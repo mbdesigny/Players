@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F3EFE4">
+<title>أُنس · Ouns — القرآن الكريم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Jost:wght@300;400;500;600&family=Nunito:wght@600;700;800&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ OUNS DESIGN TOKENS ═══════════════ */
+:root{
+  --bg:#F3EFE4; --bg2:#EAE4D2; --surface:#FBF8F0; --surface2:#FFFDF7;
+  --ink:#2C3E30; --ink2:#5F6E5B; --accent:#3E6B48; --accent2:#8FBC8F;
+  --gold:#B99745; --gold2:#E2D2A6; --on-accent:#FFFDF7;
+  --line:rgba(44,62,48,.12); --line2:rgba(44,62,48,.22);
+  --danger:#B4552D; --warn:#C08A2E; --info:#4A7A8C; --success:#3E6B48;
+  --scrim:rgba(24,30,20,.45); --glow1:rgba(143,188,143,.4); --glow2:rgba(185,151,69,.28);
+  --shadow:0 12px 34px rgba(44,62,48,.12); --shadow2:0 4px 14px rgba(44,62,48,.08);
+  --lattice:.05; --grain:.035;
+  --r-sm:10px; --r-md:16px; --r-lg:22px; --r-xl:30px;
+  --sidebar:264px; --np:344px; --player:96px;
+}
+[data-theme="dark"]{
+  --bg:#000000; --bg2:#070A06; --surface:#0E120D; --surface2:#161B14;
+  --ink:#E0F2E9; --ink2:#9CB4A2; --accent:#9DCB9D; --accent2:#6E9B74;
+  --gold:#D4B36A; --gold2:#8A7440; --on-accent:#0A0F0A;
+  --line:rgba(224,242,233,.1); --line2:rgba(224,242,233,.2);
+  --danger:#D07A52; --warn:#D9A44E; --info:#7FA8B8; --success:#9DCB9D;
+  --scrim:rgba(0,0,0,.66); --glow1:rgba(157,203,157,.13); --glow2:rgba(212,179,106,.1);
+  --shadow:0 12px 34px rgba(0,0,0,.55); --shadow2:0 4px 14px rgba(0,0,0,.4);
+  --lattice:.06; --grain:.05;
+}
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:var(--accent2) transparent}
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-thumb:hover{background:var(--accent2);background-clip:content-box}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--ink); overflow:hidden;
+  font-family:"Jost","Readex Pro",system-ui,sans-serif; font-size:15px; line-height:1.5;
+  display:flex; flex-direction:column; transition:background .45s,color .45s;
+}
+html[dir="rtl"] body{font-family:"Readex Pro","Jost",system-ui,sans-serif}
+h1,h2,h3{font-family:"Nunito","Readex Pro",sans-serif;font-weight:800;letter-spacing:-.2px}
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3{font-family:"Readex Pro","Nunito",sans-serif;font-weight:700}
+.amiri{font-family:"Amiri",serif}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+svg{display:block}
+.ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ic.fill{fill:currentColor;stroke:none}
+
+/* ═══════════════ AMBIENT BACKGROUND ═══════════════ */
+#bgFx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#bgFx .glow{position:absolute;border-radius:50%;filter:blur(90px)}
+#bgFx .g1{width:52vw;height:52vw;top:-18vw;inset-inline-start:-14vw;background:var(--glow1);animation:drift1 26s ease-in-out infinite alternate}
+#bgFx .g2{width:44vw;height:44vw;bottom:-16vw;inset-inline-end:-10vw;background:var(--glow2);animation:drift2 32s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(9vw,7vh) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-8vw,-6vh) scale(1.08)}}
+#bgFx .lattice{position:absolute;inset:0;opacity:var(--lattice);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%233E6B48' stroke-width='1'%3E%3Crect x='28' y='28' width='40' height='40'/%3E%3Crect x='28' y='28' width='40' height='40' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3Cpath d='M48 0v14M48 82v14M0 48h14M82 48h14'/%3E%3C/g%3E%3C/svg%3E")}
+[data-theme="dark"] #bgFx .lattice{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%239DCB9D' stroke-width='1'%3E%3Crect x='28' y='28' width='40' height='40'/%3E%3Crect x='28' y='28' width='40' height='40' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3Cpath d='M48 0v14M48 82v14M0 48h14M82 48h14'/%3E%3C/g%3E%3C/svg%3E")}
+#bgFx .grain{position:absolute;inset:0;opacity:var(--grain);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ═══════════════ SHELL ═══════════════ */
+.shell{position:relative;z-index:1;flex:1;min-height:0;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr) var(--np)}
+.center{min-width:0;display:flex;flex-direction:column;min-height:0}
+
+/* ═══════════════ SIDEBAR ═══════════════ */
+.sidebar{background:var(--surface);border-inline-end:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px 16px;gap:6px;min-height:0}
+.brand{display:flex;align-items:center;gap:12px;padding:2px 8px 20px}
+.brand-mark{width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--accent),var(--accent2));color:var(--on-accent);
+  box-shadow:0 6px 18px var(--glow1);position:relative}
+.brand-mark::after{content:"";position:absolute;inset:5px;border:1px solid var(--gold2);border-radius:10px;transform:rotate(45deg);opacity:.7}
+.brand-mark span{font-family:"Amiri",serif;font-size:26px;font-weight:700;position:relative;z-index:1}
+.brand-name{line-height:1.1}
+.brand-name b{font-family:"Amiri",serif;font-size:27px;font-weight:700;display:block}
+.brand-name small{font-size:10px;letter-spacing:3.5px;color:var(--gold);font-weight:600;text-transform:uppercase}
+.nav-label{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);padding:12px 10px 6px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-sm);color:var(--ink2);
+  font-weight:500;font-size:14px;border:1px solid transparent;transition:.18s;width:100%;text-align:start;position:relative}
+.nav-item:hover{background:var(--surface2);color:var(--ink);border-color:var(--line)}
+.nav-item.active{background:var(--accent);color:var(--on-accent);box-shadow:0 5px 16px var(--glow1)}
+.nav-item.active::before{content:"";position:absolute;inset-inline-start:-16px;top:20%;bottom:20%;width:3px;border-radius:3px;background:var(--gold)}
+.nav-item .cnt{margin-inline-start:auto;font-size:11px;background:var(--bg2);border-radius:20px;padding:1px 8px;color:var(--ink2)}
+.nav-item.active .cnt{background:rgba(255,255,255,.2);color:inherit}
+.verse-card{margin-top:auto;background:linear-gradient(160deg,var(--surface2),var(--bg2));border:1px solid var(--line);
+  border-radius:var(--r-md);padding:16px;position:relative;overflow:hidden}
+.verse-card::before{content:"";position:absolute;top:-24px;inset-inline-end:-24px;width:80px;height:80px;border:1px solid var(--gold);opacity:.35;transform:rotate(45deg)}
+.verse-card .vlabel{font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.verse-card .vtext{font-family:"Amiri",serif;font-size:17px;line-height:1.9;transition:opacity .5s}
+.verse-card .vref{font-size:11.5px;color:var(--ink2);margin-top:8px}
+.verse-card.fade .vtext,.verse-card.fade .vref{opacity:0}
+.side-foot{font-size:10.5px;color:var(--ink2);text-align:center;padding-top:12px;opacity:.8}
+
+/* ═══════════════ TOPBAR ═══════════════ */
+.topbar{display:flex;align-items:center;gap:10px;padding:16px 26px 12px;flex:none}
+.search{flex:1;max-width:520px;position:relative}
+.search .ic{position:absolute;inset-inline-start:14px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ink2);pointer-events:none}
+.search input{width:100%;padding:11px 16px;padding-inline-start:42px;background:var(--surface);border:1px solid var(--line);
+  border-radius:40px;font-size:13.5px;outline:none;transition:.2s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow1);background:var(--surface2)}
+.top-actions{margin-inline-start:auto;display:flex;gap:8px;align-items:center}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--surface);
+  border:1px solid var(--line);color:var(--ink2);transition:.18s;flex:none}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.icon-btn.txt{font-size:12px;font-weight:700;letter-spacing:.5px}
+#menuBtn{display:none}
+
+/* ═════════ main / views ═════════ */
+main{flex:1;min-height:0;overflow-y:auto;padding:8px 26px 30px}
+.view-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:8px 0 18px;flex-wrap:wrap}
+.view-head h2{font-size:26px}
+.view-head .sub{color:var(--ink2);font-size:13px;margin-top:2px}
+.ornament{display:flex;align-items:center;gap:10px;color:var(--gold);margin:6px 0 18px}
+.ornament::before,.ornament::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--line2),transparent)}
+.ornament svg{width:16px;height:16px}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid var(--line);border-radius:var(--r-xl);
+  padding:26px 30px;margin-bottom:26px;box-shadow:var(--shadow2)}
+.hero::after{content:"";position:absolute;inset-inline-end:-70px;top:-70px;width:240px;height:240px;border:1px solid var(--gold);opacity:.22;transform:rotate(45deg);border-radius:24px;pointer-events:none}
+.hero .mandala-wrap{width:172px;height:172px;flex:none}
+.hero h1{font-size:30px;margin-bottom:6px}
+.hero p{color:var(--ink2);font-size:14px;max-width:48ch}
+.hero-cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.stat-chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:30px;padding:6px 13px;font-size:12px;color:var(--ink2);transition:.18s}
+.stat-chip:hover{border-color:var(--gold);color:var(--ink);transform:translateY(-1px)}
+.stat-chip b{font-size:13px;color:var(--gold)}
+.stat-chip .ic{width:14px;height:14px;color:var(--accent)}
+.recent-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(212px,1fr);gap:12px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:26px;scroll-snap-type:x proximity}
+.recent-card{scroll-snap-align:start;display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:9px 11px;cursor:pointer;text-align:start;transition:.18s;overflow:hidden}
+.recent-card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:var(--shadow2)}
+.recent-card img{width:44px;height:44px;border-radius:11px;border:1px solid var(--line);flex:none}
+.recent-card .rc-txt{min-width:0;flex:1}
+.recent-card .rt{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-card .rs{font-size:10.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-card .rplay{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);flex:none;opacity:0;transform:scale(.85);transition:.18s}
+.recent-card .rplay .ic{width:14px;height:14px}
+.recent-card:hover .rplay{opacity:1;transform:scale(1)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:40px;font-weight:600;font-size:13.5px;
+  border:1px solid var(--line2);background:var(--surface2);transition:.18s;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--on-accent);border-color:transparent;box-shadow:0 6px 18px var(--glow1)}
+.btn.primary:hover{color:var(--on-accent);filter:brightness(1.07)}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2C3E30;border-color:transparent}
+.btn .ic{width:16px;height:16px}
+.btn.sm{padding:7px 14px;font-size:12.5px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px}
+.chip{flex:none;padding:7px 16px;border-radius:30px;border:1px solid var(--line);background:var(--surface);
+  font-size:12.5px;font-weight:500;color:var(--ink2);transition:.18s;white-space:nowrap}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.chip .n{opacity:.65;font-size:11px;margin-inline-start:5px}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+select.pill{padding:9px 14px;border-radius:30px;border:1px solid var(--line2);background:var(--surface);font-size:12.5px;outline:none;cursor:pointer}
+.reciter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(174px,1fr));gap:16px}
+.reciter-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;cursor:pointer;
+  transition:.25s cubic-bezier(.4,0,.2,1);position:relative;text-align:start;animation:rise .5s both}
+.reciter-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--accent2)}
+.reciter-card.active{border-color:var(--gold);box-shadow:0 0 0 3px var(--glow2)}
+.reciter-card .ava{width:100%;aspect-ratio:1;border-radius:var(--r-md);overflow:hidden;position:relative;margin-bottom:12px;border:1px solid var(--line)}
+.reciter-card .ava img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.reciter-card:hover .ava img{transform:scale(1.07)}
+.play-ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,28,18,.38);opacity:0;transition:.25s}
+.reciter-card:hover .play-ov{opacity:1}
+.play-ov span{width:50px;height:50px;border-radius:50%;background:var(--gold);display:grid;place-items:center;color:#2C3E30;
+  box-shadow:0 8px 22px rgba(0,0,0,.32);transform:scale(.82);transition:.25s}
+.reciter-card:hover .play-ov span{transform:scale(1)}
+.play-ov .ic{width:20px;height:20px;fill:currentColor;stroke:none;margin-inline-start:2px}
+.reciter-card .rn{font-weight:600;font-size:14px;line-height:1.35;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.reciter-card .rm{font-size:11px;color:var(--ink2);display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg2);color:var(--ink2);border:1px solid var(--line);white-space:nowrap}
+.tag.gold{background:transparent;border-color:var(--gold);color:var(--gold)}
+.tag.teal{background:transparent;border-color:var(--teal);color:var(--teal)}
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;margin-bottom:26px}
+.quick-surah{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);cursor:pointer;transition:.18s;text-align:start;animation:rise .5s both}
+.quick-surah:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--shadow2)}
+.quick-surah{position:relative;padding-inline-end:38px}
+.quick-surah .qplay{position:absolute;inset-inline-end:10px;top:50%;translate:0 -50%;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);opacity:0;scale:.8;transition:.18s}
+.quick-surah .qplay .ic{width:12px;height:12px}
+.quick-surah:hover .qplay{opacity:1;scale:1}
+.quick-surah.playing{border-color:var(--gold);box-shadow:0 0 0 3px var(--glow2)}
+.quick-surah .qn{font-family:"Amiri",serif;font-size:21px;color:var(--gold);width:32px;text-align:center;flex:none}
+.quick-surah .qt{font-size:13px;font-weight:600;display:block}
+.quick-surah .qs{font-size:10.5px;color:var(--ink2)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--ink2);font-size:12.5px;margin-bottom:12px;font-weight:500}
+.back-btn:hover{color:var(--accent)}
+.back-btn .ic{width:15px;height:15px}
+.reciter-hero{display:flex;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-xl);padding:22px;margin-bottom:20px;position:relative;overflow:hidden;animation:rise .45s both}
+.reciter-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,var(--glow1),transparent 55%);opacity:.5;pointer-events:none}
+.reciter-hero img{width:112px;height:112px;border-radius:var(--r-lg);border:1px solid var(--line2);flex:none;position:relative}
+.rh-info{flex:1;min-width:0;position:relative}
+.rh-info h2{font-size:24px;margin-bottom:6px}
+.rh-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.rh-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rh-actions select{padding:8px 14px;border-radius:30px;border:1px solid var(--line2);background:var(--surface2);font-size:12.5px;outline:none;max-width:290px}
+.surah-list{display:flex;flex-direction:column;gap:7px}
+.surah-row{display:flex;align-items:center;gap:14px;padding:11px 16px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);cursor:pointer;transition:.18s;position:relative;animation:rise .45s both}
+.surah-row:hover{border-color:var(--accent2);background:var(--surface2)}
+.surah-row.playing{border-color:var(--gold);background:linear-gradient(90deg,var(--glow2),var(--surface) 62%)}
+.surah-row .sn{width:40px;height:40px;flex:none;display:grid;place-items:center;position:relative;color:var(--accent);font-weight:600;font-size:13px}
+.surah-row .sn::before{content:"";position:absolute;inset:4px;border:1.3px solid var(--accent2);transform:rotate(45deg);border-radius:5px;opacity:.7}
+.surah-row.playing .sn::before{border-color:var(--gold)}
+.surah-row .sn b{position:relative;font-weight:600}
+.surah-row .si{flex:1;min-width:0}
+.surah-row .sa{font-family:"Amiri",serif;font-size:19px;line-height:1.3}
+.surah-row .se{font-size:11px;color:var(--ink2)}
+.surah-row .sm{display:flex;gap:6px;align-items:center;flex:none}
+.surah-row .dur{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums;min-width:46px;text-align:end;direction:ltr}
+.surah-row .acts{display:flex;gap:4px;opacity:0;transition:.18s}
+.surah-row:hover .acts,.surah-row.playing .acts,.surah-row:focus-within .acts{opacity:1}
+.mini-btn{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--ink2);border:1px solid transparent;transition:.15s}
+.mini-btn:hover{color:var(--accent);border-color:var(--line);background:var(--surface2)}
+.mini-btn.faved{color:var(--danger)}
+.mini-btn.faved .ic{fill:currentColor}
+.mini-btn .ic{width:15px;height:15px}
+.eq{display:inline-flex;align-items:flex-end;gap:2.5px;height:16px;width:18px;position:relative}
+.eq i{width:3px;background:var(--gold);border-radius:2px;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(1){height:60%}
+.eq i:nth-child(2){height:100%;animation-delay:.2s}
+.eq i:nth-child(3){height:45%;animation-delay:.4s}
+@keyframes eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+body:not(.playing) .eq i{animation-play-state:paused}
+.empty{padding:56px 20px;text-align:center;color:var(--ink2)}
+.empty .ic{width:42px;height:42px;margin:0 auto 14px;opacity:.4}
+.loading{display:flex;flex-direction:column;align-items:center;gap:16px;padding:80px 0;color:var(--ink2)}
+.spinner{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--gold);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.reciter-card:nth-child(2),.surah-row:nth-child(2),.quick-surah:nth-child(2){animation-delay:.04s}
+.reciter-card:nth-child(3),.surah-row:nth-child(3),.quick-surah:nth-child(3){animation-delay:.08s}
+.reciter-card:nth-child(4),.surah-row:nth-child(4),.quick-surah:nth-child(4){animation-delay:.12s}
+.reciter-card:nth-child(5),.surah-row:nth-child(5),.quick-surah:nth-child(5){animation-delay:.16s}
+.reciter-card:nth-child(6),.surah-row:nth-child(6),.quick-surah:nth-child(6){animation-delay:.2s}
+.reciter-card:nth-child(n+7),.surah-row:nth-child(n+7),.quick-surah:nth-child(n+7){animation-delay:.24s}
+
+/* ═════════ mandala ═════════ */
+.mandala-wrap{position:relative;width:100%;height:100%}
+.mandala-svg{width:100%;height:100%;filter:drop-shadow(0 10px 26px rgba(0,0,0,.2))}
+.mandala-svg .spin-a,.mandala-svg .spin-b,.mandala-svg .spin-c{transform-box:view-box;transform-origin:center}
+.mandala-svg .spin-a{animation:spin 90s linear infinite}
+.mandala-svg .spin-b{animation:spin 70s linear infinite reverse}
+.mandala-svg .spin-c{animation:spin 120s linear infinite}
+body:not(.playing) .mandala-svg .spin-a,body:not(.playing) .mandala-svg .spin-b,body:not(.playing) .mandala-svg .spin-c{animation-play-state:paused}
+.mandala-svg .m-num{font-family:"Amiri",serif;font-size:58px;font-weight:700}
+.mandala-svg .m-sub{font-family:"Amiri",serif;font-size:19px}
+.mandala-svg .pr-fill{transition:stroke-dashoffset .25s linear}
+.mandala-glow{position:absolute;inset:-9%;border-radius:50%;background:radial-gradient(circle,var(--glow1),transparent 66%);opacity:0;transition:opacity .6s;pointer-events:none}
+body.playing .mandala-glow{opacity:1;animation:breathe 4.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(.95)}50%{transform:scale(1.05)}}
+
+/* ═════════ now-playing panel ═════════ */
+.np-panel{background:var(--surface);border-inline-start:1px solid var(--line);padding:22px 20px;display:flex;flex-direction:column;gap:15px;min-height:0;overflow-y:auto}
+.np-label{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:8px}
+.np-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.np-art{width:min(100%,272px);aspect-ratio:1;margin:0 auto;position:relative}
+.np-title{font-family:"Amiri",serif;font-size:30px;text-align:center;line-height:1.25}
+.np-artist{text-align:center;color:var(--ink2);font-size:13.5px;margin-top:2px}
+.np-badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.np-actions{display:flex;gap:8px;justify-content:center}
+.np-actions .icon-btn{width:42px;height:42px}
+.icon-btn.faved{color:var(--danger);border-color:var(--danger)}
+.icon-btn.faved .ic{fill:currentColor}
+.queue-head{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink2);font-weight:600;margin-top:4px}
+.queue{display:flex;flex-direction:column;gap:4px}
+.queue-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;transition:.15s;border:1px solid transparent}
+.queue-item:hover{background:var(--surface2);border-color:var(--line)}
+.queue-item.active{background:var(--glow2);border-color:var(--gold)}
+.queue-item.dragover{border-color:var(--accent);border-style:dashed}
+.queue-item .qi-n{width:24px;font-size:11px;color:var(--ink2);text-align:center;flex:none;font-variant-numeric:tabular-nums}
+.queue-item.active .qi-n{color:var(--gold);font-weight:700}
+.queue-item .qi-t{flex:1;min-width:0;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.queue-item .qi-d{font-size:10.5px;color:var(--ink2);direction:ltr}
+.queue-item .grip{color:var(--ink2);opacity:.4;cursor:grab;flex:none}
+.queue-item .grip .ic{width:13px;height:13px}
+
+/* ═══════════════ PLAYER BAR ═══════════════ */
+.player{flex:none;height:var(--player);background:var(--surface);border-top:1px solid var(--line);
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:20px;padding:0 22px;position:relative;z-index:5;
+  box-shadow:0 -8px 30px rgba(0,0,0,.06)}
+.player::before{content:"";position:absolute;top:-1px;inset-inline:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6}
+.pb-track{display:flex;align-items:center;gap:12px;min-width:0}
+.pb-art{width:58px;height:58px;border-radius:12px;overflow:hidden;flex:none;border:1px solid var(--line2);cursor:pointer;position:relative;transition:.2s;padding:0}
+.pb-art:hover{transform:scale(1.05);box-shadow:var(--shadow2)}
+.pb-art img{width:100%;height:100%;object-fit:cover}
+.pb-art .ov-ic{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,28,18,.4);opacity:0;transition:.2s;color:#fff}
+.pb-art:hover .ov-ic{opacity:1}
+.pb-info{min-width:0}
+.pb-title{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pb-sub{font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pb-fav{flex:none}
+.pb-center{display:flex;flex-direction:column;align-items:center;gap:7px;width:min(560px,42vw)}
+.pb-buttons{display:flex;align-items:center;gap:14px}
+.ctrl{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--ink2);transition:.15s;position:relative}
+.ctrl:hover{color:var(--ink);transform:scale(1.12)}
+.ctrl.on{color:var(--gold)}
+.ctrl .ic{width:18px;height:18px}
+.ctrl .rep-1{position:absolute;top:-2px;inset-inline-end:-2px;font-size:8.5px;font-weight:800;background:var(--gold);color:#2C3E30;border-radius:8px;padding:0 4px;line-height:1.4}
+html[dir="rtl"] #btnPrev .ic,html[dir="rtl"] #btnNext .ic,
+html[dir="rtl"] .np-overlay [data-act="prev"] .ic,html[dir="rtl"] .np-overlay [data-act="next"] .ic,
+html[dir="rtl"] [data-act="openrecent"] .ic{transform:scaleX(-1)}
+.play-btn{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;color:var(--on-accent);
+  background:linear-gradient(140deg,var(--accent),var(--accent2));border:2px solid var(--gold);
+  box-shadow:0 6px 20px var(--glow1);transition:.18s}
+.play-btn:hover{transform:scale(1.07)}
+.play-btn:active{transform:scale(.97)}
+.play-btn .ic{width:20px;height:20px;fill:currentColor;stroke:none}
+.play-btn .ic.play-ic{margin-inline-start:2px}
+.pb-progress{display:flex;align-items:center;gap:10px;width:100%}
+.pb-progress .t{font-size:10.5px;color:var(--ink2);font-variant-numeric:tabular-nums;min-width:36px}
+.pb-progress .t:last-child{text-align:end}
+.prog{flex:1;height:16px;display:flex;align-items:center;cursor:pointer;position:relative;touch-action:none}
+.prog .rail{width:100%;height:4px;border-radius:4px;background:var(--line);position:relative;overflow:visible}
+.prog .buf{position:absolute;inset-inline-start:0;top:0;bottom:0;width:0;background:var(--line2);border-radius:4px}
+.prog .fill{position:absolute;inset-inline-start:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:4px}
+html[dir="rtl"] .prog .fill{background:linear-gradient(270deg,var(--accent),var(--gold))}
+.prog .thumb{position:absolute;top:50%;inset-inline-start:0;width:12px;height:12px;border-radius:50%;background:var(--gold);
+  transform:translateY(-50%);margin-inline-start:-6px;opacity:0;transition:opacity .15s;box-shadow:0 0 0 3px var(--glow2)}
+.prog:hover .thumb,.prog.scrub .thumb{opacity:1}
+.pb-right{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.pb-right select{padding:6px 10px;border-radius:20px;border:1px solid var(--line);background:var(--surface2);font-size:11px;outline:none;cursor:pointer;color:var(--ink2)}
+.vol{display:flex;align-items:center;gap:6px}
+.vol .prog{width:76px;flex:none}
+.sleep-wrap{position:relative}
+.sleep-badge{position:absolute;top:-4px;inset-inline-end:-4px;font-size:8px;background:var(--gold);color:#2C3E30;border-radius:8px;padding:0 4px;font-weight:700}
+.popover{position:absolute;bottom:calc(100% + 12px);inset-inline-end:0;background:var(--surface2);border:1px solid var(--line2);
+  border-radius:var(--r-md);box-shadow:var(--shadow);padding:8px;min-width:150px;opacity:0;pointer-events:none;transform:translateY(8px);transition:.2s;z-index:60}
+.popover.open{opacity:1;pointer-events:auto;transform:none}
+.popover button{display:flex;width:100%;justify-content:space-between;padding:8px 12px;border-radius:8px;font-size:12.5px;color:var(--ink2)}
+.popover button:hover{background:var(--bg2);color:var(--ink)}
+.popover button.on{color:var(--gold);font-weight:700}
+
+/* ═══════════════ FULLSCREEN NOW PLAYING ═══════════════ */
+.np-overlay{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;
+  padding:26px;transform:translateY(102%);transition:transform .5s cubic-bezier(.32,.72,.28,1);overflow-y:auto}
+.np-overlay.open{transform:none}
+.np-overlay .ov-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.np-overlay .ov-bg .glow{position:absolute;border-radius:50%;filter:blur(100px)}
+.ov-top{width:100%;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.ov-top .lbl{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:700}
+.ov-mandala{width:min(56vh,430px);aspect-ratio:1;margin:3vh 0 2vh;position:relative;z-index:1}
+.ov-title{font-family:"Amiri",serif;font-size:clamp(30px,5vh,44px);text-align:center;position:relative;z-index:1}
+.ov-artist{color:var(--ink2);font-size:15px;margin-top:4px;position:relative;z-index:1}
+.ov-badges{display:flex;gap:8px;margin:14px 0 20px;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
+.ov-progress{width:min(560px,90%);position:relative;z-index:1;margin-bottom:18px}
+.ov-controls{display:flex;align-items:center;gap:22px;position:relative;z-index:1;margin-bottom:16px}
+.ov-controls .play-btn{width:66px;height:66px}
+.ov-controls .play-btn .ic{width:26px;height:26px}
+.ov-controls .ctrl{width:44px;height:44px}
+.ov-controls .ctrl .ic{width:22px;height:22px}
+.ov-actions{display:flex;gap:10px;position:relative;z-index:1}
+
+/* ═══════════════ MODALS / DRAWER / TOAST ═══════════════ */
+.scrim{position:fixed;inset:0;z-index:100;background:var(--scrim);backdrop-filter:blur(6px);display:grid;place-items:center;
+  opacity:0;pointer-events:none;transition:.25s}
+.scrim.open{opacity:1;pointer-events:auto}
+.modal{background:var(--surface2);border:1px solid var(--line2);border-radius:var(--r-xl);padding:28px;width:min(480px,92vw);
+  max-height:86vh;overflow-y:auto;box-shadow:var(--shadow);transform:scale(.94) translateY(10px);transition:.25s}
+.scrim.open .modal{transform:none}
+.modal h3{font-size:20px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.modal h3 .ic{color:var(--gold)}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set-row:last-of-type{border-bottom:0}
+.set-row .sl{font-size:13.5px;font-weight:600}
+.set-row .sd{font-size:11.5px;color:var(--ink2)}
+.seg{display:flex;background:var(--bg2);border-radius:30px;padding:3px;gap:2px}
+.seg button{padding:6px 16px;border-radius:30px;font-size:12px;font-weight:600;color:var(--ink2);transition:.15s}
+.seg button.on{background:var(--accent);color:var(--on-accent)}
+.keys{margin-top:16px}
+.keys .krow{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;color:var(--ink2)}
+kbd{background:var(--bg2);border:1px solid var(--line2);border-radius:6px;padding:1px 8px;font-size:11px;font-family:inherit}
+.modal .m-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+
+.drawer{position:fixed;bottom:calc(var(--player) + 14px);inset-inline-end:18px;z-index:80;width:min(370px,92vw);
+  background:var(--surface2);border:1px solid var(--line2);border-radius:var(--r-lg);box-shadow:var(--shadow);
+  max-height:56vh;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(16px);transition:.25s}
+.drawer.open{opacity:1;pointer-events:auto;transform:none}
+.drawer .d-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.drawer .d-head b{font-size:14px;flex:1}
+.drawer .d-list{overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px}
+.dl-job{font-size:12px}
+.dl-job .dj-t{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px}
+.dl-job .dj-t span:first-child{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-job .dj-s{color:var(--ink2);flex:none;font-size:11px}
+.dl-job .dj-bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.dl-job .dj-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:4px;transition:width .2s}
+.dl-job.done .dj-s{color:var(--success)}
+.dl-job.err .dj-s{color:var(--danger)}
+
+#toasts{position:fixed;bottom:calc(var(--player) + 16px);inset-inline-start:20px;z-index:120;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:var(--r-md);font-size:13px;font-weight:500;
+  box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;animation:toastIn .3s both;max-width:340px}
+.toast button{color:var(--gold2);font-weight:700;font-size:12.5px;flex:none}
+.toast.out{animation:toastOut .3s both}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(10px)}}
+
+#scrimSide{position:fixed;inset:0;z-index:70;background:var(--scrim);opacity:0;pointer-events:none;transition:.25s}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:1280px){.shell{grid-template-columns:var(--sidebar) minmax(0,1fr)}.np-panel{display:none}}
+@media(max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:fixed;top:0;bottom:0;inset-inline-start:0;width:280px;z-index:75;transform:translateX(-105%);transition:transform .3s;box-shadow:var(--shadow)}
+  html[dir="rtl"] .sidebar{transform:translateX(105%)}
+  .sidebar.open{transform:none!important}
+  #scrimSide.open{opacity:1;pointer-events:auto}
+  #menuBtn{display:grid}
+  .pb-center{width:auto;flex:1}
+  .pb-right select,.pb-right .vol,.pb-right .sleep-wrap{display:none}
+  .hero{grid-template-columns:1fr;text-align:center}
+  .hero .mandala-wrap{margin:0 auto;width:140px;height:140px}
+  .hero .hero-cta{justify-content:center}
+}
+@media(max-width:640px){
+  :root{--player:84px}
+  .player{grid-template-columns:auto 1fr auto;gap:12px;padding:0 14px}
+  .pb-info{display:none}
+  .pb-fav{display:none}
+  .pb-buttons{gap:8px}
+  .pb-buttons .ctrl:first-child,.pb-buttons .ctrl:last-child{display:none}
+  .pb-progress{display:none}
+  .pb-right #btnExpand{display:grid}
+  main{padding:6px 16px 24px}
+  .topbar{padding:12px 16px 8px}
+  .reciter-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+  .surah-row .sm{display:none}
+  .reciter-hero{flex-direction:column;text-align:center}
+  .reciter-hero .rh-meta,.reciter-hero .rh-actions{justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body data-theme="light">
+
+<div id="bgFx"><div class="glow g1"></div><div class="glow g2"></div><div class="lattice"></div><div class="grain"></div></div>
+
+<div class="shell">
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><span>أ</span></div>
+      <div class="brand-name"><b>أُنس</b><small>OUNS · QURAN</small></div>
+    </div>
+    <div class="nav-label" data-i18n="library">المكتبة</div>
+    <button class="nav-item active" data-view="home"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg><span data-i18n="home">الرئيسية</span></button>
+    <button class="nav-item" data-view="reciters"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg><span data-i18n="reciters">القرّاء</span><span class="cnt" id="cntReciters">—</span></button>
+    <button class="nav-item" data-view="favorites"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg><span data-i18n="favorites">المفضلة</span><span class="cnt" id="cntFav">0</span></button>
+    <button class="nav-item" data-view="recent"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span data-i18n="recent">آخر الاستماع</span></button>
+    <button class="nav-item" id="navDownloads"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg><span data-i18n="downloads">التنزيلات</span><span class="cnt" id="cntDl">0</span></button>
+    <div class="verse-card" id="verseCard">
+      <div class="vlabel" data-i18n="verseLabel">آية وتدبّر</div>
+      <div class="vtext amiri" id="verseText"></div>
+      <div class="vref" id="verseRef"></div>
+    </div>
+    <div class="side-foot">أُنس · رفيق التلاوة</div>
+  </aside>
+  <div id="scrimSide"></div>
+
+  <!-- ══════════ CENTER ══════════ -->
+  <div class="center">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="menu"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="search">
+        <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+        <input type="search" id="searchInput" autocomplete="off">
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" aria-label="theme"><svg class="ic" id="themeIcon" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
+        <button class="icon-btn txt" id="langBtn">EN</button>
+        <button class="icon-btn" id="settingsBtn" aria-label="settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.14-1.4l2-1.55-2-3.46-2.35.95a7 7 0 0 0-2.42-1.4L13.7 2.6h-3.4l-.39 2.54a7 7 0 0 0-2.42 1.4l-2.35-.95-2 3.46 2 1.55A7 7 0 0 0 5 12c0 .48.05.94.14 1.4l-2 1.55 2 3.46 2.35-.95a7 7 0 0 0 2.42 1.4l.39 2.54h3.4l.39-2.54a7 7 0 0 0 2.42-1.4l2.35.95 2-3.46-2-1.55c.09-.46.14-.92.14-1.4z"/></svg></button>
+      </div>
+    </header>
+    <main id="main"><div id="view"></div></main>
+  </div>
+
+  <!-- ══════════ NOW PLAYING PANEL ══════════ -->
+  <aside class="np-panel">
+    <div class="np-label" data-i18n="nowPlaying">يُتلى الآن</div>
+    <div class="np-art"><div class="mandala-glow"></div><div class="mandala-wrap" id="npMandala"></div></div>
+    <div>
+      <div class="np-title amiri" id="npTitle">أُنس</div>
+      <div class="np-artist" id="npArtist" data-i18n="chooseReciter">اختر قارئًا لبدء التلاوة</div>
+      <div class="np-badges" id="npBadges"></div>
+    </div>
+    <div class="np-actions">
+      <button class="icon-btn" id="npFav" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
+      <button class="icon-btn" id="npDl" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+      <button class="icon-btn" id="npExpand" aria-label="expand"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
+    </div>
+    <div class="queue-head" data-i18n="upNext">التالي في القائمة</div>
+    <div class="queue" id="npQueue"></div>
+  </aside>
+</div>
+
+<!-- ══════════ PLAYER BAR ══════════ -->
+<footer class="player">
+  <div class="pb-track">
+    <button class="pb-art" id="pbArt" aria-label="now playing"><img id="pbArtImg" alt=""><span class="ov-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></span></button>
+    <div class="pb-info"><div class="pb-title" id="pbTitle">أُنس</div><div class="pb-sub" id="pbSub" data-i18n="tagline">رفيقك لتلاوة القرآن الكريم</div></div>
+    <button class="ctrl pb-fav" id="pbFav" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
+  </div>
+  <div class="pb-center">
+    <div class="pb-buttons">
+      <button class="ctrl" id="btnShuffle" aria-label="shuffle"><svg class="ic" viewBox="0 0 24 24"><path d="M16 4h4v4"/><path d="M4 20 20 4"/><path d="M16 20h4v-4"/><path d="m14.5 14.5 5.5 5.5"/><path d="m4 4 5 5"/></svg></button>
+      <button class="ctrl" id="btnPrev" aria-label="previous"><svg class="ic fill" viewBox="0 0 24 24"><path d="M18 5v14l-9-7z"/><rect x="5" y="5" width="2.6" height="14" rx="1"/></svg></button>
+      <button class="play-btn" id="btnPlay" aria-label="play"><svg class="ic play-ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+      <button class="ctrl" id="btnNext" aria-label="next"><svg class="ic fill" viewBox="0 0 24 24"><path d="M6 5v14l9-7z"/><rect x="16.4" y="5" width="2.6" height="14" rx="1"/></svg></button>
+      <button class="ctrl" id="btnRepeat" aria-label="repeat"><svg class="ic" viewBox="0 0 24 24"><path d="M17 2.5 21 6l-4 3.5"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 21.5 3 18l4-3.5"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg><span class="rep-1" id="repBadge" hidden>1</span></button>
+    </div>
+    <div class="pb-progress" dir="ltr">
+      <span class="t" id="tCur">0:00</span>
+      <div class="prog" id="progBar"><div class="rail"><div class="buf" id="progBuf"></div><div class="fill" id="progFill"></div><div class="thumb" id="progThumb"></div></div></div>
+      <span class="t" id="tDur">0:00</span>
+    </div>
+  </div>
+  <div class="pb-right">
+    <select id="selQuality" aria-label="quality"></select>
+    <select id="selSpeed" aria-label="speed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+    <div class="sleep-wrap">
+      <button class="ctrl" id="btnSleep" aria-label="sleep timer"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg><span class="sleep-badge" id="sleepBadge" hidden></span></button>
+      <div class="popover" id="sleepPop"></div>
+    </div>
+    <div class="vol">
+      <button class="ctrl" id="btnMute" aria-label="mute"><svg class="ic" id="volIcon" viewBox="0 0 24 24"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+      <div class="prog" id="volBar" dir="ltr"><div class="rail"><div class="fill" id="volFill"></div><div class="thumb" id="volThumb"></div></div></div>
+    </div>
+    <button class="ctrl" id="btnDl" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+    <button class="ctrl" id="btnExpand" aria-label="expand"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
+  </div>
+</footer>
+
+<!-- ══════════ FULLSCREEN NOW PLAYING ══════════ -->
+<div class="np-overlay" id="npOverlay">
+  <div class="ov-bg"><div class="glow" style="width:60vw;height:60vw;top:-20vw;inset-inline-start:-15vw;background:var(--glow1)"></div><div class="glow" style="width:50vw;height:50vw;bottom:-18vw;inset-inline-end:-12vw;background:var(--glow2)"></div><div class="lattice" style="position:absolute;inset:0;opacity:var(--lattice)"></div></div>
+  <div class="ov-top">
+    <span class="lbl" data-i18n="nowPlaying">يُتلى الآن</span>
+    <button class="icon-btn" id="ovClose" aria-label="close"><svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="ov-mandala"><div class="mandala-glow"></div><div class="mandala-wrap" id="ovMandala"></div></div>
+  <div class="ov-title amiri" id="ovTitle">أُنس</div>
+  <div class="ov-artist" id="ovArtist"></div>
+  <div class="ov-badges" id="ovBadges"></div>
+  <div class="ov-progress pb-progress" dir="ltr">
+    <span class="t" id="ovCur">0:00</span>
+    <div class="prog" id="ovProg"><div class="rail"><div class="buf" id="ovBuf"></div><div class="fill" id="ovFill"></div><div class="thumb" id="ovThumb"></div></div></div>
+    <span class="t" id="ovDur">0:00</span>
+  </div>
+  <div class="ov-controls">
+    <button class="ctrl" data-act="shuffle"><svg class="ic" viewBox="0 0 24 24"><path d="M16 4h4v4"/><path d="M4 20 20 4"/><path d="M16 20h4v-4"/><path d="m14.5 14.5 5.5 5.5"/><path d="m4 4 5 5"/></svg></button>
+    <button class="ctrl" data-act="prev"><svg class="ic fill" viewBox="0 0 24 24"><path d="M18 5v14l-9-7z"/><rect x="5" y="5" width="2.6" height="14" rx="1"/></svg></button>
+    <button class="play-btn" data-act="play"><svg class="ic play-ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    <button class="ctrl" data-act="next"><svg class="ic fill" viewBox="0 0 24 24"><path d="M6 5v14l9-7z"/><rect x="16.4" y="5" width="2.6" height="14" rx="1"/></svg></button>
+    <button class="ctrl" data-act="repeat"><svg class="ic" viewBox="0 0 24 24"><path d="M17 2.5 21 6l-4 3.5"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 21.5 3 18l4-3.5"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg></button>
+  </div>
+  <div class="ov-actions">
+    <button class="btn sm" data-act="fav"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg><span data-i18n="favorite">المفضلة</span></button>
+    <button class="btn sm" data-act="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg><span data-i18n="download">تنزيل</span></button>
+  </div>
+</div>
+
+<!-- ══════════ SETTINGS ══════════ -->
+<div class="scrim" id="settingsScrim">
+  <div class="modal">
+    <h3><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg><span data-i18n="settings">الإعدادات</span></h3>
+    <div class="set-row"><div><div class="sl" data-i18n="theme">المظهر</div><div class="sd" data-i18n="themeDesc">نهاري بيج / ليلي OLED</div></div>
+      <div class="seg" id="segTheme"><button data-th="light" data-i18n="light">نهاري</button><button data-th="dark" data-i18n="dark">ليلي</button></div></div>
+    <div class="set-row"><div><div class="sl" data-i18n="language">اللغة</div><div class="sd">العربية / English</div></div>
+      <div class="seg" id="segLang"><button data-lg="ar">العربية</button><button data-lg="en">English</button></div></div>
+    <div class="set-row"><div><div class="sl" data-i18n="audioSource">مصدر الصوت</div><div class="sd" data-i18n="audioSourceDesc">يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل</div></div>
+      <span class="tag gold">MP3Quran + Islamic Network</span></div>
+    <div class="keys">
+      <div class="queue-head" data-i18n="shortcuts">اختصارات لوحة المفاتيح</div>
+      <div class="krow"><span data-i18n="kPlay">تشغيل / إيقاف</span><kbd>Space</kbd></div>
+      <div class="krow"><span data-i18n="kSeek">تقديم / ترجيع ٥ ثوانٍ</span><kbd>→ ←</kbd></div>
+      <div class="krow"><span data-i18n="kNext">التالي / السابق</span><kbd>N / P</kbd></div>
+      <div class="krow"><span data-i18n="kFav">المفضلة</span><kbd>F</kbd></div>
+      <div class="krow"><span data-i18n="kMute">كتم الصوت</span><kbd>M</kbd></div>
+      <div class="krow"><span data-i18n="kSearch">بحث</span><kbd>/</kbd></div>
+    </div>
+    <div class="m-actions"><button class="btn primary" id="settingsClose" data-i18n="done">تم</button></div>
+  </div>
+</div>
+
+<!-- ══════════ CONFIRM ══════════ -->
+<div class="scrim" id="confirmScrim">
+  <div class="modal" style="width:min(400px,92vw)">
+    <h3 id="confirmTitle"></h3>
+    <p style="color:var(--ink2);font-size:13.5px" id="confirmMsg"></p>
+    <div class="m-actions"><button class="btn" id="confirmNo" data-i18n="cancel">إلغاء</button><button class="btn primary" id="confirmYes" data-i18n="confirm">تأكيد</button></div>
+  </div>
+</div>
+
+<!-- ══════════ DOWNLOADS DRAWER ══════════ -->
+<div class="drawer" id="dlDrawer">
+  <div class="d-head">
+    <svg class="ic" viewBox="0 0 24 24" style="color:var(--gold)"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg>
+    <b data-i18n="downloads">التنزيلات</b>
+    <button class="btn sm" id="folderBtn" data-i18n="chooseFolder" hidden>مجلد الحفظ</button>
+    <button class="mini-btn" id="dlClose"><svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="d-list" id="dlList"><div class="empty" style="padding:26px"><p data-i18n="noDownloads">لا توجد تنزيلات بعد</p></div></div>
+</div>
+
+<div id="toasts"></div>
+<audio id="audio" preload="metadata"></audio>
+
+<script>
+'use strict';
+/* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const API='https://mp3quran.net/api/v3';
+const pad=n=>String(n).padStart(3,'0');
+const norm=s=>(s||'').toString().replace(/[\u064B-\u0652\u0670\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/\s+/g,' ').trim().toLowerCase();
+const norm2=s=>norm(s).replace(/\s+/g,'');
+const esc=s=>(s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hash=s=>{let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return Math.abs(h)};
+const arDigits=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const fmt=s=>(!isFinite(s)||s<0)?'0:00':`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+const safeName=s=>(s||'').replace(/[\\/:*?"<>|]/g,'-').trim().slice(0,80);
+const store={get(k,d){try{const v=localStorage.getItem('ouns_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ouns_'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ── Surah metadata (114) ── */
+const SURAH=[["الفاتحة","Al-Fatihah",7,0],["البقرة","Al-Baqarah",286,1],["آل عمران","Aal-Imran",200,1],["النساء","An-Nisa",176,1],["المائدة","Al-Ma'idah",120,1],["الأنعام","Al-An'am",165,0],["الأعراف","Al-A'raf",206,0],["الأنفال","Al-Anfal",75,1],["التوبة","At-Tawbah",129,1],["يونس","Yunus",109,0],["هود","Hud",123,0],["يوسف","Yusuf",111,0],["الرعد","Ar-Ra'd",43,1],["إبراهيم","Ibrahim",52,0],["الحجر","Al-Hijr",99,0],["النحل","An-Nahl",128,0],["الإسراء","Al-Isra",111,0],["الكهف","Al-Kahf",110,0],["مريم","Maryam",98,0],["طه","Ta-Ha",135,0],["الأنبياء","Al-Anbiya",112,0],["الحج","Al-Hajj",78,1],["المؤمنون","Al-Mu'minun",118,0],["النور","An-Nur",64,1],["الفرقان","Al-Furqan",77,0],["الشعراء","Ash-Shu'ara",227,0],["النمل","An-Naml",93,0],["القصص","Al-Qasas",88,0],["العنكبوت","Al-Ankabut",69,0],["الروم","Ar-Rum",60,0],["لقمان","Luqman",34,0],["السجدة","As-Sajdah",30,0],["الأحزاب","Al-Ahzab",73,1],["سبأ","Saba",54,0],["فاطر","Fatir",45,0],["يس","Ya-Sin",83,0],["الصافات","As-Saffat",182,0],["ص","Sad",88,0],["الزمر","Az-Zumar",75,0],["غافر","Ghafir",85,0],["فصلت","Fussilat",54,0],["الشورى","Ash-Shura",53,0],["الزخرف","Az-Zukhruf",89,0],["الدخان","Ad-Dukhan",59,0],["الجاثية","Al-Jathiyah",37,0],["الأحقاف","Al-Ahqaf",35,0],["محمد","Muhammad",38,1],["الفتح","Al-Fath",29,1],["الحجرات","Al-Hujurat",18,1],["ق","Qaf",45,0],["الذاريات","Adh-Dhariyat",60,0],["الطور","At-Tur",49,0],["النجم","An-Najm",62,0],["القمر","Al-Qamar",55,0],["الرحمن","Ar-Rahman",78,1],["الواقعة","Al-Waqi'ah",96,0],["الحديد","Al-Hadid",29,1],["المجادلة","Al-Mujadila",22,1],["الحشر","Al-Hashr",24,1],["الممتحنة","Al-Mumtahanah",13,1],["الصف","As-Saff",14,1],["الجمعة","Al-Jumu'ah",11,1],["المنافقون","Al-Munafiqun",11,1],["التغابن","At-Taghabun",18,1],["الطلاق","At-Talaq",12,1],["التحريم","At-Tahrim",12,1],["الملك","Al-Mulk",30,0],["القلم","Al-Qalam",52,0],["الحاقة","Al-Haqqah",52,0],["المعارج","Al-Ma'arij",44,0],["نوح","Nuh",28,0],["الجن","Al-Jinn",28,0],["المزمل","Al-Muzzammil",20,0],["المدثر","Al-Muddaththir",56,0],["القيامة","Al-Qiyamah",40,0],["الإنسان","Al-Insan",31,1],["المرسلات","Al-Mursalat",50,0],["النبأ","An-Naba",40,0],["النازعات","An-Nazi'at",46,0],["عبس","Abasa",42,0],["التكوير","At-Takwir",29,0],["الانفطار","Al-Infitar",19,0],["المطففين","Al-Mutaffifin",36,0],["الانشقاق","Al-Inshiqaq",25,0],["البروج","Al-Buruj",22,0],["الطارق","At-Tariq",17,0],["الأعلى","Al-A'la",19,0],["الغاشية","Al-Ghashiyah",26,0],["الفجر","Al-Fajr",30,0],["البلد","Al-Balad",20,0],["الشمس","Ash-Shams",15,0],["الليل","Al-Layl",21,0],["الضحى","Ad-Duha",11,0],["الشرح","Ash-Sharh",8,0],["التين","At-Tin",8,0],["العلق","Al-Alaq",19,0],["القدر","Al-Qadr",5,0],["البينة","Al-Bayyinah",8,1],["الزلزلة","Az-Zalzalah",8,1],["العاديات","Al-Adiyat",11,0],["القارعة","Al-Qari'ah",11,0],["التكاثر","At-Takathur",8,0],["العصر","Al-Asr",3,0],["الهمزة","Al-Humazah",9,0],["الفيل","Al-Fil",5,0],["قريش","Quraysh",4,0],["الماعون","Al-Ma'un",7,0],["الكوثر","Al-Kawthar",3,0],["الكافرون","Al-Kafirun",6,0],["النصر","An-Nasr",3,1],["المسد","Al-Masad",5,0],["الإخلاص","Al-Ikhlas",4,0],["الفلق","Al-Falaq",5,0],["الناس","An-Nas",6,0]];
+const surahName=(n,lang)=>lang==='ar'?SURAH[n-1][0]:SURAH[n-1][1];
+
+/* ── Fallback catalog (offline resilience) ── */
+const FALLBACK=[["مشاري راشد العفاسي","Mishary Rashid Alafasy","https://server8.mp3quran.net/afs/"],["عبد الرحمن السديس","Abdurrahman As-Sudais","https://server11.mp3quran.net/sds/"],["سعود الشريم","Saud Ash-Shuraim","https://server7.mp3quran.net/shur/"],["ماهر المعيقلي","Maher Al Muaiqly","https://server12.mp3quran.net/maher/"],["محمود خليل الحصري","Mahmoud Khalil Al-Husary","https://server13.mp3quran.net/husr/"],["محمد صديق المنشاوي","Mohamed Siddiq El-Minshawi","https://server10.mp3quran.net/minsh/"],["سعد الغامدي","Saad Al-Ghamdi","https://server7.mp3quran.net/s_gmd/"],["أبو بكر الشاطري","Abu Bakr Ash-Shatri","https://server11.mp3quran.net/shatri/"],["ناصر القطامي","Nasser Al Qatami","https://server6.mp3quran.net/qtm/"],["ياسر الدوسري","Yasser Al-Dosari","https://server11.mp3quran.net/yasser/"],["هاني الرفاعي","Hani Ar-Rifai","https://server8.mp3quran.net/hani/"],["أحمد العجمي","Ahmed Al-Ajmi","https://server10.mp3quran.net/ajm/"],["محمد أيوب","Muhammad Ayyoub","https://server8.mp3quran.net/ayyub/"],["عبد الله بصفر","Abdullah Basfar","https://server6.mp3quran.net/bsfr/"],["علي الحذيفي","Ali Al-Hudhaify","https://server9.mp3quran.net/hthfi/"],["إبراهيم الأخضر","Ibrahim Al-Akhdar","https://server6.mp3quran.net/akdr/"],["خالد القحطاني","Khalid Al-Qahtani","https://server10.mp3quran.net/qht/"],["عبد الباسط عبد الصمد","Abdul Basit Abdus-Samad","https://server7.mp3quran.net/basit/"]].map((r,i)=>({id:9000+i,name:r[0],name_en:r[1],moshaf:[{id:1,server:r[2],rewaya:'حفص عن عاصم',name:'مرتل',surah_list:'1-114',surah_total:114}]}));
+
+/* ── Islamic Network CDN edition matching ── */
+const ED_KEYS=[["alafasy","عفاسي","alafasy"],["husary","حصري","husary"],["minshawi","منشاوي","minshawi"],["abdulbasit","عبدالباسط","abdulbasit"],["sudais","سديس","sudais"],["shuraim","شريم","shuraym"],["muaiqly","معيقلي","muaiqly"],["shatri","شاطري","shaatree"],["hudhaify","حذيفي","hudhaify"],["ajmi","عجمي","ajamy"],["ayyoub","ايوب","ayyoub"],["rifai","رفاعي","rifai"],["akhdar","اخضر","akhbar"],["jibreel","جبريل","jibreel"]];
+let EDITIONS=[];
+
+/* ── Verses ── */
+const VERSES=[["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَمِعُوا لَهُ وَأَنصِتُوا لَعَلَّكُمْ تُرْحَمُونَ","الأعراف · ٢٠٤","When the Qur'an is recited, listen to it attentively, so you may receive mercy.","Al-A'raf · 204"],["الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ ۗ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ","الرعد · ٢٨","Those who believe, and whose hearts find comfort in the remembrance of Allah.","Ar-Ra'd · 28"],["وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا","المزمل · ٤","And recite the Qur'an with measured recitation.","Al-Muzzammil · 4"],["إِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ وَإِنَّا لَهُ لَحَافِظُونَ","الحجر · ٩","Indeed, it is We who sent down the Reminder, and indeed, We will be its guardian.","Al-Hijr · 9"]];
+
+/* ── i18n ── */
+const I18N={
+ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة"},
+en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality"}
+};
+const t=k=>I18N[S.lang][k]??k;
+
+/* ── State ── */
+const S={
+  lang:store.get('lang','ar'), theme:store.get('theme','light'),
+  quality:store.get('quality','auto'), speed:store.get('speed',1),
+  view:'home', query:'', rewaya:'__all', sort:'name',
+  reciters:[], riwayat:[], editionsReady:false,
+  reciter:null, moshaf:null, tracks:[], idx:-1,
+  shuffle:store.get('shuffle',false), repeat:store.get('repeat',0),
+  favorites:store.get('favorites',[]), recent:store.get('recent',[]),
+  current:null, srcIdx:0, dirHandle:null, sleepMin:0, sleepTimer:null, sleepTick:null,
+  verseIdx:0, offline:false
+};
+const audio=$('#audio');
+audio.volume=store.get('volume',1);
+
+/* ═══════════════ GENERATIVE ISLAMIC ART ═══════════════ */
+const PAL=[["#2F5D3A","#A8CBA0","#F4F1E8","#C9A24B"],["#1F4030","#D9C9A3","#F7F3E8","#C9A24B"],["#3E6B48","#8FBC8F","#FBF9F3","#B99745"],["#274C3B","#9DCB9D","#EAF2E6","#D4B36A"],["#41563A","#CBB98A","#F4F1E8","#B99745"],["#2C3E30","#B7C9A8","#F7F9F7","#C2A14D"]];
+const pal=seed=>PAL[hash(seed)%PAL.length];
+const svgURI=s=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+function avatarURI(seed,letter){
+  const[bg,pt,ink,gd]=pal(seed);let sq='',dots='';
+  for(let i=0;i<4;i++)sq+=`<rect x="40" y="40" width="120" height="120" fill="none" stroke="${pt}" stroke-width="1.4" opacity=".45" transform="rotate(${i*22.5} 100 100)"/>`;
+  for(let i=0;i<8;i++){const a=i*Math.PI/4;dots+=`<circle cx="${(100+87*Math.cos(a)).toFixed(1)}" cy="${(100+87*Math.sin(a)).toFixed(1)}" r="3" fill="${pt}" opacity=".85"/>`}
+  return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="117" text-anchor="middle" font-size="50" font-family="Amiri,serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
+}
+function mandalaSVG(seed,numTxt,subTxt){
+  const[bg,pt,ink,gd]=pal(seed);const C=(2*Math.PI*186).toFixed(1);let dots='',petals='';
+  for(let i=0;i<16;i++){const a=i*Math.PI/8;dots+=`<circle cx="${(200+168*Math.cos(a)).toFixed(1)}" cy="${(200+168*Math.sin(a)).toFixed(1)}" r="${i%2?3:5.5}" fill="${pt}" opacity="${i%2?.5:.95}"/>`}
+  for(let i=0;i<8;i++)petals+=`<rect x="128" y="128" width="144" height="144" rx="16" fill="none" stroke="${pt}" stroke-width="1.3" opacity=".5" transform="rotate(${i*22.5} 200 200)"/>`;
+  return `<svg viewBox="0 0 400 400" class="mandala-svg" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="200" cy="200" r="197" fill="${bg}"/><circle cx="200" cy="200" r="197" fill="none" stroke="${gd}" stroke-width="1.4" opacity=".8"/>
+  <g class="spin-a">${dots}<circle cx="200" cy="200" r="168" fill="none" stroke="${pt}" stroke-width="1" opacity=".45"/></g>
+  <g class="spin-b">${petals}</g>
+  <g class="spin-c"><rect x="116" y="116" width="168" height="168" fill="none" stroke="${gd}" stroke-width="1.8"/><rect x="116" y="116" width="168" height="168" fill="none" stroke="${gd}" stroke-width="1.8" transform="rotate(45 200 200)"/><circle cx="200" cy="200" r="103" fill="none" stroke="${pt}" stroke-width="1.2" opacity=".7"/></g>
+  <circle cx="200" cy="200" r="85" fill="${bg}" stroke="${gd}" stroke-width="1.6"/>
+  <text x="200" y="200" text-anchor="middle" class="m-num" fill="${ink}">${esc(numTxt)}</text>
+  <text x="200" y="238" text-anchor="middle" class="m-sub" fill="${pt}">${esc(subTxt)}</text>
+  <circle cx="200" cy="200" r="186" fill="none" stroke="${pt}" stroke-opacity=".22" stroke-width="4"/>
+  <circle class="pr-fill" cx="200" cy="200" r="186" fill="none" stroke="${gd}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 200 200)"/></svg>`;
+}
+const reciterLetter=r=>{const n=(S.lang==='ar'?r.name:r.name_en||r.name).trim();return n[0]||'ق'};
+const reciterName=r=>S.lang==='ar'?r.name:(r.name_en||r.name);
+
+/* ═══════════════ DATA ═══════════════ */
+async function api(path,params={}){const u=new URL(API+path);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+function parseList(str,total){if(!str)return Array.from({length:total||114},(_,i)=>i+1);const out=new Set();String(str).split(',').forEach(tok=>{tok=tok.trim();if(!tok)return;if(tok.includes('-')){const[a,b]=tok.split('-').map(Number);for(let i=a;i<=b;i++)out.add(i)}else{const n=+tok;if(n)out.add(n)}});return[...out].filter(n=>n>=1&&n<=114).sort((a,b)=>a-b)}
+const serverURL=(m,n)=>m.server.replace(/^http:/,'https:').replace(/\/?$/,'/')+pad(n)+'.mp3';
+function buildSources(rar,ren,moshaf,n){
+  const src=[{provider:'MP3Quran',url:serverURL(moshaf,n),bitrate:128}];
+  const nm=norm2(rar+' '+ren), rw=norm2(moshaf.rewaya||''), mj=/مجود|mujawwad|mojawwad/.test(norm2((moshaf.name||'')+(moshaf.rewaya||'')));
+  if(/حفص|hafs/.test(rw)&&EDITIONS.length){
+    for(const[en,ar,key]of ED_KEYS){if(nm.includes(en)||nm.includes(ar)){
+      let cands=EDITIONS.filter(e=>e.identifier.includes(key));
+      if(mj)cands=cands.filter(e=>/mujawwad|mojawwad/.test(e.identifier)).length?cands.filter(e=>/mujawwad|mojawwad/.test(e.identifier)):cands;
+      else cands=cands.filter(e=>!/mujawwad|mojawwad/.test(e.identifier)).length?cands.filter(e=>!/mujawwad|mojawwad/.test(e.identifier)):cands;
+      const e=cands.sort((a,b)=>(b.bitrate||0)-(a.bitrate||0))[0];
+      if(e)src.push({provider:'Islamic Network',url:`https://cdn.islamic.network/quran/audio-surah/${e.bitrate||128}/${e.identifier}/${n}.mp3`,bitrate:e.bitrate||128});
+      break}}
+  }
+  return src;
+}
+function pickSource(track){
+  const s=[...track.sources];
+  if(S.quality==='high')s.sort((a,b)=>(b.bitrate>=192)-(a.bitrate>=192)||b.bitrate-a.bitrate);
+  else if(S.quality==='std')s.sort((a,b)=>Math.abs(a.bitrate-128)-Math.abs(b.bitrate-128));
+  else if(S.quality==='save')s.sort((a,b)=>a.bitrate-b.bitrate);
+  else s.sort((a,b)=>b.bitrate-a.bitrate);
+  return s;
+}
+function makeTrack(r,m,n){
+  const meta=SURAH[n-1];
+  return {key:`${r.id}:${m.id}:${n}`,n,name_ar:meta[0],name_en:meta[1],ayahs:meta[2],type:meta[3],
+    rid:r.id,mid:m.id,rar:r.name,ren:r.name_en||r.name,rewaya:m.rewaya,mname:m.name||m.rewaya,
+    server:m.server,sources:buildSources(r.name,r.name_en||r.name,m,n),duration:0};
+}
+const trackName=tr=>S.lang==='ar'?tr.name_ar:tr.name_en;
+const trackReciter=tr=>S.lang==='ar'?tr.rar:tr.ren;
+function rebuildTrack(f){const r={id:f.rid,name:f.rar,name_en:f.ren},m={id:f.mid,server:f.server,rewaya:f.rewaya,name:f.mname};return makeTrack(r,m,f.n)}
+
+async function loadData(){
+  try{
+    const[ar,en]=await Promise.all([api('/reciters',{language:'ar'}),api('/reciters',{language:'eng'})]);
+    const enMap=new Map((en.reciters||[]).map(r=>[r.id,r.name]));
+    S.reciters=(ar.reciters||[]).filter(r=>r.moshaf&&r.moshaf.length).map(r=>({...r,name_en:enMap.get(r.id)||r.name}));
+    if(!S.reciters.length)throw new Error('empty');
+  }catch(e){S.reciters=FALLBACK;S.offline=true;toast(t('offline'))}
+  try{const r=await fetch('https://api.alquran.cloud/v1/edition?format=audio&language=ar&type=versebyverse');const j=await r.json();EDITIONS=(j.data||[]).filter(e=>e.bitrate)}catch(e){EDITIONS=[]}
+  buildRiwayat();
+  $('#cntReciters').textContent=S.reciters.length;
+}
+function buildRiwayat(){
+  const map=new Map();
+  S.reciters.forEach(r=>r.moshaf.forEach(m=>{const k=norm(m.rewaya);if(!k)return;if(!map.has(k))map.set(k,{key:k,name:m.rewaya,count:0});map.get(k).count++}));
+  const rank=k=>/حفص|hafs/.test(k)?0:/ورش|warsh/.test(k)?1:/قالون|qaloon|qalun/.test(k)?2:/الدوري|duri/.test(k)?3:9;
+  S.riwayat=[...map.values()].sort((a,b)=>rank(a.key)-rank(b.key)||b.count-a.count);
+}
+function filteredReciters(){
+  const q=norm2(S.query);
+  let list=S.reciters.filter(r=>{
+    const okR=S.rewaya==='__all'||r.moshaf.some(m=>norm(m.rewaya)===S.rewaya);
+    const okQ=!q||norm2(r.name+' '+r.name_en).includes(q);
+    return okR&&okQ});
+  if(S.sort==='count')list.sort((a,b)=>b.moshaf.length-a.moshaf.length);
+  else list.sort((a,b)=>reciterName(a).localeCompare(reciterName(b),S.lang==='ar'?'ar':'en'));
+  return list;
+}
+
+/* ═══════════════ VIEWS ═══════════════ */
+function setView(v){S.view=v;S.query='';$('#searchInput').value='';$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
+function render(){
+  applyI18nStatic();
+  const ph={home:'searchReciters',reciters:'searchReciters',surahs:'searchSurahs',favorites:'searchFav',recent:'searchRecent'}[S.view]||'searchReciters';
+  $('#searchInput').placeholder=t(ph);
+  const v=$('#view');
+  if(S.view==='home')v.innerHTML=viewHome();
+  else if(S.view==='reciters')v.innerHTML=viewReciters();
+  else if(S.view==='surahs')v.innerHTML=viewSurahs();
+  else if(S.view==='favorites')v.innerHTML=viewCollection(S.favorites,'favView','favSub',true);
+  else if(S.view==='recent')v.innerHTML=viewCollection(S.recent,'recentView','recentSub',false);
+  $('#main').scrollTop=0;
+  updateCounts();
+}
+const orn=`<div class="ornament"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="10" height="10"/><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)"/></svg></div>`;
+function viewHome(){
+  const h=new Date().getHours();const greet=h<12?t('greetM'):t('greetE');
+  const last=S.recent[0];
+  const featKeys=['عفاسي','سديس','حصري','منشاوي','شاطري','غامدي','معيقلي','دوسري'];
+  let feat=featKeys.map(k=>S.reciters.find(r=>norm2(r.name).includes(norm2(k)))).filter(Boolean);
+  if(feat.length<6)feat=[...feat,...S.reciters.filter(r=>!feat.includes(r))].slice(0,8);
+  const quick=[18,36,55,67,56,2,1,112];
+  const heroSeed=last?last.rar:'أُنس';
+  const heroNum=last?(S.lang==='ar'?arDigits(last.n):last.n):'أ';
+  const heroSub=last?surahName(last.n,S.lang):'القرآن';
+  const num=n=>S.lang==='ar'?arDigits(n):n;
+  const stats=[["M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z","M5 11a7 7 0 0 0 14 0","M12 18v3",S.reciters.length,t('reciter')],["M4 19.5A2.5 2.5 0 0 1 6.5 17H20","M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 4.5v15A2.5 2.5 0 0 1 6.5 17z","",S.riwayat.length,t('riwayat')],["M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z","","",S.favorites.length,t('favorites')]];
+  return `<section class="hero">
+    <div class="mandala-wrap"><div class="mandala-glow"></div>${mandalaSVG(heroSeed,heroNum,heroSub)}</div>
+    <div><h1>${greet}</h1><p>${t('heroSub')}</p>
+      <div class="hero-cta">
+        ${last?`<button class="btn primary" data-act="resume"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('continueL')} · ${esc(surahName(last.n,S.lang))}</button>`:''}
+        <button class="btn" data-act="browse"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>${t('browse')}</button>
+      </div>
+      <div class="hero-stats">${stats.map(s=>`<span class="stat-chip"><svg class="ic" viewBox="0 0 24 24">${[s[0],s[1],s[2]].map(d=>d?`<path d="${d}"/>`:'' ).join('')}</svg><b>${num(s[3])}</b> ${esc(s[4])}</span>`).join('')}</div>
+    </div></section>
+  ${S.recent.length?`
+  <div class="view-head"><div><h2>${t('recentView')}</h2></div><button class="icon-btn" data-act="openrecent" aria-label="${t('recentView')}"><svg class="ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
+  <div class="recent-row">${S.recent.slice(0,10).map((f,i)=>`<button class="recent-card" data-coll="${i}">
+    <img src="${avatarURI(f.rar,reciterLetter({name:f.rar,name_en:f.ren}))}" alt="" loading="lazy">
+    <span class="rc-txt"><span class="rt">${esc(surahName(f.n,S.lang))}</span><br><span class="rs">${esc(S.lang==='ar'?f.rar:(f.ren||f.rar))} · ${esc(f.rewaya||'')}</span></span>
+    <span class="rplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`).join('')}</div>
+  ${orn}`:''}
+  <div class="view-head"><div><h2>${t('quickSurahs')}</h2></div></div>
+  <div class="quick-grid">${quick.map(n=>{const m=SURAH[n-1];return `<button class="quick-surah" data-surah="${n}"><span class="qn">${num(n)}</span><span><span class="qt">${esc(surahName(n,S.lang))}</span><br><span class="qs">${m[2]} ${t('ayahs')} · ${m[3]?t('medinan'):t('meccan')}</span></span><span class="qplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`}).join('')}</div>
+  ${orn}
+  <div class="view-head"><div><h2>${t('featured')}</h2><div class="sub">${t('recitersSub')}</div></div><button class="btn sm" data-act="browse">${t('browse')}</button></div>
+  <div class="reciter-grid">${feat.slice(0,8).map(reciterCard).join('')}</div>`;
+}
+function reciterCard(r){
+  const ms=S.rewaya==='__all'?r.moshaf:r.moshaf.filter(m=>norm(m.rewaya)===S.rewaya);
+  const rw=[...new Set(ms.map(m=>m.rewaya))].slice(0,2);
+  return `<button class="reciter-card ${S.reciter&&S.reciter.id===r.id?'active':''}" data-rid="${r.id}">
+    <div class="ava"><img src="${avatarURI(r.name,reciterLetter(r))}" alt="${esc(reciterName(r))}" loading="lazy">
+    <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
+    <div class="rn">${esc(reciterName(r))}</div>
+    <div class="rm">${rw.map(x=>`<span class="tag">${esc(x)}</span>`).join('')}<span class="tag gold">${r.moshaf.length} ${t('moshaf')}</span></div></button>`;
+}
+function viewReciters(){
+  const list=filteredReciters();
+  const chips=[{key:'__all',name:t('allRiwayat'),count:S.reciters.length},...S.riwayat];
+  return `<div class="view-head"><div><h2>${t('reciters')}</h2><div class="sub">${list.length} ${t('reciter')} · ${t('recitersSub')}</div></div>
+    <select id="sortSel" class="btn sm" style="border-radius:30px"><option value="name" ${S.sort==='name'?'selected':''}>${t('sortName')}</option><option value="count" ${S.sort==='count'?'selected':''}>${t('sortCount')}</option></select></div>
+  <div class="chips">${chips.map(c=>`<button class="chip ${S.rewaya===c.key?'active':''}" data-rw="${esc(c.key)}">${esc(c.name)}<span class="n">${c.count}</span></button>`).join('')}</div>
+  ${list.length?`<div class="reciter-grid">${list.map(reciterCard).join('')}</div>`:`<div class="empty"><p>${t('noResults')}</p></div>`}`;
+}
+function viewSurahs(){
+  if(!S.reciter||!S.moshaf)return viewReciters();
+  const r=S.reciter,m=S.moshaf;
+  const q=norm2(S.query);
+  const list=S.tracks.filter(tr=>!q||norm2(tr.name_ar+' '+tr.name_en+' '+tr.n).includes(q));
+  const ms=r.moshaf;
+  return `<button class="back-btn" data-act="back"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
+  <section class="reciter-hero"><img src="${avatarURI(r.name,reciterLetter(r))}" alt="">
+    <div class="rh-info"><h2>${esc(reciterName(r))}</h2>
+      <div class="rh-meta"><span class="tag gold">${esc(m.rewaya)}</span><span class="tag">${esc(m.name||m.rewaya)}</span><span class="tag">${S.tracks.length} ${t('surahCount')}</span></div>
+      <div class="rh-actions">
+        <button class="btn primary sm" data-act="playall"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('playAll')}</button>
+        <button class="btn sm" data-act="dlall"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg>${t('downloadAll')}</button>
+        ${ms.length>1?`<select id="moshafSel">${ms.map((x,i)=>`<option value="${i}" ${x.id===m.id?'selected':''}>${esc(x.name||x.rewaya)} — ${esc(x.rewaya)}</option>`).join('')}</select>`:''}
+      </div></div></section>
+  <div class="surah-list">${list.length?list.map(tr=>surahRow(tr,S.tracks.indexOf(tr))).join(''):`<div class="empty"><p>${t('noResults')}</p></div>`}</div>`;
+}
+function surahRow(tr,i){
+  const playing=S.current&&S.current.key===tr.key;
+  const faved=S.favorites.some(f=>f.key===tr.key);
+  const num=S.lang==='ar'?arDigits(tr.n):tr.n;
+  const prim=S.lang==='ar'?tr.name_ar:tr.name_en, sec=S.lang==='ar'?tr.name_en:tr.name_ar;
+  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-key="${tr.key}">
+    <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span>
+    <span class="si"><span class="sa">${esc(prim)}</span><br><span class="se">${esc(sec)} · ${tr.ayahs} ${t('ayahs')}</span></span>
+    <span class="sm"><span class="tag">${tr.type?t('medinan'):t('meccan')}</span></span>
+    <span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
+    <span class="acts">
+      <button class="mini-btn ${faved?'faved':''}" data-fav="${tr.key}" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
+      <button class="mini-btn" data-dl="${tr.key}" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+    </span></div>`;
+}
+function viewCollection(items,title,sub,isFav){
+  const q=norm2(S.query);
+  const list=items.filter(f=>!q||norm2(f.rar+' '+f.ren+' '+surahName(f.n,'ar')+' '+surahName(f.n,'en')).includes(q));
+  return `<div class="view-head"><div><h2>${t(title)}</h2><div class="sub">${t(sub)}</div></div>
+    ${!isFav&&items.length?`<button class="btn sm" data-act="clearrecent">${t('clearRecent')}</button>`:''}</div>
+  ${list.length?`<div class="surah-list">${list.map((f,i)=>{const tr=rebuildTrack(f);return collectionRow(f,tr,i,isFav)}).join('')}</div>`:`<div class="empty"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg><p>${isFav?t('noFav'):t('noRecent')}</p></div>`}`;
+}
+function collectionRow(f,tr,i,isFav){
+  const playing=S.current&&S.current.key===tr.key;
+  const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
+  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-key="${tr.key}">
+    <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
+    <span class="si"><span class="sa">${esc(prim)}</span><br><span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
+    <span class="sm"><span class="tag gold">${esc(f.rewaya)}</span></span>
+    <span class="acts">
+      ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
+      <button class="mini-btn" data-dl="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+    </span></div>`;
+}
+
+/* ═══════════════ NAVIGATION ACTIONS ═══════════════ */
+function openReciter(id,autoplay=false){
+  const r=S.reciters.find(x=>x.id===id);if(!r)return;
+  S.reciter=r;
+  const ms=S.rewaya==='__all'?r.moshaf:r.moshaf.filter(m=>norm(m.rewaya)===S.rewaya);
+  S.moshaf=ms[0]||r.moshaf[0];
+  S.tracks=parseList(S.moshaf.surah_list,S.moshaf.surah_total).map(n=>makeTrack(r,S.moshaf,n));
+  S.view='surahs';S.query='';$('#searchInput').value='';
+  $$('.nav-item[data-view]').forEach(b=>b.classList.remove('active'));
+  render();
+  if(autoplay&&S.tracks.length)loadTrack(0,true);
+}
+function setMoshaf(i){
+  const r=S.reciter;S.moshaf=r.moshaf[i];
+  const curN=S.current?S.current.n:null;
+  S.tracks=parseList(S.moshaf.surah_list,S.moshaf.surah_total).map(n=>makeTrack(r,S.moshaf,n));
+  render();renderQueue();
+  if(curN){const idx=S.tracks.findIndex(x=>x.n===curN);if(idx>=0)loadTrack(idx,!audio.paused)}
+}
+function playQuick(n){
+  if(!S.reciter){const r=S.reciters.find(x=>norm2(x.name).includes('عفاسي'))||S.reciters[0];openReciter(r.id,false)}
+  const idx=S.tracks.findIndex(x=>x.n===n);
+  if(idx>=0)loadTrack(idx,true);else{loadTrack(0,true)}
+}
+function playCollection(i,isFav){
+  const items=isFav?S.favorites:S.recent;const f=items[i];if(!f)return;
+  const tr=rebuildTrack(f);
+  S.tracks=items.map(rebuildTrack);S.reciter=null;S.moshaf=null;
+  loadTrack(i,true);
+}
+
+/* ═══════════════ PLAYER ═══════════════ */
+function loadTrack(i,autoplay=true,seek=0){
+  if(i<0||i>=S.tracks.length)return;
+  S.idx=i;const tr=S.tracks[i];S.current=tr;S.srcIdx=0;
+  const order=pickSource(tr);S.srcOrder=order;
+  audio.src=order[0].url;audio.playbackRate=S.speed;
+  if(seek)audio.addEventListener('loadedmetadata',()=>{audio.currentTime=seek},{once:true});
+  if(autoplay)audio.play().catch(()=>{});
+  updateNowPlaying();renderQueue();markPlayingRows();pushRecent(tr);saveSession();
+}
+function currentSources(){return S.srcOrder||[]}
+function tryNextSource(){
+  S.srcIdx++;
+  if(S.srcIdx<currentSources().length){audio.src=currentSources()[S.srcIdx].url;audio.play().catch(()=>{});updateBadges();return true}
+  toast(t('errorAudio'));return false;
+}
+function togglePlay(){
+  if(!S.current){if(S.tracks.length)loadTrack(0,true);else{setView('reciters');toast(t('selectReciterFirst'))}return}
+  audio.paused?audio.play().catch(()=>{}):audio.pause();
+}
+function nextTrack(){
+  if(!S.tracks.length)return;
+  if(S.shuffle){let j;do{j=Math.floor(Math.random()*S.tracks.length)}while(j===S.idx&&S.tracks.length>1);loadTrack(j,true);return}
+  const n=S.idx+1;
+  if(n>=S.tracks.length){if(S.repeat===1)loadTrack(0,true);else{audio.pause();audio.currentTime=0}}
+  else loadTrack(n,true);
+}
+function prevTrack(){
+  if(!S.tracks.length)return;
+  if(audio.currentTime>3){audio.currentTime=0;return}
+  loadTrack(S.idx-1<0?S.tracks.length-1:S.idx-1,true);
+}
+function updateNowPlaying(){
+  const tr=S.current;if(!tr)return;
+  const seed=tr.rar,num=S.lang==='ar'?arDigits(tr.n):String(tr.n),sub=trackName(tr);
+  const md=mandalaSVG(seed,num,sub);
+  $('#npMandala').innerHTML=md;$('#ovMandala').innerHTML=md;
+  const ava=avatarURI(tr.rar,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
+  $('#pbArtImg').src=ava;
+  $('#npTitle').textContent=trackName(tr);$('#ovTitle').textContent=trackName(tr);
+  $('#npArtist').textContent=trackReciter(tr);$('#ovArtist').textContent=trackReciter(tr);
+  $('#pbTitle').textContent=`${trackName(tr)} · ${trackReciter(tr)}`;
+  $('#pbSub').textContent=`${tr.rewaya} · ${tr.mname}`;
+  updateBadges();updateFavButtons();
+  if('mediaSession'in navigator){
+    navigator.mediaSession.metadata=new MediaMetadata({title:trackName(tr),artist:trackReciter(tr),album:tr.rewaya,artwork:[{src:ava,sizes:'512x512',type:'image/svg+xml'}]});
+  }
+}
+function updateBadges(){
+  const tr=S.current;if(!tr)return;
+  const src=currentSources()[S.srcIdx]||tr.sources[0];
+  const html=`<span class="tag gold">${esc(tr.rewaya)}</span><span class="tag" id="qBadge">${src.bitrate} ${t('kbps')}</span><span class="tag">${esc(src.provider)}</span>`;
+  $('#npBadges').innerHTML=html;$('#ovBadges').innerHTML=html;
+}
+async function probeBitrate(){
+  const tr=S.current;if(!tr)return;
+  try{
+    const h=await fetch(audio.src,{method:'HEAD'});const len=+h.headers.get('content-length');
+    if(len&&audio.duration){const k=Math.round(len*8/audio.duration/1000);
+      $$('#qBadge').forEach(el=>el.textContent=`${k} ${t('kbps')}`);
+      const src=currentSources()[S.srcIdx];if(src)src.bitrate=k;}
+  }catch(e){}
+}
+function markPlayingRows(){
+  $$('.surah-row').forEach(row=>{
+    const on=S.current&&row.dataset.key===S.current.key;
+    row.classList.toggle('playing',on);
+    const sn=row.querySelector('.sn');
+    if(on&&!sn.querySelector('.eq'))sn.innerHTML='<span class="eq"><i></i><i></i><i></i></span>';
+    else if(!on&&sn.querySelector('.eq')){const idx=+row.dataset.idx;const n=S.tracks[idx]?S.tracks[idx].n:(row.dataset.coll!=null?null:null);sn.innerHTML=`<b>${S.lang==='ar'?arDigits(n||''):n||''}</b>`}
+  });
+  $$('.quick-surah[data-surah]').forEach(q=>q.classList.toggle('playing',!!(S.view==='home'&&S.current&&+q.dataset.surah===S.current.n)));
+}
+function renderQueue(){
+  const q=$('#npQueue');if(!S.tracks.length){q.innerHTML='';return}
+  const start=Math.max(0,S.idx);const items=S.tracks.slice(start,start+8);
+  q.innerHTML=items.map((tr,k)=>{const i=start+k;return `<div class="queue-item ${i===S.idx?'active':''}" draggable="true" data-qi="${i}">
+    <span class="grip"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01"/></svg></span>
+    <span class="qi-n">${i===S.idx?'▸':(S.lang==='ar'?arDigits(tr.n):tr.n)}</span>
+    <span class="qi-t">${esc(trackName(tr))}</span><span class="qi-d">${tr.duration?fmt(tr.duration):''}</span></div>`}).join('');
+}
+function updateProgress(){
+  const d=audio.duration||0,p=d?audio.currentTime/d:0;
+  $('#tCur').textContent=fmt(audio.currentTime);$('#tDur').textContent=fmt(d);
+  $('#ovCur').textContent=fmt(audio.currentTime);$('#ovDur').textContent=fmt(d);
+  $('#progFill').style.width=(p*100)+'%';$('#progThumb').style.insetInlineStart=(p*100)+'%';
+  $('#ovFill').style.width=(p*100)+'%';$('#ovThumb').style.insetInlineStart=(p*100)+'%';
+  const C=2*Math.PI*186;
+  $$('.pr-fill').forEach(c=>c.style.strokeDashoffset=C*(1-p));
+  if(S.current&&d){S.current.duration=d;const row=$(`.surah-row[data-key="${S.current.key}"] .dur`);if(row)row.textContent=fmt(d)}
+}
+function updateBuffer(){
+  try{if(audio.buffered.length&&audio.duration){const b=audio.buffered.end(audio.buffered.length-1)/audio.duration*100;$('#progBuf').style.width=b+'%';$('#ovBuf').style.width=b+'%'}}catch(e){}
+}
+function setPlayingUI(on){
+  document.body.classList.toggle('playing',on);
+  const ic=on?'<svg class="ic" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></svg>':'<svg class="ic play-ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
+  $('#btnPlay').innerHTML=ic;$$('.np-overlay [data-act="play"]').forEach(b=>b.innerHTML=ic);
+  if('mediaSession'in navigator)navigator.mediaSession.playbackState=on?'playing':'paused';
+}
+function saveSession(){
+  if(!S.current)return;
+  store.set('session',{rid:S.current.rid,mid:S.current.mid,n:S.current.n,pos:audio.currentTime||0,server:S.current.server,rewaya:S.current.rewaya,mname:S.current.mname,rar:S.current.rar,ren:S.current.ren});
+}
+function pushRecent(tr){
+  const f={key:tr.key,n:tr.n,rid:tr.rid,mid:tr.mid,server:tr.server,rewaya:tr.rewaya,mname:tr.mname,rar:tr.rar,ren:tr.ren,ts:Date.now()};
+  S.recent=[f,...S.recent.filter(x=>x.key!==tr.key)].slice(0,30);store.set('recent',S.recent);updateCounts();
+}
+
+/* ═══════════════ FAVORITES ═══════════════ */
+const favKey=tr=>tr.key;
+function isFaved(tr){return S.favorites.some(f=>f.key===favKey(tr))}
+function toggleFav(tr){
+  if(!tr)return;
+  const k=favKey(tr);const i=S.favorites.findIndex(f=>f.key===k);
+  if(i>=0){const[rm]=S.favorites.splice(i,1);store.set('favorites',S.favorites);
+    toast(t('removedFav'),{label:t('undo'),fn:()=>{S.favorites.splice(i,0,rm);store.set('favorites',S.favorites);refreshFavUI()}})}
+  else{S.favorites.unshift({key:k,n:tr.n,rid:tr.rid,mid:tr.mid,server:tr.server,rewaya:tr.rewaya,mname:tr.mname,rar:tr.rar,ren:tr.ren});store.set('favorites',S.favorites);toast(t('addedFav'))}
+  refreshFavUI();
+}
+function refreshFavUI(){updateFavButtons();updateCounts();if(S.view==='favorites'||S.view==='recent')render();else markPlayingRows();
+  $$('.surah-row [data-fav]').forEach(b=>{const on=S.favorites.some(f=>f.key===b.dataset.fav);b.classList.toggle('faved',on)})}
+function updateFavButtons(){
+  const on=S.current&&isFaved(S.current);
+  ['npFav','pbFav'].forEach(id=>{const el=$('#'+id);el.classList.toggle('faved',on);el.classList.toggle('on',on)});
+  $('#pbFav').style.color=on?'var(--danger)':'';
+  $('#npFav').classList.toggle('faved',on);
+}
+function updateCounts(){$('#cntFav').textContent=S.favorites.length;$('#cntDl').textContent=DL.jobs.filter(j=>j.state==='done').length}
+
+/* ═══════════════ DOWNLOADS ═══════════════ */
+const DL={jobs:[],active:0,conc:2};
+if(window.showDirectoryPicker)$('#folderBtn').hidden=false;
+$('#folderBtn').onclick=async()=>{try{S.dirHandle=await window.showDirectoryPicker({mode:'readwrite'});toast(t('folderOk')+' '+S.dirHandle.name)}catch(e){}};
+function enqueueDownloads(tracks){
+  if(!tracks.length)return;
+  $('#dlDrawer').classList.add('open');
+  tracks.forEach(tr=>{
+    const job={tr,state:'pending',pct:0,ctrl:null};
+    const el=document.createElement('div');el.className='dl-job';
+    el.innerHTML=`<div class="dj-t"><span>${pad(tr.n)} · ${esc(trackName(tr))}</span><span class="dj-s">${t('pending')}</span></div><div class="dj-bar"><i></i></div>`;
+    const empty=$('#dlList .empty');if(empty)empty.remove();
+    $('#dlList').prepend(el);
+    job.el=el;job.bar=el.querySelector('i');job.st=el.querySelector('.dj-s');
+    DL.jobs.push(job);
+  });
+  pumpDL();
+}
+function pumpDL(){while(DL.active<DL.conc){const j=DL.jobs.find(x=>x.state==='pending');if(!j)break;j.state='downloading';DL.active++;runDL(j).finally(()=>{DL.active--;pumpDL();updateCounts()})}}
+async function runDL(job){
+  const tr=job.tr;const src=pickSource(tr)[0];
+  const fname=`${pad(tr.n)} - ${safeName(trackName(tr))}.mp3`;
+  job.st.textContent=t('downloading');
+  try{
+    job.ctrl=new AbortController();
+    const res=await fetch(src.url,{signal:job.ctrl.signal});if(!res.ok)throw new Error(res.status);
+    const total=+res.headers.get('content-length')||0;let blob;
+    if(res.body&&total){const rd=res.body.getReader();const chunks=[];let got=0;
+      for(;;){const{done,value}=await rd.read();if(done)break;chunks.push(value);got+=value.length;
+        job.pct=got/total*100;job.bar.style.width=job.pct+'%';job.st.textContent=`${Math.round(got/1048576)}/${Math.round(total/1048576)} MB`}
+      blob=new Blob(chunks,{type:'audio/mpeg'});
+    }else{blob=await res.blob();job.bar.style.width='100%'}
+    await saveBlob(blob,tr,fname);
+    job.state='done';job.el.classList.add('done');job.bar.style.width='100%';job.st.textContent='✓ '+t('saved');
+  }catch(e){
+    if(e.name==='AbortError'){job.state='cancelled';job.st.textContent=t('cancelled')}
+    else{job.state='err';job.el.classList.add('err');job.st.textContent='↗ '+t('failed');
+      const a=document.createElement('a');a.href=src.url;a.target='_blank';a.rel='noopener';a.download=fname;a.click()}
+  }
+}
+async function saveBlob(blob,tr,fname){
+  if(S.dirHandle){
+    let dir=S.dirHandle;
+    for(const p of[safeName(trackReciter(tr)),safeName(tr.rewaya)])dir=await dir.getDirectoryHandle(p,{create:true});
+    const fh=await dir.getFileHandle(fname,{create:true});const w=await fh.createWritable();await w.write(blob);await w.close();
+  }else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${safeName(trackReciter(tr))} - ${fname}`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000)}
+}
+function findTrackByKey(k){
+  let tr=S.tracks.find(x=>x.key===k);if(tr)return tr;
+  const f=[...S.favorites,...S.recent].find(x=>x.key===k);return f?rebuildTrack(f):null;
+}
+
+/* ═══════════════ SLEEP TIMER ═══════════════ */
+const SLEEP_OPTS=[0,5,10,15,30,45,60];
+function renderSleepPop(){
+  $('#sleepPop').innerHTML=SLEEP_OPTS.map(m=>`<button data-min="${m}" class="${S.sleepMin===m?'on':''}"><span>${m===0?t('sleepOff'):m+' '+t('min')}</span>${S.sleepMin===m?'✓':''}</button>`).join('');
+}
+function setSleep(min){
+  S.sleepMin=min;clearTimeout(S.sleepTimer);clearInterval(S.sleepTick);
+  $('#sleepBadge').hidden=!min;$('#btnSleep').classList.toggle('on',!!min);renderSleepPop();$('#sleepPop').classList.remove('open');
+  if(!min)return;
+  const end=Date.now()+min*60000;toast(`${t('timerSet')} ${min} ${t('min')}`);
+  S.sleepTick=setInterval(()=>{const left=Math.max(0,Math.round((end-Date.now())/60000));$('#sleepBadge').textContent=left||'<1'},10000);
+  $('#sleepBadge').textContent=min;
+  S.sleepTimer=setTimeout(()=>{
+    const v0=audio.volume;let step=0;
+    const fade=setInterval(()=>{step++;audio.volume=Math.max(0,v0*(1-step/10));if(step>=10){clearInterval(fade);audio.pause();audio.volume=v0;clearInterval(S.sleepTick);S.sleepMin=0;$('#sleepBadge').hidden=true;$('#btnSleep').classList.remove('on');renderSleepPop();toast(t('timerEnd'))}},800);
+  },min*60000);
+}
+
+/* ═══════════════ SEEK / VOLUME BARS ═══════════════ */
+function bindBar(el,onPct){
+  const pct=e=>{const r=el.getBoundingClientRect();const rtl=getComputedStyle(el).direction==='rtl';const x=rtl?r.right-e.clientX:e.clientX-r.left;return Math.max(0,Math.min(1,x/r.width))};
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);el.classList.add('scrub');onPct(pct(e),true);
+    const mv=ev=>onPct(pct(ev),true);const up=ev=>{onPct(pct(ev),false);el.classList.remove('scrub');el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up)};
+    el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)});
+}
+bindBar($('#progBar'),(p,drag)=>{if(audio.duration){if(!drag)audio.currentTime=p*audio.duration;$('#progFill').style.width=p*100+'%';$('#progThumb').style.insetInlineStart=p*100+'%';$('#tCur').textContent=fmt(p*audio.duration)}});
+bindBar($('#ovProg'),(p,drag)=>{if(audio.duration){if(!drag)audio.currentTime=p*audio.duration;$('#ovFill').style.width=p*100+'%';$('#ovThumb').style.insetInlineStart=p*100+'%';$('#ovCur').textContent=fmt(p*audio.duration)}});
+bindBar($('#volBar'),p=>{audio.volume=p;store.set('volume',p);updateVolUI()});
+function updateVolUI(){
+  const v=audio.muted?0:audio.volume;
+  $('#volFill').style.width=v*100+'%';$('#volThumb').style.insetInlineStart=v*100+'%';
+  $('#volIcon').innerHTML=v===0?'<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="m16 9 5 6M21 9l-5 6"/>':v<.5?'<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/>':'<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/>';
+}
+
+/* ═══════════════ TOAST / CONFIRM ═══════════════ */
+function toast(msg,action){
+  const el=document.createElement('div');el.className='toast';el.innerHTML=`<span>${esc(msg)}</span>`;
+  if(action){const b=document.createElement('button');b.textContent=action.label;b.onclick=()=>{action.fn();kill()};el.append(b)}
+  $('#toasts').append(el);
+  const kill=()=>{el.classList.add('out');setTimeout(()=>el.remove(),300)};
+  setTimeout(kill,action?6000:3200);
+}
+let confirmRes=null;
+function confirmDlg(title,msg){$('#confirmTitle').textContent=title;$('#confirmMsg').textContent=msg;$('#confirmScrim').classList.add('open');return new Promise(r=>confirmRes=r)}
+$('#confirmYes').onclick=()=>{$('#confirmScrim').classList.remove('open');confirmRes&&confirmRes(true)};
+$('#confirmNo').onclick=()=>{$('#confirmScrim').classList.remove('open');confirmRes&&confirmRes(false)};
+
+/* ═══════════════ THEME / LANG ═══════════════ */
+function applyTheme(){
+  document.body.dataset.theme=S.theme;
+  document.querySelector('meta[name=theme-color]').content=S.theme==='dark'?'#000000':'#F3EFE4';
+  $('#themeIcon').innerHTML=S.theme==='dark'?'<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/>':'<path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/>';
+  $$('#segTheme button').forEach(b=>b.classList.toggle('on',b.dataset.th===S.theme));
+}
+function applyLang(){
+  document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==='ar'?'rtl':'ltr';
+  $('#langBtn').textContent=S.lang==='ar'?'EN':'ع';
+  $$('#segLang button').forEach(b=>b.classList.toggle('on',b.dataset.lg===S.lang));
+  applyI18nStatic();buildQualitySelect();renderSleepPop();
+}
+function applyI18nStatic(){$$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I18N[S.lang][k])el.textContent=I18N[S.lang][k]})}
+function buildQualitySelect(){
+  const sel=$('#selQuality');const cur=S.quality;
+  sel.innerHTML=[['auto',t('qAuto')],['high',t('qHigh')],['std',t('qStd')],['save',t('qSave')]].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  sel.value=cur;
+}
+function setTheme(th){S.theme=th;store.set('theme',th);applyTheme()}
+function setLang(lg){S.lang=lg;store.set('lang',lg);applyLang();render();if(S.current)updateNowPlaying();renderQueue();rotateVerse(true)}
+
+/* ═══════════════ VERSE ROTATOR ═══════════════ */
+function rotateVerse(instant=false){
+  const card=$('#verseCard');
+  const show=()=>{const v=VERSES[S.verseIdx%VERSES.length];
+    $('#verseText').textContent=S.lang==='ar'?v[0]:v[2];
+    $('#verseRef').textContent=S.lang==='ar'?v[1]:v[3];card.classList.remove('fade')};
+  if(instant){show();return}
+  card.classList.add('fade');setTimeout(()=>{S.verseIdx++;show()},500);
+}
+setInterval(()=>rotateVerse(),22000);
+
+/* ═══════════════ OVERLAYS ═══════════════ */
+function openOverlay(){$('#npOverlay').classList.add('open')}
+function closeOverlay(){$('#npOverlay').classList.remove('open')}
+function closeSidebar(){$('#sidebar').classList.remove('open');$('#scrimSide').classList.remove('open')}
+$('#menuBtn').onclick=()=>{$('#sidebar').classList.add('open');$('#scrimSide').classList.add('open')};
+$('#scrimSide').onclick=closeSidebar;
+$('#pbArt').onclick=openOverlay;$('#btnExpand').onclick=openOverlay;$('#npExpand').onclick=openOverlay;$('#ovClose').onclick=closeOverlay;
+$('#settingsBtn').onclick=()=>$('#settingsScrim').classList.add('open');
+$('#settingsClose').onclick=()=>$('#settingsScrim').classList.remove('open');
+$('#settingsScrim').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
+$('#confirmScrim').addEventListener('click',e=>{if(e.target===e.currentTarget){e.currentTarget.classList.remove('open');confirmRes&&confirmRes(false)}});
+$('#navDownloads').onclick=()=>{$('#dlDrawer').classList.add('open');closeSidebar()};
+$('#dlClose').onclick=()=>$('#dlDrawer').classList.remove('open');
+$('#btnSleep').onclick=e=>{e.stopPropagation();renderSleepPop();$('#sleepPop').classList.toggle('open')};
+document.addEventListener('click',e=>{if(!e.target.closest('.sleep-wrap'))$('#sleepPop').classList.remove('open')});
+$('#sleepPop').addEventListener('click',e=>{const b=e.target.closest('[data-min]');if(b)setSleep(+b.dataset.min)});
+
+/* ═══════════════ EVENT WIRING ═══════════════ */
+$$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+$('#themeBtn').onclick=()=>setTheme(S.theme==='light'?'dark':'light');
+$('#langBtn').onclick=()=>setLang(S.lang==='ar'?'en':'ar');
+$$('#segTheme button').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));
+$$('#segLang button').forEach(b=>b.onclick=()=>setLang(b.dataset.lg));
+$('#searchInput').addEventListener('input',e=>{S.query=e.target.value;if(S.view==='home'&&S.query)setView('reciters'),S.query=e.target.value,$('#searchInput').value=e.target.value;render()});
+$('#selQuality').onchange=e=>{S.quality=e.target.value;store.set('quality',S.quality);
+  if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current);audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}};
+$('#selSpeed').onchange=e=>{S.speed=+e.target.value;store.set('speed',S.speed);audio.playbackRate=S.speed};
+$('#btnPlay').onclick=togglePlay;$('#btnNext').onclick=nextTrack;$('#btnPrev').onclick=prevTrack;
+$('#btnShuffle').onclick=()=>{S.shuffle=!S.shuffle;store.set('shuffle',S.shuffle);$('#btnShuffle').classList.toggle('on',S.shuffle);$$('.np-overlay [data-act="shuffle"]').forEach(b=>b.classList.toggle('on',S.shuffle))};
+$('#btnRepeat').onclick=()=>{S.repeat=(S.repeat+1)%3;store.set('repeat',S.repeat);updateRepeatUI()};
+function updateRepeatUI(){$('#btnRepeat').classList.toggle('on',S.repeat>0);$('#repBadge').hidden=S.repeat!==2;$$('.np-overlay [data-act="repeat"]').forEach(b=>b.classList.toggle('on',S.repeat>0))}
+$('#btnMute').onclick=()=>{audio.muted=!audio.muted;updateVolUI()};
+$('#btnDl').onclick=()=>{if(S.current)enqueueDownloads([S.current])};
+$('#npDl').onclick=()=>{if(S.current)enqueueDownloads([S.current])};
+$('#npFav').onclick=()=>toggleFav(S.current);$('#pbFav').onclick=()=>toggleFav(S.current);
+$('.np-overlay').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const a=b.dataset.act;
+  if(a==='play')togglePlay();else if(a==='next')nextTrack();else if(a==='prev')prevTrack();
+  else if(a==='shuffle')$('#btnShuffle').click();else if(a==='repeat')$('#btnRepeat').click();
+  else if(a==='fav')toggleFav(S.current);else if(a==='download'&&S.current)enqueueDownloads([S.current]);
+});
+$('#view').addEventListener('click',async e=>{
+  const favB=e.target.closest('[data-fav]');if(favB){const tr=findTrackByKey(favB.dataset.fav);if(tr)toggleFav(tr);return}
+  const unfavB=e.target.closest('[data-unfav]');if(unfavB){const tr=findTrackByKey(unfavB.dataset.unfav);if(tr)toggleFav(tr);return}
+  const dlB=e.target.closest('[data-dl]');if(dlB){const tr=findTrackByKey(dlB.dataset.dl);if(tr)enqueueDownloads([tr]);return}
+  const act=e.target.closest('[data-act]');
+  if(act){const a=act.dataset.act;
+    if(a==='browse')setView('reciters');
+    else if(a==='back')setView('reciters');
+    else if(a==='openrecent')setView('recent');
+    else if(a==='resume'&&S.recent[0]){const f=S.recent[0];const r=S.reciters.find(x=>x.id===f.rid);
+      if(r){openReciter(r.id,false);const mi=r.moshaf.findIndex(m=>m.id===f.mid);if(mi>=0&&mi!==0)setMoshaf(mi);
+        const idx=S.tracks.findIndex(x=>x.n===f.n);const sess=store.get('session',null);loadTrack(idx>=0?idx:0,true,sess&&sess.n===f.n?sess.pos:0)}
+      else{S.tracks=[rebuildTrack(f)];loadTrack(0,true)}}
+    else if(a==='playall'&&S.tracks.length)loadTrack(0,true);
+    else if(a==='dlall'){if(await confirmDlg(t('confirmDlAll'),t('confirmDlAllMsg')))enqueueDownloads(S.tracks)}
+    else if(a==='clearrecent'){const bak=[...S.recent];S.recent=[];store.set('recent',[]);render();toast(t('cleared'),{label:t('undo'),fn:()=>{S.recent=bak;store.set('recent',bak);render()}})}
+    return}
+  const chip=e.target.closest('[data-rw]');if(chip){S.rewaya=chip.dataset.rw;render();return}
+  const qs=e.target.closest('[data-surah]');if(qs){playQuick(+qs.dataset.surah);return}
+  const rc=e.target.closest('[data-rid]');if(rc){openReciter(+rc.dataset.rid,e.target.closest('.play-ov')!=null);return}
+  const coll=e.target.closest('[data-coll]');if(coll){playCollection(+coll.dataset.coll,S.view==='favorites');return}
+  const row=e.target.closest('.surah-row[data-idx]');if(row){loadTrack(+row.dataset.idx,true);return}
+});
+$('#view').addEventListener('change',e=>{
+  if(e.target.id==='sortSel'){S.sort=e.target.value;render()}
+  if(e.target.id==='moshafSel'){setMoshaf(+e.target.value)}
+});
+/* queue: click + drag reorder */
+let dragIdx=null;
+$('#npQueue').addEventListener('click',e=>{const it=e.target.closest('[data-qi]');if(it)loadTrack(+it.dataset.qi,true)});
+$('#npQueue').addEventListener('dragstart',e=>{const it=e.target.closest('[data-qi]');if(it){dragIdx=+it.dataset.qi;e.dataTransfer.effectAllowed='move'}});
+$('#npQueue').addEventListener('dragover',e=>{e.preventDefault();const it=e.target.closest('[data-qi]');$$('.queue-item').forEach(x=>x.classList.remove('dragover'));if(it)it.classList.add('dragover')});
+$('#npQueue').addEventListener('drop',e=>{e.preventDefault();const it=e.target.closest('[data-qi]');if(it&&dragIdx!=null){
+  const to=+it.dataset.qi;const curKey=S.current?S.current.key:null;
+  const[m]=S.tracks.splice(dragIdx,1);S.tracks.splice(to,0,m);
+  if(curKey)S.idx=S.tracks.findIndex(x=>x.key===curKey);renderQueue()}dragIdx=null});
+$('#npQueue').addEventListener('dragend',()=>{dragIdx=null;$$('.queue-item').forEach(x=>x.classList.remove('dragover'))});
+
+/* audio events */
+audio.addEventListener('play',()=>setPlayingUI(true));
+audio.addEventListener('pause',()=>{setPlayingUI(false);saveSession()});
+audio.addEventListener('timeupdate',()=>{updateProgress();if(Math.floor(audio.currentTime)%5===0)saveSession()});
+audio.addEventListener('progress',updateBuffer);
+audio.addEventListener('loadedmetadata',()=>{updateProgress();probeBitrate()});
+audio.addEventListener('ended',()=>{if(S.repeat===2){audio.currentTime=0;audio.play().catch(()=>{})}else nextTrack()});
+audio.addEventListener('error',()=>{if(S.current&&audio.src)tryNextSource()});
+if('mediaSession'in navigator){
+  navigator.mediaSession.setActionHandler('play',()=>audio.play());
+  navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
+  navigator.mediaSession.setActionHandler('previoustrack',prevTrack);
+  navigator.mediaSession.setActionHandler('nexttrack',nextTrack);
+  navigator.mediaSession.setActionHandler('seekto',e=>{if(e.seekTime!=null)audio.currentTime=e.seekTime});
+}
+/* keyboard */
+document.addEventListener('keydown',e=>{
+  if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.code==='Space'){e.preventDefault();togglePlay()}
+  else if(e.key==='ArrowRight')audio.currentTime=Math.min((audio.duration||0),audio.currentTime+5);
+  else if(e.key==='ArrowLeft')audio.currentTime=Math.max(0,audio.currentTime-5);
+  else if(e.key==='ArrowUp'){e.preventDefault();audio.volume=Math.min(1,audio.volume+.05);store.set('volume',audio.volume);updateVolUI()}
+  else if(e.key==='ArrowDown'){e.preventDefault();audio.volume=Math.max(0,audio.volume-.05);store.set('volume',audio.volume);updateVolUI()}
+  else if(e.key==='m'||e.key==='M')$('#btnMute').click();
+  else if(e.key==='f'||e.key==='F')toggleFav(S.current);
+  else if(e.key==='n'||e.key==='N')nextTrack();
+  else if(e.key==='p'||e.key==='P')prevTrack();
+  else if(e.key==='/'){e.preventDefault();$('#searchInput').focus()}
+  else if(e.key==='Escape'){closeOverlay();$('#settingsScrim').classList.remove('open');$('#dlDrawer').classList.remove('open');closeSidebar()}
+});
+window.addEventListener('beforeunload',saveSession);
+
+/* ═══════════════ INIT ═══════════════ */
+(async function init(){
+  applyTheme();applyLang();buildQualitySelect();renderSleepPop();updateRepeatUI();updateVolUI();
+  $('#btnShuffle').classList.toggle('on',S.shuffle);
+  $('#selSpeed').value=String(S.speed);
+  $('#view').innerHTML=`<div class="loading"><div class="spinner"></div><span>${t('loading')}</span></div>`;
+  $('#npMandala').innerHTML=mandalaSVG('أُنس','أ','القرآن الكريم');
+  $('#ovMandala').innerHTML=mandalaSVG('أُنس','أ','القرآن الكريم');
+  $('#pbArtImg').src=avatarURI('أُنس','أ');
+  rotateVerse(true);
+  await loadData();
+  render();
+  /* resume last session (paused) */
+  const sess=store.get('session',null);
+  if(sess){
+    const r=S.reciters.find(x=>x.id===sess.rid);
+    if(r){S.reciter=r;S.moshaf=r.moshaf.find(m=>m.id===sess.mid)||r.moshaf[0];
+      S.tracks=parseList(S.moshaf.surah_list,S.moshaf.surah_total).map(n=>makeTrack(r,S.moshaf,n));
+      const idx=S.tracks.findIndex(x=>x.n===sess.n);
+      if(idx>=0){S.idx=idx;S.current=S.tracks[idx];S.srcOrder=pickSource(S.current);S.srcIdx=0;
+        audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=sess.pos||0;updateProgress()},{once:true});
+        updateNowPlaying();renderQueue()}
+    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr);audio.src=S.srcOrder[0].url;updateNowPlaying()}
+  }
+})();
+</script>
+</body>
+</html>
