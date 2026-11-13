@@ -2,6 +2,11 @@
 
 Drop reciter photos here as JPG. The app picks them up automatically.
 
+`player-frame.svg` is the player artwork design source (mandala frame with the
+red reciter-photo placeholder in the center and the gold progress ring). The
+app embeds the same artwork inline and turns the placeholder into the reciter
+photo (or the surah number) and animates the ring with playback progress.
+
 ## Naming
 
 Two ways, checked in this order:
