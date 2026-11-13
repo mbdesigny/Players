@@ -44,7 +44,7 @@ const S={
   favorites:store.get('favorites',[]), recent:store.get('recent',[]),
   current:null, srcIdx:0, dirHandle:null, sleepMin:0, sleepTimer:null, sleepTick:null,
   verseIdx:0, offline:false, npMode:store.get('npMode','auto'), npPos:store.get('npPos',null), sideMode:store.get('sideMode','open'),
-  readN:null, mushafPage:store.get('mushafPage',0)
+  readN:null, mushafPage:store.get('mushafPage',0), mushafLast:store.get('mushafLast',0)
 };
 const audio=$('#audio');
 audio.volume=store.get('volume',1);
@@ -418,12 +418,14 @@ const mushafPNGURL=n=>`https://raw.githubusercontent.com/SakinaDevGroup/mushaf-m
 const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
 const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
 function mushafGo(n){
-  n=Math.min(Math.max(1,Math.round(n)||1),MUSHAF_PAGES);
-  S.mushafPage=n;store.set('mushafPage',n);S.readN=n;
-  if(S.view!=='mushaf')setView('mushaf');else render();
+  n=Math.round(n)||0;if(n<0)n=0;if(n>MUSHAF_PAGES)n=MUSHAF_PAGES;
+  S.mushafPage=n;store.set('mushafPage',n);
+  if(n>=1){S.mushafLast=n;store.set('mushafLast',n)}
+  if(S.view!=='mushaf')setView('mushaf');
+  S.readN=n;render();
 }
-function viewMushaf(){
-  const last=S.mushafPage>=1&&S.mushafPage<=MUSHAF_PAGES?S.mushafPage:0;
+function mushafCoverHTML(){
+  const last=S.mushafLast||S.mushafPage;
   const lbl=last>1?`${t('continueReading')} — ${t('page')} ${S.lang==='ar'?arDigits(last):last}`:t('startReading');
   return `<div class="mushaf-wrap">
     <div class="mushaf-stage cover">
@@ -434,13 +436,14 @@ function viewMushaf(){
     </div>
   </div>`;
 }
+function viewMushaf(){return mushafCoverHTML()}
 const mushafBook=()=>typeof window.matchMedia==='function'&&window.matchMedia('(min-width:900px)').matches;
-const mushafRight=n=>n<=1?1:(n%2===0?n:n-1);
+const mushafRight=n=>n<=0?0:(n%2===1?n:(n>=MUSHAF_PAGES?MUSHAF_PAGES-1:n-1));
 function mushafStep(n,d){
-  if(!mushafBook())return n+d;
+  if(!mushafBook())return Math.min(Math.max(0,n+d),MUSHAF_PAGES);
   const R=mushafRight(n);
-  if(d>0)return R===1?2:Math.min(R+2,MUSHAF_PAGES);
-  return R<=2?1:R-2;
+  if(d>0)return R===0?1:Math.min(R+2,MUSHAF_PAGES-1);
+  return R<=1?0:R-2;
 }
 let mushafBarsT;
 function mushafBarsUI(show){
@@ -451,15 +454,16 @@ function mushafBarsUI(show){
 }
 function viewRead(){
   const n=S.readN,book=mushafBook();
+  if(n<=0)return mushafCoverHTML();
   const R=book?mushafRight(n):n;
-  const L=book&&R>1&&R<MUSHAF_PAGES?R+1:null;
+  const L=book&&R+1<=MUSHAF_PAGES?R+1:null;
   const num=p=>S.lang==='ar'?arDigits(p):String(p);
   const tot=S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES;
   const jz=mushafJuz(R),jn=S.lang==='ar'?arDigits(jz):jz;
   const sm=SURAH[mushafSurah(R)-1],sn=S.lang==='ar'?sm[0]:sm[1];
   const img=p=>`<img src="${mushafSVGURL(p)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-png="${mushafPNGURL(p)}"
       onerror="if(this.dataset.png){this.src=this.dataset.png;this.dataset.png=''}else{this.classList.add('broken')}">`;
-  const prevOff=book?R<=1:n<=1,nextOff=book?R>=MUSHAF_PAGES:n>=MUSHAF_PAGES;
+  const prevOff=false,nextOff=book?R>=MUSHAF_PAGES-1:n>=MUSHAF_PAGES;
   const footNum=L?`${num(R)} – ${num(L)}`:`${num(R)} / ${tot}`;
   return `<div class="mushaf-wrap">
     <div class="mushaf-top">
@@ -709,7 +713,7 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='back')setView('reciters');
     else if(a==='mushafback')setView('home');
     else if(a==='mushafexit')setView('home');
-    else if(a==='mushafopen')mushafGo(S.mushafPage||1);
+    else if(a==='mushafopen')mushafGo(S.mushafLast||1);
     else if(a==='mtheme')setTheme(S.theme==='light'?'dark':'light');
     else if(a==='mprev')mushafGo(mushafStep(S.readN,-1));
     else if(a==='mnext')mushafGo(mushafStep(S.readN,1));
