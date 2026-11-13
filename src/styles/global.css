@@ -1213,8 +1213,9 @@ body.side-collapsed .nav-item.active::before {
   border-color: var(--gold)
 }
 
-#npToggle.on {
-  color: var(--gold)
+#npPin.on {
+  color: var(--gold);
+  border-color: var(--gold)
 }
 
 #npDock.on {
@@ -2212,13 +2213,15 @@ kbd {
   }
 
   .np-panel,
-  #npToggle {
+  #npPin {
     display: none !important
   }
 }
 
 @media(max-width:900px) {
-  .shell {
+  .shell,
+  body.np-collapsed .shell,
+  body.np-float .shell {
     grid-template-columns: minmax(0, 1fr)
   }
 
@@ -2875,7 +2878,7 @@ html[dir="rtl"] .back-btn .ic {
 .prayer-wrap {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 26px;
   max-width: 860px;
   margin: 0 auto;
   width: 100%
@@ -2994,7 +2997,7 @@ html[dir="rtl"] .back-btn .ic {
   background: linear-gradient(135deg, var(--accent), var(--gold));
   color: var(--on-accent);
   border-radius: var(--r-lg);
-  padding: 18px 22px;
+  padding: 22px 26px;
   box-shadow: var(--shadow2)
 }
 
@@ -3012,19 +3015,19 @@ html[dir="rtl"] .back-btn .ic {
 
 .prayer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 13px
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px
 }
 
 .prayer-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  padding: 18px 12px
+  padding: 22px 14px
 }
 
 .prayer-card span {
@@ -3052,7 +3055,8 @@ html[dir="rtl"] .back-btn .ic {
   text-align: center;
   font-size: 12.5px;
   color: var(--ink2);
-  padding-top: 14px;
+  margin-top: 4px;
+  padding-top: 16px;
   border-top: 1px dashed var(--line)
 }
 
@@ -3198,36 +3202,33 @@ html[dir="rtl"] .back-btn .ic {
 .hp-weather {
   display: flex;
   align-items: center;
-  min-height: 64px;
-  margin-bottom: 10px;
-  font-size: 13px
-}
-
-.hp-weather .hw-col {
-  display: flex;
-  flex-direction: column;
-  gap: 2px
-}
-
-.hp-weather .hw-row {
-  display: flex;
-  align-items: center;
-  gap: 10px
+  gap: 12px;
+  min-height: 56px;
+  margin-bottom: 12px;
+  text-align: start
 }
 
 .hp-weather .hw-ic {
-  font-size: 38px;
-  line-height: 1
+  font-size: 34px;
+  line-height: 1;
+  flex: none
 }
 
 .hp-weather .hw-t {
   font-weight: 800;
-  font-size: 26px;
-  color: #F7F3E8
+  font-size: 25px;
+  color: #F7F3E8;
+  font-variant-numeric: tabular-nums;
+  flex: none
 }
 
 .hp-weather .hw-d {
-  color: rgba(247, 243, 232, .8)
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: rgba(247, 243, 232, .78);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
 }
 
 .poff-ctl {
@@ -4124,17 +4125,6 @@ html[dir="rtl"] .back-btn .ic {
   color: #2C3E30
 }
 
-.prayer-settings {
-  margin-top: 22px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px
-}
-
 .ps-title {
   display: flex;
   align-items: center;
@@ -4339,126 +4329,6 @@ html[dir="rtl"] .back-btn .ic {
   pointer-events: none
 }
 
-.live-player {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  max-width: 960px;
-  margin: 0 auto 24px;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  background: #000;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, .22)
-}
-
-.live-player iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0
-}
-
-.live-badge {
-  position: absolute;
-  top: 12px;
-  inset-inline-start: 12px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(180, 85, 45, .92);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .6px;
-  border-radius: 20px;
-  padding: 4px 11px
-}
-
-.live-badge i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #fff;
-  animation: livePulse 1.4s infinite
-}
-
-@keyframes livePulse {
-  0%, 100% { opacity: 1 }
-  50% { opacity: .35 }
-}
-
-.live-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px
-}
-
-.live-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px;
-  text-align: start;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  cursor: pointer;
-  font-family: inherit;
-  color: var(--ink);
-  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease
-}
-
-.live-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--gold);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, .12)
-}
-
-.live-card.active {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold) inset
-}
-
-.live-thumb {
-  position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  border-radius: calc(var(--r-lg) - 8px);
-  overflow: hidden;
-  color: rgba(247, 243, 232, .9)
-}
-
-.live-thumb.quran {
-  background: linear-gradient(135deg, #1F4030, #3E6B48)
-}
-
-.live-thumb.sunnah {
-  background: linear-gradient(135deg, #2C3E30, #6B7A4E)
-}
-
-.live-thumb .ic {
-  width: 44px;
-  height: 44px
-}
-
-.live-thumb .live-badge {
-  position: absolute;
-  top: 10px;
-  inset-inline-start: 10px
-}
-
-.live-card b {
-  font-size: 15px
-}
-
-.live-card > span:last-child {
-  font-size: 12.5px;
-  color: var(--ink2)
-}
-
 @media(max-width:640px) {
   .hero-main {
     padding: 26px 22px
@@ -4493,5 +4363,54 @@ html[dir="rtl"] .back-btn .ic {
   .ps-sel {
     min-width: 0;
     width: 100%
+  }
+}
+
+/* ═══════════════ speed popover ═══════════════ */
+.speed-wrap {
+  position: relative
+}
+
+.speed-pop {
+  inset-inline-end: 0;
+  bottom: calc(100% + 10px);
+  width: 230px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
+.sp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700
+}
+
+.sp-head b {
+  color: var(--gold);
+  font-variant-numeric: tabular-nums
+}
+
+#speedRange {
+  width: 100%;
+  accent-color: var(--gold);
+  height: 22px;
+  cursor: pointer
+}
+
+.sp-marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--ink2)
+}
+
+@media(max-width:479px) {
+  #btnQuality,
+  .speed-wrap {
+    display: none
   }
 }
