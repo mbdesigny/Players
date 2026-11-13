@@ -42,7 +42,9 @@ sidebar tab showing real page images.
   via CSS filter (black ink → light ink) on the theme-matched background.
 - Mobile pass: compact fullscreen-player overlay (mandala sized to the
   viewport, smaller controls), compressed mushaf chrome (icon-only page-turn
-  buttons), tighter hero/topbar spacing on small and low (landscape) screens.
+  buttons), tighter hero/topbar spacing on small and low (landscape) screens;
+  below 480px the player bar hides the reciter art, download and dock-panel
+  buttons and centers the play/pause transport on screen.
 
 **Code touchpoints** (done):
 - `SURAH_PAGE` mapping (surah → Madani start page), `mushafSVGURL` /
