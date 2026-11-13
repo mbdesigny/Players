@@ -2813,3 +2813,182 @@ html[dir="rtl"] .back-btn .ic {
     justify-content: flex-end
   }
 }
+/* ═══════════════════ PRAYER TIMES ═══════════════════ */
+.prayer-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%
+}
+
+.prayer-loc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px 16px
+}
+
+.prayer-loc .ic {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.8
+}
+
+.prayer-loc b {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+
+.prayer-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px 16px
+}
+
+.prayer-search input {
+  flex: 1;
+  min-width: 180px;
+  background: var(--surface2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 9px 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px
+}
+
+.prayer-search input:focus {
+  outline: none;
+  border-color: var(--gold)
+}
+
+.loc-res {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+.lr-empty {
+  font-size: 12.5px;
+  color: var(--ink2);
+  padding: 4px 2px
+}
+
+.loc-item {
+  text-align: start;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 9px 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+
+.loc-item:hover {
+  border-color: var(--gold);
+  background: var(--glow2)
+}
+
+.prayer-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--gold));
+  color: var(--on-accent);
+  border-radius: var(--r-lg);
+  padding: 18px 22px;
+  box-shadow: var(--shadow2)
+}
+
+.prayer-next span {
+  font-size: 14px;
+  opacity: .92
+}
+
+.prayer-next b {
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  white-space: nowrap
+}
+
+.prayer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px
+}
+
+.prayer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px 10px
+}
+
+.prayer-card span {
+  font-size: 12.5px;
+  color: var(--ink2)
+}
+
+.prayer-card b {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink)
+}
+
+.prayer-card.next {
+  background: var(--glow2);
+  border-color: var(--gold)
+}
+
+.prayer-card.next span {
+  color: var(--gold);
+  font-weight: 700
+}
+
+.prayer-date {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink2)
+}
+
+@media(max-width:480px) {
+  .prayer-grid {
+    grid-template-columns: repeat(2, 1fr)
+  }
+
+  .prayer-next b {
+    font-size: 24px
+  }
+
+  .prayer-loc b {
+    font-size: 13.5px
+  }
+}
