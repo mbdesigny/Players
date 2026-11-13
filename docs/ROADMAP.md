@@ -18,28 +18,23 @@ any ayah to jump to it.
 - Optional translation: `GET /v1/surah/{n}/{edition}` (e.g. `en.sahih`), edition
   chosen in settings.
 
-**Status**: **1a shipped** — surah mode (proportional sync) is live: the
-fullscreen player has a verses panel (`#ovAyahs`) with the active ayah
-highlighted, auto-scroll with manual-scroll detection, click-to-jump, and an
-optional translation (9 editions, chosen in settings). Text is fetched from
-`api.alquran.cloud/v1/surah/{n}/editions/quran-uthmani[,trans]` and timing is
-estimated by distributing `audio.duration` over ayah text-length weights
-(plus a bismillah weight for surahs ≠ 1, 9). Works with every reciter and
-riwayat without touching the playback model.
+**Status**: **shipped (1a + 1b)**.
 
-**Audio sync strategy** — two modes:
-1. **Ayah mode (Phase 1b, exact sync)**: build the playlist from per-ayah
-   files instead of the surah file:
-   `https://cdn.islamic.network/quran/audio/{bitrate}/{edition}/{globalAyah}.mp3`
-   The player already handles source lists and track queues, so each ayah
-   becomes a queue item; the current highlight is then always exact.
-   Availability must be probed per reciter edition (same `ED_KEYS` matching
-   logic used in `buildSources()`); fall back to mode 2 when no ayah edition
-   exists (e.g. mujawwad riwayat).
-2. **Surah mode (shipped as 1a, approximate)**: keep the single surah MP3 and
-   distribute its duration proportionally over ayah text lengths
-   (`ayah.numberInSurah` weights). Good enough for highlighting; Phase 1b can
-   add an "approximate timing" hint in the UI.
+- **1b — ayah-by-ayah playback (default)**: when the reciter matches a
+  `versebyverse` audio edition (same `ED_KEYS` matching as `buildSources()`),
+  each ayah plays from its own file:
+  `https://cdn.islamic.network/quran/audio/{bitrate}/{edition}/{globalAyah}.mp3`
+  (`beginTrack()` builds the per-ayah URL list from the bundled surah ayah
+  counts; `playAyah()` advances on `ended`). Text, translation and audio all
+  come from the alquran.cloud / islamic.network source, and the highlight is
+  exact — no timing estimation. Clicking an ayah plays that file; the panel
+  head shows an ayah counter; repeat-one repeats the ayah; an audio error
+  falls back to the whole-surah file. Toggle in Settings → "تلاوة آية بآية".
+- **1a — surah mode (fallback)**: for reciters without an ayah edition, the
+  single surah MP3 plays and timing is estimated by distributing
+  `audio.duration` over ayah text-length weights (plus a bismillah weight for
+  surahs ≠ 1, 9). The verses panel, auto-scroll, click-to-jump and optional
+  translation (9 editions) work in both modes.
 
 **Code touchpoints**:
 - New `S.ayahMode` (`'off'|'on'`), `S.ayahTrans` (edition id), cached in `store`.
