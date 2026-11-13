@@ -6,7 +6,7 @@ import vMadinah from '../assets/adhan/voices/madinah.mp3';
 import vAqsa from '../assets/adhan/voices/aqsa.mp3';
 import vEgypt from '../assets/adhan/voices/egypt.mp3';
 import vTurkey from '../assets/adhan/voices/turkey.mp3';
-import vAlgeria from '../assets/adhan/voices/algeria.mp3';
+import vBaldi from '../assets/adhan/voices/baldi.mp3';
 import vQatami from '../assets/adhan/voices/qatami.mp3';
 import mosqueUrl from '../assets/hero/mosque.jpg?url';
 import ADHKAR from '../data/adhkar.json';
@@ -681,7 +681,7 @@ function prayerCountdownStr(){
 const ADHAN_VOICES=[
   {id:'abdulbasit',name:'عبد الباسط عبد الصمد',file:adhanUrl,fajrFile:adhanFajrUrl},
   {id:'qatami',name:'ناصر القطامي',file:vQatami},
-  {id:'algeria',name:'أذان جزائري — رياد الجزائري',file:vAlgeria},
+  {id:'algeria',name:'أذان جزائري — الشيخ البليدي',file:vBaldi},
   {id:'makkah',name:'أذان الحرم المكي',file:vMakkah},
   {id:'madinah',name:'المسجد النبوي',file:vMadinah},
   {id:'aqsa',name:'المسجد الأقصى',file:vAqsa},
