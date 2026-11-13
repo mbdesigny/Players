@@ -2842,18 +2842,6 @@ html[dir="rtl"] .mt-sel {
   margin-inline-start: auto
 }
 
-.mushaf-rw {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 7
-}
-
-.mushaf-rw .mt-sel {
-  box-shadow: var(--shadow2)
-}
-
 .mushaf-stage {
   flex: 1;
   min-height: 0;
@@ -2899,6 +2887,24 @@ html[dir="rtl"] .mt-sel {
   inset-inline-start: 50%;
   transform: translateX(-50%);
   box-shadow: var(--shadow2)
+}
+
+.mc-dl {
+  position: absolute;
+  bottom: calc(4% + 46px);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line2);
+  box-shadow: var(--shadow2);
+  font-size: 12.5px;
+  padding: 8px 16px
+}
+
+.mc-dl:disabled {
+  opacity: .75;
+  cursor: default
 }
 
 .mushaf-page {
@@ -3116,10 +3122,6 @@ html[dir="rtl"] .back-btn .ic {
   .ov-controls .ctrl {
     width: 40px;
     height: 40px
-  }
-
-  .mushaf-rw {
-    top: 8px
   }
 
   .mushaf-top {
