@@ -240,8 +240,8 @@ function surahRow(tr,i){
   const num=S.lang==='ar'?arDigits(tr.n):tr.n;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
   return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-key="${tr.key}">
-    <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span>
-    <span class="si"><span class="sa">${esc(prim)}</span><span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type?t('medinan'):t('meccan')}</span></span>
+    <div class="s-head"><span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span><span class="sa">${esc(prim)}</span></div>
+    <span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type?t('medinan'):t('meccan')}</span>
     <span class="sfoot"><span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
     <span class="acts">
       <button class="mini-btn ${faved?'faved':''}" data-fav="${tr.key}" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
@@ -259,8 +259,8 @@ function collectionRow(f,tr,i,isFav){
   const playing=S.current&&S.current.key===tr.key;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
   return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-key="${tr.key}">
-    <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
-    <span class="si"><span class="sa">${esc(prim)}</span><span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
+    <div class="s-head"><span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span><span class="sa">${esc(prim)}</span></div>
+    <span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
     <span class="acts">
       ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
