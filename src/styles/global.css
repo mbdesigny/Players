@@ -4509,3 +4509,22 @@ html[dir="rtl"] .back-btn .ic {
   .reciter-card .play-ov span{width:34px;height:34px}
   .reciter-card .play-ov .ic{width:14px;height:14px}
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   fullscreen player — animated aurora background + audio waves
+   ══════════════════════════════════════════════════════════════════ */
+.ov-aurora{position:absolute;inset:0;overflow:hidden;filter:blur(70px);opacity:.55;pointer-events:none}
+.ov-aurora i{position:absolute;border-radius:50%;animation:aurora 18s ease-in-out infinite alternate;will-change:transform}
+.ov-aurora i:nth-child(1){width:55vmax;height:55vmax;top:-18vmax;inset-inline-start:-12vmax;background:var(--glow1)}
+.ov-aurora i:nth-child(2){width:45vmax;height:45vmax;bottom:-15vmax;inset-inline-end:-10vmax;background:var(--glow2);animation-duration:26s;animation-delay:-8s}
+.ov-aurora i:nth-child(3){width:32vmax;height:32vmax;top:32%;inset-inline-end:18%;background:rgba(186,151,67,.28);animation-duration:32s;animation-delay:-15s}
+@keyframes aurora{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(6vmax,-4vmax) scale(1.15)}
+  100%{transform:translate(-5vmax,5vmax) scale(.9)}
+}
+.ov-waves{position:absolute;bottom:0;inset-inline:0;width:100%;height:150px;pointer-events:none;z-index:0}
+@media(max-width:640px){.ov-waves{height:110px}}
+@media(prefers-reduced-motion:reduce){.ov-aurora i{animation:none}}
+[data-theme="dark"] .ov-aurora{opacity:.7}
+[data-theme="dark"] .ov-waves{opacity:.95}

@@ -66,6 +66,7 @@ const S={
 };
 if(store.get('mushafLast',0)>1&&!store.get('mushafLast_hafs',0))store.set('mushafLast_hafs',store.get('mushafLast',0));
 const audio=$('#audio');
+audio.crossOrigin='anonymous';
 audio.volume=store.get('volume',1);
 
 /* ═══════════════ GENERATIVE ISLAMIC ART ═══════════════ */
@@ -1148,8 +1149,56 @@ function rotateVerse(instant=false){
 setInterval(()=>rotateVerse(),22000);
 
 /* ═══════════════ OVERLAYS ═══════════════ */
-function openOverlay(){$('#npOverlay').classList.add('open')}
-function closeOverlay(){$('#npOverlay').classList.remove('open')}
+/* ═══════════ fullscreen waves visualizer ═══════════ */
+let acx=null,analyser=null,freqData=null,waveRaf=0,smLevel=0;
+function ensureAnalyser(){
+  if(acx!==null||(!window.AudioContext&&!window.webkitAudioContext))return;
+  try{
+    acx=new (window.AudioContext||window.webkitAudioContext)();
+    const src=acx.createMediaElementSource(audio);
+    analyser=acx.createAnalyser();analyser.fftSize=512;analyser.smoothingTimeConstant=.82;
+    src.connect(analyser);analyser.connect(acx.destination);
+    freqData=new Uint8Array(analyser.frequencyBinCount);
+  }catch(e){acx=null;analyser=null}
+}
+audio.addEventListener('play',()=>{ensureAnalyser();if(acx&&acx.state==='suspended')acx.resume()});
+function drawWaves(ts){
+  const cv=$('#ovWaves');if(!cv){waveRaf=0;return}
+  const dpr=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;
+  if(!w||!h){waveRaf=requestAnimationFrame(drawWaves);return}
+  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr)}
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  let level=0;
+  if(analyser&&freqData&&!audio.paused){
+    analyser.getByteFrequencyData(freqData);
+    let s=0;for(let i=2;i<40;i++)s+=freqData[i];
+    level=s/(38*255);
+  }
+  smLevel+=(level-smLevel)*.09;
+  const t=ts/1000,playing=!audio.paused;
+  const amp=h*(.32+smLevel*(playing?.85:.08));
+  const layers=[[.9,.5,'rgba(186,151,67,.16)'],[1.35,.8,'rgba(186,151,67,.28)'],[1.9,1.2,'rgba(186,151,67,.5)']];
+  layers.forEach(([wl,sp,col],li)=>{
+    ctx.beginPath();ctx.moveTo(0,h);
+    for(let x=0;x<=w;x+=6){
+      const p=x/w;
+      const y=h*.66
+        -Math.sin(p*Math.PI*2*wl+t*sp+li*1.7)*amp*(.55+.45*Math.sin(p*Math.PI*3+t*.7+li))
+        -Math.sin(p*Math.PI*7-t*1.3+li*2.1)*amp*.22;
+      ctx.lineTo(x,y);
+    }
+    ctx.lineTo(w,h);ctx.closePath();ctx.fillStyle=col;ctx.fill();
+  });
+  waveRaf=requestAnimationFrame(drawWaves);
+}
+function startWaves(){
+  if(waveRaf||!$('#ovWaves'))return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  waveRaf=requestAnimationFrame(drawWaves);
+}
+function stopWaves(){if(waveRaf)cancelAnimationFrame(waveRaf);waveRaf=0}
+function openOverlay(){$('#npOverlay').classList.add('open');startWaves()}
+function closeOverlay(){$('#npOverlay').classList.remove('open');stopWaves()}
 function closeSidebar(){$('#sidebar').classList.remove('open');$('#scrimSide').classList.remove('open')}
 $('#menuBtn').onclick=()=>{$('#sidebar').classList.add('open');$('#scrimSide').classList.add('open')};
 $('#scrimSide').onclick=closeSidebar;
