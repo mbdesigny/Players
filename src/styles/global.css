@@ -2842,6 +2842,18 @@ html[dir="rtl"] .mt-sel {
   margin-inline-start: auto
 }
 
+.mushaf-rw {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7
+}
+
+.mushaf-rw .mt-sel {
+  box-shadow: var(--shadow2)
+}
+
 .mushaf-stage {
   flex: 1;
   min-height: 0;
@@ -3104,6 +3116,10 @@ html[dir="rtl"] .back-btn .ic {
   .ov-controls .ctrl {
     width: 40px;
     height: 40px
+  }
+
+  .mushaf-rw {
+    top: 8px
   }
 
   .mushaf-top {
