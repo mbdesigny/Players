@@ -1150,7 +1150,7 @@ setInterval(()=>rotateVerse(),22000);
 
 /* ═══════════════ OVERLAYS ═══════════════ */
 /* ═══════════ fullscreen waves visualizer ═══════════ */
-let acx=null,analyser=null,freqData=null,waveRaf=0,smLevel=0;
+let acx=null,analyser=null,freqData=null,waveRaf=0,smLevel=0,layerLvl=[0,0,0];
 function ensureAnalyser(){
   if(acx!==null||(!window.AudioContext&&!window.webkitAudioContext))return;
   try{
@@ -1162,29 +1162,32 @@ function ensureAnalyser(){
   }catch(e){acx=null;analyser=null}
 }
 audio.addEventListener('play',()=>{ensureAnalyser();if(acx&&acx.state==='suspended')acx.resume()});
+document.addEventListener('pointerdown',()=>{if(acx&&acx.state==='suspended')acx.resume()},{capture:true});
 function drawWaves(ts){
   const cv=$('#ovWaves');if(!cv){waveRaf=0;return}
   const dpr=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;
   if(!w||!h){waveRaf=requestAnimationFrame(drawWaves);return}
   if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr)}
   const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
-  let level=0;
-  if(analyser&&freqData&&!audio.paused){
+  const playing=!audio.paused;
+  let bands=[0,0,0];
+  if(analyser&&freqData&&playing){
     analyser.getByteFrequencyData(freqData);
-    let s=0;for(let i=2;i<40;i++)s+=freqData[i];
-    level=s/(38*255);
+    const band=(f0,f1)=>{let s=0;for(let i=f0;i<f1;i++)s+=freqData[i];return Math.min(1,s/((f1-f0)*255)*2.1)};
+    bands=[band(2,10),band(8,24),band(18,48)];
   }
-  smLevel+=(level-smLevel)*.09;
-  const t=ts/1000,playing=!audio.paused;
-  const amp=h*(.32+smLevel*(playing?.85:.08));
-  const layers=[[.9,.5,'rgba(186,151,67,.16)'],[1.35,.8,'rgba(186,151,67,.28)'],[1.9,1.2,'rgba(186,151,67,.5)']];
-  layers.forEach(([wl,sp,col],li)=>{
+  smLevel+=(Math.max(...bands)-smLevel)*.12;
+  const t=ts/1000;
+  const layers=[[.9,.5,'rgba(186,151,67,.16)',0],[1.35,.8,'rgba(186,151,67,.28)',1],[1.9,1.2,'rgba(186,151,67,.5)',2]];
+  layers.forEach(([wl,sp,col,bi],li)=>{
+    layerLvl[bi]+=((playing?bands[bi]:0)-layerLvl[bi])*.1;
+    const amp=h*(.14+layerLvl[bi]*.42);
     ctx.beginPath();ctx.moveTo(0,h);
     for(let x=0;x<=w;x+=6){
       const p=x/w;
-      const y=h*.66
+      const y=h*.68
         -Math.sin(p*Math.PI*2*wl+t*sp+li*1.7)*amp*(.55+.45*Math.sin(p*Math.PI*3+t*.7+li))
-        -Math.sin(p*Math.PI*7-t*1.3+li*2.1)*amp*.22;
+        -Math.sin(p*Math.PI*7-t*1.3+li*2.1)*amp*.15;
       ctx.lineTo(x,y);
     }
     ctx.lineTo(w,h);ctx.closePath();ctx.fillStyle=col;ctx.fill();
@@ -1197,6 +1200,7 @@ function startWaves(){
   waveRaf=requestAnimationFrame(drawWaves);
 }
 function stopWaves(){if(waveRaf)cancelAnimationFrame(waveRaf);waveRaf=0}
+window.__waves=()=>({ctx:acx?acx.state:'none',has:!!analyser,lvl:+smLevel.toFixed(3),layers:layerLvl.map(v=>+v.toFixed(3)),paused:audio.paused});
 function openOverlay(){$('#npOverlay').classList.add('open');startWaves()}
 function closeOverlay(){$('#npOverlay').classList.remove('open');stopWaves()}
 function closeSidebar(){$('#sidebar').classList.remove('open');$('#scrimSide').classList.remove('open')}
