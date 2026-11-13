@@ -59,7 +59,9 @@ const S={
   verseIdx:0, offline:false, npMode:store.get('npMode','auto'), npPos:store.get('npPos',null), sideMode:store.get('sideMode','open'),
   readN:null, mushafPage:store.get('mushafPage',0), mushafRiwaya:store.get('mushafRiwaya','hafs'), mushafAsk:false,
   prayerLoc:store.get('prayerLoc',{name:'وادي العثمانية، ميلة',lat:36.2662,lng:6.3118}), prayerData:null, prayerSearch:null, prayerTimer:null,
-  prayerOffset:store.get('prayerOffset',0),
+  prayerOffset:(()=>{const v=store.get('prayerOffset',0);const base={Fajr:0,Dhuhr:0,Asr:0,Maghrib:0,Isha:0};
+    if(typeof v==='number'){for(const k in base)base[k]=v;return base}
+    return Object.assign(base,v)})(),
   adhanOn:store.get('adhanOn',true), adhanAudio:null, adhanLast:store.get('adhanLast',''), adhanVoice:store.get('adhanVoice','abdulbasit'),
   adhkarCat:null, ytId:null, liveId:null, weather:null
 };
@@ -393,7 +395,7 @@ function updateNowPlaying(){
   $('#ovPhoto').innerHTML=photo?`<img src="${photo}" alt="" onerror="this.remove()">`:'';
   const ava=photo||avatarURI(tr.rar,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
   $('#pbArtImg').src=ava;$('#pbArtImg').onerror=function(){this.onerror=null;this.src=avatarURI(tr.rar,'ق')} ;
-  const titleHTML=S.lang==='ar'&&tr.n!=null?`<span class="sn-font">${surahNameGlyph(tr.n)}</span>`:esc(trackName(tr));
+  const titleHTML=S.lang==='ar'&&tr.n!=null?`<span class="sn-font sg-pair"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:esc(trackName(tr));
   $('#npTitle').innerHTML=titleHTML;$('#ovTitle').innerHTML=titleHTML;
   $('#npArtist').textContent=trackReciter(tr);$('#ovArtist').textContent=trackReciter(tr);
   $('#pbTitle').textContent=`${trackName(tr)} · ${trackReciter(tr)}`;
@@ -613,7 +615,8 @@ function viewRead(){
 /* ═══════════════ PRAYER TIMES ═══════════════ */
 const PRAYERS=[['Fajr','fajr'],['Dhuhr','dhuhr'],['Asr','asr'],['Maghrib','maghrib'],['Isha','isha']];
 const PRAYER_EXTRA=[['Sunrise','sunrise'],['Firstthird','firstThird'],['Lastthird','lastThird']];
-const prayerTime=k=>{const v=S.prayerData.timings[k];let m=(+v.slice(11,13))*60+(+v.slice(14,16))+S.prayerOffset;m=(m%1440+1440)%1440;return `${String((m/60)|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`};
+const prayerOff=k=>((S.prayerOffset&&S.prayerOffset[k])||0)*60000;
+const prayerTime=k=>{const v=S.prayerData.timings[k];let m=(+v.slice(11,13))*60+(+v.slice(14,16))+((S.prayerOffset&&S.prayerOffset[k])||0);m=(m%1440+1440)%1440;return `${String((m/60)|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`};
 function viewPrayer(){
   if(!S.prayerData)setTimeout(loadPrayer,0);
   const L=S.prayerLoc;
@@ -649,11 +652,12 @@ function viewPrayer(){
       <div class="ps-row">
         <div class="ps-lab"><b>${t('prOffset')}</b><span>${t('prOffsetDesc')}</span></div>
         <div class="ps-ctl poff-ctl">
-          <button class="btn sm" data-poff="-5">−5</button>
-          <button class="btn sm" data-poff="-1">−1</button>
-          <b class="poff-val" dir="ltr">${S.prayerOffset>0?'+':''}${S.prayerOffset} ${t('min')}</b>
-          <button class="btn sm" data-poff="1">+1</button>
-          <button class="btn sm" data-poff="5">+5</button>
+          ${PRAYERS.map(([k,l])=>{const v=S.prayerOffset[k]||0;return `<div class="poff-row"><span class="poff-name">${t(l)}</span>
+          <button class="btn sm" data-poff="-5" data-pr="${k}">−5</button>
+          <button class="btn sm" data-poff="-1" data-pr="${k}">−1</button>
+          <b class="poff-val" dir="ltr">${v>0?'+':''}${v}</b>
+          <button class="btn sm" data-poff="1" data-pr="${k}">+1</button>
+          <button class="btn sm" data-poff="5" data-pr="${k}">+5</button></div>`}).join('')}
         </div>
       </div>
     </div>
@@ -678,16 +682,15 @@ async function loadPrayer(){
 }
 function nextPrayerKey(){
   if(!S.prayerData)return null;
-  const tm=S.prayerData.timings,now=Date.now(),off=S.prayerOffset*60000;
-  for(const[k]of PRAYERS){if(new Date(tm[k]).getTime()+off>now)return k}
+  const tm=S.prayerData.timings,now=Date.now();
+  for(const[k]of PRAYERS){if(new Date(tm[k]).getTime()+prayerOff(k)>now)return k}
   return 'Fajr';
 }
 function prayerCountdownStr(){
   const tm=S.prayerData.timings,now=Date.now();
-  const off=S.prayerOffset*60000;
   let nt=null;
-  for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime()+off;if(tt>now){nt=tt;break}}
-  if(nt===null)nt=new Date(tm.Fajr).getTime()+off+86400000;
+  for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime()+prayerOff(k);if(tt>now){nt=tt;break}}
+  if(nt===null)nt=new Date(tm.Fajr).getTime()+prayerOff('Fajr')+86400000;
   const s=Math.max(0,Math.floor((nt-now)/1000));
   return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
@@ -721,9 +724,8 @@ function playAdhan(k){
 function adhanTick(){
   if(!S.adhanOn||!S.prayerData)return;
   const tm=S.prayerData.timings,now=Date.now();
-  const off=S.prayerOffset*60000;
   for(const[k]of PRAYERS){
-    const tt=new Date(tm[k]).getTime()+off;
+    const tt=new Date(tm[k]).getTime()+prayerOff(k);
     if(now>=tt&&now-tt<90000){
       const key=`${S.prayerKey}|${k}`;
       if(S.adhanLast!==key){S.adhanLast=key;store.set('adhanLast',key);playAdhan(k)}
@@ -1213,7 +1215,7 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='clearrecent'){const bak=[...S.recent];S.recent=[];store.set('recent',[]);render();toast(t('cleared'),{label:t('undo'),fn:()=>{S.recent=bak;store.set('recent',bak);render()}})}
     return}
   const poff=e.target.closest('[data-poff]');
-  if(poff){S.prayerOffset=Math.max(-30,Math.min(30,S.prayerOffset+(+poff.dataset.poff)));store.set('prayerOffset',S.prayerOffset);render();return}
+  if(poff){const k=poff.dataset.pr||'Fajr';S.prayerOffset[k]=Math.max(-30,Math.min(30,(S.prayerOffset[k]||0)+(+poff.dataset.poff)));store.set('prayerOffset',S.prayerOffset);render();return}
   const chip=e.target.closest('[data-rw]');if(chip){S.rewaya=chip.dataset.rw;render();return}
   const qs=e.target.closest('[data-surah]');if(qs){playQuick(+qs.dataset.surah);return}
   const rc=e.target.closest('[data-rid]');if(rc){openReciter(+rc.dataset.rid,false);return}

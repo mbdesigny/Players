@@ -817,11 +817,14 @@ html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(
   min-width: 0
 }
 
-.surah-row .sa.sn-font {
+.surah-row .sa.sn-font,
+.np-title .sn-font,
+.ov-title .sn-font {
   display: inline-flex;
   flex-direction: row-reverse;
   direction: ltr;
-  gap: .12em
+  gap: .12em;
+  justify-content: center
 }
 
 .surah-row .sa {
@@ -3225,6 +3228,30 @@ html[dir="rtl"] .back-btn .ic {
 
 .hp-weather .hw-d {
   color: rgba(247, 243, 232, .8)
+}
+
+.poff-ctl {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px
+}
+
+.poff-row {
+  display: flex;
+  align-items: center;
+  gap: 6px
+}
+
+.poff-row .poff-name {
+  min-width: 64px;
+  font-weight: 700;
+  font-size: 13px
+}
+
+.poff-row .poff-val {
+  min-width: 40px;
+  text-align: center;
+  font-variant-numeric: tabular-nums
 }
 
 .hp-loc {
