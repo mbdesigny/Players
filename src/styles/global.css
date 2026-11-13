@@ -2649,11 +2649,21 @@ html[dir="rtl"] .back-btn .ic {
 /* ═══════════════ mobile responsiveness ═══════════════ */
 @media(max-width:640px) {
   .hero {
-    padding: 20px 18px
+    padding: 22px 18px;
+    gap: 18px
   }
 
   .hero h1 {
     font-size: 24px
+  }
+
+  .hero .eyebrow {
+    font-size: 11px;
+    margin-bottom: 7px
+  }
+
+  .hero p {
+    font-size: 13.5px
   }
 
   .view-head h2 {
@@ -2817,10 +2827,27 @@ html[dir="rtl"] .back-btn .ic {
 .prayer-wrap {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   max-width: 860px;
   margin: 0 auto;
   width: 100%
+}
+
+.pr-sec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink2);
+  margin-top: 4px
+}
+
+.pr-sec::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line)
 }
 
 .prayer-loc {
@@ -2938,18 +2965,18 @@ html[dir="rtl"] .back-btn .ic {
 .prayer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px
+  gap: 13px
 }
 
 .prayer-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  padding: 16px 10px
+  padding: 18px 12px
 }
 
 .prayer-card span {
@@ -2976,12 +3003,22 @@ html[dir="rtl"] .back-btn .ic {
 .prayer-date {
   text-align: center;
   font-size: 12.5px;
-  color: var(--ink2)
+  color: var(--ink2);
+  padding-top: 14px;
+  border-top: 1px dashed var(--line)
 }
 
 @media(max-width:480px) {
   .prayer-grid {
     grid-template-columns: repeat(2, 1fr)
+  }
+
+  .prayer-card {
+    padding: 15px 10px
+  }
+
+  .prayer-next {
+    padding: 16px 18px
   }
 
   .prayer-next b {
@@ -2997,16 +3034,27 @@ html[dir="rtl"] .back-btn .ic {
 .hero {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 26px;
+  gap: 30px;
   align-items: center;
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, var(--surface2), var(--surface));
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
-  padding: 26px 30px;
-  margin-bottom: 26px;
+  padding: 34px 38px;
+  margin-bottom: 28px;
   box-shadow: var(--shadow2)
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -90px;
+  bottom: -120px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, var(--glow2), transparent 65%);
+  pointer-events: none
 }
 
 .hero::after {
@@ -3023,21 +3071,42 @@ html[dir="rtl"] .back-btn .ic {
   pointer-events: none
 }
 
+.hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  margin-bottom: 10px
+}
+
+.hero .eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+  opacity: .7
+}
+
 .hero h1 {
-  font-size: 30px;
-  margin-bottom: 6px
+  font-size: 32px;
+  margin-bottom: 8px
 }
 
 .hero p {
   color: var(--ink2);
-  font-size: 14px;
-  max-width: 48ch
+  font-size: 14.5px;
+  line-height: 1.75;
+  max-width: 52ch
 }
 
 .hero-cta {
   display: flex;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 20px;
   flex-wrap: wrap;
   align-items: center
 }
@@ -3045,7 +3114,7 @@ html[dir="rtl"] .back-btn .ic {
 .hero-stats {
   display: flex;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 18px;
   flex-wrap: wrap
 }
 
@@ -3490,7 +3559,8 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .hero-prayer {
-  border-color: var(--gold)
+  border-color: var(--gold);
+  background: var(--glow2)
 }
 
 .hero-prayer:hover {
@@ -3499,7 +3569,8 @@ html[dir="rtl"] .back-btn .ic {
 
 .hero-prayer b {
   font-variant-numeric: tabular-nums;
-  font-size: 14px
+  font-size: 14px;
+  color: var(--gold)
 }
 
 /* ═══════════════════ ADHKAR ═══════════════════ */
