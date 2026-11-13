@@ -817,6 +817,13 @@ html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(
   min-width: 0
 }
 
+.surah-row .sa.sn-font {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  direction: ltr;
+  gap: .12em
+}
+
 .surah-row .sa {
   font-family: 'SuraNames', 'Amiri', serif;
   font-size: 48px;
