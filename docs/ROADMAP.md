@@ -18,15 +18,22 @@ cancelled (audio quality from full surah files is the top priority), the
 fullscreen verses panel was removed, and the mushaf became a reading-only
 sidebar tab showing real page images.
 
-- Sidebar tab "المصحف / Mushaf": index grid of all 114 surahs (name + start
-  page + search-filterable) with a resume button for the last read page.
+- Sidebar tab "المصحف / Mushaf": **fullscreen immersive reading mode** —
+  while in the tab the sidebar, top bar, player bar and NP panel are all
+  hidden; the mushaf shows its own minimal top bar (brand / search or
+  surah + juz·page / theme / close) like desktop Quran apps.
+- Index view: grid of all 114 surahs (name + start page + search-filterable
+  with instant grid filtering) and a resume button for the last read page.
+- Reader view: surah name + juz/page indicator (juz start-page table), page
+  fitted to the viewport height, page-turn arrows in a bottom bar.
 - Reader view: one page at a time, **SVG vector pages** (crisp at any zoom)
   from `raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf` (KFGQPC
   artwork, Quran.ws/quranpedia SVG conversion, CC BY 4.0), with automatic
   fallback to the PNG CDN `SakinaDevGroup/mushaf-madani-cdn` (light/dark
   themes).
-- Pages 1–604, prev/next navigation (RTL-aware), keyboard arrows, page
-  label with Arabic digits, last page persisted in `store`.
+- Pages 1–604, prev/next navigation (RTL-aware), keyboard arrows, Escape
+  exits to the app, page label with Arabic digits, last page persisted in
+  `store`.
 - Dark theme: native dark PNG fallback available; SVG pages are inverted
   via CSS filter (black ink → light ink) on the theme-matched background.
 
