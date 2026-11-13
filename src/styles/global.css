@@ -4494,3 +4494,4 @@ html[dir="rtl"] .back-btn .ic {
 }
 [data-theme="dark"] .mushaf-page.cover-page img{filter:none}
 .mushaf-stage{-webkit-tap-highlight-color:transparent}
+.loc-approx{flex:none;font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(186,151,67,.14);color:var(--ink2);border:1px solid rgba(186,151,67,.35);white-space:nowrap;cursor:help}
