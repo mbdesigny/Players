@@ -44,7 +44,7 @@ const S={
   favorites:store.get('favorites',[]), recent:store.get('recent',[]),
   current:null, srcIdx:0, dirHandle:null, sleepMin:0, sleepTimer:null, sleepTick:null,
   verseIdx:0, offline:false, npMode:store.get('npMode','auto'), npPos:store.get('npPos',null), sideMode:store.get('sideMode','open'),
-  readN:null, mushafPage:store.get('mushafPage',0), mushafLast:store.get('mushafLast',0)
+  readN:null, mushafPage:store.get('mushafPage',0), mushafLast:store.get('mushafLast',0), mushafAsk:false
 };
 const audio=$('#audio');
 audio.volume=store.get('volume',1);
@@ -149,7 +149,7 @@ function filteredReciters(){
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf')S.readN=null;document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
+function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
 function render(){
   applyI18nStatic();
   const ph={home:'searchReciters',reciters:'searchReciters',surahs:'searchSurahs',favorites:'searchFav',recent:'searchRecent',mushaf:'searchSurahs'}[S.view]||'searchReciters';
@@ -415,7 +415,7 @@ const SURAH_PAGE=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,
 const JUZ_PAGE=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const MUSHAF_LOCAL=import.meta.glob('../assets/mushaf/*.svg',{eager:true,query:'?url',import:'default'});
 const mushafSVGURL=n=>MUSHAF_LOCAL[`../assets/mushaf/${pad(n)}.svg`]||`https://raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf/main/svg/${pad(n)}.svg`;
-const mushafPNGURL=n=>`https://raw.githubusercontent.com/SakinaDevGroup/mushaf-madani-cdn/main/${S.theme==='dark'?'dark':'light'}/p${n}.png`;
+const mushafPNGURL=n=>`https://raw.githubusercontent.com/SakinaDevGroup/mushaf-madani-cdn/main/light/p${n}.png`;
 const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
 const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
 function mushafGo(n){
@@ -428,6 +428,12 @@ function mushafGo(n){
 function mushafCoverHTML(){
   const last=S.mushafLast||S.mushafPage;
   const lbl=last>1?`${t('continueReading')} — ${t('page')} ${S.lang==='ar'?arDigits(last):last}`:t('startReading');
+  const ask=S.mushafAsk&&last>1?`<div class="mushaf-ask" data-act="mushafaskclose"><div class="ma-card">
+      <b>${t('continueReading')}</b>
+      <span>${t('page')} ${S.lang==='ar'?arDigits(last):last}</span>
+      <button class="btn gold" data-act="mresume">${t('resume')} — ${t('page')} ${S.lang==='ar'?arDigits(last):last}</button>
+      <button class="btn" data-act="mstart">${t('startReading')}</button>
+    </div></div>`:'';
   return `<div class="mushaf-wrap">
     <div class="mushaf-stage">
       <div class="mushaf-page cover-page" data-act="mushafopen">
@@ -435,6 +441,7 @@ function mushafCoverHTML(){
         <button class="btn gold mc-open" data-act="mushafopen">${lbl}</button>
       </div>
     </div>
+    ${ask}
   </div>`;
 }
 function viewMushaf(){return mushafCoverHTML()}
@@ -461,7 +468,8 @@ function viewRead(){
   const num=p=>S.lang==='ar'?arDigits(p):String(p);
   const tot=S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES;
   const jz=mushafJuz(R),jn=S.lang==='ar'?arDigits(jz):jz;
-  const sm=SURAH[mushafSurah(R)-1],sn=S.lang==='ar'?sm[0]:sm[1];
+  const sc=mushafSurah(R);
+  const sm=SURAH[sc-1],sn=S.lang==='ar'?sm[0]:sm[1];
   const img=p=>`<img src="${mushafSVGURL(p)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-png="${mushafPNGURL(p)}"
       onerror="if(this.dataset.png){this.src=this.dataset.png;this.dataset.png=''}else{this.classList.add('broken')}">`;
   const prevOff=false,nextOff=book?R>=MUSHAF_PAGES-1:n>=MUSHAF_PAGES;
@@ -469,7 +477,11 @@ function viewRead(){
   return `<div class="mushaf-wrap">
     <div class="mushaf-top">
       <button class="back-btn" data-act="mushafback"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-      <div class="mt-center"><b>${esc(sn)}</b><span>${t('juz')} ${jn} · ${t('page')} ${footNum}</span></div>
+      <div class="mt-nav">
+        <select class="mt-sel" id="mSurahSel" title="${t('surahs')}">${SURAH.map((s,i)=>`<option value="${i+1}"${i+1===sc?' selected':''}>${esc(S.lang==='ar'?s[0]:s[1])}</option>`).join('')}</select>
+        <select class="mt-sel" id="mJuzSel" title="${t('juz')}">${JUZ_PAGE.map((_,j)=>`<option value="${j+1}"${j+1===jz?' selected':''}>${t('juz')} ${S.lang==='ar'?arDigits(j+1):j+1}</option>`).join('')}</select>
+      </div>
+      <div class="mt-center"><span>${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafexit" title="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -481,6 +493,7 @@ function viewRead(){
     </div>
     <div class="mushaf-foot">
       <button class="btn sm" data-act="mprev" ${prevOff?'disabled':''}><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>${t('previous')}</span></button>
+      <input type="range" class="mf-slider" id="mSlider" min="1" max="${MUSHAF_PAGES}" value="${R}" step="1" aria-label="${t('page')}">
       <span class="mf-num">${footNum}</span>
       <button class="btn sm" data-act="mnext" ${nextOff?'disabled':''}><span>${t('next')}</span><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
@@ -714,7 +727,10 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='back')setView('reciters');
     else if(a==='mushafback')setView('home');
     else if(a==='mushafexit')setView('home');
-    else if(a==='mushafopen')mushafGo(S.mushafLast||1);
+    else if(a==='mushafopen'){if(S.mushafLast>1){S.mushafAsk=true;render()}else mushafGo(1)}
+    else if(a==='mresume')mushafGo(S.mushafLast||1);
+    else if(a==='mstart')mushafGo(1);
+    else if(a==='mushafaskclose'){if(e.target===act){S.mushafAsk=false;render()}}
     else if(a==='mtheme')setTheme(S.theme==='light'?'dark':'light');
     else if(a==='mprev')mushafGo(mushafStep(S.readN,-1));
     else if(a==='mnext')mushafGo(mushafStep(S.readN,1));
@@ -736,6 +752,14 @@ $('#view').addEventListener('click',async e=>{
 $('#view').addEventListener('change',e=>{
   if(e.target.id==='sortSel'){S.sort=e.target.value;render()}
   if(e.target.id==='moshafSel'){setMoshaf(+e.target.value)}
+  if(e.target.id==='mSurahSel')mushafGo(SURAH_PAGE[+e.target.value-1]);
+  if(e.target.id==='mJuzSel')mushafGo(JUZ_PAGE[+e.target.value-1]);
+  if(e.target.id==='mSlider')mushafGo(+e.target.value);
+});
+$('#view').addEventListener('input',e=>{
+  if(e.target.id!=='mSlider')return;
+  const v=+e.target.value,el=$('#view .mf-num');
+  if(el)el.textContent=S.lang==='ar'?`${arDigits(v)} / ${arDigits(MUSHAF_PAGES)}`:`${v} / ${MUSHAF_PAGES}`;
 });
 /* queue: click + drag reorder */
 let dragIdx=null;
@@ -769,6 +793,8 @@ if('mediaSession'in navigator){
 document.addEventListener('keydown',e=>{
   if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
   if(e.code==='Space'){e.preventDefault();togglePlay()}
+  else if(S.view==='mushaf'&&S.mushafAsk&&e.key==='Escape'){e.preventDefault();S.mushafAsk=false;render()}
+  else if(S.view==='mushaf'&&!S.readN&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();if(S.mushafLast>1){S.mushafAsk=true;render()}else mushafGo(1)}
   else if(S.view==='mushaf'&&S.readN&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const rtl=document.documentElement.dir==='rtl';mushafGo(mushafStep(S.readN,(e.key==='ArrowLeft')===rtl?1:-1));mushafBarsUI(true)}
   else if(e.key==='ArrowRight')audio.currentTime=Math.min((audio.duration||0),audio.currentTime+5);
   else if(e.key==='ArrowLeft')audio.currentTime=Math.max(0,audio.currentTime-5);
