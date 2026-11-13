@@ -1,0 +1,42 @@
+<!-- ══════════ SETTINGS ══════════ -->
+<div class="scrim" id="settingsScrim">
+  <div class="modal">
+    <h3><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg><span data-i18n="settings">الإعدادات</span></h3>
+    <div class="set-row"><div><div class="sl" data-i18n="theme">المظهر</div><div class="sd" data-i18n="themeDesc">نهاري بيج / ليلي OLED</div></div>
+      <div class="seg" id="segTheme"><button data-th="light" data-i18n="light">نهاري</button><button data-th="dark" data-i18n="dark">ليلي</button></div></div>
+    <div class="set-row"><div><div class="sl" data-i18n="language">اللغة</div><div class="sd">العربية / English</div></div>
+      <div class="seg" id="segLang"><button data-lg="ar">العربية</button><button data-lg="en">English</button></div></div>
+    <div class="set-row"><div><div class="sl" data-i18n="audioSource">مصدر الصوت</div><div class="sd" data-i18n="audioSourceDesc">يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل</div></div>
+      <span class="tag gold">MP3Quran + Islamic Network</span></div>
+    <div class="keys">
+      <div class="queue-head" data-i18n="shortcuts">اختصارات لوحة المفاتيح</div>
+      <div class="krow"><span data-i18n="kPlay">تشغيل / إيقاف</span><kbd>Space</kbd></div>
+      <div class="krow"><span data-i18n="kSeek">تقديم / ترجيع ٥ ثوانٍ</span><kbd>→ ←</kbd></div>
+      <div class="krow"><span data-i18n="kNext">التالي / السابق</span><kbd>N / P</kbd></div>
+      <div class="krow"><span data-i18n="kFav">المفضلة</span><kbd>F</kbd></div>
+      <div class="krow"><span data-i18n="kMute">كتم الصوت</span><kbd>M</kbd></div>
+      <div class="krow"><span data-i18n="kSearch">بحث</span><kbd>/</kbd></div>
+    </div>
+    <div class="m-actions"><button class="btn primary" id="settingsClose" data-i18n="done">تم</button></div>
+  </div>
+</div>
+
+<!-- ══════════ CONFIRM ══════════ -->
+<div class="scrim" id="confirmScrim">
+  <div class="modal" style="width:min(400px,92vw)">
+    <h3 id="confirmTitle"></h3>
+    <p style="color:var(--ink2);font-size:13.5px" id="confirmMsg"></p>
+    <div class="m-actions"><button class="btn" id="confirmNo" data-i18n="cancel">إلغاء</button><button class="btn primary" id="confirmYes" data-i18n="confirm">تأكيد</button></div>
+  </div>
+</div>
+
+<!-- ══════════ DOWNLOADS DRAWER ══════════ -->
+<div class="drawer" id="dlDrawer">
+  <div class="d-head">
+    <svg class="ic" viewBox="0 0 24 24" style="color:var(--gold)"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg>
+    <b data-i18n="downloads">التنزيلات</b>
+    <button class="btn sm" id="folderBtn" data-i18n="chooseFolder" hidden>مجلد الحفظ</button>
+    <button class="mini-btn" id="dlClose"><svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="d-list" id="dlList"><div class="empty" style="padding:26px"><p data-i18n="noDownloads">لا توجد تنزيلات بعد</p></div></div>
+</div>

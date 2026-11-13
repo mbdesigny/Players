@@ -2,11 +2,6 @@
 
 Drop reciter photos here as JPG. The app picks them up automatically.
 
-`player-frame.svg` is the player artwork design source (mandala frame with the
-red reciter-photo placeholder in the center and the gold progress ring). The
-app embeds the same artwork inline and turns the placeholder into the reciter
-photo (or the surah number) and animates the ring with playback progress.
-
 ## Naming
 
 Two ways, checked in this order:
@@ -25,3 +20,7 @@ generated ornamental avatar, so nothing breaks when images are missing.
 Recommended: square images, 512×512 or larger. The same photo is used on
 reciter cards, the surah-page hero, the now-playing panel, and the
 full-screen player (blurred, as a video-frame background).
+
+The player mandala design source lives at `src/assets/player-frame.svg`; it is
+embedded inline at build time (the red placeholder circle becomes the reciter
+photo and the gold ring animates with playback progress).
