@@ -540,3 +540,12 @@ html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(
   .top-actions{gap:6px}
   .icon-btn{width:36px;height:36px}
 }
+
+@media(max-width:479px){
+  .pb-art{display:none}
+  #btnDl,#npDl,#npDock{display:none}
+  .player{grid-template-columns:1fr auto 1fr}
+  .pb-track{justify-content:flex-start}
+  .pb-center{justify-self:center}
+  .pb-right{justify-content:flex-end}
+}
