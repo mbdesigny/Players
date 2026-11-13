@@ -21,6 +21,13 @@ import frame from '../assets/player-frame.svg?raw';
   <FullscreenPlayer />
   <Modals />
 
+  <div id="adhanBanner" role="alert">
+    <div class="ab-inner">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 3c2 2 4 3.6 4 6H8c0-2.4 2-4 4-6z"/><path d="M5 21v-8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8"/><path d="M3 21h18"/><path d="M10 21v-4h4v4"/></svg>
+      <div class="ab-txt" id="abText"></div>
+      <button class="ab-stop" id="adhanStop" data-i18n="stopAdhan">إيقاف الأذان</button>
+    </div>
+  </div>
   <div id="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
 
