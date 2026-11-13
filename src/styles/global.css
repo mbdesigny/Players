@@ -472,16 +472,14 @@ body.mushaf-full #view{flex:1;min-height:0;display:flex;flex-direction:column}
 .mt-center b{font-size:15.5px}
 .mt-center span{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
 .mt-actions{display:flex;gap:8px;margin-inline-start:auto}
-.mushaf-stage{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;padding:14px 6.25%}
-.mushaf-stage.cover{padding:14px}
-.mushaf-cover{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;
-  border-radius:10px;overflow:hidden;background:#E2D2A6;border:1px solid rgba(186,151,67,.4);box-shadow:var(--shadow)}
-.mushaf-cover img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px}
-.mushaf-cover img.broken{display:none}
+.mushaf-stage{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:center;padding:14px 6.25%}
 .mc-open{position:absolute;bottom:4%;inset-inline-start:50%;transform:translateX(-50%);box-shadow:var(--shadow2)}
-.mushaf-page{height:100%;display:flex;justify-content:center;background:#fff;border-radius:6px}
+.mushaf-page{height:100%;aspect-ratio:345/550;display:flex;align-items:center;justify-content:center;background:#fff;
+  border-radius:6px;overflow:hidden;box-shadow:var(--shadow)}
+.mushaf-page.cover-page{position:relative;cursor:pointer;background:#E2D2A6;border:1px solid rgba(186,151,67,.4)}
+.mushaf-page.cover-page img{object-fit:cover}
 [data-theme="dark"] .mushaf-page{background:#0D0F12}
-.mushaf-page img{max-height:100%;max-width:100%;object-fit:contain;border-radius:6px;box-shadow:var(--shadow)}
+.mushaf-page img{width:100%;height:100%;object-fit:contain;border-radius:6px}
 [data-theme="dark"] .mushaf-page img{filter:invert(1) hue-rotate(180deg)}
 .mushaf-page img.broken{display:none}
 .mushaf-foot{position:absolute;bottom:0;inset-inline:0;z-index:6;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px;
@@ -490,11 +488,12 @@ body.mushaf-full #view{flex:1;min-height:0;display:flex;flex-direction:column}
 .mf-num{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums;min-width:86px;text-align:center}
 html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(-1)}
 .mushaf-stage.book{direction:rtl;gap:6px}
-.mushaf-stage.book .mushaf-page{max-width:calc(50% - 4px)}
-.mushaf-stage.book .mushaf-page{position:relative}
+.mushaf-stage.book .mushaf-page{max-width:calc(50% - 4px);position:relative}
 .mushaf-stage.book .mushaf-page::after{content:"";position:absolute;inset:0;border-radius:6px;pointer-events:none}
 .mushaf-stage.book .mushaf-page:first-child::after{box-shadow:inset 26px 0 30px -26px rgba(0,0,0,.4)}
 .mushaf-stage.book .mushaf-page:last-child::after{box-shadow:inset -26px 0 30px -26px rgba(0,0,0,.4)}
+.mushaf-stage.book .mushaf-page{padding:10px}
+.mushaf-stage.book .mushaf-page img{max-height:100%;max-width:100%;object-fit:contain;border-radius:6px;box-shadow:none}
 
 /* ═══════════════ mobile responsiveness ═══════════════ */
 @media(max-width:640px){
@@ -512,7 +511,6 @@ html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(
   .mushaf-top{padding:8px 10px;gap:8px}
   .mt-actions .icon-btn{width:36px;height:36px}
   .mushaf-stage{padding:8px 4%}
-  .mushaf-stage.cover{padding:8px}
   .mushaf-foot{gap:10px;padding:8px}
   .mushaf-foot .btn span{display:none}
   .mf-num{min-width:64px}
