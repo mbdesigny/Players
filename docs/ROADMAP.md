@@ -22,8 +22,10 @@ sidebar tab showing real page images.
   while in the tab the sidebar, top bar, player bar and NP panel are all
   hidden; clicking the tab opens the **last viewed page directly** (no
   surah index; surah navigation will return later as a tab bar).
-- First visit shows an ornamental **cover** (full container width, green/
-  gold frame, Amiri title); tapping it opens the mushaf at page 1.
+- First visit shows the **cover page** — the provided ornamental cover
+  artwork (`public/mushaf-cover.jpg`, compressed from the original 1640×
+  2500 upload to a 1100px JPEG) at full container width with a gold
+  Start-reading button; tapping it opens the mushaf at page 1.
 - Reader top/bottom bars are **hidden by default** and overlay the page:
   tap the page (or use the arrow keys) to reveal them; they auto-hide
   after 3 seconds. Back and close buttons return to Home.
