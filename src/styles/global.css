@@ -4480,3 +4480,17 @@ html[dir="rtl"] .back-btn .ic {
     font-size: 13.5px
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   mushaf touch & mobile — full-width pages/cover (appended after base
+   rules so media overrides win the cascade)
+   ══════════════════════════════════════════════════════════════════ */
+@media(max-width:899px){
+  .mushaf-stage{align-items:flex-start;padding:8px}
+  .mushaf-page{width:100%;height:auto;aspect-ratio:345/550}
+  .mushaf-page.cover-page img{object-fit:cover}
+  .mc-open{bottom:6%}
+  .mc-dl{bottom:calc(6% + 48px)}
+}
+[data-theme="dark"] .mushaf-page.cover-page img{filter:none}
+.mushaf-stage{-webkit-tap-highlight-color:transparent}

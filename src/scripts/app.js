@@ -1296,6 +1296,24 @@ $('#view').addEventListener('input',e=>{
   const v=+e.target.value,el=$('#view .mf-num');
   if(el)el.textContent=S.lang==='ar'?`${arDigits(v)} / ${arDigits(MUSHAF_PAGES)}`:`${v} / ${MUSHAF_PAGES}`;
 });
+/* mushaf: touch swipe to turn pages */
+let swX=null,swY=null,swT=0;
+$('#view').addEventListener('touchstart',e=>{
+  if(S.view!=='mushaf'){swX=null;return}
+  const t0=e.touches[0];swX=t0.clientX;swY=t0.clientY;swT=Date.now()
+},{passive:true});
+$('#view').addEventListener('touchend',e=>{
+  if(S.view!=='mushaf'||swX==null)return;
+  const t0=e.changedTouches[0],dx=t0.clientX-swX,dy=t0.clientY-swY;swX=null;
+  if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.4||Date.now()-swT>900)return;
+  if(!e.target.closest('.mushaf-stage'))return;
+  if(e.target.closest('button,select,input,.mushaf-ask'))return;
+  const rtl=document.documentElement.dir==='rtl';
+  const d=(dx>0)===rtl?1:-1;
+  if(S.readN){mushafGo(mushafStep(S.readN,d));mushafBarsUI(true)}
+  else if(d>0){if(mushafLastGet()>1){S.mushafAsk=true;render()}else mushafGo(1)}
+},{passive:true});
+$('#view').addEventListener('touchcancel',()=>{swX=null},{passive:true});
 /* queue: click + drag reorder */
 let dragIdx=null;
 $('#npQueue').addEventListener('click',e=>{const it=e.target.closest('[data-qi]');if(it)loadTrack(+it.dataset.qi,true)});
