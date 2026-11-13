@@ -3234,25 +3234,44 @@ html[dir="rtl"] .back-btn .ic {
 .poff-ctl {
   flex-direction: column;
   align-items: stretch;
-  gap: 6px
+  gap: 0;
+  flex: 1;
+  min-width: 260px;
+  background: var(--surface2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-md);
+  overflow: hidden
 }
 
 .poff-row {
   display: flex;
   align-items: center;
-  gap: 6px
+  gap: 6px;
+  padding: 7px 12px
+}
+
+.poff-row + .poff-row {
+  border-top: 1px solid var(--line)
 }
 
 .poff-row .poff-name {
+  flex: 1;
   min-width: 64px;
   font-weight: 700;
   font-size: 13px
 }
 
 .poff-row .poff-val {
-  min-width: 40px;
+  min-width: 44px;
   text-align: center;
+  font-weight: 800;
+  color: var(--gold);
   font-variant-numeric: tabular-nums
+}
+
+.poff-row .btn.sm {
+  padding: 4px 10px;
+  min-width: 40px
 }
 
 .hp-loc {
@@ -4412,5 +4431,52 @@ html[dir="rtl"] .back-btn .ic {
   #btnQuality,
   .speed-wrap {
     display: none
+  }
+}
+
+/* ═══════════════ hero mobile (after base hero rules so they win) ═══════════════ */
+@media(max-width:900px) {
+  .hero {
+    grid-template-columns: 1fr
+  }
+
+  .hero-side {
+    padding: 0 26px 26px
+  }
+}
+
+@media(max-width:640px) {
+  .hero {
+    gap: 16px;
+    margin-bottom: 20px
+  }
+
+  .hero-main {
+    padding: 26px 20px 8px
+  }
+
+  .hero-side {
+    display: block;
+    padding: 0 20px 20px
+  }
+
+  .hp-card {
+    width: 100%
+  }
+
+  .hp-weather {
+    min-height: 0
+  }
+
+  .hp-weather .hw-d {
+    white-space: normal
+  }
+
+  .hero h1 {
+    font-size: 24px
+  }
+
+  .hero p {
+    font-size: 13.5px
   }
 }
