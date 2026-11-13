@@ -26,7 +26,11 @@ sidebar tab showing real page images.
   with instant grid filtering) and a resume button for the last read page.
 - Reader view: surah name + juz/page indicator (juz start-page table), page
   fitted to the viewport height, page-turn arrows in a bottom bar.
-- Reader view: one page at a time, **SVG vector pages** (crisp at any zoom)
+- Reader view: **open-book two-page spread on desktop** (≥900px): even page
+  on the right, odd on the left (page 2 faces page 3; page 1 and 604 render
+  alone), subtle spine shadows, page-turn steps by 2; single page below the
+  breakpoint, with live re-render when crossing it while reading.
+- Reader view: one page at a time on mobile, **SVG vector pages** (crisp at any zoom)
   from `raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf` (KFGQPC
   artwork, Quran.ws/quranpedia SVG conversion, CC BY 4.0), with automatic
   fallback to the PNG CDN `SakinaDevGroup/mushaf-madani-cdn` (light/dark
@@ -36,11 +40,15 @@ sidebar tab showing real page images.
   `store`.
 - Dark theme: native dark PNG fallback available; SVG pages are inverted
   via CSS filter (black ink → light ink) on the theme-matched background.
+- Mobile pass: compact fullscreen-player overlay (mandala sized to the
+  viewport, smaller controls), compressed mushaf chrome (icon-only page-turn
+  buttons), tighter hero/topbar spacing on small and low (landscape) screens.
 
 **Code touchpoints** (done):
 - `SURAH_PAGE` mapping (surah → Madani start page), `mushafSVGURL` /
   `mushafPNGURL`, `mushafGo()`, `viewMushaf()`, `viewRead()` in `app.js`.
-- `S.readN` (current page or null = index), `S.mushafPage` persisted.
+- `S.readN` (current page or null = index), `S.mushafPage` persisted;
+  `mushafBook()` / `mushafRight()` / `mushafStep()` spread helpers.
 - Sidebar nav item `data-view="mushaf"`; `render()` branch + `#view`
   delegation (`[data-read]`, `mushafback`, `mprev`, `mnext`).
 
