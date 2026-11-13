@@ -30,8 +30,8 @@ const VERSES=[["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَ�
 
 /* ── i18n ── */
 const I18N={
-ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة",floatPanel:"فصل اللوحة كنافذة عائمة",dockPanel:"إرجاع اللوحة إلى الجانب",mushaf:"المصحف",quranName:"القرآن الكريم",startReading:"ابدأ القراءة",continueReading:"تابع القراءة",mushafSub:"قراءة المصحف — رواية حفص عن عاصم",page:"صفحة",juz:"الجزء",rwHafs:"حفص عن عاصم",rwWarsh:"ورش عن نافع",mushafRiwaya:"رواية المصحف",mushafRiwayaDesc:"المصحف المكتوب — حفص عن عاصم / ورش عن نافع",chooseRiwaya:"اختر رواية المصحف",chooseRiwayaDesc:"يمكنك تغييرها لاحقاً من الإعدادات",dlPages:"تحميل جميع الصفحات",prayerTimes:"مواقيت الصلاة",prayerSub:"مواقيت الصلاة لموقعك",nextPrayer:"الصلاة القادمة",fajr:"الفجر",sunrise:"الشروق",dhuhr:"الظهر",asr:"العصر",maghrib:"المغرب",isha:"العشاء",location:"الموقع",changeLoc:"تغيير الموقع",searchLoc:"ابحث عن مدينة…",locNotFound:"لم يتم العثور على الموقع",search:"بحث",adhan:"الأذان",adhanDesc:"تشغيل الأذان تلقائياً عند دخول وقت الصلاة",adhanNow:"حان الآن وقت",stopAdhan:"إيقاف الأذان",adhanOn:"مفعّل",adhanOff:"معطّل"},
-en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel",floatPanel:"Float panel",dockPanel:"Dock panel",mushaf:"Mushaf",quranName:"The Holy Qur'an",startReading:"Start reading",continueReading:"Continue reading",mushafSub:"Read the Qur'an — Hafs 'an 'Asim",page:"Page",juz:"Juz",rwHafs:"Hafs 'an 'Asim",rwWarsh:"Warsh 'an Nafi'",mushafRiwaya:"Mushaf riwayah",mushafRiwayaDesc:"Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'",chooseRiwaya:"Choose mushaf riwayah",chooseRiwayaDesc:"You can change it later in Settings",dlPages:"Download all pages",prayerTimes:"Prayer times",prayerSub:"Prayer times for your location",nextPrayer:"Next prayer",fajr:"Fajr",sunrise:"Sunrise",dhuhr:"Dhuhr",asr:"Asr",maghrib:"Maghrib",isha:"Isha",location:"Location",changeLoc:"Change location",searchLoc:"Search a city…",locNotFound:"Location not found",search:"Search",adhan:"Adhan",adhanDesc:"Play the adhan automatically at prayer time",adhanNow:"It is now time for",stopAdhan:"Stop adhan",adhanOn:"On",adhanOff:"Off"}
+ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة",floatPanel:"فصل اللوحة كنافذة عائمة",dockPanel:"إرجاع اللوحة إلى الجانب",mushaf:"المصحف",quranName:"القرآن الكريم",startReading:"ابدأ القراءة",continueReading:"تابع القراءة",mushafSub:"قراءة المصحف — رواية حفص عن عاصم",page:"صفحة",juz:"الجزء",rwHafs:"حفص عن عاصم",rwWarsh:"ورش عن نافع",mushafRiwaya:"رواية المصحف",mushafRiwayaDesc:"المصحف المكتوب — حفص عن عاصم / ورش عن نافع",chooseRiwaya:"اختر رواية المصحف",chooseRiwayaDesc:"يمكنك تغييرها لاحقاً من الإعدادات",dlPages:"تحميل جميع الصفحات",prayerTimes:"مواقيت الصلاة",prayerSub:"مواقيت الصلاة لموقعك",nextPrayer:"الصلاة القادمة",fajr:"الفجر",sunrise:"الشروق",dhuhr:"الظهر",asr:"العصر",maghrib:"المغرب",isha:"العشاء",location:"الموقع",changeLoc:"تغيير الموقع",searchLoc:"ابحث عن مدينة…",locNotFound:"لم يتم العثور على الموقع",search:"بحث",adhan:"الأذان",adhanDesc:"تشغيل الأذان تلقائياً عند دخول وقت الصلاة",adhanNow:"حان الآن وقت",stopAdhan:"إيقاف الأذان",adhanOn:"مفعّل",adhanOff:"معطّل",firstThird:"الثلث الأول من الليل",lastThird:"الثلث الأخير من الليل"},
+en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel",floatPanel:"Float panel",dockPanel:"Dock panel",mushaf:"Mushaf",quranName:"The Holy Qur'an",startReading:"Start reading",continueReading:"Continue reading",mushafSub:"Read the Qur'an — Hafs 'an 'Asim",page:"Page",juz:"Juz",rwHafs:"Hafs 'an 'Asim",rwWarsh:"Warsh 'an Nafi'",mushafRiwaya:"Mushaf riwayah",mushafRiwayaDesc:"Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'",chooseRiwaya:"Choose mushaf riwayah",chooseRiwayaDesc:"You can change it later in Settings",dlPages:"Download all pages",prayerTimes:"Prayer times",prayerSub:"Prayer times for your location",nextPrayer:"Next prayer",fajr:"Fajr",sunrise:"Sunrise",dhuhr:"Dhuhr",asr:"Asr",maghrib:"Maghrib",isha:"Isha",location:"Location",changeLoc:"Change location",searchLoc:"Search a city…",locNotFound:"Location not found",search:"Search",adhan:"Adhan",adhanDesc:"Play the adhan automatically at prayer time",adhanNow:"It is now time for",stopAdhan:"Stop adhan",adhanOn:"On",adhanOff:"Off",firstThird:"First third of the night",lastThird:"Last third of the night"}
 };
 const t=k=>I18N[S.lang][k]??k;
 
@@ -154,7 +154,7 @@ function filteredReciters(){
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}if(S.prayerTimer){clearInterval(S.prayerTimer);S.prayerTimer=null}S.prayerSearch=null;document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
+function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}S.prayerSearch=null;document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
 function render(){
   applyI18nStatic();
   const ph={home:'searchReciters',reciters:'searchReciters',surahs:'searchSurahs',favorites:'searchFav',recent:'searchRecent',mushaf:'searchSurahs'}[S.view]||'searchReciters';
@@ -189,6 +189,7 @@ function viewHome(){
       <div class="hero-cta">
         ${last?`<button class="btn primary" data-act="resume"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('continueL')} · ${esc(surahName(last.n,S.lang))}</button>`:''}
         <button class="btn" data-act="browse"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>${t('browse')}</button>
+        ${nextPrayerKey()?`<button class="btn gold hero-prayer" data-act="goprayer"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c2 2 4 3.6 4 6H8c0-2.4 2-4 4-6z"/><path d="M5 21v-8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8"/><path d="M3 21h18"/><path d="M10 21v-4h4v4"/></svg><span>${t('nextPrayer')} — ${t(nextPrayerKey().toLowerCase())}</span><b class="pr-count" dir="ltr">${prayerCountdownStr()}</b></button>`:''}
       </div>
       <div class="hero-stats">${stats.map(s=>`<span class="stat-chip"><svg class="ic" viewBox="0 0 24 24">${[s[0],s[1],s[2]].map(d=>d?`<path d="${d}"/>`:'' ).join('')}</svg><b>${num(s[3])}</b> ${esc(s[4])}</span>`).join('')}</div>
     </div></section>
@@ -562,10 +563,11 @@ function viewRead(){
   </div>`;
 }
 /* ═══════════════ PRAYER TIMES ═══════════════ */
-const PRAYERS=[['Fajr','fajr'],['Sunrise','sunrise'],['Dhuhr','dhuhr'],['Asr','asr'],['Maghrib','maghrib'],['Isha','isha']];
+const PRAYERS=[['Fajr','fajr'],['Dhuhr','dhuhr'],['Asr','asr'],['Maghrib','maghrib'],['Isha','isha']];
+const PRAYER_EXTRA=[['Sunrise','sunrise'],['Firstthird','firstThird'],['Lastthird','lastThird']];
 const prayerTime=k=>S.prayerData.timings[k].slice(11,16);
 function viewPrayer(){
-  setTimeout(loadPrayer,0);
+  if(!S.prayerData)setTimeout(loadPrayer,0);
   const L=S.prayerLoc;
   return `<div class="view-head"><h2>${t('prayerTimes')}</h2></div>
   <div class="prayer-wrap">
@@ -596,9 +598,22 @@ async function fetchPrayer(){
 }
 async function loadPrayer(){
   await fetchPrayer();
-  if(S.view!=='prayer')return;
-  render();
   if(S.prayerData)startPrayerTick();
+  if(S.view==='prayer')render();
+}
+function nextPrayerKey(){
+  if(!S.prayerData)return null;
+  const tm=S.prayerData.timings,now=Date.now();
+  for(const[k]of PRAYERS){if(new Date(tm[k]).getTime()>now)return k}
+  return 'Fajr';
+}
+function prayerCountdownStr(){
+  const tm=S.prayerData.timings,now=Date.now();
+  let nt=null;
+  for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime();if(tt>now){nt=tt;break}}
+  if(nt===null)nt=new Date(tm.Fajr).getTime()+86400000;
+  const s=Math.max(0,Math.floor((nt-now)/1000));
+  return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
 function playAdhan(k){
   if(!S.adhanAudio){S.adhanAudio=new Audio();S.adhanAudio.preload='auto'}
@@ -611,7 +626,6 @@ function adhanTick(){
   if(!S.adhanOn||!S.prayerData)return;
   const tm=S.prayerData.timings,now=Date.now();
   for(const[k]of PRAYERS){
-    if(k==='Sunrise')continue;
     const tt=new Date(tm[k]).getTime();
     if(now>=tt&&now-tt<90000){
       const key=`${S.prayerKey}|${k}`;
@@ -620,36 +634,33 @@ function adhanTick(){
     }
   }
 }
-setInterval(async()=>{await fetchPrayer();adhanTick()},10000);
-fetchPrayer();
+setInterval(async()=>{await fetchPrayer();adhanTick();if(S.prayerData&&!S.prayerTimer)startPrayerTick()},10000);
+fetchPrayer().then(()=>{if(S.prayerData){startPrayerTick();if(S.view==='home'||S.view==='prayer')render()}});
 function prayerCardsHTML(){
-  const tm=S.prayerData.timings,hj=S.prayerData.date.hijri,now=Date.now();
+  const tm=S.prayerData.timings,hj=S.prayerData.date.hijri;
   const num=p=>S.lang==='ar'?arDigits(p):p;
-  let next=null;
-  for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime();if(tt>now){next=k;break}}
-  if(!next)next='Fajr';
+  const next=nextPrayerKey();
   const cards=PRAYERS.map(([k,l])=>`<div class="prayer-card${k===next?' next':''}">
+    <span>${t(l)}</span><b>${num(prayerTime(k))}</b>
+  </div>`).join('');
+  const extra=PRAYER_EXTRA.map(([k,l])=>`<div class="prayer-card alt">
     <span>${t(l)}</span><b>${num(prayerTime(k))}</b>
   </div>`).join('');
   const hdate=`${num(hj.day)} ${S.lang==='ar'?hj.month.ar:hj.month.en} ${num(hj.year)}`;
   return `<div class="prayer-next">
-    <span>${t('nextPrayer')} — ${t(PRAYERS.find(p=>p[0]===next)[1])}</span>
-    <b id="prCountdown" dir="ltr">--:--:--</b>
+    <span>${t('nextPrayer')} — ${t(next.toLowerCase())}</span>
+    <b id="prCountdown" class="pr-count" dir="ltr">${prayerCountdownStr()}</b>
   </div>
   <div class="prayer-grid">${cards}</div>
+  <div class="prayer-grid alt">${extra}</div>
   <div class="prayer-date">${hdate} · ${S.prayerData.date.readable}</div>`;
 }
 function startPrayerTick(){
   clearInterval(S.prayerTimer);
   S.prayerTimer=setInterval(()=>{
-    if(S.view!=='prayer'||!S.prayerData)return;
-    const tm=S.prayerData.timings,now=Date.now();
-    let nt=null;
-    for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime();if(tt>now){nt=tt;break}}
-    if(nt===null)nt=new Date(tm.Fajr).getTime()+86400000;
-    const el=$('#prCountdown');
-    if(el){const s=Math.max(0,Math.floor((nt-now)/1000));
-      el.textContent=`${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+    if(!S.prayerData)return;
+    const str=prayerCountdownStr();
+    $$('.pr-count').forEach(el=>el.textContent=str);
   },1000);
 }
 async function prayerSearch(q){
@@ -891,6 +902,7 @@ $('#view').addEventListener('click',async e=>{
   const act=e.target.closest('[data-act]');
   if(act){const a=act.dataset.act;
     if(a==='browse')setView('reciters');
+    else if(a==='goprayer')setView('prayer');
     else if(a==='back')setView('reciters');
     else if(a==='mushafback')setView('home');
     else if(a==='mushafexit')setView('home');
