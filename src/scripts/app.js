@@ -700,7 +700,25 @@ const YT_LIST=[
   {id:'W0C-R4Frf5w',reciter:'بدر التركي',title:'سورة الفتح كاملة'},
   {id:'ylQyd_qg2rg',reciter:'محمد ديبروف',title:'سورة البقرة كاملة'},
   {id:'v0gFVowpBXk',reciter:'محمد ديبروف',title:'سورة يس كاملة'},
-  {id:'63M2JhRGgQQ',reciter:'سعود الشريم',title:'سورة البقرة كاملة'}
+  {id:'63M2JhRGgQQ',reciter:'سعود الشريم',title:'سورة البقرة كاملة'},
+  {id:'SytvCjPesP0',reciter:'سعود الشريم',title:'سورة الذاريات كاملة'},
+  {id:'NuWRdPZANNc',reciter:'سعود الشريم',title:'سورة القصص كاملة'},
+  {id:'U9PzDaVRmMA',reciter:'سعود الشريم',title:'تلاوة خاشعة تهدا العقل وتذهب الهم'},
+  {id:'JgpefhXIPvs',reciter:'بدر التركي',title:'سورة الأحزاب ٢١-٢٧ — من المؤمنين رجال صدقوا'},
+  {id:'6JdOc53G9Z8',reciter:'بدر التركي',title:'سور: يس، الرحمن، الواقعة، الملك'},
+  {id:'Mgtp1SaVvPc',reciter:'بدر التركي',title:'تلاوة مؤثرة جداً يأخذك لعالم آخر'},
+  {id:'UHKn1WSFJNo',reciter:'محمد ديبروف',title:'وما لنا ألا نتوكل على الله وقد هدانا سبلنا'},
+  {id:'KPFnaDJ3l_w',reciter:'ياسر الدوسري',title:'قل لمن الأرض ومن فيها — سورة المؤمنون'},
+  {id:'Ect7R47t5XA',reciter:'محمد صديق المنشاوي',title:'قرآن الصباح — أجمل ما تبدأ به يومك'},
+  {id:'Wryu6u_ENtE',reciter:'شريف مصطفى',title:'سورة الدخان — تلاوة خاشعة'},
+  {id:'qmxCz3Sgy94',reciter:'عبد الرحمن مسعد',title:'تلاوة مؤثرة أرح سمعك وقلبك'},
+  {id:'hiIqeTznnS8',reciter:'محمد مسعد',title:'سورة القيامة — تلاوة هادئة'},
+  {id:'0dAwXrtS2aM',reciter:'محمد مسعد',title:'ساعة كاملة من أجمل التلاوات — راحة نفسية'},
+  {id:'Ucn4goq4EMI',reciter:'هيثم الدخين',title:'روائع التلاوات — أهدأ ما تسمعه'},
+  {id:'nXt2_Rpb71w',reciter:'عبدالعزيز السحيم',title:'سورة الملك — تلاوة مؤثرة'},
+  {id:'-VfaRGe14xc',reciter:'علاء عقل',title:'أذكار الصباح — راحة نفسية لا توصف'},
+  {id:'byM54Y35Qi8',reciter:'حمزة بوديب',title:'أذكار الصباح — بأجمل صوت'},
+  {id:'BfwSLOHlPrw',reciter:'يونس اسويلص',title:'تلاوة مؤثرة يرق لها القلب'}
 ];
 function viewYt(){
   const cur=S.ytId?YT_LIST.find(x=>x.id===S.ytId):null;
