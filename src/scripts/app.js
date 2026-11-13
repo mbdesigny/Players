@@ -710,6 +710,7 @@ const YT_LIST=[
   {id:'Mgtp1SaVvPc',reciter:'بدر التركي',title:'تلاوة مؤثرة جداً يأخذك لعالم آخر'},
   {id:'UHKn1WSFJNo',reciter:'محمد ديبروف',title:'وما لنا ألا نتوكل على الله وقد هدانا سبلنا'},
   {id:'KPFnaDJ3l_w',reciter:'ياسر الدوسري',title:'قل لمن الأرض ومن فيها — سورة المؤمنون'},
+  {id:'Rfh36mjrLBo',reciter:'ياسر الدوسري',title:'سورة المؤمنون — تلاوة خاشعة'},
   {id:'Ect7R47t5XA',reciter:'محمد صديق المنشاوي',title:'قرآن الصباح — أجمل ما تبدأ به يومك'},
   {id:'Wryu6u_ENtE',reciter:'شريف مصطفى',title:'سورة الدخان — تلاوة خاشعة'},
   {id:'qmxCz3Sgy94',reciter:'عبد الرحمن مسعد',title:'تلاوة مؤثرة أرح سمعك وقلبك'},
