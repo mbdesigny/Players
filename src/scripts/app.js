@@ -631,7 +631,7 @@ function viewPrayer(){
       <button class="btn primary sm" data-act="locsearch">${t('search')}</button>
       <div class="loc-res" id="locRes">${S.prayerSearch.res||''}</div>
     </div>`:''}
-    <div id="prayerBox">${S.prayerData?prayerCardsHTML():`<div class="empty" style="padding:30px"><p>${t('loading')}</p></div>`}</div>
+    <div class="prayer-box" id="prayerBox">${S.prayerData?prayerCardsHTML():`<div class="empty" style="padding:30px"><p>${t('loading')}</p></div>`}</div>
   </div>`;
 }
 function prayerSettingsHTML(){

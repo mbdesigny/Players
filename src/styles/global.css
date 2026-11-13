@@ -2904,6 +2904,7 @@ html[dir="rtl"] .back-btn .ic {
 .prayer-loc {
   display: flex;
   align-items: center;
+
   gap: 10px;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -2989,6 +2990,15 @@ html[dir="rtl"] .back-btn .ic {
   background: var(--glow2)
 }
 
+.prayer-box {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%
+}
+
 .prayer-next {
   display: flex;
   align-items: center;
@@ -2999,6 +3009,7 @@ html[dir="rtl"] .back-btn .ic {
   border-radius: var(--r-lg);
   padding: 22px 26px;
   box-shadow: var(--shadow2)
+
 }
 
 .prayer-next span {
