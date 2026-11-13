@@ -7,7 +7,7 @@
 <title>أُنس · Ouns — القرآن الكريم</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Jost:wght@300;400;500;600&family=Nunito:wght@600;700;800&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════ OUNS DESIGN TOKENS ═══════════════ */
 :root{
@@ -40,12 +40,11 @@
 html,body{height:100%}
 body{
   background:var(--bg); color:var(--ink); overflow:hidden;
-  font-family:"Jost","Readex Pro",system-ui,sans-serif; font-size:15px; line-height:1.5;
+  font-family:"Alan Sans",system-ui,sans-serif; font-size:15px; line-height:1.5;
   display:flex; flex-direction:column; transition:background .45s,color .45s;
 }
-html[dir="rtl"] body{font-family:"Readex Pro","Jost",system-ui,sans-serif}
-h1,h2,h3{font-family:"Nunito","Readex Pro",sans-serif;font-weight:800;letter-spacing:-.2px}
-html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3{font-family:"Readex Pro","Nunito",sans-serif;font-weight:700}
+h1,h2,h3{font-family:"Alan Sans",system-ui,sans-serif;font-weight:800;letter-spacing:-.2px}
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3{font-weight:700}
 .amiri{font-family:"Amiri",serif}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 input,select{font:inherit;color:inherit}
@@ -202,8 +201,11 @@ select.pill{padding:9px 14px;border-radius:30px;border:1px solid var(--line2);ba
 .rh-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .rh-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .rh-actions select{padding:8px 14px;border-radius:30px;border:1px solid var(--line2);background:var(--surface2);font-size:12.5px;outline:none;max-width:290px}
-.surah-list{display:flex;flex-direction:column;gap:7px}
-.surah-row{display:flex;align-items:center;gap:14px;padding:11px 16px;background:var(--surface);border:1px solid var(--line);
+.surah-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:1180px){.surah-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:860px){.surah-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.surah-list{grid-template-columns:1fr}}
+.surah-row{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:14px 14px 12px;background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r-md);cursor:pointer;transition:.18s;position:relative;animation:rise .45s both}
 .surah-row:hover{border-color:var(--accent2);background:var(--surface2)}
 .surah-row.playing{border-color:var(--gold);background:linear-gradient(90deg,var(--glow2),var(--surface) 62%)}
@@ -211,9 +213,11 @@ select.pill{padding:9px 14px;border-radius:30px;border:1px solid var(--line2);ba
 .surah-row .sn::before{content:"";position:absolute;inset:4px;border:1.3px solid var(--accent2);transform:rotate(45deg);border-radius:5px;opacity:.7}
 .surah-row.playing .sn::before{border-color:var(--gold)}
 .surah-row .sn b{position:relative;font-weight:600}
-.surah-row .si{flex:1;min-width:0}
+.surah-row .si{min-width:0}
 .surah-row .sa{font-family:"Amiri",serif;font-size:19px;line-height:1.3}
-.surah-row .se{font-size:11px;color:var(--ink2)}
+.surah-row .se{font-size:11px;color:var(--ink2);display:block;margin-top:2px}
+.surah-row .sfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+.surah-row .acts{opacity:1}
 .surah-row .sm{display:flex;gap:6px;align-items:center;flex:none}
 .surah-row .dur{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums;min-width:46px;text-align:end;direction:ltr}
 .surah-row .acts{display:flex;gap:4px;opacity:0;transition:.18s}
@@ -259,7 +263,14 @@ body.playing .mandala-glow{opacity:1;animation:breathe 4.4s ease-in-out infinite
 @keyframes breathe{0%,100%{transform:scale(.95)}50%{transform:scale(1.05)}}
 
 /* ═════════ now-playing panel ═════════ */
+body.np-collapsed .shell{grid-template-columns:var(--sidebar) minmax(0,1fr)}
+body.np-collapsed .np-panel{display:none}
 .np-panel{background:var(--surface);border-inline-start:1px solid var(--line);padding:22px 20px;display:flex;flex-direction:column;gap:15px;min-height:0;overflow-y:auto}
+.np-head{display:flex;align-items:center;gap:8px}
+.np-head .np-label{flex:1}
+.np-head .icon-btn{width:30px;height:30px;border-color:transparent}
+.np-head .icon-btn.on{color:var(--gold);border-color:var(--gold)}
+#npToggle.on{color:var(--gold)}
 .np-label{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:8px}
 .np-label::after{content:"";flex:1;height:1px;background:var(--line)}
 .np-art{width:min(100%,272px);aspect-ratio:1;margin:0 auto;position:relative}
@@ -347,7 +358,10 @@ html[dir="rtl"] .prog .fill{background:linear-gradient(270deg,var(--accent),var(
 .np-overlay .ov-bg .glow{position:absolute;border-radius:50%;filter:blur(100px)}
 .ov-top{width:100%;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
 .ov-top .lbl{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:700}
-.ov-mandala{width:min(56vh,430px);aspect-ratio:1;margin:3vh 0 2vh;position:relative;z-index:1}
+.ov-photo{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.ov-photo img{width:100%;height:100%;object-fit:cover;filter:blur(70px) saturate(1.15);opacity:.45;transform:scale(1.25)}
+.ov-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,var(--bg) 92%)}
+.ov-mandala{width:min(60vh,470px);aspect-ratio:1;margin:2vh 0 1vh;position:relative;z-index:1}
 .ov-title{font-family:"Amiri",serif;font-size:clamp(30px,5vh,44px);text-align:center;position:relative;z-index:1}
 .ov-artist{color:var(--ink2);font-size:15px;margin-top:4px;position:relative;z-index:1}
 .ov-badges{display:flex;gap:8px;margin:14px 0 20px;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
@@ -433,7 +447,7 @@ kbd{background:var(--bg2);border:1px solid var(--line2);border-radius:6px;paddin
   main{padding:6px 16px 24px}
   .topbar{padding:12px 16px 8px}
   .reciter-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
-  .surah-row .sm{display:none}
+  .surah-row .sfoot .dur{display:none}
   .reciter-hero{flex-direction:column;text-align:center}
   .reciter-hero .rh-meta,.reciter-hero .rh-actions{justify-content:center}
 }
@@ -485,7 +499,7 @@ kbd{background:var(--bg2);border:1px solid var(--line2);border-radius:6px;paddin
 
   <!-- ══════════ NOW PLAYING PANEL ══════════ -->
   <aside class="np-panel">
-    <div class="np-label" data-i18n="nowPlaying">يُتلى الآن</div>
+    <div class="np-head"><span class="np-label" data-i18n="nowPlaying">يُتلى الآن</span><button class="icon-btn" id="npPin" aria-label="pin panel"><svg class="ic" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M8 4h8"/><path d="M9 4v5c0 1.6-2.2 2.6-2.2 4.2h10.4C16.2 11.6 14 10.6 14 9V4"/></svg></button></div>
     <div class="np-art"><div class="mandala-glow"></div><div class="mandala-wrap" id="npMandala"></div></div>
     <div>
       <div class="np-title amiri" id="npTitle">أُنس</div>
@@ -524,6 +538,7 @@ kbd{background:var(--bg2);border:1px solid var(--line2);border-radius:6px;paddin
     </div>
   </div>
   <div class="pb-right">
+    <button class="ctrl" id="npToggle" aria-label="now playing panel"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg></button>
     <select id="selQuality" aria-label="quality"></select>
     <select id="selSpeed" aria-label="speed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
     <div class="sleep-wrap">
@@ -542,6 +557,7 @@ kbd{background:var(--bg2);border:1px solid var(--line2);border-radius:6px;paddin
 <!-- ══════════ FULLSCREEN NOW PLAYING ══════════ -->
 <div class="np-overlay" id="npOverlay">
   <div class="ov-bg"><div class="glow" style="width:60vw;height:60vw;top:-20vw;inset-inline-start:-15vw;background:var(--glow1)"></div><div class="glow" style="width:50vw;height:50vw;bottom:-18vw;inset-inline-end:-12vw;background:var(--glow2)"></div><div class="lattice" style="position:absolute;inset:0;opacity:var(--lattice)"></div></div>
+  <div class="ov-photo" id="ovPhoto"></div>
   <div class="ov-top">
     <span class="lbl" data-i18n="nowPlaying">يُتلى الآن</span>
     <button class="icon-btn" id="ovClose" aria-label="close"><svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
@@ -645,8 +661,8 @@ const VERSES=[["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَ�
 
 /* ── i18n ── */
 const I18N={
-ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة"},
-en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality"}
+ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة"},
+en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel"}
 };
 const t=k=>I18N[S.lang][k]??k;
 
@@ -660,7 +676,7 @@ const S={
   shuffle:store.get('shuffle',false), repeat:store.get('repeat',0),
   favorites:store.get('favorites',[]), recent:store.get('recent',[]),
   current:null, srcIdx:0, dirHandle:null, sleepMin:0, sleepTimer:null, sleepTick:null,
-  verseIdx:0, offline:false
+  verseIdx:0, offline:false, npMode:store.get('npMode','auto')
 };
 const audio=$('#audio');
 audio.volume=store.get('volume',1);
@@ -675,23 +691,35 @@ function avatarURI(seed,letter){
   for(let i=0;i<8;i++){const a=i*Math.PI/4;dots+=`<circle cx="${(100+87*Math.cos(a)).toFixed(1)}" cy="${(100+87*Math.sin(a)).toFixed(1)}" r="3" fill="${pt}" opacity=".85"/>`}
   return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="117" text-anchor="middle" font-size="50" font-family="Amiri,serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
 }
-function mandalaSVG(seed,numTxt,subTxt){
-  const[bg,pt,ink,gd]=pal(seed);const C=(2*Math.PI*186).toFixed(1);let dots='',petals='';
+function mandalaSVG(seed,numTxt,subTxt,photo,phLetter){
+  const[bg,pt,ink,gd]=pal(seed);const C=(2*Math.PI*190).toFixed(1);let dots='',petals='';
   for(let i=0;i<16;i++){const a=i*Math.PI/8;dots+=`<circle cx="${(200+168*Math.cos(a)).toFixed(1)}" cy="${(200+168*Math.sin(a)).toFixed(1)}" r="${i%2?3:5.5}" fill="${pt}" opacity="${i%2?.5:.95}"/>`}
   for(let i=0;i<8;i++)petals+=`<rect x="128" y="128" width="144" height="144" rx="16" fill="none" stroke="${pt}" stroke-width="1.3" opacity=".5" transform="rotate(${i*22.5} 200 200)"/>`;
+  const cid='phc'+(hash(seed)>>>0).toString(36);
+  const center=photo
+    ?`<circle cx="200" cy="200" r="64" fill="${bg}"/>
+      <text x="200" y="222" text-anchor="middle" font-size="56" font-family="Amiri,serif" font-weight="700" fill="${pt}">${esc(phLetter||'ق')}</text>
+      <clipPath id="${cid}"><circle cx="200" cy="200" r="64"/></clipPath>
+      <image href="${photo}" x="136" y="136" width="128" height="128" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>
+      <circle cx="200" cy="200" r="64" fill="none" stroke="${gd}" stroke-width="2"/>`
+    :`<circle cx="200" cy="200" r="85" fill="${bg}" stroke="${gd}" stroke-width="1.6"/>
+      <text x="200" y="212" text-anchor="middle" class="m-num" fill="${ink}">${esc(numTxt)}</text>
+      <text x="200" y="250" text-anchor="middle" class="m-sub" fill="${pt}">${esc(subTxt)}</text>`;
   return `<svg viewBox="0 0 400 400" class="mandala-svg" xmlns="http://www.w3.org/2000/svg">
   <circle cx="200" cy="200" r="197" fill="${bg}"/><circle cx="200" cy="200" r="197" fill="none" stroke="${gd}" stroke-width="1.4" opacity=".8"/>
   <g class="spin-a">${dots}<circle cx="200" cy="200" r="168" fill="none" stroke="${pt}" stroke-width="1" opacity=".45"/></g>
   <g class="spin-b">${petals}</g>
   <g class="spin-c"><rect x="116" y="116" width="168" height="168" fill="none" stroke="${gd}" stroke-width="1.8"/><rect x="116" y="116" width="168" height="168" fill="none" stroke="${gd}" stroke-width="1.8" transform="rotate(45 200 200)"/><circle cx="200" cy="200" r="103" fill="none" stroke="${pt}" stroke-width="1.2" opacity=".7"/></g>
-  <circle cx="200" cy="200" r="85" fill="${bg}" stroke="${gd}" stroke-width="1.6"/>
-  <text x="200" y="200" text-anchor="middle" class="m-num" fill="${ink}">${esc(numTxt)}</text>
-  <text x="200" y="238" text-anchor="middle" class="m-sub" fill="${pt}">${esc(subTxt)}</text>
-  <circle cx="200" cy="200" r="186" fill="none" stroke="${pt}" stroke-opacity=".22" stroke-width="4"/>
-  <circle class="pr-fill" cx="200" cy="200" r="186" fill="none" stroke="${gd}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 200 200)"/></svg>`;
+  ${photo?`<text x="200" y="120" text-anchor="middle" class="m-num" fill="${ink}">${esc(numTxt)}</text><text x="200" y="304" text-anchor="middle" class="m-sub" fill="${pt}">${esc(subTxt)}</text>`:''}
+  ${center}
+  <circle cx="200" cy="200" r="190" fill="none" stroke="${pt}" stroke-opacity=".22" stroke-width="4"/>
+  <circle class="pr-fill" cx="200" cy="200" r="190" fill="none" stroke="${gd}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 200 200)"/></svg>`;
 }
 const reciterLetter=r=>{const n=(S.lang==='ar'?r.name:r.name_en||r.name).trim();return n[0]||'ق'};
 const reciterName=r=>S.lang==='ar'?r.name:(r.name_en||r.name);
+const RECITER_PHOTOS={'منشاوي':'minshawi','عبدالباسط':'abdulbasit','التركي':'badr-turki','شريم':'shuraim','ديبروف':'dibirov','دوسري':'dosari','معيقلي':'muaiqly','الموسى':'al-mousa','سحيم':'suhaim','الدخين':'dukayn'};
+function photoURL(name,id){const n=norm2(name);for(const k in RECITER_PHOTOS){if(n.includes(norm2(k)))return 'img/'+RECITER_PHOTOS[k]+'.jpg'}return id?'img/'+id+'.jpg':''}
+const reciterImg=(r,cls='')=>{const p=photoURL(r.name,r.id);const ava=avatarURI(r.name,reciterLetter(r));return p?`<img class="${cls}" src="${p}" alt="${esc(reciterName(r))}" loading="lazy" onerror="this.onerror=null;this.src='${ava}'">`:`<img class="${cls}" src="${ava}" alt="${esc(reciterName(r))}" loading="lazy">`};
 
 /* ═══════════════ DATA ═══════════════ */
 async function api(path,params={}){const u=new URL(API+path);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
@@ -776,9 +804,9 @@ const orn=`<div class="ornament"><svg viewBox="0 0 24 24" fill="none" stroke="cu
 function viewHome(){
   const h=new Date().getHours();const greet=h<12?t('greetM'):t('greetE');
   const last=S.recent[0];
-  const featKeys=['عفاسي','سديس','حصري','منشاوي','شاطري','غامدي','معيقلي','دوسري'];
+  const featKeys=['منشاوي','عبدالباسط','التركي','شريم','ديبروف','دوسري','معيقلي','الموسى','سحيم','الدخين'];
   let feat=featKeys.map(k=>S.reciters.find(r=>norm2(r.name).includes(norm2(k)))).filter(Boolean);
-  if(feat.length<6)feat=[...feat,...S.reciters.filter(r=>!feat.includes(r))].slice(0,8);
+  if(feat.length<6)feat=[...feat,...S.reciters.filter(r=>!feat.includes(r))].slice(0,10);
   const quick=[18,36,55,67,56,2,1,112];
   const heroSeed=last?last.rar:'أُنس';
   const heroNum=last?(S.lang==='ar'?arDigits(last.n):last.n):'أ';
@@ -805,13 +833,13 @@ function viewHome(){
   <div class="quick-grid">${quick.map(n=>{const m=SURAH[n-1];return `<button class="quick-surah" data-surah="${n}"><span class="qn">${num(n)}</span><span><span class="qt">${esc(surahName(n,S.lang))}</span><br><span class="qs">${m[2]} ${t('ayahs')} · ${m[3]?t('medinan'):t('meccan')}</span></span><span class="qplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`}).join('')}</div>
   ${orn}
   <div class="view-head"><div><h2>${t('featured')}</h2><div class="sub">${t('recitersSub')}</div></div><button class="btn sm" data-act="browse">${t('browse')}</button></div>
-  <div class="reciter-grid">${feat.slice(0,8).map(reciterCard).join('')}</div>`;
+  <div class="reciter-grid">${feat.slice(0,10).map(reciterCard).join('')}</div>`;
 }
 function reciterCard(r){
   const ms=S.rewaya==='__all'?r.moshaf:r.moshaf.filter(m=>norm(m.rewaya)===S.rewaya);
   const rw=[...new Set(ms.map(m=>m.rewaya))].slice(0,2);
   return `<button class="reciter-card ${S.reciter&&S.reciter.id===r.id?'active':''}" data-rid="${r.id}">
-    <div class="ava"><img src="${avatarURI(r.name,reciterLetter(r))}" alt="${esc(reciterName(r))}" loading="lazy">
+    <div class="ava">${reciterImg(r)}
     <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
     <div class="rn">${esc(reciterName(r))}</div>
     <div class="rm">${rw.map(x=>`<span class="tag">${esc(x)}</span>`).join('')}<span class="tag gold">${r.moshaf.length} ${t('moshaf')}</span></div></button>`;
@@ -831,7 +859,7 @@ function viewSurahs(){
   const list=S.tracks.filter(tr=>!q||norm2(tr.name_ar+' '+tr.name_en+' '+tr.n).includes(q));
   const ms=r.moshaf;
   return `<button class="back-btn" data-act="back"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-  <section class="reciter-hero"><img src="${avatarURI(r.name,reciterLetter(r))}" alt="">
+  <section class="reciter-hero">${reciterImg(r)}
     <div class="rh-info"><h2>${esc(reciterName(r))}</h2>
       <div class="rh-meta"><span class="tag gold">${esc(m.rewaya)}</span><span class="tag">${esc(m.name||m.rewaya)}</span><span class="tag">${S.tracks.length} ${t('surahCount')}</span></div>
       <div class="rh-actions">
@@ -845,16 +873,15 @@ function surahRow(tr,i){
   const playing=S.current&&S.current.key===tr.key;
   const faved=S.favorites.some(f=>f.key===tr.key);
   const num=S.lang==='ar'?arDigits(tr.n):tr.n;
-  const prim=S.lang==='ar'?tr.name_ar:tr.name_en, sec=S.lang==='ar'?tr.name_en:tr.name_ar;
+  const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
   return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-key="${tr.key}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span>
-    <span class="si"><span class="sa">${esc(prim)}</span><br><span class="se">${esc(sec)} · ${tr.ayahs} ${t('ayahs')}</span></span>
-    <span class="sm"><span class="tag">${tr.type?t('medinan'):t('meccan')}</span></span>
-    <span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
+    <span class="si"><span class="sa">${esc(prim)}</span><span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type?t('medinan'):t('meccan')}</span></span>
+    <span class="sfoot"><span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
     <span class="acts">
       <button class="mini-btn ${faved?'faved':''}" data-fav="${tr.key}" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
       <button class="mini-btn" data-dl="${tr.key}" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
-    </span></div>`;
+    </span></span></div>`;
 }
 function viewCollection(items,title,sub,isFav){
   const q=norm2(S.query);
@@ -868,12 +895,12 @@ function collectionRow(f,tr,i,isFav){
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
   return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-key="${tr.key}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
-    <span class="si"><span class="sa">${esc(prim)}</span><br><span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
-    <span class="sm"><span class="tag gold">${esc(f.rewaya)}</span></span>
+    <span class="si"><span class="sa">${esc(prim)}</span><span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
+    <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
     <span class="acts">
       ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
       <button class="mini-btn" data-dl="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
-    </span></div>`;
+    </span></span></div>`;
 }
 
 /* ═══════════════ NAVIGATION ACTIONS ═══════════════ */
@@ -942,17 +969,19 @@ function prevTrack(){
 function updateNowPlaying(){
   const tr=S.current;if(!tr)return;
   const seed=tr.rar,num=S.lang==='ar'?arDigits(tr.n):String(tr.n),sub=trackName(tr);
-  const md=mandalaSVG(seed,num,sub);
+  const photo=photoURL(tr.rar,tr.rid);
+  const md=mandalaSVG(seed,num,sub,photo,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
   $('#npMandala').innerHTML=md;$('#ovMandala').innerHTML=md;
-  const ava=avatarURI(tr.rar,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
-  $('#pbArtImg').src=ava;
+  $('#ovPhoto').innerHTML=photo?`<img src="${photo}" alt="" onerror="this.remove()">`:'';
+  const ava=photo||avatarURI(tr.rar,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
+  $('#pbArtImg').src=ava;$('#pbArtImg').onerror=function(){this.onerror=null;this.src=avatarURI(tr.rar,'ق')} ;
   $('#npTitle').textContent=trackName(tr);$('#ovTitle').textContent=trackName(tr);
   $('#npArtist').textContent=trackReciter(tr);$('#ovArtist').textContent=trackReciter(tr);
   $('#pbTitle').textContent=`${trackName(tr)} · ${trackReciter(tr)}`;
-  $('#pbSub').textContent=`${tr.rewaya} · ${tr.mname}`;
-  updateBadges();updateFavButtons();
+  $('#pbSub').textContent=[tr.rewaya,tr.mname].filter(Boolean).join(' · ')||trackReciter(tr);
+  updateBadges();updateFavButtons();applyNpPanel();
   if('mediaSession'in navigator){
-    navigator.mediaSession.metadata=new MediaMetadata({title:trackName(tr),artist:trackReciter(tr),album:tr.rewaya,artwork:[{src:ava,sizes:'512x512',type:'image/svg+xml'}]});
+    navigator.mediaSession.metadata=new MediaMetadata({title:trackName(tr),artist:trackReciter(tr),album:tr.rewaya||'',artwork:[{src:ava,sizes:'512x512',type:photo?'image/jpeg':'image/svg+xml'}]});
   }
 }
 function updateBadges(){
@@ -994,7 +1023,7 @@ function updateProgress(){
   $('#ovCur').textContent=fmt(audio.currentTime);$('#ovDur').textContent=fmt(d);
   $('#progFill').style.width=(p*100)+'%';$('#progThumb').style.insetInlineStart=(p*100)+'%';
   $('#ovFill').style.width=(p*100)+'%';$('#ovThumb').style.insetInlineStart=(p*100)+'%';
-  const C=2*Math.PI*186;
+  const C=2*Math.PI*190;
   $$('.pr-fill').forEach(c=>c.style.strokeDashoffset=C*(1-p));
   if(S.current&&d){S.current.duration=d;const row=$(`.surah-row[data-key="${S.current.key}"] .dur`);if(row)row.textContent=fmt(d)}
 }
@@ -1155,6 +1184,12 @@ function buildQualitySelect(){
   sel.innerHTML=[['auto',t('qAuto')],['high',t('qHigh')],['std',t('qStd')],['save',t('qSave')]].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   sel.value=cur;
 }
+function applyNpPanel(){
+  const collapsed=S.npMode==='hidden'||(S.npMode==='auto'&&!S.current);
+  document.body.classList.toggle('np-collapsed',collapsed);
+  const pin=$('#npPin');if(pin)pin.classList.toggle('on',S.npMode==='pinned');
+  const tg=$('#npToggle');if(tg)tg.classList.toggle('on',S.npMode==='hidden');
+}
 function setTheme(th){S.theme=th;store.set('theme',th);applyTheme()}
 function setLang(lg){S.lang=lg;store.set('lang',lg);applyLang();render();if(S.current)updateNowPlaying();renderQueue();rotateVerse(true)}
 
@@ -1230,7 +1265,7 @@ $('#view').addEventListener('click',async e=>{
     return}
   const chip=e.target.closest('[data-rw]');if(chip){S.rewaya=chip.dataset.rw;render();return}
   const qs=e.target.closest('[data-surah]');if(qs){playQuick(+qs.dataset.surah);return}
-  const rc=e.target.closest('[data-rid]');if(rc){openReciter(+rc.dataset.rid,e.target.closest('.play-ov')!=null);return}
+  const rc=e.target.closest('[data-rid]');if(rc){openReciter(+rc.dataset.rid,false);return}
   const coll=e.target.closest('[data-coll]');if(coll){playCollection(+coll.dataset.coll,S.view==='favorites');return}
   const row=e.target.closest('.surah-row[data-idx]');if(row){loadTrack(+row.dataset.idx,true);return}
 });
@@ -1283,7 +1318,9 @@ window.addEventListener('beforeunload',saveSession);
 
 /* ═══════════════ INIT ═══════════════ */
 (async function init(){
-  applyTheme();applyLang();buildQualitySelect();renderSleepPop();updateRepeatUI();updateVolUI();
+  applyTheme();applyLang();buildQualitySelect();renderSleepPop();updateRepeatUI();updateVolUI();applyNpPanel();
+  $('#npPin').onclick=()=>{S.npMode=S.npMode==='pinned'?'auto':'pinned';store.set('npMode',S.npMode);applyNpPanel()};
+  $('#npToggle').onclick=()=>{S.npMode=S.npMode==='hidden'?'auto':'hidden';store.set('npMode',S.npMode);applyNpPanel()};
   $('#btnShuffle').classList.toggle('on',S.shuffle);
   $('#selSpeed').value=String(S.speed);
   $('#view').innerHTML=`<div class="loading"><div class="spinner"></div><span>${t('loading')}</span></div>`;
