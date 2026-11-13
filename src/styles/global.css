@@ -495,6 +495,8 @@ html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(
 .mushaf-stage.book .mushaf-page::after{content:"";position:absolute;inset:0;border-radius:6px;pointer-events:none}
 .mushaf-stage.book .mushaf-page:first-child::after{box-shadow:inset 26px 0 30px -26px rgba(0,0,0,.4)}
 .mushaf-stage.book .mushaf-page:last-child::after{box-shadow:inset -26px 0 30px -26px rgba(0,0,0,.4)}
+.mushaf-stage.book .mushaf-page{padding:10px}
+.mushaf-stage.book .mushaf-page img{max-height:100%;max-width:100%;object-fit:contain;border-radius:6px;box-shadow:none}
 
 /* ═══════════════ mobile responsiveness ═══════════════ */
 @media(max-width:640px){
