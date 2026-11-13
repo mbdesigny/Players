@@ -18,23 +18,20 @@ any ayah to jump to it.
 - Optional translation: `GET /v1/surah/{n}/{edition}` (e.g. `en.sahih`), edition
   chosen in settings.
 
-**Status**: **shipped (1a + 1b)**.
+**Status**: **shipped** — mushaf reading in the fullscreen player only, for
+Hafs recitations only (per product decision: audio quality from the full
+surah files is the priority, so ayah-by-ayah playback was cancelled).
 
-- **1b — ayah-by-ayah playback (default)**: when the reciter matches a
-  `versebyverse` audio edition (same `ED_KEYS` matching as `buildSources()`),
-  each ayah plays from its own file:
-  `https://cdn.islamic.network/quran/audio/{bitrate}/{edition}/{globalAyah}.mp3`
-  (`beginTrack()` builds the per-ayah URL list from the bundled surah ayah
-  counts; `playAyah()` advances on `ended`). Text, translation and audio all
-  come from the alquran.cloud / islamic.network source, and the highlight is
-  exact — no timing estimation. Clicking an ayah plays that file; the panel
-  head shows an ayah counter; repeat-one repeats the ayah; an audio error
-  falls back to the whole-surah file. Toggle in Settings → "تلاوة آية بآية".
-- **1a — surah mode (fallback)**: for reciters without an ayah edition, the
-  single surah MP3 plays and timing is estimated by distributing
-  `audio.duration` over ayah text-length weights (plus a bismillah weight for
-  surahs ≠ 1, 9). The verses panel, auto-scroll, click-to-jump and optional
-  translation (9 editions) work in both modes.
+- The verses panel (`#ovAyahs`) opens beside the artwork in the fullscreen
+  player (toggle button, hidden entirely for non-Hafs tracks). Text from
+  `api.alquran.cloud/v1/surah/{n}/editions/quran-uthmani[,trans]` (Uthmani
+  text is Hafs), Amiri font, active-ayah highlight, auto-scroll with
+  manual-scroll detection, click-to-jump, ayah counter (x / y), optional
+  translation (9 editions, chosen in settings).
+- Timing is estimated by distributing `audio.duration` over ayah text-length
+  weights (plus a bismillah weight for surahs ≠ 1, 9) — approximate, and
+  playback always uses the single full-surah MP3 at the best available
+  bitrate.
 
 **Code touchpoints**:
 - New `S.ayahMode` (`'off'|'on'`), `S.ayahTrans` (edition id), cached in `store`.
