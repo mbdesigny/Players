@@ -47,6 +47,14 @@ CATALOG = {
     "dukayn": ["هيثم الدخين", "Haitham Al-Dukhayn"],
 }
 
+# Quranify (quranify.pro) hosts real photos for some reciters by their own id.
+# Only entries whose photo_url is .../photo.jpg are real; white_avatar.jpg is a
+# placeholder. Find ids on https://quranify.pro/en/reciters (initialReciters JSON).
+QURANIFY = {
+    "faris-abbad": 1029,
+    "mustafa": 1020,
+}
+
 OK_DESC = ("قارئ", "إمام", "reciter", "imam", "qur", " muezzin", "المصحف")
 BAD_DESC = ("كرة", "لاعب", "football", "سياسي", "politician", "ممثل", "actor", "singer", "مغني")
 OUT_DIR = "public/img"
@@ -121,6 +129,14 @@ def fetch(slug, titles, force=False):
                 return "exists"
         except FileNotFoundError:
             pass
+    qid = QURANIFY.get(slug)
+    if qid:
+        try:
+            data = get(f"https://media.quranify.pro/images/reciters/{qid}/photo.jpg", binary=True)
+            save_square(data, path)
+            return f"ok quranify:{qid}"
+        except Exception as e:
+            print(f"  quranify fail: {e}")
     for title in titles:
         for lang in ("ar", "en"):
             try:
