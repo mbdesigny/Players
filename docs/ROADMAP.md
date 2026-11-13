@@ -22,12 +22,15 @@ sidebar tab showing real page images.
   while in the tab the sidebar, top bar, player bar and NP panel are all
   hidden; the surah index is removed (surah navigation will return later
   as a tab bar).
-- Every entry shows the **cover page** — the provided ornamental cover
-  artwork (`public/mushaf-cover.jpg`, compressed from the original 1640×
-  2500 upload to a 1100px JPEG) at full container width; its button reads
-  "تابع القراءة — صفحة N" (continue at last page) once a page was read,
-  "ابدأ القراءة" on first visit — tapping it opens the **last viewed page
-  directly**.
+- Every entry shows the **cover page — page 0 of the reading flow**: the
+  provided ornamental cover artwork (`public/mushaf-cover.jpg`, compressed
+  from the original 1640×2500 upload to a 1100px JPEG) at full container
+  width; its button reads "تابع القراءة — صفحة N" (continue at last page)
+  once a page was read, "ابدأ القراءة" on first visit.
+- Page turns treat the cover as page 0: cover → spread **(1,2)** → spread
+  **(3,4)** → … → **(603,604)** — odd page on the right, even on the left;
+  prev from (1,2) returns to the cover. Mobile shows one page per screen
+  (cover → 1 → 2 → …), so the resumed page always opens in its spread.
 - Reader top/bottom bars are **hidden by default** and overlay the page:
   tap the page (or use the arrow keys) to reveal them; they auto-hide
   after 3 seconds. Back and close buttons return to Home.
