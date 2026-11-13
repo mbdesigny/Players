@@ -428,8 +428,8 @@ function mushafCoverHTML(){
   const last=S.mushafLast||S.mushafPage;
   const lbl=last>1?`${t('continueReading')} — ${t('page')} ${S.lang==='ar'?arDigits(last):last}`:t('startReading');
   return `<div class="mushaf-wrap">
-    <div class="mushaf-stage cover">
-      <div class="mushaf-cover" data-act="mushafopen">
+    <div class="mushaf-stage">
+      <div class="mushaf-page cover-page" data-act="mushafopen">
         <img src="/mushaf-cover.jpg" alt="${t('quranName')}" onerror="this.classList.add('broken')">
         <button class="btn gold mc-open" data-act="mushafopen">${lbl}</button>
       </div>
@@ -702,7 +702,7 @@ $('.np-overlay').addEventListener('click',e=>{
 });
 $('#view').addEventListener('click',async e=>{
   const stg=e.target.closest('.mushaf-stage');
-  if(stg&&!e.target.closest('button')&&!e.target.closest('.mushaf-cover')){const w=$('#view .mushaf-wrap');if(w)mushafBarsUI(!w.classList.contains('bars'));return}
+  if(stg&&!e.target.closest('button')&&!e.target.closest('.cover-page')){const w=$('#view .mushaf-wrap');if(w)mushafBarsUI(!w.classList.contains('bars'));return}
   const rdB=e.target.closest('[data-read]');if(rdB){mushafGo(+rdB.dataset.read);return}
   const favB=e.target.closest('[data-fav]');if(favB){const tr=findTrackByKey(favB.dataset.fav);if(tr)toggleFav(tr);return}
   const unfavB=e.target.closest('[data-unfav]');if(unfavB){const tr=findTrackByKey(unfavB.dataset.unfav);if(tr)toggleFav(tr);return}
