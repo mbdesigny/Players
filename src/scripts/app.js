@@ -28,8 +28,8 @@ const VERSES=[["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَ�
 
 /* ── i18n ── */
 const I18N={
-ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة",floatPanel:"فصل اللوحة كنافذة عائمة",dockPanel:"إرجاع اللوحة إلى الجانب",mushaf:"المصحف",quranName:"القرآن الكريم",startReading:"ابدأ القراءة",continueReading:"تابع القراءة",mushafSub:"قراءة المصحف — رواية حفص عن عاصم",page:"صفحة",juz:"الجزء"},
-en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel",floatPanel:"Float panel",dockPanel:"Dock panel",mushaf:"Mushaf",quranName:"The Holy Qur'an",startReading:"Start reading",continueReading:"Continue reading",mushafSub:"Read the Qur'an — Hafs 'an 'Asim",page:"Page",juz:"Juz"}
+ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة",floatPanel:"فصل اللوحة كنافذة عائمة",dockPanel:"إرجاع اللوحة إلى الجانب",mushaf:"المصحف",quranName:"القرآن الكريم",startReading:"ابدأ القراءة",continueReading:"تابع القراءة",mushafSub:"قراءة المصحف — رواية حفص عن عاصم",page:"صفحة",juz:"الجزء",rwHafs:"حفص عن عاصم",rwWarsh:"ورش عن نافع",mushafRiwaya:"رواية المصحف",mushafRiwayaDesc:"المصحف المكتوب — حفص عن عاصم / ورش عن نافع",chooseRiwaya:"اختر رواية المصحف",chooseRiwayaDesc:"يمكنك تغييرها لاحقاً من الإعدادات",dlPages:"تحميل جميع الصفحات"},
+en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel",floatPanel:"Float panel",dockPanel:"Dock panel",mushaf:"Mushaf",quranName:"The Holy Qur'an",startReading:"Start reading",continueReading:"Continue reading",mushafSub:"Read the Qur'an — Hafs 'an 'Asim",page:"Page",juz:"Juz",rwHafs:"Hafs 'an 'Asim",rwWarsh:"Warsh 'an Nafi'",mushafRiwaya:"Mushaf riwayah",mushafRiwayaDesc:"Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'",chooseRiwaya:"Choose mushaf riwayah",chooseRiwayaDesc:"You can change it later in Settings",dlPages:"Download all pages"}
 };
 const t=k=>I18N[S.lang][k]??k;
 
@@ -44,8 +44,9 @@ const S={
   favorites:store.get('favorites',[]), recent:store.get('recent',[]),
   current:null, srcIdx:0, dirHandle:null, sleepMin:0, sleepTimer:null, sleepTick:null,
   verseIdx:0, offline:false, npMode:store.get('npMode','auto'), npPos:store.get('npPos',null), sideMode:store.get('sideMode','open'),
-  readN:null, mushafPage:store.get('mushafPage',0), mushafLast:store.get('mushafLast',0)
+  readN:null, mushafPage:store.get('mushafPage',0), mushafRiwaya:store.get('mushafRiwaya','hafs'), mushafAsk:false
 };
+if(store.get('mushafLast',0)>1&&!store.get('mushafLast_hafs',0))store.set('mushafLast_hafs',store.get('mushafLast',0));
 const audio=$('#audio');
 audio.volume=store.get('volume',1);
 
@@ -149,7 +150,7 @@ function filteredReciters(){
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf')S.readN=null;document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
+function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
 function render(){
   applyI18nStatic();
   const ph={home:'searchReciters',reciters:'searchReciters',surahs:'searchSurahs',favorites:'searchFav',recent:'searchRecent',mushaf:'searchSurahs'}[S.view]||'searchReciters';
@@ -413,28 +414,90 @@ function pushRecent(tr){
 const MUSHAF_PAGES=604;
 const SURAH_PAGE=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const JUZ_PAGE=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
-const MUSHAF_LOCAL=import.meta.glob('../assets/mushaf/*.svg',{eager:true,query:'?url',import:'default'});
-const mushafSVGURL=n=>MUSHAF_LOCAL[`../assets/mushaf/${pad(n)}.svg`]||`https://raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf/main/svg/${pad(n)}.svg`;
-const mushafPNGURL=n=>`https://raw.githubusercontent.com/SakinaDevGroup/mushaf-madani-cdn/main/${S.theme==='dark'?'dark':'light'}/p${n}.png`;
+const MUSHAF_LOCAL={
+  hafs:import.meta.glob('../assets/mushaf/*.svg',{eager:true,query:'?url',import:'default'}),
+  warsh:import.meta.glob('../assets/mushaf-warsh/*.svg',{eager:true,query:'?url',import:'default'})
+};
+const MUSHAF_REMOTE={
+  hafs:n=>`https://raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf/main/svg/${pad(n)}.svg`,
+  warsh:n=>`https://raw.githubusercontent.com/quran-ws/quran-svg/main/mushafs/warsh/kfqc/svg/${pad(n)}.svg`
+};
+const mushafSVGURL=(n,rw)=>MUSHAF_LOCAL[rw][`../assets/${rw==='warsh'?'mushaf-warsh':'mushaf'}/${pad(n)}.svg`]||MUSHAF_REMOTE[rw](n);
+const mushafLastGet=()=>store.get(`mushafLast_${S.mushafRiwaya}`,0);
+function setMushafRiwaya(rw){
+  S.mushafRiwaya=rw;store.set('mushafRiwaya',rw);store.set('mushafVisited',true);
+  $$('#segMushafRw button').forEach(b=>b.classList.toggle('on',b.dataset.mrw===rw));
+  if(S.view==='mushaf'){S.readN=null;S.mushafAsk=false;render()}
+}
+const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c}return t})();
+const crc32=b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_TABLE[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0};
+async function mushafZipAll(rw,onProg){
+  const enc=new TextEncoder(),parts=[],central=[];
+  let offset=0,count=0;
+  const u16=v=>new Uint8Array([v&255,(v>>8)&255]);
+  const u32=v=>new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255]);
+  for(let n=1;n<=MUSHAF_PAGES;n++){
+    let txt;
+    try{const res=await fetch(mushafSVGURL(n,rw));if(!res.ok)throw new Error(res.status);txt=await res.text()}catch(e){onProg(n);continue}
+    const data=enc.encode(txt),crc=crc32(data),nameB=enc.encode(`${pad(n)}.svg`);
+    const lh=new Uint8Array(30);lh.set(u32(0x04034b50),0);lh.set(u16(20),4);lh.set(u16(0),8);lh.set(u16(0),10);lh.set(u32(crc),14);
+    lh.set(u32(data.length),18);lh.set(u32(data.length),22);lh.set(u16(nameB.length),26);
+    parts.push(lh,nameB,data);offset+=lh.length+nameB.length+data.length;
+    const ch=new Uint8Array(46);ch.set(u32(0x02014b50),0);ch.set(u16(20),4);ch.set(u16(20),6);ch.set(u32(crc),16);
+    ch.set(u32(data.length),20);ch.set(u32(data.length),24);ch.set(u16(nameB.length),28);ch.set(u32(offset-(lh.length+nameB.length+data.length)),42);
+    central.push(ch,nameB);count++;onProg(n);
+  }
+  if(!count)throw new Error('no pages');
+  const cdSize=central.reduce((s,a)=>s+a.length,0);
+  const eo=new Uint8Array(22);eo.set(u32(0x06054b50),0);eo.set(u16(count),8);eo.set(u16(count),10);eo.set(u32(cdSize),12);eo.set(u32(offset),16);
+  return new Blob([...parts,...central,eo],{type:'application/zip'});
+}
+async function mushafDownloadAll(btn){
+  if(btn.dataset.busy)return;btn.dataset.busy='1';btn.disabled=true;
+  const rw=S.mushafRiwaya,orig=btn.textContent;
+  try{
+    const blob=await mushafZipAll(rw,p=>{btn.textContent=`${S.lang==='ar'?arDigits(p):p} / ${S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES}`});
+    const fname=`mushaf-${rw}-svg.zip`;
+    if(S.dirHandle){const fh=await S.dirHandle.getFileHandle(fname,{create:true});const w=await fh.createWritable();await w.write(blob);await w.close()}
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),60000)}
+    toast(t('saved'));
+  }catch(e){toast(t('failed'))}
+  btn.textContent=orig;btn.disabled=false;delete btn.dataset.busy;
+}
+const mushafPNGURL=n=>`https://raw.githubusercontent.com/SakinaDevGroup/mushaf-madani-cdn/main/light/p${n}.png`;
 const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
 const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
 function mushafGo(n){
   n=Math.round(n)||0;if(n<0)n=0;if(n>MUSHAF_PAGES)n=MUSHAF_PAGES;
   S.mushafPage=n;store.set('mushafPage',n);
-  if(n>=1){S.mushafLast=n;store.set('mushafLast',n)}
+  if(n>=1)store.set(`mushafLast_${S.mushafRiwaya}`,n);
   if(S.view!=='mushaf')setView('mushaf');
   S.readN=n;render();
 }
 function mushafCoverHTML(){
-  const last=S.mushafLast||S.mushafPage;
+  const last=mushafLastGet()||S.mushafPage;
   const lbl=last>1?`${t('continueReading')} — ${t('page')} ${S.lang==='ar'?arDigits(last):last}`:t('startReading');
+  const first=!store.get('mushafVisited',false);
+  const ask=first?`<div class="mushaf-ask" data-act="mushafaskclose"><div class="ma-card">
+      <b>${t('chooseRiwaya')}</b>
+      <span>${t('chooseRiwayaDesc')}</span>
+      <button class="btn gold" data-act="mrwset" data-rw="hafs">${t('rwHafs')}</button>
+      <button class="btn" data-act="mrwset" data-rw="warsh">${t('rwWarsh')}</button>
+    </div></div>`:(S.mushafAsk&&last>1?`<div class="mushaf-ask" data-act="mushafaskclose"><div class="ma-card">
+      <b>${t('continueReading')}</b>
+      <span>${t('page')} ${S.lang==='ar'?arDigits(last):last} · ${t(S.mushafRiwaya==='warsh'?'rwWarsh':'rwHafs')}</span>
+      <button class="btn gold" data-act="mresume">${t('resume')} — ${t('page')} ${S.lang==='ar'?arDigits(last):last}</button>
+      <button class="btn" data-act="mstart">${t('startReading')}</button>
+    </div></div>`:'');
   return `<div class="mushaf-wrap">
     <div class="mushaf-stage">
       <div class="mushaf-page cover-page" data-act="mushafopen">
         <img src="/mushaf-cover.jpg" alt="${t('quranName')}" onerror="this.classList.add('broken')">
         <button class="btn gold mc-open" data-act="mushafopen">${lbl}</button>
+        <button class="btn mc-dl" data-act="mushafdlall">${t('dlPages')}</button>
       </div>
     </div>
+    ${ask}
   </div>`;
 }
 function viewMushaf(){return mushafCoverHTML()}
@@ -461,15 +524,21 @@ function viewRead(){
   const num=p=>S.lang==='ar'?arDigits(p):String(p);
   const tot=S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES;
   const jz=mushafJuz(R),jn=S.lang==='ar'?arDigits(jz):jz;
-  const sm=SURAH[mushafSurah(R)-1],sn=S.lang==='ar'?sm[0]:sm[1];
-  const img=p=>`<img src="${mushafSVGURL(p)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-png="${mushafPNGURL(p)}"
+  const sc=mushafSurah(R);
+  const sm=SURAH[sc-1],sn=S.lang==='ar'?sm[0]:sm[1];
+  const rw=S.mushafRiwaya;
+  const img=p=>`<img src="${mushafSVGURL(p,rw)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-png="${rw==='hafs'?mushafPNGURL(p):''}"
       onerror="if(this.dataset.png){this.src=this.dataset.png;this.dataset.png=''}else{this.classList.add('broken')}">`;
   const prevOff=false,nextOff=book?R>=MUSHAF_PAGES-1:n>=MUSHAF_PAGES;
   const footNum=L?`${num(R)} – ${num(L)}`:`${num(R)} / ${tot}`;
   return `<div class="mushaf-wrap">
     <div class="mushaf-top">
       <button class="back-btn" data-act="mushafback"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-      <div class="mt-center"><b>${esc(sn)}</b><span>${t('juz')} ${jn} · ${t('page')} ${footNum}</span></div>
+      <div class="mt-nav">
+        <select class="mt-sel" id="mSurahSel" title="${t('surahs')}">${SURAH.map((s,i)=>`<option value="${i+1}"${i+1===sc?' selected':''}>${esc(S.lang==='ar'?s[0]:s[1])}</option>`).join('')}</select>
+        <select class="mt-sel" id="mJuzSel" title="${t('juz')}">${JUZ_PAGE.map((_,j)=>`<option value="${j+1}"${j+1===jz?' selected':''}>${t('juz')} ${S.lang==='ar'?arDigits(j+1):j+1}</option>`).join('')}</select>
+      </div>
+      <div class="mt-center"><span>${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafexit" title="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -481,6 +550,7 @@ function viewRead(){
     </div>
     <div class="mushaf-foot">
       <button class="btn sm" data-act="mprev" ${prevOff?'disabled':''}><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>${t('previous')}</span></button>
+      <input type="range" class="mf-slider" id="mSlider" min="1" max="${MUSHAF_PAGES}" value="${R}" step="1" aria-label="${t('page')}">
       <span class="mf-num">${footNum}</span>
       <button class="btn sm" data-act="mnext" ${nextOff?'disabled':''}><span>${t('next')}</span><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
@@ -682,6 +752,7 @@ $('#themeBtn').onclick=()=>setTheme(S.theme==='light'?'dark':'light');
 $('#langBtn').onclick=()=>setLang(S.lang==='ar'?'en':'ar');
 $$('#segTheme button').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));
 $$('#segLang button').forEach(b=>b.onclick=()=>setLang(b.dataset.lg));
+$$('#segMushafRw button').forEach(b=>{b.onclick=()=>setMushafRiwaya(b.dataset.mrw);b.classList.toggle('on',b.dataset.mrw===S.mushafRiwaya)});
 $('#searchInput').addEventListener('input',e=>{S.query=e.target.value;if(S.view==='home'&&S.query)setView('reciters'),S.query=e.target.value,$('#searchInput').value=e.target.value;render()});
 $('#selQuality').onchange=e=>{S.quality=e.target.value;store.set('quality',S.quality);
   if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current);audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}};
@@ -714,7 +785,12 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='back')setView('reciters');
     else if(a==='mushafback')setView('home');
     else if(a==='mushafexit')setView('home');
-    else if(a==='mushafopen')mushafGo(S.mushafLast||1);
+    else if(a==='mushafopen'){if(mushafLastGet()>1){S.mushafAsk=true;render()}else mushafGo(1)}
+    else if(a==='mresume')mushafGo(mushafLastGet()||1);
+    else if(a==='mstart')mushafGo(1);
+    else if(a==='mrwset')setMushafRiwaya(act.dataset.rw);
+    else if(a==='mushafaskclose'){if(e.target===act){S.mushafAsk=false;render()}}
+    else if(a==='mushafdlall')mushafDownloadAll(act);
     else if(a==='mtheme')setTheme(S.theme==='light'?'dark':'light');
     else if(a==='mprev')mushafGo(mushafStep(S.readN,-1));
     else if(a==='mnext')mushafGo(mushafStep(S.readN,1));
@@ -736,6 +812,14 @@ $('#view').addEventListener('click',async e=>{
 $('#view').addEventListener('change',e=>{
   if(e.target.id==='sortSel'){S.sort=e.target.value;render()}
   if(e.target.id==='moshafSel'){setMoshaf(+e.target.value)}
+  if(e.target.id==='mSurahSel')mushafGo(SURAH_PAGE[+e.target.value-1]);
+  if(e.target.id==='mJuzSel')mushafGo(JUZ_PAGE[+e.target.value-1]);
+  if(e.target.id==='mSlider')mushafGo(+e.target.value);
+});
+$('#view').addEventListener('input',e=>{
+  if(e.target.id!=='mSlider')return;
+  const v=+e.target.value,el=$('#view .mf-num');
+  if(el)el.textContent=S.lang==='ar'?`${arDigits(v)} / ${arDigits(MUSHAF_PAGES)}`:`${v} / ${MUSHAF_PAGES}`;
 });
 /* queue: click + drag reorder */
 let dragIdx=null;
@@ -769,6 +853,8 @@ if('mediaSession'in navigator){
 document.addEventListener('keydown',e=>{
   if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
   if(e.code==='Space'){e.preventDefault();togglePlay()}
+  else if(S.view==='mushaf'&&S.mushafAsk&&e.key==='Escape'){e.preventDefault();S.mushafAsk=false;render()}
+  else if(S.view==='mushaf'&&!S.readN&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();if(mushafLastGet()>1){S.mushafAsk=true;render()}else mushafGo(1)}
   else if(S.view==='mushaf'&&S.readN&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const rtl=document.documentElement.dir==='rtl';mushafGo(mushafStep(S.readN,(e.key==='ArrowLeft')===rtl?1:-1));mushafBarsUI(true)}
   else if(e.key==='ArrowRight')audio.currentTime=Math.min((audio.duration||0),audio.currentTime+5);
   else if(e.key==='ArrowLeft')audio.currentTime=Math.max(0,audio.currentTime-5);

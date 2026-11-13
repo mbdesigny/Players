@@ -2786,23 +2786,54 @@ body.mushaf-full #view {
   pointer-events: none
 }
 
-.mt-center {
-  flex: 1;
-  min-width: 0;
+.mt-nav {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center
+  gap: 8px;
+  flex: 1;
+  min-width: 0
 }
 
-.mt-center b {
-  font-size: 15.5px
+.mt-sel {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 190px;
+  padding: 7px 26px 7px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface2) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F6E5B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center / 14px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden
+}
+
+html[dir="rtl"] .mt-sel {
+  padding: 7px 12px 7px 26px;
+  background-position: left 8px center
+}
+
+.mt-sel:focus {
+  outline: none;
+  border-color: var(--gold)
+}
+
+.mt-center {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  text-align: center
 }
 
 .mt-center span {
   font-size: 12px;
   color: var(--ink2);
-  font-variant-numeric: tabular-nums
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap
 }
 
 .mt-actions {
@@ -2858,6 +2889,24 @@ body.mushaf-full #view {
   box-shadow: var(--shadow2)
 }
 
+.mc-dl {
+  position: absolute;
+  bottom: calc(4% + 46px);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line2);
+  box-shadow: var(--shadow2);
+  font-size: 12.5px;
+  padding: 8px 16px
+}
+
+.mc-dl:disabled {
+  opacity: .75;
+  cursor: default
+}
+
 .mushaf-page {
   height: 100%;
   display: flex;
@@ -2879,10 +2928,6 @@ body.mushaf-full #view {
   box-shadow: var(--shadow-page)
 }
 
-[data-theme="dark"] .mushaf-page img {
-  filter: invert(1) hue-rotate(180deg)
-}
-
 .mushaf-page img.broken {
   display: none
 }
@@ -2894,15 +2939,90 @@ body.mushaf-full #view {
   z-index: 6;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 10px;
+  gap: 14px;
+  padding: 10px 18px;
   background: var(--surface);
   border-top: 1px solid var(--line);
   opacity: 0;
   transform: translateY(100%);
   transition: .25s;
   pointer-events: none
+}
+
+.mf-slider {
+  flex: 1;
+  min-width: 80px;
+  height: 22px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer
+}
+
+.mf-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--line2)
+}
+
+.mf-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .25)
+}
+
+.mf-slider::-moz-range-track {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--line2)
+}
+
+.mf-slider::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--surface)
+}
+
+.mushaf-ask {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--scrim);
+  backdrop-filter: blur(3px)
+}
+
+.ma-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  min-width: min(320px, calc(100vw - 48px));
+  padding: 22px 24px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow2);
+  text-align: center
+}
+
+.ma-card b {
+  font-size: 16px
+}
+
+.ma-card span {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-bottom: 6px
 }
 
 .mushaf-wrap.bars .mushaf-top,
@@ -3009,6 +3129,20 @@ html[dir="rtl"] .back-btn .ic {
     gap: 8px
   }
 
+  .mt-nav {
+    flex-wrap: wrap
+  }
+
+  .mt-sel {
+    max-width: 130px;
+    font-size: 12px;
+    padding-block: 6px
+  }
+
+  .mt-center span {
+    display: none
+  }
+
   .mt-actions .icon-btn {
     width: 36px;
     height: 36px
@@ -3024,7 +3158,7 @@ html[dir="rtl"] .back-btn .ic {
 
   .mushaf-foot {
     gap: 10px;
-    padding: 8px
+    padding: 8px 12px
   }
 
   .mushaf-foot .btn span {
