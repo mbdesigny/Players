@@ -620,7 +620,7 @@ const prayerTime=k=>{const v=S.prayerData.timings[k];let m=(+v.slice(11,13))*60+
 function viewPrayer(){
   if(!S.prayerData)setTimeout(loadPrayer,0);
   const L=S.prayerLoc;
-  return `<div class="view-head"><h2>${t('prayerTimes')}</h2></div>
+  return `<div class="view-head"><h2>${t('prayerTimes')}</h2><button class="btn sm" data-act="prayerset"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>${t('settings')}</button></div>
   <div class="prayer-wrap">
     <div class="prayer-loc">
       <svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
@@ -633,35 +633,38 @@ function viewPrayer(){
       <div class="loc-res" id="locRes">${S.prayerSearch.res||''}</div>
     </div>`:''}
     <div id="prayerBox">${S.prayerData?prayerCardsHTML():`<div class="empty" style="padding:30px"><p>${t('loading')}</p></div>`}</div>
-    <div class="prayer-settings">
-      <div class="ps-title"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>${t('settings')}</div>
-      <div class="ps-row">
-        <div class="ps-lab"><b>${t('adhan')}</b><span>${t('adhanDesc')}</span></div>
-        <div class="seg" id="segAdhanPg">
-          <button data-adhpg="on" class="${S.adhanOn?'on':''}">${t('adhanOn')}</button>
-          <button data-adhpg="off" class="${!S.adhanOn?'on':''}">${t('adhanOff')}</button>
-        </div>
-      </div>
-      <div class="ps-row">
-        <div class="ps-lab"><b>${t('adhanVoice')}</b><span>${t('adhanVoiceDesc')}</span></div>
-        <div class="ps-ctl">
-          <select id="adhanVoiceSel" class="ps-sel">${ADHAN_VOICES.map(v=>`<option value="${v.id}" ${S.adhanVoice===v.id?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
-          <button class="btn sm" data-act="adhanpreview"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('preview')}</button>
-        </div>
-      </div>
-      <div class="ps-row">
-        <div class="ps-lab"><b>${t('prOffset')}</b><span>${t('prOffsetDesc')}</span></div>
-        <div class="ps-ctl poff-ctl">
-          ${PRAYERS.map(([k,l])=>{const v=S.prayerOffset[k]||0;return `<div class="poff-row"><span class="poff-name">${t(l)}</span>
-          <button class="btn sm" data-poff="-5" data-pr="${k}">−5</button>
-          <button class="btn sm" data-poff="-1" data-pr="${k}">−1</button>
-          <b class="poff-val" dir="ltr">${v>0?'+':''}${v}</b>
-          <button class="btn sm" data-poff="1" data-pr="${k}">+1</button>
-          <button class="btn sm" data-poff="5" data-pr="${k}">+5</button></div>`}).join('')}
-        </div>
+  </div>`;
+}
+function prayerSettingsHTML(){
+  return `<div class="ps-row">
+      <div class="ps-lab"><b>${t('adhan')}</b><span>${t('adhanDesc')}</span></div>
+      <div class="seg" id="segAdhanPg">
+        <button data-adhpg="on" class="${S.adhanOn?'on':''}">${t('adhanOn')}</button>
+        <button data-adhpg="off" class="${!S.adhanOn?'on':''}">${t('adhanOff')}</button>
       </div>
     </div>
-  </div>`;
+    <div class="ps-row">
+      <div class="ps-lab"><b>${t('adhanVoice')}</b><span>${t('adhanVoiceDesc')}</span></div>
+      <div class="ps-ctl">
+        <select id="adhanVoiceSel" class="ps-sel">${ADHAN_VOICES.map(v=>`<option value="${v.id}" ${S.adhanVoice===v.id?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
+        <button class="btn sm" data-psact="adhanpreview"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('preview')}</button>
+      </div>
+    </div>
+    <div class="ps-row">
+      <div class="ps-lab"><b>${t('prOffset')}</b><span>${t('prOffsetDesc')}</span></div>
+      <div class="ps-ctl poff-ctl">
+        ${PRAYERS.map(([k,l])=>{const v=S.prayerOffset[k]||0;return `<div class="poff-row"><span class="poff-name">${t(l)}</span>
+        <button class="btn sm" data-poff="-5" data-pr="${k}">−5</button>
+        <button class="btn sm" data-poff="-1" data-pr="${k}">−1</button>
+        <b class="poff-val" dir="ltr">${v>0?'+':''}${v}</b>
+        <button class="btn sm" data-poff="1" data-pr="${k}">+1</button>
+        <button class="btn sm" data-poff="5" data-pr="${k}">+5</button></div>`}).join('')}
+      </div>
+    </div>`;
+}
+function openPrayerSettings(){
+  $('#prayerSetBody').innerHTML=prayerSettingsHTML();
+  $('#prayerScrim').classList.add('open');
 }
 async function fetchPrayer(){
   const L=S.prayerLoc,d=new Date();
@@ -1135,6 +1138,23 @@ $('#pbArt').onclick=openOverlay;$('#btnExpand').onclick=openOverlay;$('#npExpand
 $('#settingsBtn').onclick=()=>$('#settingsScrim').classList.add('open');
 $('#settingsClose').onclick=()=>$('#settingsScrim').classList.remove('open');
 $('#settingsScrim').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
+$('#prayerSetClose').onclick=()=>$('#prayerScrim').classList.remove('open');
+$('#prayerScrim').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
+$('#prayerScrim').addEventListener('click',e=>{
+  const adhpg=e.target.closest('[data-adhpg]');
+  if(adhpg){S.adhanOn=adhpg.dataset.adhpg==='on';store.set('adhanOn',S.adhanOn);
+    if(!S.adhanOn&&S.adhanAudio){S.adhanAudio.pause();hideAdhanBanner()}
+    $$('#segAdhan button').forEach(b=>b.classList.toggle('on',b.dataset.adh===(S.adhanOn?'on':'off')));
+    $$('#segAdhanPg button').forEach(b=>b.classList.toggle('on',b.dataset.adhpg===(S.adhanOn?'on':'off')));return}
+  const poff=e.target.closest('[data-poff]');
+  if(poff){const k=poff.dataset.pr||'Fajr';S.prayerOffset[k]=Math.max(-30,Math.min(30,(S.prayerOffset[k]||0)+(+poff.dataset.poff)));store.set('prayerOffset',S.prayerOffset);
+    $('#prayerSetBody').innerHTML=prayerSettingsHTML();render();return}
+  const psa=e.target.closest('[data-psact]');
+  if(psa&&psa.dataset.psact==='adhanpreview'){playAdhan(nextPrayerKey()||'Fajr')}
+});
+$('#prayerScrim').addEventListener('change',e=>{
+  if(e.target.id==='adhanVoiceSel'){S.adhanVoice=e.target.value;store.set('adhanVoice',S.adhanVoice)}
+});
 $('#confirmScrim').addEventListener('click',e=>{if(e.target===e.currentTarget){e.currentTarget.classList.remove('open');confirmRes&&confirmRes(false)}});
 $('#navDownloads').onclick=()=>{$('#dlDrawer').classList.add('open');closeSidebar()};
 $('#dlClose').onclick=()=>$('#dlDrawer').classList.remove('open');
@@ -1178,15 +1198,11 @@ $('#view').addEventListener('click',async e=>{
   const favB=e.target.closest('[data-fav]');if(favB){const tr=findTrackByKey(favB.dataset.fav);if(tr)toggleFav(tr);return}
   const unfavB=e.target.closest('[data-unfav]');if(unfavB){const tr=findTrackByKey(unfavB.dataset.unfav);if(tr)toggleFav(tr);return}
   const dlB=e.target.closest('[data-dl]');if(dlB){const tr=findTrackByKey(dlB.dataset.dl);if(tr)enqueueDownloads([tr]);return}
-  const adhpg=e.target.closest('[data-adhpg]');
-  if(adhpg){S.adhanOn=adhpg.dataset.adhpg==='on';store.set('adhanOn',S.adhanOn);
-    if(!S.adhanOn&&S.adhanAudio){S.adhanAudio.pause();hideAdhanBanner()}
-    $$('#segAdhan button').forEach(b=>b.classList.toggle('on',b.dataset.adh===(S.adhanOn?'on':'off')));
-    $$('#segAdhanPg button').forEach(b=>b.classList.toggle('on',b.dataset.adhpg===(S.adhanOn?'on':'off')));return}
   const act=e.target.closest('[data-act]');
   if(act){const a=act.dataset.act;
     if(a==='browse')setView('reciters');
     else if(a==='goprayer')setView('prayer');
+    else if(a==='prayerset'){openPrayerSettings();return}
     else if(a==='ytback'){S.ytId=null;render()}
     else if(a==='liveback'){S.liveId=null;render()}
     else if(a==='akback'){S.adhkarCat=null;render()}
@@ -1214,8 +1230,6 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='dlall'){if(await confirmDlg(t('confirmDlAll'),t('confirmDlAllMsg')))enqueueDownloads(S.tracks)}
     else if(a==='clearrecent'){const bak=[...S.recent];S.recent=[];store.set('recent',[]);render();toast(t('cleared'),{label:t('undo'),fn:()=>{S.recent=bak;store.set('recent',bak);render()}})}
     return}
-  const poff=e.target.closest('[data-poff]');
-  if(poff){const k=poff.dataset.pr||'Fajr';S.prayerOffset[k]=Math.max(-30,Math.min(30,(S.prayerOffset[k]||0)+(+poff.dataset.poff)));store.set('prayerOffset',S.prayerOffset);render();return}
   const chip=e.target.closest('[data-rw]');if(chip){S.rewaya=chip.dataset.rw;render();return}
   const qs=e.target.closest('[data-surah]');if(qs){playQuick(+qs.dataset.surah);return}
   const rc=e.target.closest('[data-rid]');if(rc){openReciter(+rc.dataset.rid,false);return}
@@ -1242,7 +1256,6 @@ $('#view').addEventListener('click',e=>{
     S.prayerSearch=null;S.prayerData=null;render();return}
 });
 $('#view').addEventListener('change',e=>{
-  if(e.target.id==='adhanVoiceSel'){S.adhanVoice=e.target.value;store.set('adhanVoice',S.adhanVoice)}
   if(e.target.id==='sortSel'){S.sort=e.target.value;render()}
   if(e.target.id==='moshafSel'){setMoshaf(+e.target.value)}
   if(e.target.id==='mSurahSel')mushafGo(SURAH_PAGE[+e.target.value-1]);
@@ -1300,7 +1313,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='n'||e.key==='N')nextTrack();
   else if(e.key==='p'||e.key==='P')prevTrack();
   else if(e.key==='/'){e.preventDefault();$('#searchInput').focus()}
-  else if(e.key==='Escape'){if(S.view==='mushaf'){setView('home');return}closeOverlay();$('#settingsScrim').classList.remove('open');$('#dlDrawer').classList.remove('open');closeSidebar()}
+  else if(e.key==='Escape'){if(S.view==='mushaf'){setView('home');return}closeOverlay();$('#settingsScrim').classList.remove('open');$('#prayerScrim').classList.remove('open');$('#dlDrawer').classList.remove('open');closeSidebar()}
 });
 window.addEventListener('beforeunload',saveSession);
 
