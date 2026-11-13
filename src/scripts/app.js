@@ -446,27 +446,43 @@ function viewMushaf(){
     <div class="mushaf-body"><div id="mushafGrid">${mushafGridHTML()}</div></div>
   </div>`;
 }
+const mushafBook=()=>typeof window.matchMedia==='function'&&window.matchMedia('(min-width:900px)').matches;
+const mushafRight=n=>n<=1?1:(n%2===0?n:n-1);
+function mushafStep(n,d){
+  if(!mushafBook())return n+d;
+  const R=mushafRight(n);
+  if(d>0)return R===1?2:Math.min(R+2,MUSHAF_PAGES);
+  return R<=2?1:R-2;
+}
 function viewRead(){
-  const n=S.readN,num=S.lang==='ar'?arDigits(n):n,tot=S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES;
-  const jz=mushafJuz(n),jn=S.lang==='ar'?arDigits(jz):jz;
-  const sm=SURAH[mushafSurah(n)-1],sn=S.lang==='ar'?sm[0]:sm[1];
+  const n=S.readN,book=mushafBook();
+  const R=book?mushafRight(n):n;
+  const L=book&&R>1&&R<MUSHAF_PAGES?R+1:null;
+  const num=p=>S.lang==='ar'?arDigits(p):String(p);
+  const tot=S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES;
+  const jz=mushafJuz(R),jn=S.lang==='ar'?arDigits(jz):jz;
+  const sm=SURAH[mushafSurah(R)-1],sn=S.lang==='ar'?sm[0]:sm[1];
+  const img=p=>`<img src="${mushafSVGURL(p)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-png="${mushafPNGURL(p)}"
+      onerror="if(this.dataset.png){this.src=this.dataset.png;this.dataset.png=''}else{this.classList.add('broken')}">`;
+  const prevOff=book?R<=1:n<=1,nextOff=book?R>=MUSHAF_PAGES:n>=MUSHAF_PAGES;
+  const footNum=L?`${num(R)} – ${num(L)}`:`${num(R)} / ${tot}`;
   return `<div class="mushaf-wrap">
     <div class="mushaf-top">
       <button class="back-btn" data-act="mushafback"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-      <div class="mt-center"><b>${esc(sn)}</b><span>${t('juz')} ${jn} · ${t('page')} ${num} / ${tot}</span></div>
+      <div class="mt-center"><b>${esc(sn)}</b><span>${t('juz')} ${jn} · ${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafexit" title="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
     </div>
-    <div class="mushaf-stage"><div class="mushaf-page" data-page="${n}">
-      <img src="${mushafSVGURL(n)}" alt="${t('mushaf')} — ${t('page')} ${num}" data-png="${mushafPNGURL(n)}"
-        onerror="if(this.dataset.png){this.src=this.dataset.png;this.dataset.png=''}else{this.classList.add('broken')}">
-    </div></div>
+    <div class="mushaf-stage${book?' book':''}">
+      <div class="mushaf-page" data-page="${R}">${img(R)}</div>
+      ${L?`<div class="mushaf-page" data-page="${L}">${img(L)}</div>`:''}
+    </div>
     <div class="mushaf-foot">
-      <button class="btn sm" data-act="mprev" ${n<=1?'disabled':''}><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>${t('previous')}</span></button>
-      <span class="mf-num">${num} / ${tot}</span>
-      <button class="btn sm" data-act="mnext" ${n>=MUSHAF_PAGES?'disabled':''}><span>${t('next')}</span><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button class="btn sm" data-act="mprev" ${prevOff?'disabled':''}><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>${t('previous')}</span></button>
+      <span class="mf-num">${footNum}</span>
+      <button class="btn sm" data-act="mnext" ${nextOff?'disabled':''}><span>${t('next')}</span><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
   </div>`;
 }
@@ -698,8 +714,8 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='mushafback'){S.readN=null;render()}
     else if(a==='mushafexit')setView('home');
     else if(a==='mtheme')setTheme(S.theme==='light'?'dark':'light');
-    else if(a==='mprev')mushafGo(S.readN-1);
-    else if(a==='mnext')mushafGo(S.readN+1);
+    else if(a==='mprev')mushafGo(mushafStep(S.readN,-1));
+    else if(a==='mnext')mushafGo(mushafStep(S.readN,1));
     else if(a==='openrecent')setView('recent');
     else if(a==='resume'&&S.recent[0]){const f=S.recent[0];const r=S.reciters.find(x=>x.id===f.rid);
       if(r){openReciter(r.id,false);const mi=r.moshaf.findIndex(m=>m.id===f.mid);if(mi>=0&&mi!==0)setMoshaf(mi);
@@ -730,6 +746,8 @@ $('#npQueue').addEventListener('drop',e=>{e.preventDefault();const it=e.target.c
   if(curKey)S.idx=S.tracks.findIndex(x=>x.key===curKey);renderQueue()}dragIdx=null});
 $('#npQueue').addEventListener('dragend',()=>{dragIdx=null;$$('.queue-item').forEach(x=>x.classList.remove('dragover'))});
 
+if(window.matchMedia){const mqBook=window.matchMedia('(min-width:900px)');if(mqBook.addEventListener)mqBook.addEventListener('change',()=>{if(S.view==='mushaf'&&S.readN)render()})}
+
 /* audio events */
 audio.addEventListener('play',()=>setPlayingUI(true));
 audio.addEventListener('pause',()=>{setPlayingUI(false);saveSession()});
@@ -749,7 +767,7 @@ if('mediaSession'in navigator){
 document.addEventListener('keydown',e=>{
   if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
   if(e.code==='Space'){e.preventDefault();togglePlay()}
-  else if(S.view==='mushaf'&&S.readN&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const rtl=document.documentElement.dir==='rtl';mushafGo(S.readN+((e.key==='ArrowLeft')===rtl?1:-1))}
+  else if(S.view==='mushaf'&&S.readN&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const rtl=document.documentElement.dir==='rtl';mushafGo(mushafStep(S.readN,(e.key==='ArrowLeft')===rtl?1:-1))}
   else if(e.key==='ArrowRight')audio.currentTime=Math.min((audio.duration||0),audio.currentTime+5);
   else if(e.key==='ArrowLeft')audio.currentTime=Math.max(0,audio.currentTime-5);
   else if(e.key==='ArrowUp'){e.preventDefault();audio.volume=Math.min(1,audio.volume+.05);store.set('volume',audio.volume);updateVolUI()}
