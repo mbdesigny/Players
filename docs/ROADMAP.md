@@ -20,10 +20,15 @@ sidebar tab showing real page images.
 
 - Sidebar tab "المصحف / Mushaf": **fullscreen immersive reading mode** —
   while in the tab the sidebar, top bar, player bar and NP panel are all
-  hidden; the mushaf shows its own minimal top bar (brand / search or
-  surah + juz·page / theme / close) like desktop Quran apps.
-- Index view: grid of all 114 surahs (name + start page + search-filterable
-  with instant grid filtering) and a resume button for the last read page.
+  hidden; clicking the tab opens the **last viewed page directly** (no
+  surah index; surah navigation will return later as a tab bar).
+- First visit shows an ornamental **cover** (full container width, green/
+  gold frame, Amiri title); tapping it opens the mushaf at page 1.
+- Reader top/bottom bars are **hidden by default** and overlay the page:
+  tap the page (or use the arrow keys) to reveal them; they auto-hide
+  after 3 seconds. Back and close buttons return to Home.
+- Inner pages are inset 6.25% from each side of the stage (60px per side
+  at a 960px-wide cover).
 - Reader view: surah name + juz/page indicator (juz start-page table), page
   fitted to the viewport height, page-turn arrows in a bottom bar.
 - Reader view: **open-book two-page spread on desktop** (≥900px): even page
