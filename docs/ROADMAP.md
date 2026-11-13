@@ -7,44 +7,35 @@ HTML/CSS/JS application (no build step), RTL-first, with the existing helpers:
 
 ---
 
-## Phase 1 — Ayah-by-ayah text in the full-screen player
+## Phase 1 — Mushaf reading tab (real Madani pages)
 
-**Goal**: show the surah's verses next to the artwork in the full-screen player,
-highlight the ayah currently being recited, auto-scroll, and let the user click
-any ayah to jump to it.
+**Goal**: read the actual printed Madani mushaf (KFGQPC, Hafs 'an 'Asim,
+604 pages) in a dedicated reading tab in the sidebar — not reflowed ayah
+text, and not inside the fullscreen player.
 
-**Data source** (already in use: `api.alquran.cloud`):
-- Arabic text: `GET /v1/surah/{n}/quran-uthmani`
-- Optional translation: `GET /v1/surah/{n}/{edition}` (e.g. `en.sahih`), edition
-  chosen in settings.
+**Status**: **shipped** — per product decisions: ayah-by-ayah playback was
+cancelled (audio quality from full surah files is the top priority), the
+fullscreen verses panel was removed, and the mushaf became a reading-only
+sidebar tab showing real page images.
 
-**Status**: **shipped** — mushaf reading in the fullscreen player only, for
-Hafs recitations only (per product decision: audio quality from the full
-surah files is the priority, so ayah-by-ayah playback was cancelled).
+- Sidebar tab "المصحف / Mushaf": index grid of all 114 surahs (name + start
+  page + search-filterable) with a resume button for the last read page.
+- Reader view: one page at a time, **SVG vector pages** (crisp at any zoom)
+  from `raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf` (KFGQPC
+  artwork, Quran.ws/quranpedia SVG conversion, CC BY 4.0), with automatic
+  fallback to the PNG CDN `SakinaDevGroup/mushaf-madani-cdn` (light/dark
+  themes).
+- Pages 1–604, prev/next navigation (RTL-aware), keyboard arrows, page
+  label with Arabic digits, last page persisted in `store`.
+- Dark theme: native dark PNG fallback available; SVG pages are inverted
+  via CSS filter (black ink → light ink) on the theme-matched background.
 
-- The verses panel (`#ovAyahs`) opens beside the artwork in the fullscreen
-  player (toggle button, hidden entirely for non-Hafs tracks). Text from
-  `api.alquran.cloud/v1/surah/{n}/editions/quran-uthmani[,trans]` (Uthmani
-  text is Hafs), Amiri font, active-ayah highlight, auto-scroll with
-  manual-scroll detection, click-to-jump, ayah counter (x / y), optional
-  translation (9 editions, chosen in settings).
-- Timing is estimated by distributing `audio.duration` over ayah text-length
-  weights (plus a bismillah weight for surahs ≠ 1, 9) — approximate, and
-  playback always uses the single full-surah MP3 at the best available
-  bitrate.
-
-**Code touchpoints**:
-- New `S.ayahMode` (`'off'|'on'`), `S.ayahTrans` (edition id), cached in `store`.
-- `loadTrack()` — when ayah mode is on, fetch text + build ayah queue.
-- `updateProgress()` — map `audio.currentTime` to the active ayah index and
-  toggle `.ayah-item.active`.
-- Fullscreen overlay: add a two-column layout (artwork + `.ayah-panel` with
-  scrollable verse list, Amiri font, auto-scroll with manual-scroll detection,
-  click-to-jump). Reuse the collapsible-column pattern from the NP panel.
-- Repeat settings gain "repeat ayah" scope (natural with ayah-mode queues).
-
-**Effort**: medium. **Risk**: ayah-file availability per reciter (mitigated by
-fallback mode 2).
+**Code touchpoints** (done):
+- `SURAH_PAGE` mapping (surah → Madani start page), `mushafSVGURL` /
+  `mushafPNGURL`, `mushafGo()`, `viewMushaf()`, `viewRead()` in `app.js`.
+- `S.readN` (current page or null = index), `S.mushafPage` persisted.
+- Sidebar nav item `data-view="mushaf"`; `render()` branch + `#view`
+  delegation (`[data-read]`, `mushafback`, `mprev`, `mnext`).
 
 ---
 
@@ -130,7 +121,7 @@ list mitigates); no background audio on mobile (platform limitation).
 
 1. **Phase 3** (adhkar) — smallest, fully offline, high daily-use value
 2. **Phase 2** (prayer times + adhan) — small, complements adhkar
-3. **Phase 1** (ayah-by-ayah) — core player upgrade, medium effort
+3. **Phase 1** (mushaf tab) — core reading upgrade, medium effort
 4. **Phase 4** (YouTube) — largest surface, depends on curated catalog
 
 Each phase ships independently behind the existing view router; no breaking
