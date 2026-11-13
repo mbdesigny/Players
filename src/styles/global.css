@@ -4495,3 +4495,17 @@ html[dir="rtl"] .back-btn .ic {
 [data-theme="dark"] .mushaf-page.cover-page img{filter:none}
 .mushaf-stage{-webkit-tap-highlight-color:transparent}
 .loc-approx{flex:none;font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(186,151,67,.14);color:var(--ink2);border:1px solid rgba(186,151,67,.35);white-space:nowrap;cursor:help}
+
+/* ══════════════════════════════════════════════════════════════════
+   reciter cards — centered text on desktop, horizontal row on phones
+   ══════════════════════════════════════════════════════════════════ */
+.reciter-card{text-align:center}
+.reciter-card .rm{justify-content:center}
+@media(max-width:640px){
+  .reciter-card{display:grid;grid-template-columns:64px 1fr;grid-template-rows:auto auto;column-gap:12px;row-gap:3px;align-items:center;padding:11px 12px;text-align:start}
+  .reciter-card .ava{grid-row:1/3;grid-column:1;width:64px;height:64px;margin:0}
+  .reciter-card .rn{grid-column:2;grid-row:1;min-height:0;margin-bottom:0;-webkit-line-clamp:1;font-size:13.5px}
+  .reciter-card .rm{grid-column:2;grid-row:2;justify-content:flex-start}
+  .reciter-card .play-ov span{width:34px;height:34px}
+  .reciter-card .play-ov .ic{width:14px;height:14px}
+}

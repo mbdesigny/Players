@@ -255,7 +255,7 @@ function viewHome(){
 }
 function reciterCard(r){
   const ms=S.rewaya==='__all'?r.moshaf:r.moshaf.filter(m=>norm(m.rewaya)===S.rewaya);
-  const rw=[...new Set(ms.map(m=>m.rewaya))].slice(0,2);
+  const rw=[...new Set(ms.map(m=>m.rewaya).filter(Boolean))].slice(0,2);
   return `<button class="reciter-card ${S.reciter&&S.reciter.id===r.id?'active':''}" data-rid="${r.id}">
     <div class="ava">${reciterImg(r)}
     <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
