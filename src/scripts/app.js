@@ -179,6 +179,7 @@ function filteredReciters() {
 /* ═══════════════ VIEWS ═══════════════ */
 function setView(v) { S.view = v; S.query = ''; $('#searchInput').value = ''; if (v === 'mushaf') { S.readN = null; S.mushafAsk = false } if (v !== 'adhkar') S.adhkarCat = null; else if (S.adhkarCat == null) S.adhkarCat = akAutoCat(); if (v !== 'yt') { S.ytId = null; destroyYt() } document.body.classList.toggle('mushaf-full', v === 'mushaf'); $$('.nav-item[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v)); closeSidebar(); render() }
 function render() {
+  destroyFlip();
   applyI18nStatic();
   const ph = { home: 'searchReciters', reciters: 'searchReciters', surahs: 'searchSurahs', favorites: 'searchFav', recent: 'searchRecent', mushaf: 'searchSurahs' }[S.view] || 'searchReciters';
   $('#searchInput').placeholder = t(ph);
@@ -188,7 +189,7 @@ function render() {
   else if (S.view === 'surahs') v.innerHTML = viewSurahs();
   else if (S.view === 'favorites') v.innerHTML = viewCollection(S.favorites, 'favView', 'favSub', true);
   else if (S.view === 'recent') v.innerHTML = viewCollection(S.recent, 'recentView', 'recentSub', false);
-  else if (S.view === 'mushaf') v.innerHTML = S.readN ? viewRead() : viewMushaf();
+  else if (S.view === 'mushaf') { v.innerHTML = S.readN ? viewRead() : viewMushaf(); if (S.readN) mountFlip() }
   else if (S.view === 'prayer') v.innerHTML = viewPrayer();
   else if (S.view === 'adhkar') v.innerHTML = viewAdhkar();
   else if (S.view === 'yt') v.innerHTML = viewYt();
@@ -630,7 +631,14 @@ function mushafGo(n) {
   S.mushafPage = n; store.set('mushafPage', n);
   if (n >= 1) store.set(`mushafLast_${S.mushafRiwaya}`, n);
   if (S.view !== 'mushaf') setView('mushaf');
-  S.readN = n; render();
+  S.readN = n;
+  if (flip && document.contains($('#flipHost'))) {
+    const idx = Math.max(0, n - 1), cur = flip.getCurrentPageIndex();
+    if (idx === cur + 1) flip.flipNext();
+    else if (idx === cur - 1) flip.flipPrev();
+    else flip.turnToPage(idx);
+    mushafSyncUI();
+  } else render();
   mushafPrecache(n, S.mushafRiwaya);
 }
 function mushafPrecache(n, rw) {
@@ -672,6 +680,74 @@ function mushafCoverHTML() {
 function viewMushaf() { return mushafCoverHTML() }
 const mushafBook = () => typeof window.matchMedia === 'function' && window.matchMedia('(min-width:900px)').matches;
 function mushafFocus() { document.body.classList.toggle('mushaf-clean') }
+/* flip-book (StPageFlip) */
+let flip = null, flipIO = null;
+function destroyFlip() {
+  if (flipIO) { flipIO.disconnect(); flipIO = null }
+  if (flip) { try { flip.destroy() } catch (_) { } flip = null }
+  const stg = $('#view .mushaf-stage'); if (stg) stg.classList.remove('flip-on');
+}
+function flipSetSrc(p) {
+  const im = document.querySelector(`#flipHost .flip-page[data-p="${p}"] img`);
+  if (im && !im.getAttribute('src')) im.src = im.dataset.src;
+}
+function mushafSyncUI() {
+  const n = S.readN; if (!n) return;
+  const book = mushafBook(), R = book ? mushafRight(n) : n;
+  const num = p => S.lang === 'ar' ? arDigits(p) : String(p);
+  const L = book && R + 1 <= MUSHAF_PAGES ? R + 1 : null;
+  const footNum = L ? `${num(R)} – ${num(L)}` : `${num(R)} / ${num(MUSHAF_PAGES)}`;
+  $$('#view .mf-num').forEach(el => el.textContent = footNum);
+  ['mSlider', 'mSliderSide'].forEach(id => { const el = document.getElementById(id); if (el) el.value = n });
+  const sc = mushafSurah(R), jz = mushafJuz(R);
+  ['mSurahSel', 'mSurahSelSide'].forEach(id => { const el = document.getElementById(id); if (el) el.value = sc });
+  ['mJuzSel', 'mJuzSelSide'].forEach(id => { const el = document.getElementById(id); if (el) el.value = jz });
+  $$('#view [data-mlist="surah"] .ms-item').forEach(el => el.classList.toggle('active', +el.dataset.read === SURAH_PAGE[sc - 1]));
+  $$('#view [data-mlist="juz"] .ms-item').forEach(el => el.classList.toggle('active', +el.dataset.read === JUZ_PAGE[jz - 1]));
+}
+async function mountFlip() {
+  const host = $('#flipHost'); if (!host || flip) return;
+  const book = mushafBook(), n = S.readN, rw = S.mushafRiwaya;
+  const num = p => S.lang === 'ar' ? arDigits(p) : String(p);
+  const stg = host.closest('.mushaf-stage');
+  try {
+    const { PageFlip } = await import('page-flip');
+    if (!document.contains(host) || flip) return;
+    if (stg) stg.classList.add('flip-on');
+    const frag = document.createDocumentFragment();
+    for (let p = 1; p <= MUSHAF_PAGES; p++) {
+      const d = document.createElement('div');
+      d.className = 'flip-page'; d.dataset.p = p;
+      const sm = SURAH[mushafSurah(p) - 1];
+      d.innerHTML = `<div class="flip-in"><span class="fp-juz">${t('juz')} ${num(mushafJuz(p))}</span><span class="fp-surah">${esc(S.lang === 'ar' ? sm[0] : sm[1])}</span><img data-src="${esc(mushafSVGURL(p, rw))}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" draggable="false"><span class="fp-num">${num(p)}</span></div>`;
+      frag.appendChild(d);
+    }
+    host.innerHTML = ''; host.appendChild(frag);
+    const pf = new PageFlip(host, {
+      width: 345, height: 550, size: 'stretch', autoSize: false,
+      minWidth: 200, maxWidth: 620, minHeight: 260, maxHeight: 900,
+      usePortrait: !book, showCover: false, mobileScrollSupport: false,
+      drawShadow: true, maxShadowOpacity: .45, flippingTime: 700,
+      startPage: Math.max(0, (book ? mushafRight(n) : n) - 1), swipeDistance: 18
+    });
+    pf.loadFromHTML(host.querySelectorAll('.flip-page'));
+    flip = pf;
+    flipIO = new IntersectionObserver(es => {
+      for (const en of es) if (en.isIntersecting) { const im = en.target.querySelector('img'); if (im && !im.getAttribute('src')) im.src = im.dataset.src }
+    }, { rootMargin: '600px' });
+    host.querySelectorAll('.flip-page').forEach(el => flipIO.observe(el));
+    const R0 = book ? mushafRight(n) : n;
+    for (let p = R0 - 2; p <= R0 + 3; p++) if (p >= 1 && p <= MUSHAF_PAGES) flipSetSrc(p);
+    pf.on('flip', e => {
+      const i = +e.data; if (isNaN(i)) return;
+      S.readN = book ? mushafRight(i + 1) : i + 1;
+      S.mushafPage = S.readN; store.set('mushafPage', S.readN); store.set(`mushafLast_${S.mushafRiwaya}`, S.readN);
+      mushafSyncUI();
+      for (let p = S.readN - 4; p <= S.readN + 5; p++) if (p >= 1 && p <= MUSHAF_PAGES) flipSetSrc(p);
+      mushafPrecache(S.readN, S.mushafRiwaya);
+    });
+  } catch (_) { if (stg) stg.classList.remove('flip-on') }
+}
 function mushafSearchGo(q) {
   q = (q || '').trim();
   if (!q) return;
@@ -707,6 +783,7 @@ function viewRead() {
       </div>
       <div class="mt-center"><span>${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
+        <button class="icon-btn" data-act="mfocus" title="${t('focusMode')}" aria-label="${t('focusMode')}"><svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}" aria-label="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafexit" title="${t('close')}" aria-label="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
@@ -715,6 +792,7 @@ function viewRead() {
       <div class="mushaf-stage${book ? ' book' : ''}">
         <div class="mushaf-page" data-page="${R}">${img(R)}</div>
         ${L ? `<div class="mushaf-page" data-page="${L}">${img(L)}</div>` : ''}
+        <div class="flip-host" id="flipHost"></div>
       </div>
       <button class="mnav prev" data-act="mprev" ${prevOff ? 'disabled' : ''} aria-label="${t('previous')}"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <button class="mnav next" data-act="mnext" ${nextOff ? 'disabled' : ''} aria-label="${t('next')}"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
@@ -726,7 +804,7 @@ function viewRead() {
         <button class="icon-btn" data-act="mfocus" title="${t('focusMode')}" aria-label="${t('focusMode')}"><svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}" aria-label="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafdlall" title="${t('dlPages')}" aria-label="${t('dlPages')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
-        <button class="icon-btn" data-act="mushafexit" title="${t('close')}" aria-label="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="icon-btn" data-act="mushafside" title="${document.body.classList.contains('mushaf-noside') ? t('showPanel') : t('hidePanel')}" aria-label="${document.body.classList.contains('mushaf-noside') ? t('showPanel') : t('hidePanel')}">${document.body.classList.contains('mushaf-noside') ? '<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>' : '<svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'}</button>
       </div>
       <aside class="mushaf-side">
         <div class="ms-search">
@@ -1529,7 +1607,7 @@ $('.np-overlay').addEventListener('click', e => {
 });
 $('#view').addEventListener('click', async e => {
   const stg = e.target.closest('.mushaf-stage');
-  if (stg && !e.target.closest('button') && !e.target.closest('.cover-page')) { if (!mushafBook()) mushafFocus(); return }
+  if (stg && !e.target.closest('button') && !e.target.closest('.cover-page')) { if (!flip && !mushafBook()) mushafFocus(); return }
   const rdB = e.target.closest('[data-read]'); if (rdB) { mushafGo(+rdB.dataset.read); return }
   const favB = e.target.closest('[data-fav]'); if (favB) { const tr = findTrackByKey(favB.dataset.fav); if (tr) toggleFav(tr); return }
   const unfavB = e.target.closest('[data-unfav]'); if (unfavB) { const tr = findTrackByKey(unfavB.dataset.unfav); if (tr) toggleFav(tr); return }
@@ -1557,6 +1635,12 @@ $('#view').addEventListener('click', async e => {
     else if (a === 'mushafaskclose') { if (e.target === act) { S.mushafAsk = false; render() } }
     else if (a === 'mushafdlall') mushafDownloadAll(act);
     else if (a === 'mfocus') mushafFocus();
+    else if (a === 'mushafside') {
+      document.body.classList.toggle('mushaf-noside');
+      const closed = document.body.classList.contains('mushaf-noside'), lbl = closed ? t('showPanel') : t('hidePanel');
+      act.innerHTML = closed ? '<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>' : '<svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      act.title = lbl; act.setAttribute('aria-label', lbl);
+    }
     else if (a === 'sidetoggle') { S.sideMode = S.sideMode === 'collapsed' ? 'open' : 'collapsed'; store.set('sideMode', S.sideMode); applySidebar() }
     else if (a === 'mssearch') { const inp = $('#msSearch'); if (inp) { inp.hidden = !inp.hidden; if (!inp.hidden) inp.focus(); else inp.value = '' } }
     else if (a === 'locauto') detectLoc('auto')
@@ -1628,7 +1712,7 @@ $('#view').addEventListener('touchstart', e => {
   const t0 = e.touches[0]; swX = t0.clientX; swY = t0.clientY; swT = Date.now()
 }, { passive: true });
 $('#view').addEventListener('touchend', e => {
-  if (S.view !== 'mushaf' || swX == null) return;
+  if (S.view !== 'mushaf' || swX == null || flip) return;
   const t0 = e.changedTouches[0], dx = t0.clientX - swX, dy = t0.clientY - swY; swX = null;
   if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.4 || Date.now() - swT > 900) return;
   if (!e.target.closest('.mushaf-stage')) return;
@@ -1639,6 +1723,7 @@ $('#view').addEventListener('touchend', e => {
   else if (d > 0) { if (mushafLastGet() > 1) { S.mushafAsk = true; render() } else mushafGo(1) }
 }, { passive: true });
 $('#view').addEventListener('touchcancel', () => { swX = null }, { passive: true });
+try { window.matchMedia('(min-width:900px)').addEventListener('change', () => { if (S.view === 'mushaf' && S.readN) { destroyFlip(); render() } }) } catch (_) { }
 /* queue: click + drag reorder */
 let dragIdx = null;
 $('#npQueue').addEventListener('click', e => { const it = e.target.closest('[data-qi]'); if (it) loadTrack(+it.dataset.qi, true) });
