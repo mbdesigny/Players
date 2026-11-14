@@ -474,10 +474,23 @@ const MUSHAF_LOCAL={
   warsh:import.meta.glob('../assets/mushaf-warsh/*.svg',{eager:true,query:'?url',import:'default'})
 };
 const MUSHAF_REMOTE={
-  hafs:n=>`https://raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf/main/svg/${pad(n)}.svg`,
-  warsh:n=>`https://raw.githubusercontent.com/quran-ws/quran-svg/main/mushafs/warsh/kfqc/svg/${pad(n)}.svg`
+  hafs:n=>[
+    `https://cdn.jsdelivr.net/gh/Younes12345698/pro-muslim-mushaf@main/svg/${pad(n)}.svg`,
+    `https://raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf/main/svg/${pad(n)}.svg`,
+    `https://cdn.jsdelivr.net/gh/SakinaDevGroup/mushaf-madani-cdn@main/light/p${n}.png`,
+    `https://raw.githubusercontent.com/SakinaDevGroup/mushaf-madani-cdn/main/light/p${n}.png`
+  ],
+  warsh:n=>[
+    `https://raw.githubusercontent.com/quran-ws/quran-svg/main/mushafs/warsh/kfqc/svg/${pad(n)}.svg`,
+    `https://cdn.jsdelivr.net/gh/quran-ws/quran-svg@main/mushafs/warsh/kfqc/svg/${pad(n)}.svg`
+  ]
 };
-const mushafSVGURL=(n,rw)=>MUSHAF_LOCAL[rw][`../assets/${rw==='warsh'?'mushaf-warsh':'mushaf'}/${pad(n)}.svg`]||MUSHAF_REMOTE[rw](n);
+const mushafLocalKey=(n,rw)=>`../assets/${rw==='warsh'?'mushaf-warsh':'mushaf'}/${pad(n)}.svg`;
+const mushafSources=(n,rw)=>{
+  const local=MUSHAF_LOCAL[rw][mushafLocalKey(n,rw)];
+  return local?[local,...MUSHAF_REMOTE[rw](n)]:MUSHAF_REMOTE[rw](n);
+};
+const mushafSVGURL=(n,rw)=>mushafSources(n,rw)[0];
 const mushafLastGet=()=>store.get(`mushafLast_${S.mushafRiwaya}`,0);
 function setMushafRiwaya(rw){
   S.mushafRiwaya=rw;store.set('mushafRiwaya',rw);store.set('mushafVisited',true);
@@ -492,8 +505,11 @@ async function mushafZipAll(rw,onProg){
   const u16=v=>new Uint8Array([v&255,(v>>8)&255]);
   const u32=v=>new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255]);
   for(let n=1;n<=MUSHAF_PAGES;n++){
-    let txt;
-    try{const res=await fetch(mushafSVGURL(n,rw));if(!res.ok)throw new Error(res.status);txt=await res.text()}catch(e){onProg(n);continue}
+    let txt=null;
+    for(const u of mushafSources(n,rw)){
+      try{const res=await fetch(u);if(!res.ok)throw new Error(res.status);txt=await res.text();break}catch(e){}
+    }
+    if(txt==null){onProg(n);continue}
     const data=enc.encode(txt),crc=crc32(data),nameB=enc.encode(`${pad(n)}.svg`);
     const lh=new Uint8Array(30);lh.set(u32(0x04034b50),0);lh.set(u16(20),4);lh.set(u16(0),8);lh.set(u16(0),10);lh.set(u32(crc),14);
     lh.set(u32(data.length),18);lh.set(u32(data.length),22);lh.set(u16(nameB.length),26);
@@ -519,7 +535,6 @@ async function mushafDownloadAll(btn){
   }catch(e){toast(t('failed'))}
   btn.textContent=orig;btn.disabled=false;delete btn.dataset.busy;
 }
-const mushafPNGURL=n=>`https://raw.githubusercontent.com/SakinaDevGroup/mushaf-madani-cdn/main/light/p${n}.png`;
 const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
 const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
 function mushafGo(n){
@@ -582,8 +597,8 @@ function viewRead(){
   const sc=mushafSurah(R);
   const sm=SURAH[sc-1],sn=S.lang==='ar'?sm[0]:sm[1];
   const rw=S.mushafRiwaya;
-  const img=p=>`<img src="${mushafSVGURL(p,rw)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-png="${rw==='hafs'?mushafPNGURL(p):''}"
-      onerror="if(this.dataset.png){this.src=this.dataset.png;this.dataset.png=''}else{this.classList.add('broken')}">`;
+  const img=p=>`<img src="${mushafSVGURL(p,rw)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-alts="${esc(mushafSources(p,rw).slice(1).join('|'))}"
+      onerror="const alts=(this.dataset.alts||'').split('|').filter(Boolean);if(alts.length){this.src=alts.shift();this.dataset.alts=alts.join('|')}else{this.classList.add('broken')}">`;
   const prevOff=false,nextOff=book?R>=MUSHAF_PAGES-1:n>=MUSHAF_PAGES;
   const footNum=L?`${num(R)} – ${num(L)}`:`${num(R)} / ${tot}`;
   return `<div class="mushaf-wrap">
