@@ -1103,6 +1103,82 @@ body:not(.playing) .eq i {
   color: var(--ink2)
 }
 
+/* ═══════════ skeleton loading ═══════════ */
+.skel {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface2);
+  border-radius: 10px
+}
+
+.skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(148, 138, 110, .16), transparent);
+  animation: shimmer 1.4s ease-in-out infinite
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%)
+  }
+}
+
+.skel-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 8px
+}
+
+.skel-hero {
+  height: 180px;
+  border-radius: var(--r-lg)
+}
+
+.skel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(174px, 1fr));
+  gap: var(--grid-gap)
+}
+
+.skel-card {
+  height: 210px;
+  border-radius: var(--r-md)
+}
+
+.prayer-skel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px
+}
+
+.skel-bar {
+  height: 58px;
+  border-radius: 14px
+}
+
+.prayer-skel .skel-card {
+  height: 64px;
+  border-radius: 12px
+}
+
+.view-head .chips.vh-chips {
+  flex: 1 1 260px;
+  min-width: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  align-self: center
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel::after {
+    animation: none
+  }
+}
+
 .spinner {
   width: 44px;
   height: 44px;
