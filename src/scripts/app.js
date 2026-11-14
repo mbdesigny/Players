@@ -252,7 +252,7 @@ function viewHome() {
   <div class="view-head"><div><h2>${t('recentView')}</h2></div><button class="icon-btn" data-act="openrecent" aria-label="${t('recentView')}"><svg class="ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
   <div class="recent-row">${S.recent.slice(0, 10).map((f, i) => `<button class="recent-card" data-coll="${i}">
     <img src="${avatarURI(f.rar, reciterLetter({ name: f.rar, name_en: f.ren }))}" alt="" loading="lazy">
-    <span class="rc-txt"><span class="rt${S.lang === 'ar' ? ' sn-font' : ''}">${S.lang === 'ar' ? surahNameGlyph(f.n) : esc(surahName(f.n, S.lang))}</span><br><span class="rs">${esc(S.lang === 'ar' ? f.rar : (f.ren || f.rar))} · ${esc(f.rewaya || f.mname || '')}</span></span>
+    <span class="rc-txt"><span class="rt${S.lang === 'ar' ? ' sn-font' : ''}">${S.lang === 'ar' ? surahNameGlyph(f.n) : esc(surahName(f.n, S.lang))}</span><span class="rs">${esc(S.lang === 'ar' ? f.rar : (f.ren || f.rar))} · ${esc(f.rewaya || f.mname || '')}</span></span>
     <span class="rplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`).join('')}</div>
   ${orn}` : ''}
   <div class="view-head"><div><h2>${t('quickSurahs')}</h2></div></div>
