@@ -252,7 +252,19 @@ function viewHome() {
     <span class="rplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`).join('')}</div>
   ${orn}` : ''}
   <div class="view-head"><div><h2>${t('quickSurahs')}</h2></div></div>
-  <div class="quick-grid">${quick.map(n => { const m = SURAH[n - 1]; return `<button class="quick-surah" data-surah="${n}" title="${esc(surahName(n, S.lang))}"><span class="qn">${num(n)}</span><span><span class="qt sn-font" aria-label="${esc(surahName(n, S.lang))}">${surahNameGlyph(n)}</span><br><span class="qs">${m[2]} ${t('ayahs')} · ${m[3] ? t('medinan') : t('meccan')}</span></span><span class="qplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>` }).join('')}</div>
+  <div class="quick-grid">${quick.map(n => { const m = SURAH[n - 1]; return `
+    
+    <button class="quick-surah" data-surah="${n}" title="${esc(surahName(n, S.lang))}"><span class="qsurah sn-font" aria-hidden="true">
+  
+  <span class="qn">${num(n)}</span>
+    <span class="qt sn-font" aria-label="${esc(surahName(n, S.lang))}">${surahNameGlyph(n)}</span>
+    
+  
+</span>
+ <span class="qplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span>
+
+   <span class="qs">${m[2]} ${t('ayahs')} · ${m[3] ? t('medinan') : t('meccan')}</span>
+ </button>` }).join('')}</div>
   ${orn}
   <div class="view-head"><div><h2>${t('featured')}</h2><div class="sub">${t('recitersSub')}</div></div><button class="btn sm" data-act="browse">${t('browse')}</button></div>
   <div class="reciter-grid">${feat.slice(0, 16).map(reciterCard).join('')}</div>`;

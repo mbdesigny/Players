@@ -3658,9 +3658,11 @@ html[dir="rtl"] .back-btn .ic {
 
 .quick-surah {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 12px 30px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -3668,10 +3670,8 @@ html[dir="rtl"] .back-btn .ic {
   font-family: inherit;
   color: var(--ink);
   transition: .18s;
-  text-align: start;
   animation: rise .5s both;
   position: relative;
-  padding-inline-end: 38px
 }
 
 .quick-surah:hover {
@@ -3682,8 +3682,8 @@ html[dir="rtl"] .back-btn .ic {
 
 .quick-surah .qplay {
   position: absolute;
-  inset-inline-end: 10px;
   top: 50%;
+  left: 50%;
   translate: 0 -50%;
   width: 26px;
   height: 26px;
@@ -3719,6 +3719,15 @@ html[dir="rtl"] .back-btn .ic {
   width: 32px;
   text-align: center;
   flex: none
+}
+
+.quick-surah .qsurah {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-arround;
+  gap: 20px;
+  width: 100%
 }
 
 .quick-surah .qt {
