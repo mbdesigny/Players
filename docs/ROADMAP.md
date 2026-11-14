@@ -66,11 +66,16 @@ Implemented:
 - Per-prayer ±minutes offset correction (each prayer individually).
 - Settings live in a modal opened from the prayer view.
 
+Audit item **A9 is done**: an adhan-behavior setting (pause recitation or
+`duck` — lower its volume to 15% during the adhan and restore it after), an
+optional desktop notification at prayer time (Notification API, permission
+requested when enabled), and a fixed quick-cities list in the location
+search panel as a reliable fallback when detection fails.
+
 **Pending** (tracked in the audit):
-- Adhan must pause **all** players (Quran audio + YouTube) — currently the
-  recitation keeps playing (audit item B4).
-- `duck` mode (lower recitation volume instead of silence) and optional
-  desktop notifications (audit item A9).
+- Adhan must pause **all** players (Quran audio + YouTube) — the Quran
+  audio element is paused in `stop` mode, but YouTube pausing and full
+  visual state rollback are audit item B4.
 
 ---
 
@@ -123,7 +128,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A6 | Dead assets removed; adhan mp3s out of the bundle (`_astro` 8.5MB → 1.3MB) | **done** |
 | A7 | This documentation sync | **done** |
 | A8 | Adhkar daily progress | **done** |
-| A9 | Adhan duck mode + notifications + location hardening | pending |
+| A9 | Adhan duck mode + notifications + location hardening | **done** |
 | A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | pending |
 | A11 | Deduplicate CSS; single `#view` click delegator | pending |
 | A12 | `markPlayingRows()` null-number bug | pending |
