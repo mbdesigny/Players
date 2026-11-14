@@ -1,38 +1,31 @@
 'use strict';
-import adhanUrl from '../assets/adhan/adhan.mp3';
-import adhanFajrUrl from '../assets/adhan/adhan-fajr.mp3';
-import vMakkah from '../assets/adhan/voices/makkah.mp3';
-import vMadinah from '../assets/adhan/voices/madinah.mp3';
-import vAqsa from '../assets/adhan/voices/aqsa.mp3';
-import vEgypt from '../assets/adhan/voices/egypt.mp3';
-import vTurkey from '../assets/adhan/voices/turkey.mp3';
-import vBaldi from '../assets/adhan/voices/baldi.mp3';
-import vQatami from '../assets/adhan/voices/qatami.mp3';
+const adhanUrl='/adhan/adhan.mp3';
+const adhanFajrUrl='/adhan/adhan-fajr.mp3';
+const vMakkah='/adhan/voices/makkah.mp3';
+const vMadinah='/adhan/voices/madinah.mp3';
+const vAqsa='/adhan/voices/aqsa.mp3';
+const vEgypt='/adhan/voices/egypt.mp3';
+const vTurkey='/adhan/voices/turkey.mp3';
+const vBaldi='/adhan/voices/baldi.mp3';
+const vQatami='/adhan/voices/qatami.mp3';
 import mosqueUrl from '../assets/hero/mosque.jpg?url';
 import ADHKAR from '../data/adhkar.json';
+import{pad,norm,norm2,esc,hash,arDigits,fmt,safeName}from './lib/text.js';
+import{SURAH,surahName,surahNameGlyph,SURAH_PAGE}from './lib/surah.js';
+import{MUSHAF_PAGES,JUZ_PAGE,mushafJuz,mushafSurah,mushafRight,mushafStep}from './lib/mushaf.js';
+import{ED_KEYS,CORS_AUDIO_HOST,corsAudio,serverURL,parseList,buildSources,pickSource}from './lib/sources.js';
+import{prayerTimeStr,countdownStr}from './lib/prayer.js';
 /* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const API='https://mp3quran.net/api/v3';
-const pad=n=>String(n).padStart(3,'0');
-const norm=s=>(s||'').toString().replace(/[\u064B-\u0652\u0670\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/\s+/g,' ').trim().toLowerCase();
-const norm2=s=>norm(s).replace(/\s+/g,'');
-const esc=s=>(s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hash=s=>{let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return Math.abs(h)};
-const arDigits=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
-const fmt=s=>(!isFinite(s)||s<0)?'0:00':`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-const safeName=s=>(s||'').replace(/[\\/:*?"<>|]/g,'-').trim().slice(0,80);
 const store={get(k,d){try{const v=localStorage.getItem('ouns_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ouns_'+k,JSON.stringify(v))}catch(e){}}};
 
 /* ── Surah metadata (114) ── */
-const SURAH=[["الفاتحة","Al-Fatihah",7,0],["البقرة","Al-Baqarah",286,1],["آل عمران","Aal-Imran",200,1],["النساء","An-Nisa",176,1],["المائدة","Al-Ma'idah",120,1],["الأنعام","Al-An'am",165,0],["الأعراف","Al-A'raf",206,0],["الأنفال","Al-Anfal",75,1],["التوبة","At-Tawbah",129,1],["يونس","Yunus",109,0],["هود","Hud",123,0],["يوسف","Yusuf",111,0],["الرعد","Ar-Ra'd",43,1],["إبراهيم","Ibrahim",52,0],["الحجر","Al-Hijr",99,0],["النحل","An-Nahl",128,0],["الإسراء","Al-Isra",111,0],["الكهف","Al-Kahf",110,0],["مريم","Maryam",98,0],["طه","Ta-Ha",135,0],["الأنبياء","Al-Anbiya",112,0],["الحج","Al-Hajj",78,1],["المؤمنون","Al-Mu'minun",118,0],["النور","An-Nur",64,1],["الفرقان","Al-Furqan",77,0],["الشعراء","Ash-Shu'ara",227,0],["النمل","An-Naml",93,0],["القصص","Al-Qasas",88,0],["العنكبوت","Al-Ankabut",69,0],["الروم","Ar-Rum",60,0],["لقمان","Luqman",34,0],["السجدة","As-Sajdah",30,0],["الأحزاب","Al-Ahzab",73,1],["سبأ","Saba",54,0],["فاطر","Fatir",45,0],["يس","Ya-Sin",83,0],["الصافات","As-Saffat",182,0],["ص","Sad",88,0],["الزمر","Az-Zumar",75,0],["غافر","Ghafir",85,0],["فصلت","Fussilat",54,0],["الشورى","Ash-Shura",53,0],["الزخرف","Az-Zukhruf",89,0],["الدخان","Ad-Dukhan",59,0],["الجاثية","Al-Jathiyah",37,0],["الأحقاف","Al-Ahqaf",35,0],["محمد","Muhammad",38,1],["الفتح","Al-Fath",29,1],["الحجرات","Al-Hujurat",18,1],["ق","Qaf",45,0],["الذاريات","Adh-Dhariyat",60,0],["الطور","At-Tur",49,0],["النجم","An-Najm",62,0],["القمر","Al-Qamar",55,0],["الرحمن","Ar-Rahman",78,1],["الواقعة","Al-Waqi'ah",96,0],["الحديد","Al-Hadid",29,1],["المجادلة","Al-Mujadila",22,1],["الحشر","Al-Hashr",24,1],["الممتحنة","Al-Mumtahanah",13,1],["الصف","As-Saff",14,1],["الجمعة","Al-Jumu'ah",11,1],["المنافقون","Al-Munafiqun",11,1],["التغابن","At-Taghabun",18,1],["الطلاق","At-Talaq",12,1],["التحريم","At-Tahrim",12,1],["الملك","Al-Mulk",30,0],["القلم","Al-Qalam",52,0],["الحاقة","Al-Haqqah",52,0],["المعارج","Al-Ma'arij",44,0],["نوح","Nuh",28,0],["الجن","Al-Jinn",28,0],["المزمل","Al-Muzzammil",20,0],["المدثر","Al-Muddaththir",56,0],["القيامة","Al-Qiyamah",40,0],["الإنسان","Al-Insan",31,1],["المرسلات","Al-Mursalat",50,0],["النبأ","An-Naba",40,0],["النازعات","An-Nazi'at",46,0],["عبس","Abasa",42,0],["التكوير","At-Takwir",29,0],["الانفطار","Al-Infitar",19,0],["المطففين","Al-Mutaffifin",36,0],["الانشقاق","Al-Inshiqaq",25,0],["البروج","Al-Buruj",22,0],["الطارق","At-Tariq",17,0],["الأعلى","Al-A'la",19,0],["الغاشية","Al-Ghashiyah",26,0],["الفجر","Al-Fajr",30,0],["البلد","Al-Balad",20,0],["الشمس","Ash-Shams",15,0],["الليل","Al-Layl",21,0],["الضحى","Ad-Duha",11,0],["الشرح","Ash-Sharh",8,0],["التين","At-Tin",8,0],["العلق","Al-Alaq",19,0],["القدر","Al-Qadr",5,0],["البينة","Al-Bayyinah",8,1],["الزلزلة","Az-Zalzalah",8,1],["العاديات","Al-Adiyat",11,0],["القارعة","Al-Qari'ah",11,0],["التكاثر","At-Takathur",8,0],["العصر","Al-Asr",3,0],["الهمزة","Al-Humazah",9,0],["الفيل","Al-Fil",5,0],["قريش","Quraysh",4,0],["الماعون","Al-Ma'un",7,0],["الكوثر","Al-Kawthar",3,0],["الكافرون","Al-Kafirun",6,0],["النصر","An-Nasr",3,1],["المسد","Al-Masad",5,0],["الإخلاص","Al-Ikhlas",4,0],["الفلق","Al-Falaq",5,0],["الناس","An-Nas",6,0]];
-const surahName=(n,lang)=>lang==='ar'?SURAH[n-1][0]:SURAH[n-1][1];
-const surahNameGlyph=n=>String.fromCodePoint(0xE000+(((n/100)|0)<<8|(((n/10)|0)%10)<<4|(n%10)));
 
 /* ── Fallback catalog (offline resilience) ── */
 const FALLBACK=[["مشاري راشد العفاسي","Mishary Rashid Alafasy","https://server8.mp3quran.net/afs/"],["عبد الرحمن السديس","Abdurrahman As-Sudais","https://server11.mp3quran.net/sds/"],["سعود الشريم","Saud Ash-Shuraim","https://server7.mp3quran.net/shur/"],["ماهر المعيقلي","Maher Al Muaiqly","https://server12.mp3quran.net/maher/"],["محمود خليل الحصري","Mahmoud Khalil Al-Husary","https://server13.mp3quran.net/husr/"],["محمد صديق المنشاوي","Mohamed Siddiq El-Minshawi","https://server10.mp3quran.net/minsh/"],["سعد الغامدي","Saad Al-Ghamdi","https://server7.mp3quran.net/s_gmd/"],["أبو بكر الشاطري","Abu Bakr Ash-Shatri","https://server11.mp3quran.net/shatri/"],["ناصر القطامي","Nasser Al Qatami","https://server6.mp3quran.net/qtm/"],["ياسر الدوسري","Yasser Al-Dosari","https://server11.mp3quran.net/yasser/"],["هاني الرفاعي","Hani Ar-Rifai","https://server8.mp3quran.net/hani/"],["أحمد العجمي","Ahmed Al-Ajmi","https://server10.mp3quran.net/ajm/"],["محمد أيوب","Muhammad Ayyoub","https://server8.mp3quran.net/ayyub/"],["عبد الله بصفر","Abdullah Basfar","https://server6.mp3quran.net/bsfr/"],["علي الحذيفي","Ali Al-Hudhaify","https://server9.mp3quran.net/hthfi/"],["إبراهيم الأخضر","Ibrahim Al-Akhdar","https://server6.mp3quran.net/akdr/"],["خالد القحطاني","Khalid Al-Qahtani","https://server10.mp3quran.net/qht/"],["عبد الباسط عبد الصمد","Abdul Basit Abdus-Samad","https://server7.mp3quran.net/basit/"]].map((r,i)=>({id:9000+i,name:r[0],name_en:r[1],moshaf:[{id:1,server:r[2],rewaya:'حفص عن عاصم',name:'مرتل',surah_list:'1-114',surah_total:114}]}));
 
 /* ── Islamic Network CDN edition matching ── */
-const ED_KEYS=[["alafasy","عفاسي","alafasy"],["husary","حصري","husary"],["minshawi","منشاوي","minshawi"],["abdulbasit","عبدالباسط","abdulbasit"],["sudais","سديس","sudais"],["shuraim","شريم","shuraym"],["muaiqly","معيقلي","muaiqly"],["shatri","شاطري","shaatree"],["hudhaify","حذيفي","hudhaify"],["ajmi","عجمي","ajamy"],["ayyoub","ايوب","ayyoub"],["rifai","رفاعي","rifai"],["akhdar","اخضر","akhbar"],["jibreel","جبريل","jibreel"]];
 let EDITIONS=[];
 
 /* ── Verses ── */
@@ -40,8 +33,8 @@ const VERSES=[["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَ�
 
 /* ── i18n ── */
 const I18N={
-ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة",floatPanel:"فصل اللوحة كنافذة عائمة",dockPanel:"إرجاع اللوحة إلى الجانب",mushaf:"المصحف",quranName:"القرآن الكريم",startReading:"ابدأ القراءة",continueReading:"تابع القراءة",mushafSub:"قراءة المصحف — رواية حفص عن عاصم",page:"صفحة",juz:"الجزء",rwHafs:"حفص عن عاصم",rwWarsh:"ورش عن نافع",mushafRiwaya:"رواية المصحف",mushafRiwayaDesc:"المصحف المكتوب — حفص عن عاصم / ورش عن نافع",chooseRiwaya:"اختر رواية المصحف",chooseRiwayaDesc:"يمكنك تغييرها لاحقاً من الإعدادات",dlPages:"تحميل جميع الصفحات",prayerTimes:"مواقيت الصلاة",prayerSub:"مواقيت الصلاة لموقعك",nextPrayer:"الصلاة القادمة",fajr:"الفجر",sunrise:"الشروق",dhuhr:"الظهر",asr:"العصر",maghrib:"المغرب",isha:"العشاء",location:"الموقع",changeLoc:"تغيير الموقع",searchLoc:"ابحث عن مدينة…",locNotFound:"لم يتم العثور على الموقع",search:"بحث",locAuto:"تحديد الموقع تلقائياً",locGps:"عبر GPS",locNet:"عبر الشبكة",locDetecting:"جارٍ تحديد الموقع…",locFail:"تعذّر تحديد الموقع",locApprox:"تقريبي — الشبكة",locApproxT:"تم التحديد عبر الشبكة وقد يكون غير دقيق — استعمل GPS أو ابحث عن مدينتك",adhan:"الأذان",adhanDesc:"تشغيل الأذان تلقائياً عند دخول وقت الصلاة",adhanNow:"حان الآن وقت",stopAdhan:"إيقاف الأذان",adhanOn:"مفعّل",adhanOff:"معطّل",firstThird:"الثلث الأول من الليل",lastThird:"الثلث الأخير من الليل",prOffset:"تصحيح المواقيت",prOffsetDesc:"تقديم أو تأخير المواقيت بالدقائق",untilAdhan:"بقي على رفع الآذان",cc:"الترجمة",adhkar:"الأذكار",adhkarSub:"من حصن المسلم",dhikr:"ذكر",allCats:"جميع الأقسام",akDone:"تمّت الأذكار — تقبّل الله",ytView:"أفضل التلاوات",ytSub:"مجموعة مختارة من أجمل التلاوات المرئية",ytAll:"كل التلاوات",prToday:"صلوات اليوم",prNight:"الشروق وأوقات الليل",adhanVoice:"صوت المؤذن",adhanVoiceDesc:"اختر صوت الأذان المستعمل عند دخول وقت الصلاة",preview:"استماع"},
-en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel",floatPanel:"Float panel",dockPanel:"Dock panel",mushaf:"Mushaf",quranName:"The Holy Qur'an",startReading:"Start reading",continueReading:"Continue reading",mushafSub:"Read the Qur'an — Hafs 'an 'Asim",page:"Page",juz:"Juz",rwHafs:"Hafs 'an 'Asim",rwWarsh:"Warsh 'an Nafi'",mushafRiwaya:"Mushaf riwayah",mushafRiwayaDesc:"Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'",chooseRiwaya:"Choose mushaf riwayah",chooseRiwayaDesc:"You can change it later in Settings",dlPages:"Download all pages",prayerTimes:"Prayer times",prayerSub:"Prayer times for your location",nextPrayer:"Next prayer",fajr:"Fajr",sunrise:"Sunrise",dhuhr:"Dhuhr",asr:"Asr",maghrib:"Maghrib",isha:"Isha",location:"Location",changeLoc:"Change location",searchLoc:"Search a city…",locNotFound:"Location not found",search:"Search",locAuto:"Detect location",locGps:"Via GPS",locNet:"Via network",locDetecting:"Detecting location…",locFail:"Could not detect your location",locApprox:"Approximate",locApproxT:"Detected via network and may be imprecise — use GPS or search your city",adhan:"Adhan",adhanDesc:"Play the adhan automatically at prayer time",adhanNow:"It is now time for",stopAdhan:"Stop adhan",adhanOn:"On",adhanOff:"Off",firstThird:"First third of the night",lastThird:"Last third of the night",prOffset:"Time adjustment",prOffsetDesc:"Shift prayer times earlier or later (minutes)",untilAdhan:"Adhan in",cc:"Captions",adhkar:"Adhkar",adhkarSub:"From Hisn al-Muslim",dhikr:"dhikr",allCats:"All categories",akDone:"Adhkar complete — may Allah accept",ytView:"Best recitations",ytSub:"A curated selection of the finest video recitations",ytAll:"All recitations",prToday:"Today's prayers",prNight:"Sunrise & night quarters",adhanVoice:"Adhan voice",adhanVoiceDesc:"Choose the adhan recitation played at prayer time",preview:"Preview"}
+ar:{library:"المكتبة",home:"الرئيسية",reciters:"القرّاء",favorites:"المفضلة",recent:"آخر الاستماع",downloads:"التنزيلات",verseLabel:"آية وتدبّر",tagline:"رفيقك لتلاوة القرآن الكريم",nowPlaying:"يُتلى الآن",chooseReciter:"اختر قارئًا لبدء التلاوة",upNext:"التالي في القائمة",favorite:"المفضلة",download:"تنزيل",settings:"الإعدادات",theme:"المظهر",themeDesc:"نهاري بيج / ليلي OLED",light:"نهاري",dark:"ليلي",language:"اللغة",audioSource:"مصدر الصوت",audioSourceDesc:"يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل",shortcuts:"اختصارات لوحة المفاتيح",kPlay:"تشغيل / إيقاف",kSeek:"تقديم / ترجيع ٥ ثوانٍ",kNext:"التالي / السابق",kFav:"المفضلة",kMute:"كتم الصوت",kSearch:"بحث",done:"تم",cancel:"إلغاء",confirm:"تأكيد",chooseFolder:"مجلد الحفظ",noDownloads:"لا توجد تنزيلات بعد",loading:"جارٍ تحميل المكتبة…",offline:"تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت",searchReciters:"ابحث عن قارئ…",searchSurahs:"ابحث عن سورة…",searchFav:"ابحث في المفضلة…",searchRecent:"ابحث في آخر الاستماع…",greetM:"صباح النور والقرآن",greetE:"مساء النور والقرآن",heroSub:"تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.",continueL:"واصل الاستماع",browse:"تصفّح القرّاء",featured:"قرّاء مختارون",quickSurahs:"سور يُكثر الاستماع إليها",allRiwayat:"كل الروايات",riwayat:"الروايات",sortName:"الاسم",sortCount:"عدد المصاحف",moshaf:"مصحف",surahs:"سورة",playAll:"تشغيل الكل",downloadAll:"تنزيل الكل",back:"عودة للقرّاء",ayahs:"آية",meccan:"مكية",medinan:"مدنية",noFav:"لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة",noRecent:"لم تستمع إلى شيء بعد",clearRecent:"مسح السجل",cleared:"تم مسح السجل",undo:"تراجع",addedFav:"أُضيفت إلى المفضلة",removedFav:"أُزيلت من المفضلة",qAuto:"أعلى جودة",qHigh:"١٩٢+",qStd:"١٢٨",qSave:"توفير البيانات",sleep:"مؤقت النوم",sleepOff:"إيقاف",min:"دقيقة",timerSet:"سيتوقف التشغيل بعد",timerEnd:"انتهى مؤقت النوم — تصبح على خير",confirmDlAll:"تنزيل جميع سور هذا المصحف؟",confirmDlAllMsg:"قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.",saved:"تم الحفظ",failed:"فشل",downloading:"جارٍ التنزيل",pending:"بالانتظار",cancelled:"أُلغي",dlDone:"اكتمل التنزيل",errorAudio:"تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر",noResults:"لا توجد نتائج مطابقة",reciter:"قارئ",tracks:"تلاوة",kbps:"kbps",provider:"المصدر",resume:"استئناف",playing:"يُتلى الآن",selectReciterFirst:"اختر قارئًا أولًا",favView:"المفضلة",recentView:"آخر الاستماع",favSub:"سورك المحفوظة للتلاوة الدائمة",recentSub:"آخر ما استمعت إليه",recitersSub:"قرّاء من حول العالم، بروايات متعددة",surahCount:"سورة متاحة",dlFolder:"اختر مجلدًا لحفظ التلاوات تلقائيًا",folderOk:"سيتم الحفظ في",quality:"الجودة",speed:"السرعة",volume:"الصوت",mute:"كتم",expand:"ملء الشاشة",close:"إغلاق",previous:"السابق",next:"التالي",shuffle:"عشوائي",repeat:"تكرار",play:"تشغيل",pause:"إيقاف",remove:"إزالة",clear:"مسح",about:"أُنس — مشغل القرآن الكريم",aboutSub:"تلاوات كاملة، روايات متعددة، أعلى جودة",pin:"تثبيت اللوحة",unpin:"إلغاء التثبيت",hidePanel:"إخفاء اللوحة",showPanel:"إظهار اللوحة",floatPanel:"فصل اللوحة كنافذة عائمة",dockPanel:"إرجاع اللوحة إلى الجانب",mushaf:"المصحف",quranName:"القرآن الكريم",startReading:"ابدأ القراءة",continueReading:"تابع القراءة",mushafSub:"قراءة المصحف — رواية حفص عن عاصم",page:"صفحة",juz:"الجزء",rwHafs:"حفص عن عاصم",rwWarsh:"ورش عن نافع",mushafRiwaya:"رواية المصحف",mushafRiwayaDesc:"المصحف المكتوب — حفص عن عاصم / ورش عن نافع",chooseRiwaya:"اختر رواية المصحف",chooseRiwayaDesc:"يمكنك تغييرها لاحقاً من الإعدادات",dlPages:"تحميل جميع الصفحات",prayerTimes:"مواقيت الصلاة",prayerSub:"مواقيت الصلاة لموقعك",nextPrayer:"الصلاة القادمة",fajr:"الفجر",sunrise:"الشروق",dhuhr:"الظهر",asr:"العصر",maghrib:"المغرب",isha:"العشاء",location:"الموقع",changeLoc:"تغيير الموقع",searchLoc:"ابحث عن مدينة…",locNotFound:"لم يتم العثور على الموقع",search:"بحث",locAuto:"تحديد الموقع تلقائياً",locGps:"عبر GPS",locNet:"عبر الشبكة",locDetecting:"جارٍ تحديد الموقع…",locFail:"تعذّر تحديد الموقع",locApprox:"تقريبي — الشبكة",locApproxT:"تم التحديد عبر الشبكة وقد يكون غير دقيق — استعمل GPS أو ابحث عن مدينتك",adhan:"الأذان",adhanDesc:"تشغيل الأذان تلقائياً عند دخول وقت الصلاة",adhanNow:"حان الآن وقت",stopAdhan:"إيقاف الأذان",adhanOn:"مفعّل",adhanOff:"معطّل",firstThird:"الثلث الأول من الليل",lastThird:"الثلث الأخير من الليل",prOffset:"تصحيح المواقيت",prOffsetDesc:"تقديم أو تأخير المواقيت بالدقائق",untilAdhan:"بقي على رفع الآذان",cc:"الترجمة",adhkar:"الأذكار",adhkarSub:"من حصن المسلم",dhikr:"ذكر",allCats:"جميع الأقسام",akDone:"تمّت الأذكار — تقبّل الله",akProgress:"تمّ",ytView:"أفضل التلاوات",ytSub:"مجموعة مختارة من أجمل التلاوات المرئية",ytAll:"كل التلاوات",prToday:"صلوات اليوم",prNight:"الشروق وأوقات الليل",adhanVoice:"صوت المؤذن",adhanVoiceDesc:"اختر صوت الأذان المستعمل عند دخول وقت الصلاة",preview:"استماع",adhanMode:"سلوك الأذان",adhanModeDesc:"عند دخول وقت الصلاة: إيقاف التلاوة أو خفض صوتها أثناء الأذان",adhanStop:"إيقاف التلاوة",adhanDuck:"خفض الصوت",notify:"إشعار سطح المكتب",notifyDesc:"إشعار عند دخول وقت الصلاة",quickCities:"مدن سريعة"},
+en:{library:"Library",home:"Home",reciters:"Reciters",favorites:"Favorites",recent:"Recently Played",downloads:"Downloads",verseLabel:"Verse & Reflect",tagline:"Your companion for Qur'an listening",nowPlaying:"Now Reciting",chooseReciter:"Choose a reciter to begin",upNext:"Up Next",favorite:"Favorite",download:"Download",settings:"Settings",theme:"Theme",themeDesc:"Beige light / OLED dark",light:"Light",dark:"Dark",language:"Language",audioSource:"Audio source",audioSourceDesc:"Highest quality chosen automatically, with fallback",shortcuts:"Keyboard shortcuts",kPlay:"Play / pause",kSeek:"Seek ±5 seconds",kNext:"Next / previous",kFav:"Favorite",kMute:"Mute",kSearch:"Search",done:"Done",cancel:"Cancel",confirm:"Confirm",chooseFolder:"Save folder",noDownloads:"No downloads yet",loading:"Loading library…",offline:"Could not reach the source — showing a compact online catalog",searchReciters:"Search reciters…",searchSurahs:"Search surahs…",searchFav:"Search favorites…",searchRecent:"Search recent…",greetM:"Good morning, with Qur'an",greetE:"Good evening, with Qur'an",heroSub:"Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.",continueL:"Continue listening",browse:"Browse reciters",featured:"Featured reciters",quickSurahs:"Frequently recited surahs",allRiwayat:"All riwayat",riwayat:"Riwayat",sortName:"Name",sortCount:"Mushaf count",moshaf:"mushaf",surahs:"surahs",playAll:"Play all",downloadAll:"Download all",back:"Back to reciters",ayahs:"ayahs",meccan:"Meccan",medinan:"Medinan",noFav:"No favorites yet — tap ♥ on any surah",noRecent:"Nothing played yet",clearRecent:"Clear history",cleared:"History cleared",undo:"Undo",addedFav:"Added to favorites",removedFav:"Removed from favorites",qAuto:"Best quality",qHigh:"192+",qStd:"128",qSave:"Save data",sleep:"Sleep timer",sleepOff:"Off",min:"min",timerSet:"Playback will stop in",timerEnd:"Sleep timer ended — good night",confirmDlAll:"Download all surahs of this mushaf?",confirmDlAllMsg:"Total size may exceed 500 MB. Downloads run in the background.",saved:"Saved",failed:"Failed",downloading:"Downloading",pending:"Pending",cancelled:"Cancelled",dlDone:"Download complete",errorAudio:"Could not play this recitation — try another source",noResults:"No matching results",reciter:"reciters",tracks:"recitations",kbps:"kbps",provider:"Source",resume:"Resume",playing:"Now reciting",selectReciterFirst:"Choose a reciter first",favView:"Favorites",recentView:"Recently Played",favSub:"Your saved surahs for anytime recitation",recentSub:"What you listened to last",recitersSub:"Reciters worldwide, across multiple riwayat",surahCount:"surahs available",dlFolder:"Choose a folder to save recitations automatically",folderOk:"Saving to",quality:"Quality",speed:"Speed",volume:"Volume",mute:"Mute",expand:"Fullscreen",close:"Close",previous:"Previous",next:"Next",shuffle:"Shuffle",repeat:"Repeat",play:"Play",pause:"Pause",remove:"Remove",clear:"Clear",about:"Ouns — Qur'an Player",aboutSub:"Full recitations, multiple riwayat, highest quality",pin:"Pin panel",unpin:"Unpin",hidePanel:"Hide panel",showPanel:"Show panel",floatPanel:"Float panel",dockPanel:"Dock panel",mushaf:"Mushaf",quranName:"The Holy Qur'an",startReading:"Start reading",continueReading:"Continue reading",mushafSub:"Read the Qur'an — Hafs 'an 'Asim",page:"Page",juz:"Juz",rwHafs:"Hafs 'an 'Asim",rwWarsh:"Warsh 'an Nafi'",mushafRiwaya:"Mushaf riwayah",mushafRiwayaDesc:"Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'",chooseRiwaya:"Choose mushaf riwayah",chooseRiwayaDesc:"You can change it later in Settings",dlPages:"Download all pages",prayerTimes:"Prayer times",prayerSub:"Prayer times for your location",nextPrayer:"Next prayer",fajr:"Fajr",sunrise:"Sunrise",dhuhr:"Dhuhr",asr:"Asr",maghrib:"Maghrib",isha:"Isha",location:"Location",changeLoc:"Change location",searchLoc:"Search a city…",locNotFound:"Location not found",search:"Search",locAuto:"Detect location",locGps:"Via GPS",locNet:"Via network",locDetecting:"Detecting location…",locFail:"Could not detect your location",locApprox:"Approximate",locApproxT:"Detected via network and may be imprecise — use GPS or search your city",adhan:"Adhan",adhanDesc:"Play the adhan automatically at prayer time",adhanNow:"It is now time for",stopAdhan:"Stop adhan",adhanOn:"On",adhanOff:"Off",firstThird:"First third of the night",lastThird:"Last third of the night",prOffset:"Time adjustment",prOffsetDesc:"Shift prayer times earlier or later (minutes)",untilAdhan:"Adhan in",cc:"Captions",adhkar:"Adhkar",adhkarSub:"From Hisn al-Muslim",dhikr:"dhikr",allCats:"All categories",akDone:"Adhkar complete — may Allah accept",akProgress:"Done",ytView:"Best recitations",ytSub:"A curated selection of the finest video recitations",ytAll:"All recitations",prToday:"Today's prayers",prNight:"Sunrise & night quarters",adhanVoice:"Adhan voice",adhanVoiceDesc:"Choose the adhan recitation played at prayer time",preview:"Preview",adhanMode:"Adhan behavior",adhanModeDesc:"At prayer time: pause recitation or lower its volume during the adhan",adhanStop:"Pause recitation",adhanDuck:"Lower volume",notify:"Desktop notification",notifyDesc:"Notify when a prayer time enters",quickCities:"Quick cities"}
 };
 const t=k=>I18N[S.lang][k]??k;
 
@@ -62,12 +55,41 @@ const S={
     if(typeof v==='number'){for(const k in base)base[k]=v;return base}
     return Object.assign(base,v)})(),
   adhanOn:store.get('adhanOn',true), adhanAudio:null, adhanLast:store.get('adhanLast',''), adhanVoice:store.get('adhanVoice','abdulbasit'),
+  adhanMode:store.get('adhanMode','stop'), notifyOn:store.get('notifyOn',false), adhanDuckV:null,
   adhkarCat:null, ytId:null, weather:null
 };
 if(store.get('mushafLast',0)>1&&!store.get('mushafLast_hafs',0))store.set('mushafLast_hafs',store.get('mushafLast',0));
-const audio=$('#audio');
-audio.crossOrigin='anonymous';
+let audio=$('#audio');
 audio.volume=store.get('volume',1);
+
+/* CORS-safe audio: only route through Web Audio (which requires CORS) for
+   hosts verified to send Access-Control-Allow-Origin; never let the analyser
+   break playback — non-CORS sources play unrouted with synthetic waves. */
+function setAudioSrc(url){
+  if(corsAudio(url)){audio.crossOrigin='anonymous'}
+  else if(acx){audio=swapAudioEl()}
+  else{audio.removeAttribute('crossorigin')}
+  audio.src=url;
+}
+function swapAudioEl(){
+  const el=document.createElement('audio');
+  el.id='audio';el.preload='metadata';
+  el.volume=audio.volume;el.muted=audio.muted;el.playbackRate=audio.playbackRate;
+  audio.replaceWith(el);
+  try{if(acx)acx.close()}catch(e){ }
+  acx=null;analyser=null;freqData=null;
+  bindAudio(el);
+  return el;
+}
+function bindAudio(el){
+  el.addEventListener('play',()=>{if(corsAudio(el.currentSrc||el.src))ensureAnalyser();if(acx&&acx.state==='suspended')acx.resume()});
+  el.addEventListener('pause',()=>{setPlayingUI(false);saveSession()});
+  el.addEventListener('timeupdate',()=>{updateProgress();if(Math.floor(el.currentTime)%5===0)saveSession()});
+  el.addEventListener('progress',updateBuffer);
+  el.addEventListener('loadedmetadata',()=>{updateProgress();probeBitrate()});
+  el.addEventListener('ended',()=>{if(S.repeat===2){el.currentTime=0;el.play().catch(()=>{})}else nextTrack()});
+  el.addEventListener('error',()=>{if(S.current&&el.src)tryNextSource()});
+}
 
 /* ═══════════════ GENERATIVE ISLAMIC ART ═══════════════ */
 const PAL=[["#2F5D3A","#A8CBA0","#F4F1E8","#C9A24B"],["#1F4030","#D9C9A3","#F7F3E8","#C9A24B"],["#3E6B48","#8FBC8F","#FBF9F3","#B99745"],["#274C3B","#9DCB9D","#EAF2E6","#D4B36A"],["#41563A","#CBB98A","#F4F1E8","#B99745"],["#2C3E30","#B7C9A8","#F7F9F7","#C2A14D"]];
@@ -107,35 +129,11 @@ const reciterImg=(r,cls='')=>{const p=photoURL(r.name,r.id);const ava=avatarURI(
 
 /* ═══════════════ DATA ═══════════════ */
 async function api(path,params={}){const u=new URL(API+path);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
-function parseList(str,total){if(!str)return Array.from({length:total||114},(_,i)=>i+1);const out=new Set();String(str).split(',').forEach(tok=>{tok=tok.trim();if(!tok)return;if(tok.includes('-')){const[a,b]=tok.split('-').map(Number);for(let i=a;i<=b;i++)out.add(i)}else{const n=+tok;if(n)out.add(n)}});return[...out].filter(n=>n>=1&&n<=114).sort((a,b)=>a-b)}
-const serverURL=(m,n)=>m.server.replace(/^http:/,'https:').replace(/\/?$/,'/')+pad(n)+'.mp3';
-function buildSources(rar,ren,moshaf,n){
-  const src=[{provider:'MP3Quran',url:serverURL(moshaf,n),bitrate:128}];
-  const nm=norm2(rar+' '+ren), rw=norm2(moshaf.rewaya||''), mj=/مجود|mujawwad|mojawwad/.test(norm2((moshaf.name||'')+(moshaf.rewaya||'')));
-  if(/حفص|hafs/.test(rw)&&EDITIONS.length){
-    for(const[en,ar,key]of ED_KEYS){if(nm.includes(en)||nm.includes(ar)){
-      let cands=EDITIONS.filter(e=>e.identifier.includes(key));
-      if(mj)cands=cands.filter(e=>/mujawwad|mojawwad/.test(e.identifier)).length?cands.filter(e=>/mujawwad|mojawwad/.test(e.identifier)):cands;
-      else cands=cands.filter(e=>!/mujawwad|mojawwad/.test(e.identifier)).length?cands.filter(e=>!/mujawwad|mojawwad/.test(e.identifier)):cands;
-      const e=cands.sort((a,b)=>(b.bitrate||0)-(a.bitrate||0))[0];
-      if(e)src.push({provider:'Islamic Network',url:`https://cdn.islamic.network/quran/audio-surah/${e.bitrate||128}/${e.identifier}/${n}.mp3`,bitrate:e.bitrate||128,ed:e.identifier});
-      break}}
-  }
-  return src;
-}
-function pickSource(track){
-  const s=[...track.sources];
-  if(S.quality==='high')s.sort((a,b)=>(b.bitrate>=192)-(a.bitrate>=192)||b.bitrate-a.bitrate);
-  else if(S.quality==='std')s.sort((a,b)=>Math.abs(a.bitrate-128)-Math.abs(b.bitrate-128));
-  else if(S.quality==='save')s.sort((a,b)=>a.bitrate-b.bitrate);
-  else s.sort((a,b)=>b.bitrate-a.bitrate);
-  return s;
-}
 function makeTrack(r,m,n){
   const meta=SURAH[n-1];
   return {key:`${r.id}:${m.id}:${n}`,n,name_ar:meta[0],name_en:meta[1],ayahs:meta[2],type:meta[3],
     rid:r.id,mid:m.id,rar:r.name,ren:r.name_en||r.name,rewaya:m.rewaya,mname:m.name||m.rewaya,
-    server:m.server,sources:buildSources(r.name,r.name_en||r.name,m,n),duration:0};
+    server:m.server,sources:buildSources(r.name,r.name_en||r.name,m,n,EDITIONS),duration:0};
 }
 const trackName=tr=>S.lang==='ar'?tr.name_ar:tr.name_en;
 const trackReciter=tr=>S.lang==='ar'?tr.rar:tr.ren;
@@ -148,7 +146,7 @@ async function loadData(){
     S.reciters=(ar.reciters||[]).filter(r=>r.moshaf&&r.moshaf.length).map(r=>({...r,name_en:enMap.get(r.id)||r.name}));
     if(!S.reciters.length)throw new Error('empty');
   }catch(e){S.reciters=FALLBACK;S.offline=true;toast(t('offline'))}
-  try{const r=await fetch('https://api.alquran.cloud/v1/edition?format=audio&language=ar&type=versebyverse');const j=await r.json();EDITIONS=(j.data||[]).filter(e=>e.bitrate)}catch(e){EDITIONS=[]}
+  try{const r=await fetch('https://api.alquran.cloud/v1/edition/format/audio');const j=await r.json();EDITIONS=(j.data||[]).filter(e=>e.format==='audio'&&e.language==='ar').map(e=>({...e,bitrate:e.bitrate||128}))}catch(e){EDITIONS=[]}
   buildRiwayat();
   $('#cntReciters').textContent=S.reciters.length;
 }
@@ -170,7 +168,7 @@ function filteredReciters(){
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}S.prayerSearch=null;if(v!=='adhkar')S.adhkarCat=null;if(v!=='yt'){S.ytId=null;destroyYt()}document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
+function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}S.prayerSearch=null;if(v!=='adhkar')S.adhkarCat=null;else if(S.adhkarCat==null)S.adhkarCat=akAutoCat();if(v!=='yt'){S.ytId=null;destroyYt()}document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
 function render(){
   applyI18nStatic();
   const ph={home:'searchReciters',reciters:'searchReciters',surahs:'searchSurahs',favorites:'searchFav',recent:'searchRecent',mushaf:'searchSurahs'}[S.view]||'searchReciters';
@@ -293,7 +291,7 @@ function surahRow(tr,i){
   const faved=S.favorites.some(f=>f.key===tr.key);
   const num=S.lang==='ar'?arDigits(tr.n):tr.n;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
-  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-key="${tr.key}" title="${esc(prim)}">
+  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-n="${tr.n}" data-key="${tr.key}" title="${esc(prim)}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span>
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type?t('medinan'):t('meccan')}</span></span>
     <span class="sfoot"><span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
@@ -312,7 +310,7 @@ function viewCollection(items,title,sub,isFav){
 function collectionRow(f,tr,i,isFav){
   const playing=S.current&&S.current.key===tr.key;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
-  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-key="${tr.key}">
+  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-n="${tr.n}" data-key="${tr.key}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
@@ -357,8 +355,8 @@ function playCollection(i,isFav){
 function loadTrack(i,autoplay=true,seek=0){
   if(i<0||i>=S.tracks.length)return;
   S.idx=i;const tr=S.tracks[i];S.current=tr;S.srcIdx=0;
-  const order=pickSource(tr);S.srcOrder=order;
-  audio.src=order[0].url;audio.playbackRate=S.speed;
+  const order=pickSource(tr,S.quality);S.srcOrder=order;
+  setAudioSrc(order[0].url);audio.playbackRate=S.speed;
   if(seek)audio.addEventListener('loadedmetadata',()=>{audio.currentTime=seek},{once:true});
   if(autoplay)audio.play().catch(()=>{});
   updateNowPlaying();renderQueue();markPlayingRows();pushRecent(tr);saveSession();
@@ -366,7 +364,7 @@ function loadTrack(i,autoplay=true,seek=0){
 function currentSources(){return S.srcOrder||[]}
 function tryNextSource(){
   S.srcIdx++;
-  if(S.srcIdx<currentSources().length){audio.src=currentSources()[S.srcIdx].url;audio.play().catch(()=>{});updateBadges();return true}
+  if(S.srcIdx<currentSources().length){setAudioSrc(currentSources()[S.srcIdx].url);audio.play().catch(()=>{});updateBadges();return true}
   toast(t('errorAudio'));return false;
 }
 function togglePlay(){
@@ -425,7 +423,7 @@ function markPlayingRows(){
     row.classList.toggle('playing',on);
     const sn=row.querySelector('.sn');
     if(on&&!sn.querySelector('.eq'))sn.innerHTML='<span class="eq"><i></i><i></i><i></i></span>';
-    else if(!on&&sn.querySelector('.eq')){const idx=+row.dataset.idx;const n=S.tracks[idx]?S.tracks[idx].n:(row.dataset.coll!=null?null:null);sn.innerHTML=`<b>${S.lang==='ar'?arDigits(n||''):n||''}</b>`}
+    else if(!on&&sn.querySelector('.eq')){const n=+row.dataset.n||0;sn.innerHTML=`<b>${n?(S.lang==='ar'?arDigits(n):n):''}</b>`}
   });
   $$('.quick-surah[data-surah]').forEach(q=>q.classList.toggle('playing',!!(S.view==='home'&&S.current&&+q.dataset.surah===S.current.n)));
 }
@@ -466,9 +464,6 @@ function pushRecent(tr){
 }
 
 /* ═══════════════ MUSHAF ═══════════════ */
-const MUSHAF_PAGES=604;
-const SURAH_PAGE=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
-const JUZ_PAGE=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const MUSHAF_LOCAL={
   hafs:import.meta.glob('../assets/mushaf/*.svg',{eager:true,query:'?url',import:'default'}),
   warsh:import.meta.glob('../assets/mushaf-warsh/*.svg',{eager:true,query:'?url',import:'default'})
@@ -499,44 +494,78 @@ function setMushafRiwaya(rw){
 }
 const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c}return t})();
 const crc32=b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_TABLE[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0};
-async function mushafZipAll(rw,onProg){
+const zipDeflate=async raw=>{
+  if(typeof CompressionStream==='undefined')return{data:raw,method:0};
+  try{
+    const out=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
+    return out.length<raw.length?{data:out,method:8}:{data:raw,method:0};
+  }catch(e){return{data:raw,method:0}}
+};
+let mushafZipCancel=null;
+const ctlCancelMushafZip=()=>{if(mushafZipCancel)mushafZipCancel()};
+async function mushafZipAll(rw,onProg,ctl,sink){
   const enc=new TextEncoder(),parts=[],central=[];
-  let offset=0,count=0;
+  let offset=0,count=0,fail=0;
   const u16=v=>new Uint8Array([v&255,(v>>8)&255]);
   const u32=v=>new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255]);
+  const put=sink?u8=>sink.write(u8):u8=>{parts.push(u8)};
   for(let n=1;n<=MUSHAF_PAGES;n++){
+    if(ctl&&ctl.cancelled)throw new Error('cancelled');
     let txt=null;
     for(const u of mushafSources(n,rw)){
       try{const res=await fetch(u);if(!res.ok)throw new Error(res.status);txt=await res.text();break}catch(e){}
     }
-    if(txt==null){onProg(n);continue}
-    const data=enc.encode(txt),crc=crc32(data),nameB=enc.encode(`${pad(n)}.svg`);
-    const lh=new Uint8Array(30);lh.set(u32(0x04034b50),0);lh.set(u16(20),4);lh.set(u16(0),8);lh.set(u16(0),10);lh.set(u32(crc),14);
-    lh.set(u32(data.length),18);lh.set(u32(data.length),22);lh.set(u16(nameB.length),26);
-    parts.push(lh,nameB,data);offset+=lh.length+nameB.length+data.length;
-    const ch=new Uint8Array(46);ch.set(u32(0x02014b50),0);ch.set(u16(20),4);ch.set(u16(20),6);ch.set(u32(crc),16);
-    ch.set(u32(data.length),20);ch.set(u32(data.length),24);ch.set(u16(nameB.length),28);ch.set(u32(offset-(lh.length+nameB.length+data.length)),42);
+    if(txt==null){onProg(n);if(++fail>=25)throw new Error('too-many-failures');continue}
+    fail=0;
+    const raw=enc.encode(txt);txt=null;
+    const crc=crc32(raw),{data,method}=await zipDeflate(raw);
+    const csz=method===8?data.length:raw.length;
+    const nameB=enc.encode(`${pad(n)}.svg`);
+    const lh=new Uint8Array(30);lh.set(u32(0x04034b50),0);lh.set(u16(20),4);lh.set(u16(0),8);lh.set(u16(method),10);lh.set(u32(crc),14);
+    lh.set(u32(csz),18);lh.set(u32(raw.length),22);lh.set(u16(nameB.length),26);
+    await put(lh);await put(nameB);await put(data);
+    offset+=lh.length+nameB.length+csz;
+    const ch=new Uint8Array(46);ch.set(u32(0x02014b50),0);ch.set(u16(20),4);ch.set(u16(20),6);ch.set(u16(method),10);ch.set(u32(crc),16);
+    ch.set(u32(csz),20);ch.set(u32(raw.length),24);ch.set(u16(nameB.length),28);ch.set(u32(offset-(lh.length+nameB.length+csz)),42);
     central.push(ch,nameB);count++;onProg(n);
+    if(n%6===0)await new Promise(r=>setTimeout(r,0));
   }
   if(!count)throw new Error('no pages');
   const cdSize=central.reduce((s,a)=>s+a.length,0);
   const eo=new Uint8Array(22);eo.set(u32(0x06054b50),0);eo.set(u16(count),8);eo.set(u16(count),10);eo.set(u32(cdSize),12);eo.set(u32(offset),16);
+  if(sink){for(const c of central)await sink.write(c);await sink.write(eo);await sink.close();return null}
   return new Blob([...parts,...central,eo],{type:'application/zip'});
 }
 async function mushafDownloadAll(btn){
-  if(btn.dataset.busy)return;btn.dataset.busy='1';btn.disabled=true;
-  const rw=S.mushafRiwaya,orig=btn.textContent;
+  if(btn.dataset.busy){ctlCancelMushafZip();return}
+  btn.dataset.busy='1';btn.title=t('cancel');
+  const rw=S.mushafRiwaya,orig=btn.textContent,ctl={cancelled:false};
+  mushafZipCancel=()=>{ctl.cancelled=true};
+  const prog=p=>{btn.textContent=`${S.lang==='ar'?arDigits(p):p} / ${S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES}`};
+  const fname=`mushaf-${rw}-svg.zip`;
+  let sink=null,wr=null;
   try{
-    const blob=await mushafZipAll(rw,p=>{btn.textContent=`${S.lang==='ar'?arDigits(p):p} / ${S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES}`});
-    const fname=`mushaf-${rw}-svg.zip`;
-    if(S.dirHandle){const fh=await S.dirHandle.getFileHandle(fname,{create:true});const w=await fh.createWritable();await w.write(blob);await w.close()}
-    else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),60000)}
+    if(S.dirHandle){
+      const fh=await S.dirHandle.getFileHandle(fname,{create:true});
+      wr=await fh.createWritable();
+    }else if(window.showSaveFilePicker){
+      try{
+        const fh=await window.showSaveFilePicker({suggestedName:fname,types:[{description:'ZIP',accept:{'application/zip':['.zip']}}]});
+        wr=await fh.createWritable();
+      }catch(e){if(e&&e.name==='AbortError')throw new Error('cancelled')}
+    }
+    if(wr)sink={write:async u8=>{if(ctl.cancelled)throw new Error('cancelled');await wr.write(u8)},close:async()=>{await wr.close()}};
+    const blob=await mushafZipAll(rw,prog,ctl,sink);
+    if(blob){
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),60000);
+    }
     toast(t('saved'));
-  }catch(e){toast(t('failed'))}
-  btn.textContent=orig;btn.disabled=false;delete btn.dataset.busy;
+  }catch(e){
+    if(wr&&wr.abort)try{wr.abort()}catch(_){ }
+    toast(e&&e.message==='cancelled'?t('cancelled'):t('failed'));
+  }
+  btn.textContent=orig;btn.title='';btn.disabled=false;delete btn.dataset.busy;mushafZipCancel=null;
 }
-const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
-const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
 function mushafGo(n){
   n=Math.round(n)||0;if(n<0)n=0;if(n>MUSHAF_PAGES)n=MUSHAF_PAGES;
   S.mushafPage=n;store.set('mushafPage',n);
@@ -562,7 +591,7 @@ function mushafCoverHTML(){
   return `<div class="mushaf-wrap">
     <div class="mushaf-stage">
       <div class="mushaf-page cover-page" data-act="mushafopen">
-        <img src="/mushaf-cover.jpg" alt="${t('quranName')}" onerror="this.classList.add('broken')">
+        <img src="${S.mushafRiwaya==='warsh'?'/mushaf-cover.jpg':'/mushaf-cover-hafs.jpg'}" alt="${t('quranName')}" onerror="this.classList.add('broken')">
         <button class="btn gold mc-open" data-act="mushafopen">${lbl}</button>
         <button class="btn mc-dl" data-act="mushafdlall">${t('dlPages')}</button>
       </div>
@@ -572,13 +601,6 @@ function mushafCoverHTML(){
 }
 function viewMushaf(){return mushafCoverHTML()}
 const mushafBook=()=>typeof window.matchMedia==='function'&&window.matchMedia('(min-width:900px)').matches;
-const mushafRight=n=>n<=0?0:(n%2===1?n:(n>=MUSHAF_PAGES?MUSHAF_PAGES-1:n-1));
-function mushafStep(n,d){
-  if(!mushafBook())return Math.min(Math.max(0,n+d),MUSHAF_PAGES);
-  const R=mushafRight(n);
-  if(d>0)return R===0?1:Math.min(R+2,MUSHAF_PAGES-1);
-  return R<=1?0:R-2;
-}
 let mushafBarsT;
 function mushafBarsUI(show){
   const w=$('#view .mushaf-wrap');if(!w)return;
@@ -628,9 +650,14 @@ function viewRead(){
 }
 /* ═══════════════ PRAYER TIMES ═══════════════ */
 const PRAYERS=[['Fajr','fajr'],['Dhuhr','dhuhr'],['Asr','asr'],['Maghrib','maghrib'],['Isha','isha']];
+const FALLBACK_CITIES=[
+  ['وادي العثمانية، ميلة',36.2662,6.3118],['الجزائر العاصمة',36.7538,3.0588],['قسنطينةة',36.365,6.6147],['عنابة',36.9,7.7667],
+  ['سطيف',36.19,5.41],['باتنة',35.5556,6.1747],['وهران',35.6971,-0.6308],['تلمسان',34.8828,-1.3167],
+  ['بجاية',36.7509,5.0567],['تيزي وزو',36.7169,4.0497],['البليدة',36.4703,2.8277],['غرداية',32.49,3.67],
+  ['مكة المكرمة',21.4225,39.8262],['المدينة المنورة',24.4672,39.6111]
+];
 const PRAYER_EXTRA=[['Sunrise','sunrise'],['Firstthird','firstThird'],['Lastthird','lastThird']];
 const prayerOff=k=>((S.prayerOffset&&S.prayerOffset[k])||0)*60000;
-const prayerTime=k=>{const v=S.prayerData.timings[k];let m=(+v.slice(11,13))*60+(+v.slice(14,16))+((S.prayerOffset&&S.prayerOffset[k])||0);m=(m%1440+1440)%1440;return `${String((m/60)|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`};
 function setPrayerLoc(lat,lng,name,src){
   S.prayerLoc={lat:+lat,lng:+lng,name:name||S.prayerLoc.name,src:src||S.prayerLoc.src};
   store.set('prayerLoc',S.prayerLoc);S.prayerData=null;S.prayerKey=null;S.prayerSearch=null;render()
@@ -689,6 +716,7 @@ function viewPrayer(){
       <button class="btn sm" data-act="locgps"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg>${t('locGps')}</button>
       <button class="btn sm" data-act="locnet"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>${t('locNet')}</button>
       <div class="loc-res" id="locRes">${S.prayerSearch.res||''}</div>
+      <div class="loc-chips"><span class="loc-chips-lab">${t('quickCities')}</span>${FALLBACK_CITIES.map(c=>`<button class="loc-chip" data-act="citypick" data-lat="${c[1]}" data-lng="${c[2]}" data-name="${c[0]}">${c[0]}</button>`).join('')}</div>
     </div>`:''}
     <div class="prayer-box" id="prayerBox">${S.prayerData?prayerCardsHTML():`<div class="empty" style="padding:30px"><p>${t('loading')}</p></div>`}</div>
   </div>`;
@@ -699,6 +727,20 @@ function prayerSettingsHTML(){
       <div class="seg" id="segAdhanPg">
         <button data-adhpg="on" class="${S.adhanOn?'on':''}">${t('adhanOn')}</button>
         <button data-adhpg="off" class="${!S.adhanOn?'on':''}">${t('adhanOff')}</button>
+      </div>
+    </div>
+    <div class="ps-row">
+      <div class="ps-lab"><b>${t('adhanMode')}</b><span>${t('adhanModeDesc')}</span></div>
+      <div class="seg" id="segAdModePg">
+        <button data-admodepg="stop" class="${S.adhanMode!=='duck'?'on':''}">${t('adhanStop')}</button>
+        <button data-admodepg="duck" class="${S.adhanMode==='duck'?'on':''}">${t('adhanDuck')}</button>
+      </div>
+    </div>
+    <div class="ps-row">
+      <div class="ps-lab"><b>${t('notify')}</b><span>${t('notifyDesc')}</span></div>
+      <div class="seg" id="segNotifyPg">
+        <button data-ntfpg="on" class="${S.notifyOn?'on':''}">${t('adhanOn')}</button>
+        <button data-ntfpg="off" class="${!S.notifyOn?'on':''}">${t('adhanOff')}</button>
       </div>
     </div>
     <div class="ps-row">
@@ -747,14 +789,8 @@ function nextPrayerKey(){
   for(const[k]of PRAYERS){if(new Date(tm[k]).getTime()+prayerOff(k)>now)return k}
   return 'Fajr';
 }
-function prayerCountdownStr(){
-  const tm=S.prayerData.timings,now=Date.now();
-  let nt=null;
-  for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime()+prayerOff(k);if(tt>now){nt=tt;break}}
-  if(nt===null)nt=new Date(tm.Fajr).getTime()+prayerOff('Fajr')+86400000;
-  const s=Math.max(0,Math.floor((nt-now)/1000));
-  return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-}
+const prayerTime=k=>prayerTimeStr(S.prayerData.timings[k],S.prayerOffset&&S.prayerOffset[k]);
+function prayerCountdownStr(){return countdownStr(S.prayerData.timings,S.prayerOffset,Date.now())}
 const ADHAN_VOICES=[
   {id:'abdulbasit',name:'عبد الباسط عبد الصمد',file:adhanUrl,fajrFile:adhanFajrUrl},
   {id:'qatami',name:'ناصر القطامي',file:vQatami},
@@ -778,9 +814,21 @@ function playAdhan(k){
   const v=adhanVoice();
   S.adhanAudio.src=(k==='Fajr'&&v.fajrFile)?v.fajrFile:v.file;
   S.adhanAudio.currentTime=0;
-  S.adhanAudio.onended=hideAdhanBanner;
+  S.adhanAudio.onended=endAdhan;
   S.adhanAudio.play().catch(()=>{});
   showAdhanBanner(k);
+  notifyPrayer(k);
+  if(S.adhanMode==='duck'){S.adhanDuckV=audio.volume;audio.volume=Math.min(audio.volume,0.15)}
+  else if(!audio.paused)audio.pause();
+}
+function endAdhan(){
+  hideAdhanBanner();
+  if(S.adhanDuckV!=null){audio.volume=S.adhanDuckV;S.adhanDuckV=null}
+}
+function stopAdhan(){if(S.adhanAudio)S.adhanAudio.pause();endAdhan()}
+function notifyPrayer(k){
+  if(!S.notifyOn||!('Notification' in window)||Notification.permission!=='granted')return;
+  try{new Notification(`${t('adhanNow')} ${t(k.toLowerCase())}`,{body:S.prayerLoc.name,tag:'ouns-adhan'})}catch(e){}
 }
 function adhanTick(){
   if(!S.adhanOn||!S.prayerData)return;
@@ -801,6 +849,14 @@ fetchPrayer().then(()=>{if(S.prayerData){startPrayerTick();if(S.view==='home'||S
 const AK_CATS=(()=>{const out=[];for(const c of ADHKAR){
   if(c.category==='أذكار الصباح والمساء'){out.push({name:'أذكار الصباح',items:c.array});out.push({name:'أذكار المساء',items:c.array})}
   else out.push({name:c.category,items:c.array})}return out})();
+function akTodayKey(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `adhkar_${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}
+function akProgress(){return store.get(akTodayKey(),{})||{}}
+function akCatProgress(ci){return akProgress()[ci]||{}}
+function akSave(ci,id,left){const all=akProgress();(all[ci]=all[ci]||{})[id]=left;store.set(akTodayKey(),all)}
+function akDoneCount(ci){const p=akCatProgress(ci);return AK_CATS[ci].items.filter(a=>(p[a.id]??a.count)===0).length}
+function akDoneChip(ci){const done=akDoneCount(ci),tot=AK_CATS[ci].items.length;return done?`<span class="ak-prog">${t('akProgress')} ${arDigits(done)}/${arDigits(tot)}</span>`:''}
+function akAutoCat(){const h=new Date().getHours(),m=AK_CATS.findIndex(c=>c.name==='أذكار الصباح'),e=AK_CATS.findIndex(c=>c.name==='أذكار المساء');if(m<0&&e<0)return null;if(m<0)return e;if(e<0)return m;return h>=4&&h<12?m:e}
+function akPurgeOld(){try{const today='ouns_'+akTodayKey();for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(/^ouns_adhkar_\d{4}-\d{2}-\d{2}$/.test(k)&&k!==today)localStorage.removeItem(k)}}catch(e){}}
 const AK_FEATURED=['أذكار الصباح','أذكار المساء','أذكار النوم','أذكار الاستيقاظ من النوم','الأذكار بعد السلام من الصلاة'];
 const AK_ICONS={
   'أذكار الصباح':'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>',
@@ -817,7 +873,7 @@ function viewAdhkar(){
   return `<div class="view-head"><div><h2>${t('adhkar')}</h2><div class="sub">${t('adhkarSub')}</div></div></div>
   <div class="ak-feat">${feat.map(x=>`<button class="ak-hero" data-akcat="${x.i}">
     <svg class="ic" viewBox="0 0 24 24">${AK_ICONS[x.c.name]||AK_ICONS['أذكار الصباح']}</svg>
-    <b>${esc(x.c.name)}</b><span>${arDigits(x.c.items.length)} ${t('dhikr')}</span></button>`).join('')}</div>
+    <b>${esc(x.c.name)}</b><span>${arDigits(x.c.items.length)} ${t('dhikr')}</span>${akDoneChip(x.i)}</button>`).join('')}</div>
   ${q?`<div class="ak-grid">${rest.map(x=>`<button class="ak-cat" data-akcat="${x.i}"><span>${esc(x.c.name)}</span><span class="n">${arDigits(x.c.items.length)}</span></button>`).join('')||`<div class="empty"><p>${t('noResults')}</p></div>`}</div>`
   :`<div class="view-head"><div><h2 class="ak-more">${t('allCats')}</h2></div></div>
   <div class="ak-grid">${rest.map(x=>`<button class="ak-cat" data-akcat="${x.i}"><span>${esc(x.c.name)}</span><span class="n">${arDigits(x.c.items.length)}</span></button>`).join('')}</div>`}`;
@@ -825,15 +881,17 @@ function viewAdhkar(){
 function viewAdhkarCat(){
   const c=AK_CATS[S.adhkarCat];
   const num=n=>S.lang==='ar'?arDigits(n):n;
+  const prog=akCatProgress(S.adhkarCat);
+  const done=c.items.filter(a=>(prog[a.id]??a.count)===0).length;
   return `<button class="back-btn" data-akback><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-  <div class="view-head"><div><h2>${esc(c.name)}</h2><div class="sub">${num(c.items.length)} ${t('dhikr')}</div></div></div>
-  <div class="ak-list">${c.items.map(a=>`<div class="ak-card">
+  <div class="view-head"><div><h2>${esc(c.name)}</h2><div class="sub" id="akProg" data-done="${done}" data-total="${c.items.length}">${num(c.items.length)} ${t('dhikr')} · ${t('akProgress')} ${num(done)}/${num(c.items.length)}</div></div></div>
+  <div class="ak-list">${c.items.map(a=>{const rem=prog[a.id]??a.count;return `<div class="ak-card${rem===0?' done':''}">
     <p class="ak-text">${esc(a.text)}</p>
     <div class="ak-foot">
-      <button class="ak-tap" data-akdec="${a.id}" data-left="${a.count}" data-max="${a.count}">
-        <b>${num(a.count)}</b><span>/${num(a.count)}</span>
+      <button class="ak-tap" data-akdec="${a.id}" data-left="${rem}" data-max="${a.count}"${rem===0?' disabled':''}>
+        <b>${num(rem)}</b><span>/${num(a.count)}</span>
       </button>
-    </div></div>`).join('')}</div>`;
+    </div></div>`}).join('')}</div>`;
 }
 function akTap(btn){
   let l=+btn.dataset.left;
@@ -841,8 +899,11 @@ function akTap(btn){
   l--;btn.dataset.left=l;
   const num=n=>S.lang==='ar'?arDigits(n):n;
   btn.innerHTML=`<b>${num(l)}</b><span>/${num(btn.dataset.max)}</span>`;
+  akSave(S.adhkarCat,+btn.dataset.akdec,l);
   const card=btn.closest('.ak-card');
   if(l===0){card.classList.add('done');btn.disabled=true;toast(t('akDone'))}
+  const pr=$('#akProg');
+  if(pr&&l===0){const d=+pr.dataset.done+1;pr.dataset.done=d;pr.textContent=`${num(+pr.dataset.total)} ${t('dhikr')} · ${t('akProgress')} ${num(d)}/${num(pr.dataset.total)}`}
 }
 /* ═══════════════════════════════ YOUTUBE RECITATIONS ═══════════════════════════════ */
 const YT_LIST=[
@@ -1035,7 +1096,7 @@ function enqueueDownloads(tracks){
 }
 function pumpDL(){while(DL.active<DL.conc){const j=DL.jobs.find(x=>x.state==='pending');if(!j)break;j.state='downloading';DL.active++;runDL(j).finally(()=>{DL.active--;pumpDL();updateCounts()})}}
 async function runDL(job){
-  const tr=job.tr;const src=pickSource(tr)[0];
+  const tr=job.tr;const src=pickSource(tr,S.quality)[0];
   const fname=`${pad(tr.n)} - ${safeName(trackName(tr))}.mp3`;
   job.st.textContent=t('downloading');
   try{
@@ -1176,7 +1237,6 @@ function ensureAnalyser(){
     freqData=new Uint8Array(analyser.frequencyBinCount);
   }catch(e){acx=null;analyser=null}
 }
-audio.addEventListener('play',()=>{ensureAnalyser();if(acx&&acx.state==='suspended')acx.resume()});
 document.addEventListener('pointerdown',()=>{if(acx&&acx.state==='suspended')acx.resume()},{capture:true});
 function drawWaves(ts){
   const cv=$('#ovWaves');if(!cv){waveRaf=0;return}
@@ -1190,6 +1250,9 @@ function drawWaves(ts){
     analyser.getByteFrequencyData(freqData);
     const band=(f0,f1)=>{let s=0;for(let i=f0;i<f1;i++)s+=freqData[i];return Math.min(1,s/((f1-f0)*255)*2.1)};
     bands=[band(2,10),band(8,24),band(18,48)];
+  }else if(playing){
+    const tt=ts/1000;
+    bands=[.3+.2*Math.sin(tt*1.1),.24+.16*Math.sin(tt*.9+1.3),.18+.13*Math.sin(tt*.7+2.1)];
   }
   smLevel+=(Math.max(...bands)-smLevel)*.12;
   const t=ts/1000;
@@ -1230,9 +1293,17 @@ $('#prayerScrim').addEventListener('click',e=>{if(e.target===e.currentTarget)e.c
 $('#prayerScrim').addEventListener('click',e=>{
   const adhpg=e.target.closest('[data-adhpg]');
   if(adhpg){S.adhanOn=adhpg.dataset.adhpg==='on';store.set('adhanOn',S.adhanOn);
-    if(!S.adhanOn&&S.adhanAudio){S.adhanAudio.pause();hideAdhanBanner()}
+    if(!S.adhanOn)stopAdhan();
     $$('#segAdhan button').forEach(b=>b.classList.toggle('on',b.dataset.adh===(S.adhanOn?'on':'off')));
     $$('#segAdhanPg button').forEach(b=>b.classList.toggle('on',b.dataset.adhpg===(S.adhanOn?'on':'off')));return}
+  const admode=e.target.closest('[data-admodepg]');
+  if(admode){S.adhanMode=admode.dataset.admodepg;store.set('adhanMode',S.adhanMode);
+    if(S.adhanMode!=='duck'&&S.adhanDuckV!=null){audio.volume=S.adhanDuckV;S.adhanDuckV=null}
+    $$('#segAdModePg button').forEach(b=>b.classList.toggle('on',b.dataset.admodepg===S.adhanMode));return}
+  const ntf=e.target.closest('[data-ntfpg]');
+  if(ntf){S.notifyOn=ntf.dataset.ntfpg==='on';store.set('notifyOn',S.notifyOn);
+    if(S.notifyOn&&'Notification' in window&&Notification.permission==='default')Notification.requestPermission();
+    $$('#segNotifyPg button').forEach(b=>b.classList.toggle('on',b.dataset.ntfpg===(S.notifyOn?'on':'off')));return}
   const poff=e.target.closest('[data-poff]');
   if(poff){const k=poff.dataset.pr||'Fajr';S.prayerOffset[k]=Math.max(-30,Math.min(30,(S.prayerOffset[k]||0)+(+poff.dataset.poff)));store.set('prayerOffset',S.prayerOffset);
     $('#prayerSetBody').innerHTML=prayerSettingsHTML();render();return}
@@ -1257,13 +1328,13 @@ $$('#segTheme button').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));
 $$('#segLang button').forEach(b=>b.onclick=()=>setLang(b.dataset.lg));
 $$('#segMushafRw button').forEach(b=>{b.onclick=()=>setMushafRiwaya(b.dataset.mrw);b.classList.toggle('on',b.dataset.mrw===S.mushafRiwaya)});
 function updateAdhanSeg(){$$('#segAdhan button').forEach(b=>b.classList.toggle('on',b.dataset.adh===(S.adhanOn?'on':'off')))}
-$$('#segAdhan button').forEach(b=>{b.onclick=()=>{S.adhanOn=b.dataset.adh==='on';store.set('adhanOn',S.adhanOn);if(!S.adhanOn&&S.adhanAudio){S.adhanAudio.pause();hideAdhanBanner()}updateAdhanSeg();$$('#segAdhanPg button').forEach(x=>x.classList.toggle('on',x.dataset.adhpg===(S.adhanOn?'on':'off')))}});
+$$('#segAdhan button').forEach(b=>{b.onclick=()=>{S.adhanOn=b.dataset.adh==='on';store.set('adhanOn',S.adhanOn);if(!S.adhanOn)stopAdhan();updateAdhanSeg();$$('#segAdhanPg button').forEach(x=>x.classList.toggle('on',x.dataset.adhpg===(S.adhanOn?'on':'off')))}});
 updateAdhanSeg();
 $('#searchInput').addEventListener('input',e=>{S.query=e.target.value;if(S.view==='home'&&S.query)setView('reciters'),S.query=e.target.value,$('#searchInput').value=e.target.value;render()});
 $('#qualityScrim').addEventListener('click',e=>{
   const qb=e.target.closest('#segQuality button');
   if(qb){S.quality=qb.dataset.q;store.set('quality',S.quality);buildQualitySeg();
-    if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current);audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}
+    if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current,S.quality);setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}
     return}
   if(e.target.id==='qualityClose'||e.target.id==='qualityScrim')$('#qualityScrim').classList.remove('open');
 });
@@ -1297,6 +1368,10 @@ $('#view').addEventListener('click',async e=>{
   const favB=e.target.closest('[data-fav]');if(favB){const tr=findTrackByKey(favB.dataset.fav);if(tr)toggleFav(tr);return}
   const unfavB=e.target.closest('[data-unfav]');if(unfavB){const tr=findTrackByKey(unfavB.dataset.unfav);if(tr)toggleFav(tr);return}
   const dlB=e.target.closest('[data-dl]');if(dlB){const tr=findTrackByKey(dlB.dataset.dl);if(tr)enqueueDownloads([tr]);return}
+  const loc=e.target.closest('[data-loc]');
+  if(loc){const[lat,lng,name]=loc.dataset.loc.split(',');
+    S.prayerLoc={lat:+lat,lng:+lng,name};store.set('prayerLoc',S.prayerLoc);
+    S.prayerSearch=null;S.prayerData=null;render();return}
   const act=e.target.closest('[data-act]');
   if(act){const a=act.dataset.act;
     if(a==='browse')setView('reciters');
@@ -1319,9 +1394,10 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='locnet')detectLoc('net')
     else if(a==='adhanpreview'){const v=adhanVoice();const k=nextPrayerKey()||'Fajr';playAdhan(k)}
     else if(a==='locsearch'){const q=$('#locQ').value.trim();if(q)prayerSearch(q)}
+    else if(a==='citypick')setPrayerLoc(act.dataset.lat,act.dataset.lng,act.dataset.name,'manual')
     else if(a==='mtheme')setTheme(S.theme==='light'?'dark':'light');
-    else if(a==='mprev')mushafGo(mushafStep(S.readN,-1));
-    else if(a==='mnext')mushafGo(mushafStep(S.readN,1));
+    else if(a==='mprev')mushafGo(mushafStep(S.readN,-1,mushafBook()));
+    else if(a==='mnext')mushafGo(mushafStep(S.readN,1,mushafBook()));
     else if(a==='openrecent')setView('recent');
     else if(a==='resume'&&S.recent[0]){const f=S.recent[0];const r=S.reciters.find(x=>x.id===f.rid);
       if(r){openReciter(r.id,false);const mi=r.moshaf.findIndex(m=>m.id===f.mid);if(mi>=0&&mi!==0)setMoshaf(mi);
@@ -1348,12 +1424,6 @@ $('#view').addEventListener('click',async e=>{
   const ytc=e.target.closest('[data-yt]');if(ytc){audio.pause();S.ytId=ytc.dataset.yt;render();return}
   const coll=e.target.closest('[data-coll]');if(coll){playCollection(+coll.dataset.coll,S.view==='favorites');return}
   const row=e.target.closest('.surah-row[data-idx]');if(row){loadTrack(+row.dataset.idx,true);return}
-});
-$('#view').addEventListener('click',e=>{
-  const loc=e.target.closest('[data-loc]');
-  if(loc){const[lat,lng,name]=loc.dataset.loc.split(',');
-    S.prayerLoc={lat:+lat,lng:+lng,name};store.set('prayerLoc',S.prayerLoc);
-    S.prayerSearch=null;S.prayerData=null;render();return}
 });
 $('#view').addEventListener('change',e=>{
   if(e.target.id==='sortSel'){S.sort=e.target.value;render()}
@@ -1383,7 +1453,7 @@ $('#view').addEventListener('touchend',e=>{
   if(e.target.closest('button,select,input,.mushaf-ask'))return;
   const rtl=document.documentElement.dir==='rtl';
   const d=(dx>0)===rtl?1:-1;
-  if(S.readN){mushafGo(mushafStep(S.readN,d));mushafBarsUI(true)}
+  if(S.readN){mushafGo(mushafStep(S.readN,d,mushafBook()));mushafBarsUI(true)}
   else if(d>0){if(mushafLastGet()>1){S.mushafAsk=true;render()}else mushafGo(1)}
 },{passive:true});
 $('#view').addEventListener('touchcancel',()=>{swX=null},{passive:true});
@@ -1401,13 +1471,7 @@ $('#npQueue').addEventListener('dragend',()=>{dragIdx=null;$$('.queue-item').for
 if(window.matchMedia){const mqBook=window.matchMedia('(min-width:900px)');if(mqBook.addEventListener)mqBook.addEventListener('change',()=>{if(S.view==='mushaf'&&S.readN)render()})}
 
 /* audio events */
-audio.addEventListener('play',()=>setPlayingUI(true));
-audio.addEventListener('pause',()=>{setPlayingUI(false);saveSession()});
-audio.addEventListener('timeupdate',()=>{updateProgress();if(Math.floor(audio.currentTime)%5===0)saveSession()});
-audio.addEventListener('progress',updateBuffer);
-audio.addEventListener('loadedmetadata',()=>{updateProgress();probeBitrate()});
-audio.addEventListener('ended',()=>{if(S.repeat===2){audio.currentTime=0;audio.play().catch(()=>{})}else nextTrack()});
-audio.addEventListener('error',()=>{if(S.current&&audio.src)tryNextSource()});
+bindAudio(audio);
 if('mediaSession'in navigator){
   navigator.mediaSession.setActionHandler('play',()=>audio.play());
   navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
@@ -1437,6 +1501,7 @@ window.addEventListener('beforeunload',saveSession);
 
 /* ═══════════════ INIT ═══════════════ */
 (async function init(){
+  akPurgeOld();
   applyTheme();applyLang();buildQualitySeg();renderSleepPop();updateRepeatUI();updateVolUI();applyNpPanel();applySidebar();
   $('#npPin').onclick=()=>{S.npMode=S.npMode==='pinned'?'hidden':'pinned';store.set('npMode',S.npMode);applyNpPanel()}
     $('#npDock').onclick=()=>{S.npMode=S.npMode==='float'?'auto':'float';store.set('npMode',S.npMode);applyNpPanel()};
@@ -1458,7 +1523,7 @@ window.addEventListener('beforeunload',saveSession);
   npHead.addEventListener('pointerup',npEndDrag);
   npHead.addEventListener('pointercancel',npEndDrag);
   $('#sideBtn').onclick=()=>{S.sideMode=S.sideMode==='collapsed'?'open':'collapsed';store.set('sideMode',S.sideMode);applySidebar()};
-  $('#adhanStop').onclick=()=>{if(S.adhanAudio)S.adhanAudio.pause();hideAdhanBanner()};
+  $('#adhanStop').onclick=stopAdhan;
   $('#btnShuffle').classList.toggle('on',S.shuffle);
   setSpeed(S.speed);
   $('#view').innerHTML=`<div class="loading"><div class="spinner"></div><span>${t('loading')}</span></div>`;
@@ -1475,9 +1540,9 @@ window.addEventListener('beforeunload',saveSession);
     if(r){S.reciter=r;S.moshaf=r.moshaf.find(m=>m.id===sess.mid)||r.moshaf[0];
       S.tracks=parseList(S.moshaf.surah_list,S.moshaf.surah_total).map(n=>makeTrack(r,S.moshaf,n));
       const idx=S.tracks.findIndex(x=>x.n===sess.n);
-      if(idx>=0){S.idx=idx;S.current=S.tracks[idx];S.srcOrder=pickSource(S.current);S.srcIdx=0;
-        audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=sess.pos||0;updateProgress()},{once:true});
+      if(idx>=0){S.idx=idx;S.current=S.tracks[idx];S.srcOrder=pickSource(S.current,S.quality);S.srcIdx=0;
+        setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=sess.pos||0;updateProgress()},{once:true});
         updateNowPlaying();renderQueue()}
-    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr);audio.src=S.srcOrder[0].url;updateNowPlaying()}
+    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr,S.quality);setAudioSrc(S.srcOrder[0].url);updateNowPlaying()}
   }
 })();

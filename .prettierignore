@@ -1,0 +1,6 @@
+src/scripts/app.js
+src/styles/global.css
+src/data/
+dist/
+node_modules/
+public/

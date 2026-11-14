@@ -1,0 +1,78 @@
+# NOTICE — Third-party assets and data sources
+
+This file documents every asset, dataset, and external service used by Ouns
+(أُنس) that is **not** original project code. The project's own code is
+licensed under the MIT license (see `LICENSE`); the items below are **not**
+covered by it and remain the property of their respective owners.
+
+## Bundled assets
+
+### Written mushaf pages (Hafs & Warsh)
+- Location: `src/assets/mushaf/*.svg`, `src/assets/mushaf-warsh/*.svg`
+- Source: https://github.com/Younes12345698/pro-muslim-mushaf (Madani mushaf,
+  King Fahd Glorious Qur'an Printing Complex artwork)
+- License: **CC-BY-NC 4.0** — non-commercial use only. Any commercial use of
+  this project requires removing or re-licensing these pages.
+
+### Mushaf covers
+- Location: `public/mushaf-cover.jpg`, `public/mushaf-cover-hafs.jpg`
+- Project-provided artwork.
+
+### Reciter photos
+- Location: `public/img/*.jpg`
+- Source: Wikipedia / Wikimedia Commons, downloaded by
+  `scripts/fetch-reciter-photos.py` (each `CATALOG` entry in that script names
+  the article a photo came from; the original license page — CC-BY, CC-BY-SA,
+  or public domain — is reachable from that article).
+- Each photo keeps its original free license; attribution requirements of the
+  individual photo licenses apply. When no photo exists, the app falls back to
+  a generated ornamental avatar (original project code).
+
+### Adhan audio
+- Location: `src/assets/adhan/voices/*.mp3`
+- Several recordings come from
+  https://github.com/mohsalvi/adhan-audio (that repository publishes no
+  license file; the recordings are of public adhan calls).
+- `baldi.mp3` (Sheikh Boulaidi — the adhan used by the official Algerian adhan
+  application) and any other voice files were provided by the project owner
+  from public sources.
+- If you redistribute this project commercially, verify these recordings
+  separately.
+
+### Adhkar texts
+- Location: `src/data/adhkar.json`
+- Source: https://github.com/rn0x/Adhkar-json (no license file in that
+  repository). The underlying text is from *Hisn al-Muslim* (حصن المسلم) by
+  Sa'id ibn Ali ibn Wahf al-Qahtani — a widely circulated religious text.
+
+### Fonts
+- `src/assets/fonts/sura_names.woff2` — custom PUA-encoded surah-name font
+  bundled with the project; verify redistribution rights before commercial use.
+- **Alan Sans** and **Amiri** are loaded from Google Fonts at runtime
+  (SIL Open Font License 1.1).
+
+### Artwork
+- `src/assets/player-frame.svg` (player mandala/frame design) and
+  `src/assets/hero/mosque.jpg` (hero background) — project-provided artwork.
+
+## Runtime data sources (not bundled; queried at runtime)
+
+| Service | Use | Terms |
+|---|---|---|
+| mp3quran.net API v3 | reciter catalog + audio files | free public API |
+| cdn.islamic.network (AlQuran.cloud) | audio fallback CDN | free public CDN |
+| api.aladhan.com | prayer times | free public API |
+| api.open-meteo.com | weather in the prayer card | free, CC-BY 4.0 |
+| nominatim.openstreetmap.org | city search / geocoding | © OpenStreetMap contributors, ODbL — polite-use rate limits apply |
+
+## Embedded third-party content
+
+- **YouTube recitations** are embedded via the official YouTube IFrame API.
+  The videos and their content remain the property of their owners and are
+  subject to the [YouTube Terms of Service](https://www.youtube.com/t/terms).
+
+## Quran text
+
+Quranic verses displayed in the app (verse-of-the-day snippets, adhkar
+footnotes) are quoted from the Qur'an itself; the text has no copyright in its
+original Arabic form. Translations, if any, would carry their own licenses.

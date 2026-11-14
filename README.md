@@ -25,34 +25,19 @@ npm run build     # outputs static site to dist/
 npm run preview   # serve the build locally
 ```
 
-## Deploy (Cloudflare Pages — static)
-
-The build output is fully static (`dist/`), so Cloudflare Pages needs **no
-adapter and no deploy command**. `wrangler.jsonc` points Pages at `dist/`.
-
-### Option 1 — Git integration (recommended)
-
-1. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git**
-   and pick this repository.
-2. Build settings:
-   - **Build command**: `npm run build`
-   - **Build output directory**: `dist`
-   - **Deploy command**: **leave empty** — Pages uploads `dist/` automatically
-     after the build. Never set `npx wrangler preview` (it is a Workers-only
-     beta command and fails the deploy).
-3. Every push to the production branch deploys automatically.
-
-### Option 2 — CLI
+## Quality checks
 
 ```bash
-npm run build
-npx wrangler pages deploy dist
+npm test          # unit tests (node:test) for src/scripts/lib modules
+npm run lint      # ESLint over src/scripts/lib and tests/
+npm run format    # Prettier over src/scripts/lib and tests/
 ```
 
-### Domain
-
-Update `site` in `astro.config.mjs` to the final public domain so canonical,
-Open Graph and sitemap URLs are absolute.
+Pure logic (text helpers, surah metadata, audio sources, mushaf paging, prayer
+times) lives in `src/scripts/lib/` and is covered by tests in `tests/`. Node
+>= 18 is required (`engines` in `package.json`). `app.js` and `global.css` are
+excluded from Prettier for now to keep diffs small; formatting there is
+gradual.
 
 ## Structure
 
@@ -70,3 +55,11 @@ Open Graph and sitemap URLs are absolute.
 See `docs/ROADMAP.md` for the planned features: ayah-by-ayah text in the
 full-screen player, prayer times with adhan, adhkar sabah/masaa, and a YouTube
 player for video recitations.
+
+## Licenses & attribution
+
+The project code is MIT-licensed (see `LICENSE`). Bundled third-party assets
+(mushaf pages CC-BY-NC, reciter photos from Wikimedia Commons, adhan
+recordings, adhkar texts) and runtime data sources are documented with their
+licenses in [`NOTICE`](NOTICE). The mushaf pages are **non-commercial**
+(CC-BY-NC 4.0) — review `NOTICE` before any commercial redistribution.
