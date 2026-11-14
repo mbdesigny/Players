@@ -41,6 +41,35 @@ offline-first source chain (local SVG → CDN fallbacks) and keyboard navigation
 8. **Prefetch** — prefetch page N±2 images during idle to avoid flip flicker on slow
    networks (extend the existing `mushafSources` fallback chain).
 
+## Page overlay labels
+
+StPageFlip wraps each rendered page in its own element, so page metadata is added as
+overlay markup inside each page wrapper (StPageFlip supports arbitrary HTML inside
+`loadFromHTML` pages):
+
+```html
+<div class="flip-page">
+  <img src="…" alt="">
+  <span class="fp-juz">الجزء ٢١</span>   <!-- top-start corner -->
+  <span class="fp-surah">سورة البقرة</span> <!-- top-end corner -->
+  <span class="fp-num">٣٤</span>        <!-- bottom corner -->
+</div>
+```
+
+- Data source: the existing helpers already map page → metadata —
+  `mushafSurah(page)` (surah index), `mushafJuz(page)` (juz number), and `SURAH` for
+  names. Computed once per page in `loadPage`, no extra lookups needed.
+- Placement: `fp-num` bottom-inline-end (bottom corner near the spine edge),
+  `fp-juz` top-inline-start, `fp-surah` top-inline-end — all logical properties so
+  they mirror correctly in both riwayat and languages.
+- Styling: small, translucent chips (`background: rgba(0,0,0,.35); color: #fff;
+  border-radius: 8px; font-size: var(--fs-2xs)`) absolutely positioned inside the
+  page wrapper; hidden while the page is mid-turn (StPageFlip adds a turning class
+  on the shadow element — target `.flip-page:not(.turning) .fp-*` if flicker shows).
+- Accuracy note: a surah name shown on a spread belongs to the page where the surah
+  starts; for the left (even) page of a spread, recompute `mushafSurah(page)` for
+  that page rather than reusing the right page's value.
+
 ## Risks / notes
 
 - StPageFlip renders into its own DOM; the current dark-theme `filter: invert(1)` on page
