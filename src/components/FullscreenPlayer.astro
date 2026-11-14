@@ -1,7 +1,12 @@
+---
+import AudioReactiveBg from './AudioReactiveBg.astro';
+---
+
 <!-- ══════════ FULLSCREEN NOW PLAYING ══════════ -->
 <div class="np-overlay" id="npOverlay">
   <div class="ov-bg"><div class="ov-aurora"><i></i><i></i><i></i></div><div class="glow" style="width:60vw;height:60vw;top:-20vw;inset-inline-start:-15vw;background:var(--glow1)"></div><div class="glow" style="width:50vw;height:50vw;bottom:-18vw;inset-inline-end:-12vw;background:var(--glow2)"></div><div class="lattice" style="position:absolute;inset:0;opacity:var(--lattice)"></div></div>
   <div class="ov-photo" id="ovPhoto"></div>
+  <AudioReactiveBg />
   <canvas class="ov-waves" id="ovWaves" aria-hidden="true"></canvas>
   <div class="ov-top">
     <span class="lbl" data-i18n="nowPlaying">يُتلى الآن</span>
