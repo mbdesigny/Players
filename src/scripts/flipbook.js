@@ -5,13 +5,51 @@ import { MUSHAF_PAGES, JUZ_PAGE, mushafJuz, mushafSurah, mushafRight } from './l
 import { SURAH, SURAH_PAGE } from './lib/surah.js';
 import { esc, arDigits } from './lib/text.js';
 
-let ctx = null, flip = null, flipIO = null;
+let ctx = null, flip = null, flipIO = null, mirrorDrag = false;
 
 export function initFlipbook(c) { ctx = c; return api }
+
+/* the host is CSS-mirrored for RTL, so pointer coordinates must be mirrored
+   back around the book center before StPageFlip sees them */
+function mirrorHandler(e) {
+  if (e.__ounsFlip || !flip) return;
+  const host = document.getElementById('flipHost');
+  if (!host) return;
+  const type = e.type;
+  const inside = !!(e.target && host.contains(e.target));
+  if (type === 'mousedown' || type === 'touchstart') {
+    mirrorDrag = inside;
+    if (!inside) return;
+  } else {
+    if (!mirrorDrag) return;
+    if (type === 'mouseup' || type === 'touchend' || type === 'touchcancel') mirrorDrag = false;
+  }
+  const block = host.querySelector('.stf__block');
+  if (!block) return;
+  const pt = e.changedTouches && e.changedTouches.length ? e.changedTouches[0] : e;
+  const r = block.getBoundingClientRect();
+  const mx = 2 * r.left + r.width - pt.clientX;
+  e.stopPropagation();
+  if (type === 'mousedown' || type === 'touchstart') e.preventDefault();
+  const common = { bubbles: true, cancelable: true, view: window, clientX: mx, clientY: pt.clientY };
+  let ne;
+  if (typeof TouchEvent === 'function' && e instanceof TouchEvent) {
+    const changed = [...e.changedTouches].map(tt => new Touch({ identifier: tt.identifier, target: e.target, clientX: 2 * r.left + r.width - tt.clientX, clientY: tt.clientY }));
+    ne = new TouchEvent(type, Object.assign(common, { changedTouches: changed }));
+  } else {
+    ne = new MouseEvent(type, Object.assign(common, { button: e.button, buttons: e.buttons }));
+  }
+  ne.__ounsFlip = true;
+  (e.target || host).dispatchEvent(ne);
+}
+const MIRROR_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
+function attachMirror() { MIRROR_EVENTS.forEach(ty => document.addEventListener(ty, mirrorHandler, true)) }
+function detachMirror() { mirrorDrag = false; MIRROR_EVENTS.forEach(ty => document.removeEventListener(ty, mirrorHandler, true)) }
 
 const num = p => ctx.S.lang === 'ar' ? arDigits(p) : String(p);
 
 function destroy() {
+  detachMirror();
   if (flipIO) { flipIO.disconnect(); flipIO = null }
   if (flip) { try { flip.destroy() } catch (_) { } flip = null }
   const stg = ctx.$('#view .mushaf-stage'); if (stg) stg.classList.remove('flip-on');
@@ -78,6 +116,7 @@ async function mount() {
       for (let p = S.readN - 4; p <= S.readN + 5; p++) if (p >= 1 && p <= MUSHAF_PAGES) setSrc(p);
       mushafPrecache(S.readN, S.mushafRiwaya);
     });
+    attachMirror();
   } catch (_) { if (stg) stg.classList.remove('flip-on') }
 }
 function go(n) {
