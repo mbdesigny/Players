@@ -18,6 +18,17 @@ import frame from '../assets/player-frame.svg?raw';
   </div>
 
   <PlayerBar />
+  <div class="npc" id="npcCard" role="group" data-i18n-aria="nowPlaying" aria-label="يُتلى الآن">
+    <img id="npcArt" alt="" loading="lazy">
+    <div class="npc-meta" id="npcMeta">
+      <b id="npcTitle">أُنس</b>
+      <span id="npcArtist"></span>
+    </div>
+    <button class="mini-btn" id="npcPlay" data-i18n-aria="play" aria-label="تشغيل"><svg class="ic play-ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+    <button class="mini-btn" id="npcNext" data-i18n-aria="next" aria-label="التالي"><svg class="ic fill" viewBox="0 0 24 24"><path d="M6 5v14l9-7z"/><rect x="16.4" y="5" width="2.6" height="14" rx="1"/></svg></button>
+    <button class="mini-btn" id="npcExpand" data-i18n-aria="expand" aria-label="ملء الشاشة"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
+    <div class="npc-prog"><i id="npcFill"></i></div>
+  </div>
   <FullscreenPlayer />
   <Modals />
 

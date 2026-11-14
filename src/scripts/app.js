@@ -169,7 +169,7 @@ function filteredReciters(){
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}S.prayerSearch=null;if(v!=='adhkar')S.adhkarCat=null;else if(S.adhkarCat==null)S.adhkarCat=akAutoCat();if(v!=='yt'){S.ytId=null;destroyYt()}document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();render()}
+function setView(v){S.view=v;S.query='';$('#searchInput').value='';if(v==='mushaf'){S.readN=null;S.mushafAsk=false}S.prayerSearch=null;if(v!=='adhkar')S.adhkarCat=null;else if(S.adhkarCat==null)S.adhkarCat=akAutoCat();if(v!=='yt'){S.ytId=null;destroyYt()}document.body.classList.toggle('mushaf-full',v==='mushaf');$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));closeSidebar();applyNpCard();render()}
 function render(){
   applyI18nStatic();
   const ph={home:'searchReciters',reciters:'searchReciters',surahs:'searchSurahs',favorites:'searchFav',recent:'searchRecent',mushaf:'searchSurahs'}[S.view]||'searchReciters';
@@ -392,8 +392,11 @@ function updateNowPlaying(){
   $('#ovPhoto').innerHTML=photo?`<img src="${photo}" alt="" onerror="this.remove()">`:'';
   const ava=photo||avatarURI(tr.rar,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
   $('#pbArtImg').src=ava;$('#pbArtImg').onerror=function(){this.onerror=null;this.src=avatarURI(tr.rar,'ق')} ;
+  const nArt=$('#npcArt');if(nArt){nArt.src=ava;nArt.onerror=function(){this.onerror=null;this.src=avatarURI(tr.rar,'ق')}}
+  $('#npcTitle').textContent=trackName(tr);$('#npcArtist').textContent=trackReciter(tr);
   const titleHTML=S.lang==='ar'&&tr.n!=null?`<span class="sn-font sg-pair"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:esc(trackName(tr));
   $('#npTitle').innerHTML=titleHTML;$('#ovTitle').innerHTML=titleHTML;
+  applyNpCard();
   $('#npArtist').textContent=trackReciter(tr);$('#ovArtist').textContent=trackReciter(tr);
   $('#pbTitle').textContent=`${trackName(tr)} · ${trackReciter(tr)}`;
   $('#pbSub').textContent=[tr.rewaya,tr.mname].filter(Boolean).join(' · ')||trackReciter(tr);
@@ -443,6 +446,7 @@ function updateProgress(){
   $('#ovFill').style.width=(p*100)+'%';$('#ovThumb').style.insetInlineStart=(p*100)+'%';
   const now=Math.round(audio.currentTime||0),max=Math.round(d);
   ['progBar','ovProg'].forEach(id=>{const el=$('#'+id);if(!el)return;el.setAttribute('aria-valuemax',max);el.setAttribute('aria-valuenow',now);el.setAttribute('aria-valuetext',fmt(now)+' / '+fmt(max))});
+  const nf=$('#npcFill');if(nf)nf.style.width=(p*100)+'%';
   const C=2*Math.PI*45.6;
   $$('.pr-fill').forEach(c=>c.style.strokeDashoffset=C*(1-p));
   if(S.current&&d){S.current.duration=d;const row=$(`.surah-row[data-key="${S.current.key}"] .dur`);if(row)row.textContent=fmt(d)}
@@ -454,6 +458,7 @@ function setPlayingUI(on){
   document.body.classList.toggle('playing',on);
   const ic=on?'<svg class="ic" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></svg>':'<svg class="ic play-ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
   $('#btnPlay').innerHTML=ic;$$('.np-overlay [data-act="play"]').forEach(b=>b.innerHTML=ic);
+  const npb=$('#npcPlay');if(npb)npb.innerHTML=ic;
   if('mediaSession'in navigator)navigator.mediaSession.playbackState=on?'playing':'paused';
 }
 function saveSession(){
@@ -1300,12 +1305,19 @@ function startWaves(){
 }
 function stopWaves(){if(waveRaf)cancelAnimationFrame(waveRaf);waveRaf=0}
 window.__waves=()=>({ctx:acx?acx.state:'none',has:!!analyser,lvl:+smLevel.toFixed(3),layers:layerLvl.map(v=>+v.toFixed(3)),paused:audio.paused});
-function openOverlay(){$('#npOverlay').classList.add('open');startWaves()}
-function closeOverlay(){$('#npOverlay').classList.remove('open');stopWaves()}
+function applyNpCard(){
+  const on=!!S.current&&innerWidth<=1280&&!document.body.classList.contains('mushaf-full')&&!$('#npOverlay').classList.contains('open');
+  document.body.classList.toggle('npc-on',on);
+}
+function openOverlay(){$('#npOverlay').classList.add('open');startWaves();applyNpCard()}
+function closeOverlay(){$('#npOverlay').classList.remove('open');stopWaves();applyNpCard()}
 function closeSidebar(){$('#sidebar').classList.remove('open');$('#scrimSide').classList.remove('open')}
 $('#menuBtn').onclick=()=>{$('#sidebar').classList.add('open');$('#scrimSide').classList.add('open')};
 $('#scrimSide').onclick=closeSidebar;
 $('#pbArt').onclick=openOverlay;$('#btnExpand').onclick=openOverlay;$('#npExpand').onclick=openOverlay;$('#ovClose').onclick=closeOverlay;
+$('#npcPlay').onclick=togglePlay;$('#npcNext').onclick=nextTrack;$('#npcExpand').onclick=openOverlay;
+$('#npcArt').onclick=openOverlay;$('#npcMeta').onclick=openOverlay;
+addEventListener('resize',applyNpCard);
 $('#settingsBtn').onclick=()=>$('#settingsScrim').classList.add('open');
 $('#settingsClose').onclick=()=>$('#settingsScrim').classList.remove('open');
 $('#settingsScrim').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
