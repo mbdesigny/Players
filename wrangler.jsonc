@@ -1,0 +1,7 @@
+{
+  // Cloudflare Pages configuration (static output — no adapter needed).
+  // Used by `npx wrangler pages deploy` and by Pages Git builds.
+  "name": "ouns",
+  "compatibility_date": "2026-11-01",
+  "pages_build_output_dir": "dist"
+}
