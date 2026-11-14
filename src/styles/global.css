@@ -2843,6 +2843,93 @@ html[dir="rtl"] .mt-sel {
   display: none
 }
 
+body.mushaf-noside .mushaf-body {
+  --mside-w: 0px
+}
+
+body.mushaf-noside .mushaf-side {
+  display: none
+}
+
+.flip-host {
+  display: none
+}
+
+.mushaf-stage.flip-on {
+  position: relative;
+  overflow: hidden
+}
+
+.mushaf-stage.flip-on .mushaf-page {
+  display: none
+}
+
+.mushaf-stage.flip-on .flip-host {
+  display: block;
+  position: absolute;
+  inset: 10px 3%;
+  transform: scaleX(-1)
+}
+
+.flip-page {
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden
+}
+
+[data-theme="dark"] .flip-page {
+  background: #0D0F12
+}
+
+.flip-in {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(-1)
+}
+
+.flip-page img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  user-select: none
+}
+
+[data-theme="dark"] .flip-page img {
+  filter: invert(1) hue-rotate(180deg)
+}
+
+.fp-num,
+.fp-juz,
+.fp-surah {
+  position: absolute;
+  z-index: 2;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(20, 18, 12, .38);
+  color: #fff;
+  font-size: var(--fs-2xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none
+}
+
+.fp-num {
+  bottom: 8px;
+  inset-inline-end: 10px
+}
+
+.fp-juz {
+  top: 8px;
+  inset-inline-start: 10px
+}
+
+.fp-surah {
+  top: 8px;
+  inset-inline-end: 10px
+}
+
 .mushaf-side {
   display: none
 }
@@ -2921,6 +3008,7 @@ body.mushaf-clean .mrestore {
     gap: 14px;
     flex: none;
     width: var(--mside-w);
+    height: 100vh;
     padding: 18px 14px;
     border-inline-start: 1px solid var(--line);
     background: var(--bg);
@@ -2940,10 +3028,7 @@ body.mushaf-clean .mrestore {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    padding: 10px 18px;
-    background: var(--surface);
-    border-top: 1px solid var(--line);
-    box-shadow: 0 -2px 12px rgba(0, 0, 0, .07)
+    padding: 6px 18px 10px
   }
 
   .mushaf-bottom .mf-slider {

@@ -1,5 +1,15 @@
 # Mushaf Flip-Book — Implementation Plan
 
+> **Status: v1 implemented.** `page-flip` (StPageFlip) is a dependency; `mountFlip()` in
+> `app.js` lazily imports it and mounts the book over the static stage (kept as fallback).
+> Desktop = two-page landscape spread, mobile = portrait single page. Pages are built once
+> per mount with `data-src` images loaded lazily (IntersectionObserver + ±4-page prefetch
+> on flip). RTL handled by mirroring the host and re-mirroring page content
+> (`scaleX(-1)` on `.flip-host` and `.flip-in`), so forward turns read right-to-left.
+> Page overlay labels (page number bottom corner, juz top-start, surah name top-end) are
+> rendered per page. `mushafGo()` turns the book in place when mounted; riwaya switches
+> and breakpoint changes destroy and re-mount.
+
 A plan to evolve the current mushaf reader (two static page images side by side) into a real
 page-flip book experience.
 
