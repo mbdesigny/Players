@@ -13,3 +13,7 @@ used by the «download all pages» ZIP builder.
 use a square 235×235 artboard, so they are wrapped into the standard
 345×550 page frame (content scaled to page width, vertically centered).
 Do not overwrite them when copying your download.
+
+The Hafs cover image lives at `public/mushaf-cover-hafs.jpg` (the Warsh cover
+is `public/mushaf-cover.jpg`); both are selected per riwaya in
+`mushafCoverHTML()`.

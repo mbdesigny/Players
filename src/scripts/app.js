@@ -562,7 +562,7 @@ function mushafCoverHTML(){
   return `<div class="mushaf-wrap">
     <div class="mushaf-stage">
       <div class="mushaf-page cover-page" data-act="mushafopen">
-        <img src="/mushaf-cover.jpg" alt="${t('quranName')}" onerror="this.classList.add('broken')">
+        <img src="${S.mushafRiwaya==='warsh'?'/mushaf-cover.jpg':'/mushaf-cover-hafs.jpg'}" alt="${t('quranName')}" onerror="this.classList.add('broken')">
         <button class="btn gold mc-open" data-act="mushafopen">${lbl}</button>
         <button class="btn mc-dl" data-act="mushafdlall">${t('dlPages')}</button>
       </div>
