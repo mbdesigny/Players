@@ -112,8 +112,8 @@ function frameInner() {
 function mandalaSVG(seed, numTxt, subTxt, photo, phLetter) {
   const C = (2 * Math.PI * 45.6).toFixed(2), cid = 'phc' + (hash(seed) >>> 0).toString(36) + (phSeq++);
   const center = photo
-    ? `<text x="48" y="52.4" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text><clipPath id="${cid}"><circle cx="48" cy="48" r="15.36"/></clipPath><image href="${photo}" x="32.64" y="32.64" width="30.72" height="30.72" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>`
-    : `<circle cx="48" cy="48" r="15.36" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="51.8" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="60" text-anchor="middle" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
+    ? `<text x="48" y="52.4" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text><clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath><image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>`
+    : `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="51.8" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="60" text-anchor="middle" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
   const inner = frameInner()
     .replace(/<g id="mondala">/, '<g class="spin-a">')
     .replace(/<circle id="pr-pill"[^>]*\/>/, `<circle class="pr-fill" cx="48" cy="48" r="45.6" fill="none" stroke="#ba9743" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 48 48)"/>`)
@@ -286,7 +286,7 @@ function viewReciters() {
   const list = filteredReciters();
   const chips = [{ key: '__all', name: t('allRiwayat'), count: S.reciters.length }, ...S.riwayat];
   return `<div class="view-head"><div><h2>${t('reciters')}</h2><div class="sub">${list.length} ${t('reciter')} · ${t('recitersSub')}</div></div>
-    <div class="chips vh-chips">${chips.map(c => `<button class="chip ${S.rewaya === c.key ? 'active' : ''}" data-rw="${esc(c.key)}">${esc(c.name)}<span class="n">${c.count}</span></button>`).join('')}</div>
+    <select id="rwSel" class="btn sm" style="border-radius:30px;max-width:240px" aria-label="${t('riwayat')}">${chips.map(c => `<option value="${esc(c.key)}"${S.rewaya === c.key ? ' selected' : ''}>${esc(c.name)} (${c.count})</option>`).join('')}</select>
     <select id="sortSel" class="btn sm" style="border-radius:30px"><option value="name" ${S.sort === 'name' ? 'selected' : ''}>${t('sortName')}</option><option value="count" ${S.sort === 'count' ? 'selected' : ''}>${t('sortCount')}</option></select></div>
   ${list.length ? `<div class="reciter-grid">${list.map(reciterCard).join('')}</div>` : `<div class="empty"><p>${t('noResults')}</p></div>`}`;
 }
@@ -793,6 +793,7 @@ function viewRead() {
         <div class="mushaf-page" data-page="${R}">${img(R)}</div>
         ${L ? `<div class="mushaf-page" data-page="${L}">${img(L)}</div>` : ''}
         <div class="flip-host" id="flipHost"></div>
+        <div class="flip-spine"></div>
       </div>
       <button class="mnav prev" data-act="mprev" ${prevOff ? 'disabled' : ''} aria-label="${t('previous')}"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <button class="mnav next" data-act="mnext" ${nextOff ? 'disabled' : ''} aria-label="${t('next')}"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
@@ -1693,6 +1694,7 @@ $('#view').addEventListener('click', async e => {
 });
 $('#view').addEventListener('change', e => {
   if (e.target.id === 'sortSel') { S.sort = e.target.value; render() }
+  if (e.target.id === 'rwSel') { S.rewaya = e.target.value; render(); return }
   if (e.target.id === 'moshafSel') { setMoshaf(+e.target.value) }
   if (e.target.id === 'mSurahSel' || e.target.id === 'mSurahSelSide') mushafGo(SURAH_PAGE[+e.target.value - 1]);
   if (e.target.id === 'mJuzSel' || e.target.id === 'mJuzSelSide') mushafGo(JUZ_PAGE[+e.target.value - 1]);
