@@ -1,10 +1,7 @@
 # Mushaf Flip-Book — Implementation Plan
 
-> **Status: v1 implemented.** `page-flip` (StPageFlip) is a dependency; the engine lives in
-> `src/scripts/flipbook.js`, which `app.js` lazy-loads via `import('./flipbook.js')` only when
-> the mushaf reading view is active (Vite emits it as a separate chunk, so StPageFlip and the
-> `page-flip` import are never fetched on other tabs). It mounts the book over the static
-> stage (kept as fallback).
+> **Status: v1 implemented.** `page-flip` (StPageFlip) is a dependency; `mountFlip()` in
+> `app.js` lazily imports it and mounts the book over the static stage (kept as fallback).
 > Desktop = two-page landscape spread, mobile = portrait single page. Pages are built once
 > per mount with `data-src` images loaded lazily (IntersectionObserver + ±4-page prefetch
 > on flip). RTL handled by mirroring the host and re-mirroring page content
