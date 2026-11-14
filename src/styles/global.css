@@ -4234,6 +4234,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .recent-card .rt {
+  display: block;
   font-size: var(--fs-xs);
   font-weight: 600;
   white-space: nowrap;
@@ -4248,6 +4249,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .recent-card .rs {
+  display: block;
   font-size: var(--fs-3xs);
   color: var(--ink2);
   white-space: nowrap;
