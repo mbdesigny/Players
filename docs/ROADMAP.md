@@ -84,9 +84,11 @@ Implemented:
   from `src/data/adhkar.json` (Hisn al-Muslim based, see `NOTICE`).
 - Card per dhikr with tap counter; completion state per category.
 
-**Pending** (audit item A8): daily progress persistence
-(`ouns_adhkar_YYYY-MM-DD`, auto-reset next day), «done X/Y» header, and
-automatic morning/evening tab selection by time of day.
+Daily progress is persisted (audit item A8 done): tap counts are saved per
+category under `ouns_adhkar_YYYY-MM-DD` (auto-reset next day, old day keys
+purged at startup), the category header shows «done X/Y», progress is
+restored on reopen, and the morning/evening tab is auto-selected by time of
+day (overridable via the back button).
 
 ---
 
@@ -120,7 +122,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A5 | LICENSE + NOTICE + README attribution | **done** |
 | A6 | Dead assets removed; adhan mp3s out of the bundle (`_astro` 8.5MB → 1.3MB) | **done** |
 | A7 | This documentation sync | **done** |
-| A8 | Adhkar daily progress | pending |
+| A8 | Adhkar daily progress | **done** |
 | A9 | Adhan duck mode + notifications + location hardening | pending |
 | A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | pending |
 | A11 | Deduplicate CSS; single `#view` click delegator | pending |

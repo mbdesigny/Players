@@ -3831,6 +3831,15 @@ html[dir="rtl"] .back-btn .ic {
   color: var(--ink2)
 }
 
+.ak-prog {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+  background: var(--glow2);
+  border-radius: 20px;
+  padding: 2px 9px
+}
+
 .ak-more {
   font-size: 17px
 }
