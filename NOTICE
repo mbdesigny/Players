@@ -48,8 +48,10 @@ covered by it and remain the property of their respective owners.
 ### Fonts
 - `src/assets/fonts/sura_names.woff2` — custom PUA-encoded surah-name font
   bundled with the project; verify redistribution rights before commercial use.
-- **Alan Sans** and **Amiri** are loaded from Google Fonts at runtime
-  (SIL Open Font License 1.1).
+- **Alan Sans** (variable 300–900) and **Amiri** (400/700) are self-hosted in
+  `src/assets/fonts/*.woff2` (arabic/latin/latin-ext subsets) —
+  SIL Open Font License 1.1, © Google LLC / The Amiri Project.
+  No requests leave to Google Fonts at runtime.
 
 ### Artwork
 - `src/assets/player-frame.svg` (player mandala/frame design) and

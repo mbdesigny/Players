@@ -8,13 +8,14 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/bump-sw.mjs",
     "preview": "astro preview",
     "test": "node --test \"tests/**/*.test.mjs\"",
     "lint": "eslint src/scripts/lib tests",
     "format": "prettier --write src/scripts/lib tests"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
     "astro": "^7.4.11"
   },
   "devDependencies": {
