@@ -50,11 +50,16 @@ gradual.
 - `src/assets/player-frame.svg` — player mandala design source (embedded inline)
 - `public/img/` — reciter photos (see `public/img/README.md`)
 
-## Roadmap
+## Features & roadmap
 
-See `docs/ROADMAP.md` for the planned features: ayah-by-ayah text in the
-full-screen player, prayer times with adhan, adhkar sabah/masaa, and a YouTube
-player for video recitations.
+Shipped: a reciters/riwayat player (favorites, recents, downloads, sleep
+timer), a full mushaf reading tab (Hafs + Warsh, self-hosted pages), prayer
+times with per-prayer adhan and offsets, adhkar with daily progress, and a
+YouTube player for video recitations.
+
+See `docs/ROADMAP.md` for the full status. Every audit stage except **A1 —
+deployment setup** (Cloudflare Workers/Pages config + a documented deploy) is
+done.
 
 ## Licenses & attribution
 
