@@ -572,6 +572,15 @@ function mushafGo(n){
   if(n>=1)store.set(`mushafLast_${S.mushafRiwaya}`,n);
   if(S.view!=='mushaf')setView('mushaf');
   S.readN=n;render();
+  mushafPrecache(n,S.mushafRiwaya);
+}
+function mushafPrecache(n,rw){
+  if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)return;
+  const book=mushafBook();
+  const R=book?mushafRight(n):n;
+  const pages=(book?[R,R+1,R+2,R+3]:[n,n+1]).filter(p=>p>=1&&p<=MUSHAF_PAGES);
+  const urls=pages.flatMap(p=>mushafSources(p,rw).slice(1));
+  try{navigator.serviceWorker.controller.postMessage({type:'precache-mushaf',urls})}catch(_){ }
 }
 function mushafCoverHTML(){
   const last=mushafLastGet()||S.mushafPage;
