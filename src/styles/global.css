@@ -3233,7 +3233,9 @@ html[dir="rtl"] .back-btn .ic {
   align-items: baseline;
   gap: 8px;
   font-size: var(--fs-md);
-  color: rgba(247, 243, 232, .75)
+  color: rgba(247, 243, 232, .75);
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .hp-count .pr-count {
