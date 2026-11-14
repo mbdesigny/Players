@@ -110,17 +110,21 @@
   --surface: #FBF8F0;
   --surface2: #FFFDF7;
   --ink: #2C3E30;
-  --ink2: #5F6E5B;
+  --ink2: #57654F;
   --accent: #3E6B48;
   --accent2: #8FBC8F;
   --gold: #B99745;
+  --gold-ink: #6F5521;
   --gold2: #E2D2A6;
+  --gold2-ink: #E2D2A6;
+  --gold-on-ink: #E2D2A6;
   --on-accent: #FFFDF7;
+  --on-gold: #1E2A19;
   --line: rgba(44, 62, 48, .12);
   --line2: rgba(44, 62, 48, .22);
-  --danger: #B4552D;
-  --warn: #C08A2E;
-  --info: #4A7A8C;
+  --danger: #A34A24;
+  --warn: #7E5C1E;
+  --info: #3D6879;
   --success: #3E6B48;
   --scrim: rgba(24, 30, 20, .45);
   --glow1: rgba(143, 188, 143, .4);
@@ -149,8 +153,12 @@
   --accent: #9DCB9D;
   --accent2: #6E9B74;
   --gold: #D4B36A;
+  --gold-ink: #D4B36A;
   --gold2: #8A7440;
+  --gold2-ink: #D4B36A;
+  --gold-on-ink: #6B5827;
   --on-accent: #0A0F0A;
+  --on-gold: #0A0F0A;
   --line: rgba(224, 242, 233, .1);
   --line2: rgba(224, 242, 233, .2);
   --danger: #D07A52;
@@ -407,7 +415,7 @@ svg {
 .brand-name small {
   font-size: 10px;
   letter-spacing: 3.5px;
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 600;
   text-transform: uppercase
 }
@@ -499,7 +507,7 @@ svg {
 .verse-card .vlabel {
   font-size: 10px;
   letter-spacing: 1.5px;
-  color: var(--gold);
+  color: var(--gold-ink);
   text-transform: uppercase;
   font-weight: 600;
   margin-bottom: 8px
@@ -641,7 +649,7 @@ main {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin: 6px 0 18px
 }
 
@@ -1241,7 +1249,7 @@ body.side-collapsed .nav-item.active::before {
 }
 
 #sideBtn.on {
-  color: var(--gold);
+  color: var(--gold-ink);
   border-color: var(--gold)
 }
 
@@ -1273,17 +1281,17 @@ body.side-collapsed .nav-item.active::before {
 }
 
 .np-head .icon-btn.on {
-  color: var(--gold);
+  color: var(--gold-ink);
   border-color: var(--gold)
 }
 
 #npPin.on {
-  color: var(--gold);
+  color: var(--gold-ink);
   border-color: var(--gold)
 }
 
 #npDock.on {
-  color: var(--gold);
+  color: var(--gold-ink);
   border-color: var(--gold)
 }
 
@@ -1326,7 +1334,7 @@ body.np-float .np-title {
   font-size: 10.5px;
   letter-spacing: 1.8px;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1447,7 +1455,7 @@ body.np-float .np-title {
 }
 
 .queue-item.active .qi-n {
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 700
 }
 
@@ -1606,7 +1614,7 @@ body.np-float .np-title {
 }
 
 .ctrl.on {
-  color: var(--gold)
+  color: var(--gold-ink)
 }
 
 .ctrl .ic {
@@ -1621,7 +1629,7 @@ body.np-float .np-title {
   font-size: 8.5px;
   font-weight: 800;
   background: var(--gold);
-  color: #2C3E30;
+  color: var(--on-gold);
   border-radius: 8px;
   padding: 0 4px;
   line-height: 1.4
@@ -1786,7 +1794,7 @@ html[dir="rtl"] .prog .fill {
   inset-inline-end: -4px;
   font-size: 8px;
   background: var(--gold);
-  color: #2C3E30;
+  color: var(--on-gold);
   border-radius: 8px;
   padding: 0 4px;
   font-weight: 700
@@ -1831,7 +1839,7 @@ html[dir="rtl"] .prog .fill {
 }
 
 .popover button.on {
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 700
 }
 
@@ -1880,7 +1888,7 @@ html[dir="rtl"] .prog .fill {
   font-size: 11px;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 700
 }
 
@@ -2034,7 +2042,7 @@ html[dir="rtl"] .prog .fill {
 }
 
 .modal h3 .ic {
-  color: var(--gold)
+  color: var(--gold-ink)
 }
 
 .set-row {
@@ -2230,7 +2238,7 @@ kbd {
 }
 
 .toast button {
-  color: var(--gold2);
+  color: var(--gold-on-ink);
   font-weight: 700;
   font-size: 12.5px;
   flex: none
@@ -2969,7 +2977,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .loc-chip:hover {
   border-color: var(--gold);
-  color: var(--gold)
+  color: var(--gold-ink)
 }
 
 .loc-item:hover {
@@ -3045,7 +3053,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .prayer-card.next span {
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 700
 }
 
@@ -3158,7 +3166,7 @@ html[dir="rtl"] .back-btn .ic {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: var(--gold2);
+  color: var(--gold2-ink);
   font-weight: 700
 }
 
@@ -3180,7 +3188,7 @@ html[dir="rtl"] .back-btn .ic {
 .hp-time {
   font-size: 20px;
   font-weight: 700;
-  color: var(--gold2);
+  color: var(--gold2-ink);
   font-variant-numeric: tabular-nums
 }
 
@@ -3263,7 +3271,7 @@ html[dir="rtl"] .back-btn .ic {
   min-width: 44px;
   text-align: center;
   font-weight: 800;
-  color: var(--gold);
+  color: var(--gold-ink);
   font-variant-numeric: tabular-nums
 }
 
@@ -3293,7 +3301,7 @@ html[dir="rtl"] .back-btn .ic {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--gold2);
+  color: var(--gold2-ink);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: .4px;
@@ -3323,9 +3331,9 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .hero .btn.primary {
-  background: var(--gold2);
+  background: var(--gold2-ink);
   border-color: transparent;
-  color: var(--ink)
+  color: var(--on-gold)
 }
 
 .hero .btn.primary:hover {
@@ -3393,8 +3401,8 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .btn.gold {
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  color: #2C3E30;
+  background: linear-gradient(135deg, var(--gold), var(--gold2-ink));
+  color: var(--on-gold);
   border-color: transparent
 }
 
@@ -3461,7 +3469,7 @@ html[dir="rtl"] .back-btn .ic {
 .tag.gold {
   background: transparent;
   border-color: var(--gold);
-  color: var(--gold)
+  color: var(--gold-ink)
 }
 
 .reciter-grid {
@@ -3538,7 +3546,7 @@ html[dir="rtl"] .back-btn .ic {
   background: var(--gold);
   display: grid;
   place-items: center;
-  color: #2C3E30;
+  color: var(--on-gold);
   box-shadow: 0 8px 22px rgba(0, 0, 0, .32);
   transform: scale(.82);
   transition: .25s
@@ -3643,7 +3651,7 @@ html[dir="rtl"] .back-btn .ic {
 .quick-surah .qn {
   font-family: "Amiri", serif;
   font-size: 21px;
-  color: var(--gold);
+  color: var(--gold-ink);
   width: 32px;
   text-align: center;
   flex: none
@@ -3806,7 +3814,7 @@ html[dir="rtl"] .back-btn .ic {
 .ak-hero .ic {
   width: 26px;
   height: 26px;
-  color: var(--gold)
+  color: var(--gold-ink)
 }
 
 .ak-hero b {
@@ -3821,7 +3829,7 @@ html[dir="rtl"] .back-btn .ic {
 .ak-prog {
   font-size: 11px;
   font-weight: 600;
-  color: var(--gold);
+  color: var(--gold-ink);
   background: var(--glow2);
   border-radius: 20px;
   padding: 2px 9px
@@ -3861,7 +3869,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .ak-cat .n {
   font-size: 11px;
-  color: var(--gold);
+  color: var(--gold-ink);
   background: var(--glow2);
   border-radius: 20px;
   padding: 2px 9px;
@@ -3930,7 +3938,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .ak-tap:disabled {
   background: var(--gold);
-  color: #2C3E30;
+  color: var(--on-gold);
   cursor: default
 }
 
@@ -3978,7 +3986,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .yt-btn.active {
-  color: var(--gold2)
+  color: var(--gold2-ink)
 }
 
 .yt-grid {
@@ -4045,7 +4053,7 @@ html[dir="rtl"] .back-btn .ic {
   box-sizing: content-box;
   border-radius: 50%;
   background: var(--gold);
-  color: #2C3E30
+  color: var(--on-gold)
 }
 
 .yt-card:hover .yt-play,
@@ -4114,7 +4122,7 @@ html[dir="rtl"] .back-btn .ic {
 .ab-inner .ic {
   width: 26px;
   height: 26px;
-  color: var(--gold2);
+  color: var(--gold2-ink);
   flex: none
 }
 
@@ -4130,7 +4138,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .ab-txt span {
   font-size: 12px;
-  color: var(--gold2)
+  color: var(--gold2-ink)
 }
 
 .ab-stop {
@@ -4148,7 +4156,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .ab-stop:hover {
   background: var(--gold);
-  color: #2C3E30
+  color: var(--on-gold)
 }
 
 .ps-title {
@@ -4165,7 +4173,7 @@ html[dir="rtl"] .back-btn .ic {
 .ps-title .ic {
   width: 17px;
   height: 17px;
-  color: var(--gold)
+  color: var(--gold-ink)
 }
 
 .ps-row {
@@ -4303,7 +4311,7 @@ html[dir="rtl"] .back-btn .ic {
 .yt-btn.big .ic {
   width: 21px;
   height: 21px;
-  color: #2C3E30
+  color: var(--on-gold)
 }
 
 .yt-time {
@@ -4346,7 +4354,7 @@ html[dir="rtl"] .back-btn .ic {
   box-sizing: content-box;
   border-radius: 50%;
   background: rgba(185, 151, 67, .92);
-  color: #2C3E30;
+  color: var(--on-gold);
   box-shadow: 0 12px 34px rgba(0, 0, 0, .4)
 }
 
@@ -4416,7 +4424,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .sp-head b {
-  color: var(--gold);
+  color: var(--gold-ink);
   font-variant-numeric: tabular-nums
 }
 
@@ -4591,7 +4599,7 @@ body.mushaf-full .np-card{display:none!important}
   .np-card .npc-btn .ic{width:20px;height:20px}
   .np-card #npcPlay{background:var(--accent);color:var(--on-accent)}
   .np-card #npcPlay .ic{fill:currentColor;stroke:none}
-  .np-card .npc-expand .ic{width:18px;height:18px;color:var(--gold)}
+  .np-card .npc-expand .ic{width:18px;height:18px;color:var(--gold-ink)}
   body.has-track main{padding-bottom:calc(70px + 32px)}
 }
 
