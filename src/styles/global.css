@@ -1013,7 +1013,7 @@ justify-content: space-between;
   color: var(--ink2);
   display: block;
   margin-top: 2px;
-  padding-inline-start: 52px
+  padding-inline-start: 0
 }
 
 .surah-row .sfoot {
