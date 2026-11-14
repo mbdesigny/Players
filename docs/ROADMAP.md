@@ -100,7 +100,7 @@ day (overridable via the back button).
 
 ## Phase 4 — YouTube player for best recitations
 
-**Status**: **shipped** (core), with pending polish below.
+**Status**: **shipped**.
 
 Implemented:
 
@@ -108,9 +108,14 @@ Implemented:
   IFrame Player API; videos are fully standalone in their tab (no coupling
   with the audio player's queue state).
 - In-site navigation only between the site's videos (no external exits).
-
-**Pending** (user feedback, outside the A/B audit): the custom player shell
-still lacks a CC disable button and a fullscreen button.
+- Custom player shell: the native YouTube controls are disabled
+  (`controls:0`) and replaced by a bottom bar (prev/play/next, seek, mute +
+  volume for desktop, caption toggle, fullscreen).
+- **Captions toggle** (`#ytCcBtn`): turns the `ar` caption track on/off via
+  `loadModule('captions')` / `unloadModule('captions')`; CC starts off
+  (`cc_load_policy:0`).
+- **Fullscreen** (`#ytFsBtn`): requests fullscreen on the player box and
+  exits it again; the box is restyled via `.yt-player:fullscreen`.
 
 ---
 
@@ -148,7 +153,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 
 ## Suggested order
 
-All audit stages **A1–A19** and **B1–B6** are now complete. Remaining wishlist
-items are outside the audit: a CC-disable and a fullscreen button for the
-YouTube shell (see Phase 4). Each stage ships independently; no breaking
-changes to existing `ouns_` state keys.
+All audit stages **A1–A19** and **B1–B6** are complete, along with the earlier
+Phase 4 wishlist (the YouTube shell's caption toggle and fullscreen button).
+No pending items remain. Each stage ships independently; no breaking changes
+to existing `ouns_` state keys.

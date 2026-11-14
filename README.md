@@ -79,9 +79,9 @@ timer), a full mushaf reading tab (Hafs + Warsh, self-hosted pages), prayer
 times with per-prayer adhan and offsets, adhkar with daily progress, and a
 YouTube player for video recitations.
 
-See `docs/ROADMAP.md` for the full status. The A1–A19 and B1–B6 audit stages
-are all done; the only open wishlist items (a CC-disable and a fullscreen
-button for the YouTube shell) sit outside that audit.
+See `docs/ROADMAP.md` for the full status. All A1–A19 and B1–B6 audit stages
+are done, and the YouTube shell's caption toggle and fullscreen button are in
+place — no pending items remain.
 
 ## Licenses & attribution
 
