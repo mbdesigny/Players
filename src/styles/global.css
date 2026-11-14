@@ -2807,7 +2807,40 @@ html[dir="rtl"] .mt-sel {
   position: relative;
   flex: 1;
   min-height: 0;
-  display: flex
+  display: flex;
+  --mside-w: 252px
+}
+
+.mushaf-corner {
+  display: none;
+  position: absolute;
+  z-index: 8;
+  gap: 8px
+}
+
+.mushaf-corner.start {
+  top: 12px;
+  inset-inline-start: 12px
+}
+
+.mushaf-corner.end {
+  top: 12px;
+  inset-inline-end: calc(var(--mside-w) + 12px)
+}
+
+.mushaf-corner .icon-btn {
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  box-shadow: var(--shadow2)
+}
+
+#mSideBtn.on {
+  color: var(--gold-ink);
+  border-color: var(--gold)
+}
+
+.mushaf-bottom {
+  display: none
 }
 
 .mushaf-side {
@@ -2838,7 +2871,7 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mnav.next {
-  inset-inline-end: 14px
+  inset-inline-end: calc(var(--mside-w) + 14px)
 }
 
 .mnav:disabled {
@@ -2858,6 +2891,8 @@ html[dir="rtl"] .mt-sel {
 body.mushaf-clean .mushaf-side,
 body.mushaf-clean .mushaf-top,
 body.mushaf-clean .mushaf-foot,
+body.mushaf-clean .mushaf-bottom,
+body.mushaf-clean .mushaf-corner,
 body.mushaf-clean .mnav {
   display: none
 }
@@ -2885,7 +2920,7 @@ body.mushaf-clean .mrestore {
     flex-direction: column;
     gap: 14px;
     flex: none;
-    width: 252px;
+    width: var(--mside-w);
     padding: 18px 14px;
     border-inline-start: 1px solid var(--line);
     background: var(--bg);
@@ -2895,41 +2930,145 @@ body.mushaf-clean .mrestore {
   .mnav {
     display: flex
   }
+
+  .mushaf-corner {
+    display: flex
+  }
+
+  .mushaf-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 10px 18px;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, .07)
+  }
+
+  .mushaf-bottom .mf-slider {
+    max-width: 480px
+  }
 }
 
-.ms-sec {
+.ms-search {
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+
+.ms-search .icon-btn {
+  flex: none
+}
+
+.ms-search-in {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface2);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm)
+}
+
+.ms-search-in:focus {
+  border-color: var(--gold);
+  outline: none
+}
+
+.ms-tabs {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line)
+}
+
+.ms-tab {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink2);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  cursor: pointer
+}
+
+.ms-tab:hover {
+  color: var(--ink)
+}
+
+.ms-tab.active {
+  background: var(--surface2);
+  border-color: var(--line2);
+  color: var(--gold-ink)
+}
+
+.ms-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px
+  gap: 2px
 }
 
-.ms-lab {
-  font-size: var(--fs-2xs);
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--ink2);
+.ms-list[hidden] {
+  display: none
+}
+
+.ms-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  text-align: start;
+  cursor: pointer
+}
+
+.ms-item:hover {
+  background: var(--surface2)
+}
+
+.ms-item.active {
+  background: var(--surface2);
+  color: var(--gold-ink);
   font-weight: 700
 }
 
-.ms-sec .mt-sel {
-  max-width: none;
-  width: 100%
+.ms-i {
+  flex: none;
+  min-width: 26px;
+  padding: 1px 6px;
+  border-radius: 7px;
+  background: var(--surface2);
+  color: var(--ink2);
+  font-size: var(--fs-2xs);
+  font-variant-numeric: tabular-nums;
+  text-align: center
 }
 
-.ms-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--line)
+.ms-item.active .ms-i {
+  background: rgba(186, 151, 67, .16);
+  color: var(--gold-ink)
 }
 
-.ms-actions .btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px
+.ms-n {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
 }
 
 .mf-slider {
@@ -3017,6 +3156,8 @@ body.mushaf-clean .mrestore {
 }
 
 html[dir="rtl"] .mushaf-foot .ic,
+html[dir="rtl"] .mnav .ic,
+html[dir="rtl"] .mushaf-corner [data-act="mushafback"] .ic,
 html[dir="rtl"] .back-btn .ic {
   transform: scaleX(-1)
 }
