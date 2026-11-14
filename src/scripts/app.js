@@ -85,7 +85,7 @@ function swapAudioEl() {
   return el;
 }
 function bindAudio(el) {
-  el.addEventListener('play', () => { if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
+  el.addEventListener('play', () => { setPlayingUI(true); if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
   el.addEventListener('pause', () => { setPlayingUI(false); saveSession() });
   el.addEventListener('timeupdate', () => { updateProgress(); if (Math.floor(el.currentTime) % 5 === 0) saveSession() });
   el.addEventListener('progress', updateBuffer);
@@ -282,8 +282,8 @@ function viewReciters() {
   const list = filteredReciters();
   const chips = [{ key: '__all', name: t('allRiwayat'), count: S.reciters.length }, ...S.riwayat];
   return `<div class="view-head"><div><h2>${t('reciters')}</h2><div class="sub">${list.length} ${t('reciter')} · ${t('recitersSub')}</div></div>
+    <div class="chips vh-chips">${chips.map(c => `<button class="chip ${S.rewaya === c.key ? 'active' : ''}" data-rw="${esc(c.key)}">${esc(c.name)}<span class="n">${c.count}</span></button>`).join('')}</div>
     <select id="sortSel" class="btn sm" style="border-radius:30px"><option value="name" ${S.sort === 'name' ? 'selected' : ''}>${t('sortName')}</option><option value="count" ${S.sort === 'count' ? 'selected' : ''}>${t('sortCount')}</option></select></div>
-  <div class="chips">${chips.map(c => `<button class="chip ${S.rewaya === c.key ? 'active' : ''}" data-rw="${esc(c.key)}">${esc(c.name)}<span class="n">${c.count}</span></button>`).join('')}</div>
   ${list.length ? `<div class="reciter-grid">${list.map(reciterCard).join('')}</div>` : `<div class="empty"><p>${t('noResults')}</p></div>`}`;
 }
 function viewSurahs() {
@@ -762,15 +762,14 @@ async function detectLoc(mode) {
 function viewPrayer() {
   if (!S.prayerData) setTimeout(loadPrayer, 0);
   const L = S.prayerLoc;
-  return `<div class="view-head"><h2>${t('prayerTimes')}</h2></div>
+  return `<div class="view-head"><div><h2>${t('prayerTimes')}</h2></div><button class="icon-btn" data-act="prayerset" data-i18n-title="settings" aria-label="settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg></button></div>
   <div class="prayer-wrap">
     <div class="prayer-loc">
       <svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
       <b>${esc(L.name)}</b>${L.src === 'net' ? `<span class="loc-approx" title="${t('locApproxT')}">${t('locApprox')}</span>` : ''}
       <button class="icon-btn" data-act="locauto" data-i18n-title="locAuto" aria-label="detect"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg></button>
-      <button class="icon-btn" data-act="prayerset" data-i18n-title="settings" aria-label="settings"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg></button>
     </div>
-    <div class="prayer-box" id="prayerBox">${S.prayerData ? prayerCardsHTML() : `<div class="empty" style="padding:30px"><p>${t('loading')}</p></div>`}</div>
+    <div class="prayer-box" id="prayerBox">${S.prayerData ? prayerCardsHTML() : prayerSkeleton()}</div>
   </div>`;
 }
 function prayerSettingsHTML() {
@@ -1097,6 +1096,10 @@ function viewYt() {
     <span class="yt-thumb"><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"/>
     <span class="yt-play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span>
     <b>${esc(S.lang === 'ar' ? v.reciter : v.reciter_en || v.reciter)}</b><span>${esc(S.lang === 'ar' ? v.title : v.title_en || v.title)}</span></button>`).join('')}</div>`;
+}
+function prayerSkeleton() {
+  const card = '<div class="skel skel-card"></div>';
+  return `<div class="prayer-skel"><div class="skel skel-bar"></div><div class="prayer-grid">${card.repeat(5)}</div><div class="prayer-grid alt">${card.repeat(3)}</div></div>`;
 }
 function prayerCardsHTML() {
   const tm = S.prayerData.timings, hj = S.prayerData.date.hijri;
@@ -1662,7 +1665,7 @@ window.addEventListener('beforeunload', saveSession);
   $('#adhanStop').onclick = stopAdhan;
   $('#btnShuffle').classList.toggle('on', S.shuffle);
   setSpeed(S.speed);
-  $('#view').innerHTML = `<div class="loading"><div class="spinner"></div><span>${t('loading')}</span></div>`;
+  $('#view').innerHTML = `<div class="skel-page"><div class="skel skel-hero"></div><div class="skel-grid">${'<div class="skel skel-card"></div>'.repeat(8)}</div></div>`;
   $('#npMandala').innerHTML = mandalaSVG('أُنس', 'أ', 'القرآن الكريم');
   $('#ovMandala').innerHTML = mandalaSVG('أُنس', 'أ', 'القرآن الكريم');
   $('#pbArtImg').src = avatarURI('أُنس', 'أ');
