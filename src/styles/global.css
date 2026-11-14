@@ -3636,7 +3636,7 @@ html[dir="rtl"] .back-btn .ic {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 12px 30px;
+  padding: 12px 12px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -3699,8 +3699,8 @@ html[dir="rtl"] .back-btn .ic {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-arround;
-  gap: 20px;
+  justify-content: center;
+  gap: 10px;
   width: 100%
 }
 
