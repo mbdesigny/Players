@@ -10,29 +10,22 @@ const vBaldi='/adhan/voices/baldi.mp3';
 const vQatami='/adhan/voices/qatami.mp3';
 import mosqueUrl from '../assets/hero/mosque.jpg?url';
 import ADHKAR from '../data/adhkar.json';
+import{pad,norm,norm2,esc,hash,arDigits,fmt,safeName}from './lib/text.js';
+import{SURAH,surahName,surahNameGlyph,SURAH_PAGE}from './lib/surah.js';
+import{MUSHAF_PAGES,JUZ_PAGE,mushafJuz,mushafSurah,mushafRight,mushafStep}from './lib/mushaf.js';
+import{ED_KEYS,CORS_AUDIO_HOST,corsAudio,serverURL,parseList,buildSources,pickSource}from './lib/sources.js';
+import{prayerTimeStr,countdownStr}from './lib/prayer.js';
 /* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const API='https://mp3quran.net/api/v3';
-const pad=n=>String(n).padStart(3,'0');
-const norm=s=>(s||'').toString().replace(/[\u064B-\u0652\u0670\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/\s+/g,' ').trim().toLowerCase();
-const norm2=s=>norm(s).replace(/\s+/g,'');
-const esc=s=>(s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hash=s=>{let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return Math.abs(h)};
-const arDigits=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
-const fmt=s=>(!isFinite(s)||s<0)?'0:00':`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-const safeName=s=>(s||'').replace(/[\\/:*?"<>|]/g,'-').trim().slice(0,80);
 const store={get(k,d){try{const v=localStorage.getItem('ouns_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ouns_'+k,JSON.stringify(v))}catch(e){}}};
 
 /* ── Surah metadata (114) ── */
-const SURAH=[["الفاتحة","Al-Fatihah",7,0],["البقرة","Al-Baqarah",286,1],["آل عمران","Aal-Imran",200,1],["النساء","An-Nisa",176,1],["المائدة","Al-Ma'idah",120,1],["الأنعام","Al-An'am",165,0],["الأعراف","Al-A'raf",206,0],["الأنفال","Al-Anfal",75,1],["التوبة","At-Tawbah",129,1],["يونس","Yunus",109,0],["هود","Hud",123,0],["يوسف","Yusuf",111,0],["الرعد","Ar-Ra'd",43,1],["إبراهيم","Ibrahim",52,0],["الحجر","Al-Hijr",99,0],["النحل","An-Nahl",128,0],["الإسراء","Al-Isra",111,0],["الكهف","Al-Kahf",110,0],["مريم","Maryam",98,0],["طه","Ta-Ha",135,0],["الأنبياء","Al-Anbiya",112,0],["الحج","Al-Hajj",78,1],["المؤمنون","Al-Mu'minun",118,0],["النور","An-Nur",64,1],["الفرقان","Al-Furqan",77,0],["الشعراء","Ash-Shu'ara",227,0],["النمل","An-Naml",93,0],["القصص","Al-Qasas",88,0],["العنكبوت","Al-Ankabut",69,0],["الروم","Ar-Rum",60,0],["لقمان","Luqman",34,0],["السجدة","As-Sajdah",30,0],["الأحزاب","Al-Ahzab",73,1],["سبأ","Saba",54,0],["فاطر","Fatir",45,0],["يس","Ya-Sin",83,0],["الصافات","As-Saffat",182,0],["ص","Sad",88,0],["الزمر","Az-Zumar",75,0],["غافر","Ghafir",85,0],["فصلت","Fussilat",54,0],["الشورى","Ash-Shura",53,0],["الزخرف","Az-Zukhruf",89,0],["الدخان","Ad-Dukhan",59,0],["الجاثية","Al-Jathiyah",37,0],["الأحقاف","Al-Ahqaf",35,0],["محمد","Muhammad",38,1],["الفتح","Al-Fath",29,1],["الحجرات","Al-Hujurat",18,1],["ق","Qaf",45,0],["الذاريات","Adh-Dhariyat",60,0],["الطور","At-Tur",49,0],["النجم","An-Najm",62,0],["القمر","Al-Qamar",55,0],["الرحمن","Ar-Rahman",78,1],["الواقعة","Al-Waqi'ah",96,0],["الحديد","Al-Hadid",29,1],["المجادلة","Al-Mujadila",22,1],["الحشر","Al-Hashr",24,1],["الممتحنة","Al-Mumtahanah",13,1],["الصف","As-Saff",14,1],["الجمعة","Al-Jumu'ah",11,1],["المنافقون","Al-Munafiqun",11,1],["التغابن","At-Taghabun",18,1],["الطلاق","At-Talaq",12,1],["التحريم","At-Tahrim",12,1],["الملك","Al-Mulk",30,0],["القلم","Al-Qalam",52,0],["الحاقة","Al-Haqqah",52,0],["المعارج","Al-Ma'arij",44,0],["نوح","Nuh",28,0],["الجن","Al-Jinn",28,0],["المزمل","Al-Muzzammil",20,0],["المدثر","Al-Muddaththir",56,0],["القيامة","Al-Qiyamah",40,0],["الإنسان","Al-Insan",31,1],["المرسلات","Al-Mursalat",50,0],["النبأ","An-Naba",40,0],["النازعات","An-Nazi'at",46,0],["عبس","Abasa",42,0],["التكوير","At-Takwir",29,0],["الانفطار","Al-Infitar",19,0],["المطففين","Al-Mutaffifin",36,0],["الانشقاق","Al-Inshiqaq",25,0],["البروج","Al-Buruj",22,0],["الطارق","At-Tariq",17,0],["الأعلى","Al-A'la",19,0],["الغاشية","Al-Ghashiyah",26,0],["الفجر","Al-Fajr",30,0],["البلد","Al-Balad",20,0],["الشمس","Ash-Shams",15,0],["الليل","Al-Layl",21,0],["الضحى","Ad-Duha",11,0],["الشرح","Ash-Sharh",8,0],["التين","At-Tin",8,0],["العلق","Al-Alaq",19,0],["القدر","Al-Qadr",5,0],["البينة","Al-Bayyinah",8,1],["الزلزلة","Az-Zalzalah",8,1],["العاديات","Al-Adiyat",11,0],["القارعة","Al-Qari'ah",11,0],["التكاثر","At-Takathur",8,0],["العصر","Al-Asr",3,0],["الهمزة","Al-Humazah",9,0],["الفيل","Al-Fil",5,0],["قريش","Quraysh",4,0],["الماعون","Al-Ma'un",7,0],["الكوثر","Al-Kawthar",3,0],["الكافرون","Al-Kafirun",6,0],["النصر","An-Nasr",3,1],["المسد","Al-Masad",5,0],["الإخلاص","Al-Ikhlas",4,0],["الفلق","Al-Falaq",5,0],["الناس","An-Nas",6,0]];
-const surahName=(n,lang)=>lang==='ar'?SURAH[n-1][0]:SURAH[n-1][1];
-const surahNameGlyph=n=>String.fromCodePoint(0xE000+(((n/100)|0)<<8|(((n/10)|0)%10)<<4|(n%10)));
 
 /* ── Fallback catalog (offline resilience) ── */
 const FALLBACK=[["مشاري راشد العفاسي","Mishary Rashid Alafasy","https://server8.mp3quran.net/afs/"],["عبد الرحمن السديس","Abdurrahman As-Sudais","https://server11.mp3quran.net/sds/"],["سعود الشريم","Saud Ash-Shuraim","https://server7.mp3quran.net/shur/"],["ماهر المعيقلي","Maher Al Muaiqly","https://server12.mp3quran.net/maher/"],["محمود خليل الحصري","Mahmoud Khalil Al-Husary","https://server13.mp3quran.net/husr/"],["محمد صديق المنشاوي","Mohamed Siddiq El-Minshawi","https://server10.mp3quran.net/minsh/"],["سعد الغامدي","Saad Al-Ghamdi","https://server7.mp3quran.net/s_gmd/"],["أبو بكر الشاطري","Abu Bakr Ash-Shatri","https://server11.mp3quran.net/shatri/"],["ناصر القطامي","Nasser Al Qatami","https://server6.mp3quran.net/qtm/"],["ياسر الدوسري","Yasser Al-Dosari","https://server11.mp3quran.net/yasser/"],["هاني الرفاعي","Hani Ar-Rifai","https://server8.mp3quran.net/hani/"],["أحمد العجمي","Ahmed Al-Ajmi","https://server10.mp3quran.net/ajm/"],["محمد أيوب","Muhammad Ayyoub","https://server8.mp3quran.net/ayyub/"],["عبد الله بصفر","Abdullah Basfar","https://server6.mp3quran.net/bsfr/"],["علي الحذيفي","Ali Al-Hudhaify","https://server9.mp3quran.net/hthfi/"],["إبراهيم الأخضر","Ibrahim Al-Akhdar","https://server6.mp3quran.net/akdr/"],["خالد القحطاني","Khalid Al-Qahtani","https://server10.mp3quran.net/qht/"],["عبد الباسط عبد الصمد","Abdul Basit Abdus-Samad","https://server7.mp3quran.net/basit/"]].map((r,i)=>({id:9000+i,name:r[0],name_en:r[1],moshaf:[{id:1,server:r[2],rewaya:'حفص عن عاصم',name:'مرتل',surah_list:'1-114',surah_total:114}]}));
 
 /* ── Islamic Network CDN edition matching ── */
-const ED_KEYS=[["alafasy","عفاسي","alafasy"],["husary","حصري","husary"],["minshawi","منشاوي","minshawi"],["abdulbasit","عبدالباسط","abdulbasit"],["sudais","سديس","sudais"],["shuraim","شريم","shuraym"],["muaiqly","معيقلي","muaiqly"],["shatri","شاطري","shaatree"],["hudhaify","حذيفي","hudhaify"],["ajmi","عجمي","ajamy"],["ayyoub","ايوب","ayyoub"],["rifai","رفاعي","rifai"],["akhdar","اخضر","akhbar"],["jibreel","جبريل","jibreel"]];
 let EDITIONS=[];
 
 /* ── Verses ── */
@@ -72,8 +65,6 @@ audio.volume=store.get('volume',1);
 /* CORS-safe audio: only route through Web Audio (which requires CORS) for
    hosts verified to send Access-Control-Allow-Origin; never let the analyser
    break playback — non-CORS sources play unrouted with synthetic waves. */
-const CORS_AUDIO_HOST=/^https:\/\/([a-z0-9-]+\.)*mp3quran\.net\//i;
-const corsAudio=url=>!!url&&(url.startsWith('blob:')||CORS_AUDIO_HOST.test(url));
 function setAudioSrc(url){
   if(corsAudio(url)){audio.crossOrigin='anonymous'}
   else if(acx){audio=swapAudioEl()}
@@ -138,35 +129,11 @@ const reciterImg=(r,cls='')=>{const p=photoURL(r.name,r.id);const ava=avatarURI(
 
 /* ═══════════════ DATA ═══════════════ */
 async function api(path,params={}){const u=new URL(API+path);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
-function parseList(str,total){if(!str)return Array.from({length:total||114},(_,i)=>i+1);const out=new Set();String(str).split(',').forEach(tok=>{tok=tok.trim();if(!tok)return;if(tok.includes('-')){const[a,b]=tok.split('-').map(Number);for(let i=a;i<=b;i++)out.add(i)}else{const n=+tok;if(n)out.add(n)}});return[...out].filter(n=>n>=1&&n<=114).sort((a,b)=>a-b)}
-const serverURL=(m,n)=>m.server.replace(/^http:/,'https:').replace(/\/?$/,'/')+pad(n)+'.mp3';
-function buildSources(rar,ren,moshaf,n){
-  const src=[{provider:'MP3Quran',url:serverURL(moshaf,n),bitrate:128}];
-  const nm=norm2(rar+' '+ren), rw=norm2((moshaf.rewaya||'')+' '+(moshaf.name||'')), mj=/مجود|mujawwad|mojawwad/.test(norm2((moshaf.name||'')+(moshaf.rewaya||'')));
-  if(/حفص|hafs/.test(rw)&&EDITIONS.length){
-    for(const[en,ar,key]of ED_KEYS){if(nm.includes(en)||nm.includes(ar)){
-      let cands=EDITIONS.filter(e=>e.identifier.includes(key));
-      if(mj)cands=cands.filter(e=>/mujawwad|mojawwad/.test(e.identifier)).length?cands.filter(e=>/mujawwad|mojawwad/.test(e.identifier)):cands;
-      else cands=cands.filter(e=>!/mujawwad|mojawwad/.test(e.identifier)).length?cands.filter(e=>!/mujawwad|mojawwad/.test(e.identifier)):cands;
-      const e=cands.sort((a,b)=>(b.bitrate||0)-(a.bitrate||0))[0];
-      if(e)src.push({provider:'Islamic Network',url:`https://cdn.islamic.network/quran/audio-surah/${e.bitrate||128}/${e.identifier}/${n}.mp3`,bitrate:e.bitrate||128,ed:e.identifier});
-      break}}
-  }
-  return src;
-}
-function pickSource(track){
-  const s=[...track.sources];
-  if(S.quality==='high')s.sort((a,b)=>(b.bitrate>=192)-(a.bitrate>=192)||b.bitrate-a.bitrate);
-  else if(S.quality==='std')s.sort((a,b)=>Math.abs(a.bitrate-128)-Math.abs(b.bitrate-128));
-  else if(S.quality==='save')s.sort((a,b)=>a.bitrate-b.bitrate);
-  else s.sort((a,b)=>b.bitrate-a.bitrate);
-  return s;
-}
 function makeTrack(r,m,n){
   const meta=SURAH[n-1];
   return {key:`${r.id}:${m.id}:${n}`,n,name_ar:meta[0],name_en:meta[1],ayahs:meta[2],type:meta[3],
     rid:r.id,mid:m.id,rar:r.name,ren:r.name_en||r.name,rewaya:m.rewaya,mname:m.name||m.rewaya,
-    server:m.server,sources:buildSources(r.name,r.name_en||r.name,m,n),duration:0};
+    server:m.server,sources:buildSources(r.name,r.name_en||r.name,m,n,EDITIONS),duration:0};
 }
 const trackName=tr=>S.lang==='ar'?tr.name_ar:tr.name_en;
 const trackReciter=tr=>S.lang==='ar'?tr.rar:tr.ren;
@@ -388,7 +355,7 @@ function playCollection(i,isFav){
 function loadTrack(i,autoplay=true,seek=0){
   if(i<0||i>=S.tracks.length)return;
   S.idx=i;const tr=S.tracks[i];S.current=tr;S.srcIdx=0;
-  const order=pickSource(tr);S.srcOrder=order;
+  const order=pickSource(tr,S.quality);S.srcOrder=order;
   setAudioSrc(order[0].url);audio.playbackRate=S.speed;
   if(seek)audio.addEventListener('loadedmetadata',()=>{audio.currentTime=seek},{once:true});
   if(autoplay)audio.play().catch(()=>{});
@@ -497,9 +464,6 @@ function pushRecent(tr){
 }
 
 /* ═══════════════ MUSHAF ═══════════════ */
-const MUSHAF_PAGES=604;
-const SURAH_PAGE=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
-const JUZ_PAGE=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
 const MUSHAF_LOCAL={
   hafs:import.meta.glob('../assets/mushaf/*.svg',{eager:true,query:'?url',import:'default'}),
   warsh:import.meta.glob('../assets/mushaf-warsh/*.svg',{eager:true,query:'?url',import:'default'})
@@ -602,8 +566,6 @@ async function mushafDownloadAll(btn){
   }
   btn.textContent=orig;btn.title='';btn.disabled=false;delete btn.dataset.busy;mushafZipCancel=null;
 }
-const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
-const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
 function mushafGo(n){
   n=Math.round(n)||0;if(n<0)n=0;if(n>MUSHAF_PAGES)n=MUSHAF_PAGES;
   S.mushafPage=n;store.set('mushafPage',n);
@@ -639,13 +601,6 @@ function mushafCoverHTML(){
 }
 function viewMushaf(){return mushafCoverHTML()}
 const mushafBook=()=>typeof window.matchMedia==='function'&&window.matchMedia('(min-width:900px)').matches;
-const mushafRight=n=>n<=0?0:(n%2===1?n:(n>=MUSHAF_PAGES?MUSHAF_PAGES-1:n-1));
-function mushafStep(n,d){
-  if(!mushafBook())return Math.min(Math.max(0,n+d),MUSHAF_PAGES);
-  const R=mushafRight(n);
-  if(d>0)return R===0?1:Math.min(R+2,MUSHAF_PAGES-1);
-  return R<=1?0:R-2;
-}
 let mushafBarsT;
 function mushafBarsUI(show){
   const w=$('#view .mushaf-wrap');if(!w)return;
@@ -703,7 +658,6 @@ const FALLBACK_CITIES=[
 ];
 const PRAYER_EXTRA=[['Sunrise','sunrise'],['Firstthird','firstThird'],['Lastthird','lastThird']];
 const prayerOff=k=>((S.prayerOffset&&S.prayerOffset[k])||0)*60000;
-const prayerTime=k=>{const v=S.prayerData.timings[k];let m=(+v.slice(11,13))*60+(+v.slice(14,16))+((S.prayerOffset&&S.prayerOffset[k])||0);m=(m%1440+1440)%1440;return `${String((m/60)|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`};
 function setPrayerLoc(lat,lng,name,src){
   S.prayerLoc={lat:+lat,lng:+lng,name:name||S.prayerLoc.name,src:src||S.prayerLoc.src};
   store.set('prayerLoc',S.prayerLoc);S.prayerData=null;S.prayerKey=null;S.prayerSearch=null;render()
@@ -835,14 +789,8 @@ function nextPrayerKey(){
   for(const[k]of PRAYERS){if(new Date(tm[k]).getTime()+prayerOff(k)>now)return k}
   return 'Fajr';
 }
-function prayerCountdownStr(){
-  const tm=S.prayerData.timings,now=Date.now();
-  let nt=null;
-  for(const[k]of PRAYERS){const tt=new Date(tm[k]).getTime()+prayerOff(k);if(tt>now){nt=tt;break}}
-  if(nt===null)nt=new Date(tm.Fajr).getTime()+prayerOff('Fajr')+86400000;
-  const s=Math.max(0,Math.floor((nt-now)/1000));
-  return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-}
+const prayerTime=k=>prayerTimeStr(S.prayerData.timings[k],S.prayerOffset&&S.prayerOffset[k]);
+function prayerCountdownStr(){return countdownStr(S.prayerData.timings,S.prayerOffset,Date.now())}
 const ADHAN_VOICES=[
   {id:'abdulbasit',name:'عبد الباسط عبد الصمد',file:adhanUrl,fajrFile:adhanFajrUrl},
   {id:'qatami',name:'ناصر القطامي',file:vQatami},
@@ -1148,7 +1096,7 @@ function enqueueDownloads(tracks){
 }
 function pumpDL(){while(DL.active<DL.conc){const j=DL.jobs.find(x=>x.state==='pending');if(!j)break;j.state='downloading';DL.active++;runDL(j).finally(()=>{DL.active--;pumpDL();updateCounts()})}}
 async function runDL(job){
-  const tr=job.tr;const src=pickSource(tr)[0];
+  const tr=job.tr;const src=pickSource(tr,S.quality)[0];
   const fname=`${pad(tr.n)} - ${safeName(trackName(tr))}.mp3`;
   job.st.textContent=t('downloading');
   try{
@@ -1386,7 +1334,7 @@ $('#searchInput').addEventListener('input',e=>{S.query=e.target.value;if(S.view=
 $('#qualityScrim').addEventListener('click',e=>{
   const qb=e.target.closest('#segQuality button');
   if(qb){S.quality=qb.dataset.q;store.set('quality',S.quality);buildQualitySeg();
-    if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current);setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}
+    if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current,S.quality);setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}
     return}
   if(e.target.id==='qualityClose'||e.target.id==='qualityScrim')$('#qualityScrim').classList.remove('open');
 });
@@ -1444,8 +1392,8 @@ $('#view').addEventListener('click',async e=>{
     else if(a==='locsearch'){const q=$('#locQ').value.trim();if(q)prayerSearch(q)}
     else if(a==='citypick')setPrayerLoc(act.dataset.lat,act.dataset.lng,act.dataset.name,'manual')
     else if(a==='mtheme')setTheme(S.theme==='light'?'dark':'light');
-    else if(a==='mprev')mushafGo(mushafStep(S.readN,-1));
-    else if(a==='mnext')mushafGo(mushafStep(S.readN,1));
+    else if(a==='mprev')mushafGo(mushafStep(S.readN,-1,mushafBook()));
+    else if(a==='mnext')mushafGo(mushafStep(S.readN,1,mushafBook()));
     else if(a==='openrecent')setView('recent');
     else if(a==='resume'&&S.recent[0]){const f=S.recent[0];const r=S.reciters.find(x=>x.id===f.rid);
       if(r){openReciter(r.id,false);const mi=r.moshaf.findIndex(m=>m.id===f.mid);if(mi>=0&&mi!==0)setMoshaf(mi);
@@ -1507,7 +1455,7 @@ $('#view').addEventListener('touchend',e=>{
   if(e.target.closest('button,select,input,.mushaf-ask'))return;
   const rtl=document.documentElement.dir==='rtl';
   const d=(dx>0)===rtl?1:-1;
-  if(S.readN){mushafGo(mushafStep(S.readN,d));mushafBarsUI(true)}
+  if(S.readN){mushafGo(mushafStep(S.readN,d,mushafBook()));mushafBarsUI(true)}
   else if(d>0){if(mushafLastGet()>1){S.mushafAsk=true;render()}else mushafGo(1)}
 },{passive:true});
 $('#view').addEventListener('touchcancel',()=>{swX=null},{passive:true});
@@ -1594,9 +1542,9 @@ window.addEventListener('beforeunload',saveSession);
     if(r){S.reciter=r;S.moshaf=r.moshaf.find(m=>m.id===sess.mid)||r.moshaf[0];
       S.tracks=parseList(S.moshaf.surah_list,S.moshaf.surah_total).map(n=>makeTrack(r,S.moshaf,n));
       const idx=S.tracks.findIndex(x=>x.n===sess.n);
-      if(idx>=0){S.idx=idx;S.current=S.tracks[idx];S.srcOrder=pickSource(S.current);S.srcIdx=0;
+      if(idx>=0){S.idx=idx;S.current=S.tracks[idx];S.srcOrder=pickSource(S.current,S.quality);S.srcIdx=0;
         setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=sess.pos||0;updateProgress()},{once:true});
         updateNowPlaying();renderQueue()}
-    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr);setAudioSrc(S.srcOrder[0].url);updateNowPlaying()}
+    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr,S.quality);setAudioSrc(S.srcOrder[0].url);updateNowPlaying()}
   }
 })();

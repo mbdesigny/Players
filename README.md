@@ -25,6 +25,20 @@ npm run build     # outputs static site to dist/
 npm run preview   # serve the build locally
 ```
 
+## Quality checks
+
+```bash
+npm test          # unit tests (node:test) for src/scripts/lib modules
+npm run lint      # ESLint over src/scripts/lib and tests/
+npm run format    # Prettier over src/scripts/lib and tests/
+```
+
+Pure logic (text helpers, surah metadata, audio sources, mushaf paging, prayer
+times) lives in `src/scripts/lib/` and is covered by tests in `tests/`. Node
+>= 18 is required (`engines` in `package.json`). `app.js` and `global.css` are
+excluded from Prettier for now to keep diffs small; formatting there is
+gradual.
+
 ## Structure
 
 - `src/pages/index.astro` — page composition

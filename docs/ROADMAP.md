@@ -129,7 +129,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A7 | This documentation sync | **done** |
 | A8 | Adhkar daily progress | **done** |
 | A9 | Adhan duck mode + notifications + location hardening | **done** |
-| A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | pending |
+| A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | **done** — pure logic in `src/scripts/lib/` (text/surah/mushaf/sources/prayer), 29 unit tests via `node:test`, ESLint + Prettier wired (`npm run lint`/`format`/`test`), `engines.node >=18` |
 | A11 | Deduplicate CSS; single `#view` click delegator | pending |
 | A12 | `markPlayingRows()` null-number bug | pending |
 | A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | pending |
@@ -149,6 +149,6 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 ## Suggested order
 
 Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
-A8–A19 in numeric order (A1 deployment setup before the next production
+A11–A19 in numeric order (A1 deployment setup before the next production
 deploy). Each stage ships independently on its own branch/PR; no breaking
 changes to existing `ouns_` state keys.
