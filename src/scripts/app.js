@@ -65,9 +65,39 @@ const S={
   adhkarCat:null, ytId:null, weather:null
 };
 if(store.get('mushafLast',0)>1&&!store.get('mushafLast_hafs',0))store.set('mushafLast_hafs',store.get('mushafLast',0));
-const audio=$('#audio');
-audio.crossOrigin='anonymous';
+let audio=$('#audio');
 audio.volume=store.get('volume',1);
+
+/* CORS-safe audio: only route through Web Audio (which requires CORS) for
+   hosts verified to send Access-Control-Allow-Origin; never let the analyser
+   break playback — non-CORS sources play unrouted with synthetic waves. */
+const CORS_AUDIO_HOST=/^https:\/\/([a-z0-9-]+\.)*mp3quran\.net\//i;
+const corsAudio=url=>!!url&&(url.startsWith('blob:')||CORS_AUDIO_HOST.test(url));
+function setAudioSrc(url){
+  if(corsAudio(url)){audio.crossOrigin='anonymous'}
+  else if(acx){audio=swapAudioEl()}
+  else{audio.removeAttribute('crossorigin')}
+  audio.src=url;
+}
+function swapAudioEl(){
+  const el=document.createElement('audio');
+  el.id='audio';el.preload='metadata';
+  el.volume=audio.volume;el.muted=audio.muted;el.playbackRate=audio.playbackRate;
+  audio.replaceWith(el);
+  try{if(acx)acx.close()}catch(e){ }
+  acx=null;analyser=null;freqData=null;
+  bindAudio(el);
+  return el;
+}
+function bindAudio(el){
+  el.addEventListener('play',()=>{if(corsAudio(el.currentSrc||el.src))ensureAnalyser();if(acx&&acx.state==='suspended')acx.resume()});
+  el.addEventListener('pause',()=>{setPlayingUI(false);saveSession()});
+  el.addEventListener('timeupdate',()=>{updateProgress();if(Math.floor(el.currentTime)%5===0)saveSession()});
+  el.addEventListener('progress',updateBuffer);
+  el.addEventListener('loadedmetadata',()=>{updateProgress();probeBitrate()});
+  el.addEventListener('ended',()=>{if(S.repeat===2){el.currentTime=0;el.play().catch(()=>{})}else nextTrack()});
+  el.addEventListener('error',()=>{if(S.current&&el.src)tryNextSource()});
+}
 
 /* ═══════════════ GENERATIVE ISLAMIC ART ═══════════════ */
 const PAL=[["#2F5D3A","#A8CBA0","#F4F1E8","#C9A24B"],["#1F4030","#D9C9A3","#F7F3E8","#C9A24B"],["#3E6B48","#8FBC8F","#FBF9F3","#B99745"],["#274C3B","#9DCB9D","#EAF2E6","#D4B36A"],["#41563A","#CBB98A","#F4F1E8","#B99745"],["#2C3E30","#B7C9A8","#F7F9F7","#C2A14D"]];
@@ -111,7 +141,7 @@ function parseList(str,total){if(!str)return Array.from({length:total||114},(_,i
 const serverURL=(m,n)=>m.server.replace(/^http:/,'https:').replace(/\/?$/,'/')+pad(n)+'.mp3';
 function buildSources(rar,ren,moshaf,n){
   const src=[{provider:'MP3Quran',url:serverURL(moshaf,n),bitrate:128}];
-  const nm=norm2(rar+' '+ren), rw=norm2(moshaf.rewaya||''), mj=/مجود|mujawwad|mojawwad/.test(norm2((moshaf.name||'')+(moshaf.rewaya||'')));
+  const nm=norm2(rar+' '+ren), rw=norm2((moshaf.rewaya||'')+' '+(moshaf.name||'')), mj=/مجود|mujawwad|mojawwad/.test(norm2((moshaf.name||'')+(moshaf.rewaya||'')));
   if(/حفص|hafs/.test(rw)&&EDITIONS.length){
     for(const[en,ar,key]of ED_KEYS){if(nm.includes(en)||nm.includes(ar)){
       let cands=EDITIONS.filter(e=>e.identifier.includes(key));
@@ -148,7 +178,7 @@ async function loadData(){
     S.reciters=(ar.reciters||[]).filter(r=>r.moshaf&&r.moshaf.length).map(r=>({...r,name_en:enMap.get(r.id)||r.name}));
     if(!S.reciters.length)throw new Error('empty');
   }catch(e){S.reciters=FALLBACK;S.offline=true;toast(t('offline'))}
-  try{const r=await fetch('https://api.alquran.cloud/v1/edition?format=audio&language=ar&type=versebyverse');const j=await r.json();EDITIONS=(j.data||[]).filter(e=>e.bitrate)}catch(e){EDITIONS=[]}
+  try{const r=await fetch('https://api.alquran.cloud/v1/edition/format/audio');const j=await r.json();EDITIONS=(j.data||[]).filter(e=>e.format==='audio'&&e.language==='ar').map(e=>({...e,bitrate:e.bitrate||128}))}catch(e){EDITIONS=[]}
   buildRiwayat();
   $('#cntReciters').textContent=S.reciters.length;
 }
@@ -358,7 +388,7 @@ function loadTrack(i,autoplay=true,seek=0){
   if(i<0||i>=S.tracks.length)return;
   S.idx=i;const tr=S.tracks[i];S.current=tr;S.srcIdx=0;
   const order=pickSource(tr);S.srcOrder=order;
-  audio.src=order[0].url;audio.playbackRate=S.speed;
+  setAudioSrc(order[0].url);audio.playbackRate=S.speed;
   if(seek)audio.addEventListener('loadedmetadata',()=>{audio.currentTime=seek},{once:true});
   if(autoplay)audio.play().catch(()=>{});
   updateNowPlaying();renderQueue();markPlayingRows();pushRecent(tr);saveSession();
@@ -366,7 +396,7 @@ function loadTrack(i,autoplay=true,seek=0){
 function currentSources(){return S.srcOrder||[]}
 function tryNextSource(){
   S.srcIdx++;
-  if(S.srcIdx<currentSources().length){audio.src=currentSources()[S.srcIdx].url;audio.play().catch(()=>{});updateBadges();return true}
+  if(S.srcIdx<currentSources().length){setAudioSrc(currentSources()[S.srcIdx].url);audio.play().catch(()=>{});updateBadges();return true}
   toast(t('errorAudio'));return false;
 }
 function togglePlay(){
@@ -1212,7 +1242,6 @@ function ensureAnalyser(){
     freqData=new Uint8Array(analyser.frequencyBinCount);
   }catch(e){acx=null;analyser=null}
 }
-audio.addEventListener('play',()=>{ensureAnalyser();if(acx&&acx.state==='suspended')acx.resume()});
 document.addEventListener('pointerdown',()=>{if(acx&&acx.state==='suspended')acx.resume()},{capture:true});
 function drawWaves(ts){
   const cv=$('#ovWaves');if(!cv){waveRaf=0;return}
@@ -1226,6 +1255,9 @@ function drawWaves(ts){
     analyser.getByteFrequencyData(freqData);
     const band=(f0,f1)=>{let s=0;for(let i=f0;i<f1;i++)s+=freqData[i];return Math.min(1,s/((f1-f0)*255)*2.1)};
     bands=[band(2,10),band(8,24),band(18,48)];
+  }else if(playing){
+    const tt=ts/1000;
+    bands=[.3+.2*Math.sin(tt*1.1),.24+.16*Math.sin(tt*.9+1.3),.18+.13*Math.sin(tt*.7+2.1)];
   }
   smLevel+=(Math.max(...bands)-smLevel)*.12;
   const t=ts/1000;
@@ -1299,7 +1331,7 @@ $('#searchInput').addEventListener('input',e=>{S.query=e.target.value;if(S.view=
 $('#qualityScrim').addEventListener('click',e=>{
   const qb=e.target.closest('#segQuality button');
   if(qb){S.quality=qb.dataset.q;store.set('quality',S.quality);buildQualitySeg();
-    if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current);audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}
+    if(S.current){const pos=audio.currentTime,was=!audio.paused;S.srcIdx=0;S.srcOrder=pickSource(S.current);setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=pos},{once:true});if(was)audio.play().catch(()=>{});updateBadges()}
     return}
   if(e.target.id==='qualityClose'||e.target.id==='qualityScrim')$('#qualityScrim').classList.remove('open');
 });
@@ -1437,13 +1469,7 @@ $('#npQueue').addEventListener('dragend',()=>{dragIdx=null;$$('.queue-item').for
 if(window.matchMedia){const mqBook=window.matchMedia('(min-width:900px)');if(mqBook.addEventListener)mqBook.addEventListener('change',()=>{if(S.view==='mushaf'&&S.readN)render()})}
 
 /* audio events */
-audio.addEventListener('play',()=>setPlayingUI(true));
-audio.addEventListener('pause',()=>{setPlayingUI(false);saveSession()});
-audio.addEventListener('timeupdate',()=>{updateProgress();if(Math.floor(audio.currentTime)%5===0)saveSession()});
-audio.addEventListener('progress',updateBuffer);
-audio.addEventListener('loadedmetadata',()=>{updateProgress();probeBitrate()});
-audio.addEventListener('ended',()=>{if(S.repeat===2){audio.currentTime=0;audio.play().catch(()=>{})}else nextTrack()});
-audio.addEventListener('error',()=>{if(S.current&&audio.src)tryNextSource()});
+bindAudio(audio);
 if('mediaSession'in navigator){
   navigator.mediaSession.setActionHandler('play',()=>audio.play());
   navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
@@ -1512,8 +1538,8 @@ window.addEventListener('beforeunload',saveSession);
       S.tracks=parseList(S.moshaf.surah_list,S.moshaf.surah_total).map(n=>makeTrack(r,S.moshaf,n));
       const idx=S.tracks.findIndex(x=>x.n===sess.n);
       if(idx>=0){S.idx=idx;S.current=S.tracks[idx];S.srcOrder=pickSource(S.current);S.srcIdx=0;
-        audio.src=S.srcOrder[0].url;audio.addEventListener('loadedmetadata',()=>{audio.currentTime=sess.pos||0;updateProgress()},{once:true});
+        setAudioSrc(S.srcOrder[0].url);audio.addEventListener('loadedmetadata',()=>{audio.currentTime=sess.pos||0;updateProgress()},{once:true});
         updateNowPlaying();renderQueue()}
-    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr);audio.src=S.srcOrder[0].url;updateNowPlaying()}
+    }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr);setAudioSrc(S.srcOrder[0].url);updateNowPlaying()}
   }
 })();
