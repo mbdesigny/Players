@@ -1549,4 +1549,7 @@ window.addEventListener('beforeunload',saveSession);
         updateNowPlaying();renderQueue()}
     }else{const tr=rebuildTrack(sess);S.tracks=[tr];S.idx=0;S.current=tr;S.srcOrder=pickSource(tr,S.quality);setAudioSrc(S.srcOrder[0].url);updateNowPlaying()}
   }
+  /* deep link: /?view=... (PWA shortcuts) */
+  const dv=new URLSearchParams(location.search).get('view');
+  if(dv&&['reciters','favorites','recent','mushaf','adhkar','prayer','yt'].includes(dv))setView(dv);
 })();

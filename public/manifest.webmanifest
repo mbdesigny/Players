@@ -18,5 +18,15 @@
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "/screenshots/home-wide.jpg", "sizes": "1280x720", "type": "image/jpeg", "form_factor": "wide", "label": "الصفحة الرئيسية — أُنس" },
+    { "src": "/screenshots/home-narrow.jpg", "sizes": "720x1280", "type": "image/jpeg", "form_factor": "narrow", "label": "الصفحة الرئيسية — الهاتف" }
+  ],
+  "shortcuts": [
+    { "name": "المصحف", "short_name": "المصحف", "url": "/?view=mushaf", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "مواقيت الصلاة", "short_name": "المواقيت", "url": "/?view=prayer", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "القرّاء", "short_name": "القرّاء", "url": "/?view=reciters", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "الأذكار", "short_name": "الأذكار", "url": "/?view=adhkar", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }
