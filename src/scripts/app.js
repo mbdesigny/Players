@@ -15,6 +15,7 @@ import{SURAH,surahName,surahNameGlyph,SURAH_PAGE}from './lib/surah.js';
 import{MUSHAF_PAGES,JUZ_PAGE,mushafJuz,mushafSurah,mushafRight,mushafStep}from './lib/mushaf.js';
 import{ED_KEYS,CORS_AUDIO_HOST,corsAudio,serverURL,parseList,buildSources,pickSource}from './lib/sources.js';
 import{prayerTimeStr,countdownStr}from './lib/prayer.js';
+import{apiFetch,nominatimSearch}from './lib/api.js';
 /* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const API='https://mp3quran.net/api/v3';
@@ -128,7 +129,7 @@ function photoURL(name,id){const n=norm2(name);const ex=RECITER_PHOTOS_EXACT[n];
 const reciterImg=(r,cls='')=>{const p=photoURL(r.name,r.id);const ava=avatarURI(r.name,reciterLetter(r));return p?`<img class="${cls}" src="${p}" alt="${esc(reciterName(r))}" loading="lazy" onerror="this.onerror=null;this.src='${ava}'">`:`<img class="${cls}" src="${ava}" alt="${esc(reciterName(r))}" loading="lazy">`};
 
 /* ═══════════════ DATA ═══════════════ */
-async function api(path,params={}){const u=new URL(API+path);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+async function api(path,params={}){const u=new URL(API+path);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));return apiFetch(u.toString(),{timeout:12000,retries:1,ttl:300000})}
 function makeTrack(r,m,n){
   const meta=SURAH[n-1];
   return {key:`${r.id}:${m.id}:${n}`,n,name_ar:meta[0],name_en:meta[1],ayahs:meta[2],type:meta[3],
@@ -146,7 +147,7 @@ async function loadData(){
     S.reciters=(ar.reciters||[]).filter(r=>r.moshaf&&r.moshaf.length).map(r=>({...r,name_en:enMap.get(r.id)||r.name}));
     if(!S.reciters.length)throw new Error('empty');
   }catch(e){S.reciters=FALLBACK;S.offline=true;toast(t('offline'))}
-  try{const r=await fetch('https://api.alquran.cloud/v1/edition/format/audio');const j=await r.json();EDITIONS=(j.data||[]).filter(e=>e.format==='audio'&&e.language==='ar').map(e=>({...e,bitrate:e.bitrate||128}))}catch(e){EDITIONS=[]}
+  try{const j=await apiFetch('https://api.alquran.cloud/v1/edition/format/audio',{timeout:12000,retries:1,ttl:21600000});EDITIONS=(j.data||[]).filter(e=>e.format==='audio'&&e.language==='ar').map(e=>({...e,bitrate:e.bitrate||128}))}catch(e){EDITIONS=[]}
   buildRiwayat();
   $('#cntReciters').textContent=S.reciters.length;
 }
@@ -200,8 +201,7 @@ async function loadWeather(){
   const L=S.prayerLoc;
   if(S.weather&&S.weather.lat===L.lat&&Date.now()-S.weather.at<1800000){paintWeather();return}
   try{
-    const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lng}&current=temperature_2m,weather_code`);
-    const j=await res.json();
+    const j=await apiFetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lng}&current=temperature_2m,weather_code`,{timeout:8000,retries:1});
     if(!j.current)throw new Error('no current');
     S.weather={at:Date.now(),lat:L.lat,t:Math.round(j.current.temperature_2m),c:j.current.weather_code};
     paintWeather();
@@ -664,8 +664,7 @@ function setPrayerLoc(lat,lng,name,src){
 }
 async function reverseGeo(lat,lng){
   try{
-    const r=await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=${S.lang==='ar'?'ar':'en'}`);
-    const j=await r.json();
+    const j=await apiFetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=${S.lang==='ar'?'ar':'en'}`,{timeout:8000,retries:1,ttl:86400000});
     return j.city||j.locality||j.principalSubdivision||''
   }catch(e){return ''}
 }
@@ -678,14 +677,10 @@ function detectGPS(){
     },()=>res(null),{enableHighAccuracy:true,timeout:10000,maximumAge:300000})
   })
 }
-const fetchT=(u,ms)=>Promise.race([
-  fetch(u).then(r=>r.ok?r.json():null).catch(()=>null),
-  new Promise(res=>setTimeout(()=>res(null),ms))
-]);
 async function detectIP(){
-  const j=await fetchT('https://get.geojs.io/v1/ip/geo.json',7000)
-      ||await fetchT('https://ipwho.is/',7000)
-      ||await fetchT('https://ipapi.co/json/',7000);
+  const j=await apiFetch('https://get.geojs.io/v1/ip/geo.json',{timeout:7000,retries:0}).catch(()=>null)
+      ||await apiFetch('https://ipwho.is/',{timeout:7000,retries:0}).catch(()=>null)
+      ||await apiFetch('https://ipapi.co/json/',{timeout:7000,retries:0}).catch(()=>null);
   if(!j)return null;
   const lat=j.latitude!=null?j.latitude:j.lat,lng=j.longitude!=null?j.longitude:j.lng;
   if(lat==null||lng==null||isNaN(+lat)||isNaN(+lng))return null;
@@ -772,8 +767,7 @@ async function fetchPrayer(){
   const key=`${L.lat},${L.lng},${day}`;
   if(S.prayerData&&S.prayerKey===key)return;
   try{
-    const res=await fetch(`https://api.aladhan.com/v1/timings/${day}?latitude=${L.lat}&longitude=${L.lng}&method=3&iso8601=true`);
-    const j=await res.json();
+    const j=await apiFetch(`https://api.aladhan.com/v1/timings/${day}?latitude=${L.lat}&longitude=${L.lng}&method=3&iso8601=true`,{timeout:10000,retries:1,ttl:3600000});
     if(j.code!==200)throw new Error(j.code);
     S.prayerData=j.data;S.prayerKey=key;
   }catch(e){S.prayerData=null}
@@ -1049,8 +1043,7 @@ async function prayerSearch(q){
   const box=$('#locRes');if(!box)return;
   box.innerHTML=`<span class="lr-empty">${t('loading')}</span>`;
   try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5`,{headers:{'Accept-Language':S.lang}});
-    const list=await res.json();
+    const list=await nominatimSearch(q,S.lang);
     if(!list.length){box.innerHTML=`<span class="lr-empty">${t('locNotFound')}</span>`;return}
     box.innerHTML=list.map(r=>`<button class="loc-item" data-loc="${r.lat},${r.lon},${esc(r.display_name.split(',').slice(0,2).join('،'))}">${esc(r.display_name)}</button>`).join('');
   }catch(e){box.innerHTML=`<span class="lr-empty">${t('locNotFound')}</span>`}

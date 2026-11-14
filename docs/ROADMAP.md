@@ -132,7 +132,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | **done** — pure logic in `src/scripts/lib/` (text/surah/mushaf/sources/prayer), 29 unit tests via `node:test`, ESLint + Prettier wired (`npm run lint`/`format`/`test`), `engines.node >=18` |
 | A11 | Deduplicate CSS; single `#view` click delegator | **done** — removed duplicate MUSHAF-1 section (merged unique props into MUSHAF-2), slimmed duplicate MOBILE-2 media blocks to unique rules (kept after base mushaf rules so cascade still wins), merged the two `#view` click handlers into one delegator; RESTORED-BASE section analyzed and intentionally kept (its 2 overlapping selectors are live partial overrides, not dead duplication) |
 | A12 | `markPlayingRows()` null-number bug | **done** — rows now carry `data-n` (both reciter rows and collection rows), so un-marking always restores the real surah number; removed the dead `(row.dataset.coll!=null?null:null)` expression |
-| A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | pending |
+| A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | **done** — `src/scripts/lib/api.js`: `apiFetch` with AbortController timeout, retry with backoff (5xx/429/network, fail-fast on 4xx), in-memory TTL cache; wired into mp3quran, alquran.cloud editions, open-meteo, bigdatacloud, geo IP chain, aladhan; `nominatimSearch` sends `Accept-Language` + identifying `User-Agent` and throttles to ~1 req/sec |
 | A14 | Service worker cache versioning + mushaf offline | pending |
 | A15 | SSR-time lang/dir + missing i18n keys | pending |
 | A16 | sitemap.xml, robots, manifest screenshots/shortcuts | pending |
