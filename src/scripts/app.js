@@ -213,9 +213,9 @@ async function loadWeather(){
 function viewHome(){
   const h=new Date().getHours();const greet=h<12?t('greetM'):t('greetE');
   const last=S.recent[0];
-  const featKeys=[['صديق المنشاوي','المنشاوي'],['عبد الباسط','عبدالباسط'],['بدر التركي','التركي'],['سعود الشريم','الشريم'],['محمد ديبروف','ديبروف'],['ياسر الدوسري','الدوسري'],['ماهر المعيقلي','المعيقلي'],['عبد الله الموسى','الموسى'],['عبدالعزيز السحيم','عبدالعزيز سحيم','السحيم','سحيم'],['هيثم الدخين','الدخين']];
+  const featKeys=[['صديق المنشاوي','المنشاوي'],['عبد الباسط','عبدالباسط'],['بدر التركي','التركي'],['سعود الشريم','الشريم'],['محمد ديبيروف','ديبيروف','ديبروف'],['ياسر الدوسري','الدوسري'],['ماهر المعيقلي','المعيقلي'],['عبد الله الموسى','الموسى'],['عبدالعزيز السحيم','عبدالعزيز سحيم','السحيم','سحيم'],['هيثم الدخين','الدخين'],['إسلام صبحي','صبحي'],['أحمد بن علي العجمي','العجمي'],['رعد محمد الكردي','رعد الكردي'],['ناصر القطامي','القطامي'],['صلاح بو خاطر','بو خاطر'],['هزاع البلوشي','البلوشي']];
   let feat=featKeys.map(ks=>ks.map(k=>S.reciters.find(r=>norm2(r.name).includes(norm2(k)))).find(Boolean)).filter(Boolean);
-  if(feat.length<6)feat=[...feat,...S.reciters.filter(r=>!feat.includes(r))].slice(0,10);
+  if(feat.length<6)feat=[...feat,...S.reciters.filter(r=>!feat.includes(r))].slice(0,16);
   const quick=[1,2,18,36,55,56,67,76,112,113,114];
   const num=n=>S.lang==='ar'?arDigits(n):n;
   const npKey=nextPrayerKey();
@@ -252,7 +252,7 @@ function viewHome(){
   <div class="quick-grid">${quick.map(n=>{const m=SURAH[n-1];return `<button class="quick-surah" data-surah="${n}" title="${esc(surahName(n,S.lang))}"><span class="qn">${num(n)}</span><span><span class="qt sn-font" aria-label="${esc(surahName(n,S.lang))}">${surahNameGlyph(n)}</span><br><span class="qs">${m[2]} ${t('ayahs')} · ${m[3]?t('medinan'):t('meccan')}</span></span><span class="qplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`}).join('')}</div>
   ${orn}
   <div class="view-head"><div><h2>${t('featured')}</h2><div class="sub">${t('recitersSub')}</div></div><button class="btn sm" data-act="browse">${t('browse')}</button></div>
-  <div class="reciter-grid">${feat.slice(0,10).map(reciterCard).join('')}</div>`;
+  <div class="reciter-grid">${feat.slice(0,16).map(reciterCard).join('')}</div>`;
 }
 function reciterCard(r){
   const ms=S.rewaya==='__all'?r.moshaf:r.moshaf.filter(m=>norm(m.rewaya)===S.rewaya);
@@ -313,8 +313,8 @@ function collectionRow(f,tr,i,isFav){
   const playing=S.current&&S.current.key===tr.key;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
   return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-key="${tr.key}">
-    <div class="s-head"><span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span><span class="sa">${esc(prim)}</span></div>
-    <span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span>
+    <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
+    <span class="si"><span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span><span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
     <span class="acts">
       ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
