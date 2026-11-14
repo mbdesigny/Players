@@ -141,6 +141,45 @@
   --sidebar: 264px;
   --np: 344px;
   --player: 96px;
+
+  /* ─── B3: unified type scale ───
+     Small/body tiers are rem (relative to a 16px root); display tiers are
+     fluid via clamp() so headings shrink on phones without extra media rules.
+     Values were normalised to a single ladder so every component reads the
+     same scale instead of scattering one-off px values. */
+  --fs-3xs: 0.625rem;                                     /* 10 */
+  --fs-2xs: 0.6875rem;                                    /* 11 */
+  --fs-xs: 0.75rem;                                       /* 12 */
+  --fs-sm: 0.8125rem;                                     /* 13 */
+  --fs-base: 0.875rem;                                    /* 14 */
+  --fs-md: 0.9375rem;                                     /* 15 */
+  --fs-lg: 1rem;                                          /* 16 */
+  --fs-xl: 1.0625rem;                                     /* 17 */
+  --fs-2xl: clamp(1.125rem, 0.9vw + 0.9rem, 1.25rem);     /* 18 → 20 */
+  --fs-3xl: clamp(1.1875rem, 1.3vw + 0.9rem, 1.375rem);   /* 19 → 22 */
+  --fs-4xl: clamp(1.25rem, 2vw + 0.6rem, 1.5rem);         /* 20 → 24 */
+  --fs-5xl: clamp(1.3125rem, 2.8vw + 0.5rem, 1.625rem);   /* 21 → 26 */
+  --fs-6xl: clamp(1.375rem, 3.2vw + 0.65rem, 1.875rem);   /* 22 → 30 */
+  --fs-7xl: clamp(1.5rem, 3.6vw + 0.6rem, 2.125rem);      /* 24 → 34 */
+  --fs-8xl: clamp(1.625rem, 4.4vw + 0.65rem, 2.25rem);    /* 26 → 36 */
+  --fs-9xl: clamp(2rem, 6vw + 0.9rem, 3rem);              /* 32 → 48 */
+
+  /* ─── B3: unified spacing scale ─── */
+  --sp-1: 4px;
+  --sp-2: 6px;
+  --sp-3: 8px;
+  --sp-4: 10px;
+  --sp-5: 12px;
+  --sp-6: 14px;
+  --sp-7: 16px;
+  --sp-8: 20px;
+  --sp-9: 24px;
+  --sp-10: 28px;
+
+  /* ─── B3: layout rhythm (fluid gutters) ─── */
+  --gutter: clamp(14px, 2.2vw, 26px);
+  --gutter-y: clamp(8px, 1.4vw, 16px);
+  --grid-gap: clamp(10px, 1.2vw, 16px);
 }
 
 [data-theme="dark"] {
@@ -214,7 +253,7 @@ body {
   color: var(--ink);
   overflow: hidden;
   font-family: "Alan Sans", system-ui, sans-serif;
-  font-size: 15px;
+  font-size: var(--fs-md);
   line-height: 1.5;
   display: flex;
   flex-direction: column;
@@ -395,7 +434,7 @@ svg {
 
 .brand-mark span {
   font-family: "Amiri", serif;
-  font-size: 26px;
+  font-size: var(--fs-5xl);
   font-weight: 700;
   position: relative;
   z-index: 1
@@ -407,13 +446,13 @@ svg {
 
 .brand-name b {
   font-family: "Amiri", serif;
-  font-size: 27px;
+  font-size: var(--fs-5xl);
   font-weight: 700;
   display: block
 }
 
 .brand-name small {
-  font-size: 10px;
+  font-size: var(--fs-3xs);
   letter-spacing: 3.5px;
   color: var(--gold-ink);
   font-weight: 600;
@@ -421,7 +460,7 @@ svg {
 }
 
 .nav-label {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   letter-spacing: 1.6px;
   text-transform: uppercase;
   color: var(--ink2);
@@ -437,7 +476,7 @@ svg {
   border-radius: var(--r-sm);
   color: var(--ink2);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--fs-base);
   border: 1px solid transparent;
   transition: .18s;
   width: 100%;
@@ -470,7 +509,7 @@ svg {
 
 .nav-item .cnt {
   margin-inline-start: auto;
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   background: var(--bg2);
   border-radius: 20px;
   padding: 1px 8px;
@@ -505,7 +544,7 @@ svg {
 }
 
 .verse-card .vlabel {
-  font-size: 10px;
+  font-size: var(--fs-3xs);
   letter-spacing: 1.5px;
   color: var(--gold-ink);
   text-transform: uppercase;
@@ -515,13 +554,13 @@ svg {
 
 .verse-card .vtext {
   font-family: "Amiri", serif;
-  font-size: 17px;
+  font-size: var(--fs-xl);
   line-height: 1.9;
   transition: opacity .5s
 }
 
 .verse-card .vref {
-  font-size: 11.5px;
+  font-size: var(--fs-2xs);
   color: var(--ink2);
   margin-top: 8px
 }
@@ -532,7 +571,7 @@ svg {
 }
 
 .side-foot {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   color: var(--ink2);
   text-align: center;
   padding-top: 12px;
@@ -544,7 +583,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 26px 12px;
+  padding: var(--gutter-y) var(--gutter) 12px;
   flex: none
 }
 
@@ -572,7 +611,7 @@ svg {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 40px;
-  font-size: 13.5px;
+  font-size: var(--fs-sm);
   transition: .2s
 }
 
@@ -609,7 +648,7 @@ svg {
 }
 
 .icon-btn.txt {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: .5px
 }
@@ -623,7 +662,8 @@ main {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 8px 26px 30px
+  overflow-x: clip;
+  padding: var(--gutter-y) var(--gutter) calc(var(--gutter) + 4px)
 }
 
 .view-head {
@@ -636,12 +676,12 @@ main {
 }
 
 .view-head h2 {
-  font-size: 26px
+  font-size: var(--fs-5xl)
 }
 
 .view-head .sub {
   color: var(--ink2);
-  font-size: 13px;
+  font-size: var(--fs-sm);
   margin-top: 2px
 }
 
@@ -668,8 +708,6 @@ main {
 
 /* ═══════════════ mobile responsiveness ═══════════════ */
 @media(max-width:640px){
-  .hero h1{font-size:24px}
-  .view-head h2{font-size:21px}
   .np-overlay{padding:16px}
   .ov-mandala{width:min(36vh,64vw,280px)}
   .ov-badges{margin:10px 0 12px}
@@ -755,7 +793,7 @@ main {
 }
 
 .rh-info h2 {
-  font-size: 24px;
+  font-size: var(--fs-4xl);
   margin-bottom: 6px
 }
 
@@ -779,14 +817,14 @@ main {
   border-radius: 30px;
   border: 1px solid var(--line2);
   background: var(--surface2);
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   max-width: 290px
 }
 
 .surah-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px
+  gap: var(--grid-gap)
 }
 
 @media(max-width:1180px) {
@@ -841,7 +879,7 @@ main {
   position: relative;
   color: var(--accent);
   font-weight: 600;
-  font-size: 13px
+  font-size: var(--fs-sm)
 }
 
 .surah-row .sn::before {
@@ -882,7 +920,7 @@ main {
 
 .surah-row .sa {
   font-family: 'SuraNames', 'Amiri', serif;
-  font-size: 48px;
+  font-size: var(--fs-9xl);
   line-height: 1.25;
   min-width: 0;
   overflow: hidden;
@@ -891,7 +929,7 @@ main {
 }
 
 .surah-row .se {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   color: var(--ink2);
   display: block;
   margin-top: 2px;
@@ -918,7 +956,7 @@ main {
 }
 
 .surah-row .dur {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--ink2);
   font-variant-numeric: tabular-nums;
   min-width: 46px;
@@ -1159,7 +1197,7 @@ body:not(.playing) .mandala-svg .spin-c {
 
 .mandala-svg .m-num {
   font-family: "Amiri", serif;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   font-weight: 700
 }
 
@@ -1327,11 +1365,11 @@ body.np-float .np-art {
 }
 
 body.np-float .np-title {
-  font-size: 22px
+  font-size: var(--fs-3xl)
 }
 
 .np-label {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   letter-spacing: 1.8px;
   text-transform: uppercase;
   color: var(--gold-ink);
@@ -1357,19 +1395,19 @@ body.np-float .np-title {
 
 .np-title {
   font-family: "Amiri", serif;
-  font-size: 30px;
+  font-size: var(--fs-6xl);
   text-align: center;
   line-height: 1.25
 }
 
 .np-title .sn-font {
-  font-size: 34px
+  font-size: var(--fs-7xl)
 }
 
 .np-artist {
   text-align: center;
   color: var(--ink2);
-  font-size: 13.5px;
+  font-size: var(--fs-sm);
   margin-top: 2px
 }
 
@@ -1402,7 +1440,7 @@ body.np-float .np-title {
 }
 
 .queue-head {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   letter-spacing: 1.4px;
   text-transform: uppercase;
   color: var(--ink2);
@@ -1447,7 +1485,7 @@ body.np-float .np-title {
 
 .queue-item .qi-n {
   width: 24px;
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   color: var(--ink2);
   text-align: center;
   flex: none;
@@ -1462,7 +1500,7 @@ body.np-float .np-title {
 .queue-item .qi-t {
   flex: 1;
   min-width: 0;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -1470,7 +1508,7 @@ body.np-float .np-title {
 }
 
 .queue-item .qi-d {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   color: var(--ink2);
   direction: ltr
 }
@@ -1565,14 +1603,14 @@ body.np-float .np-title {
 
 .pb-title {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--fs-base);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis
 }
 
 .pb-sub {
-  font-size: 11.5px;
+  font-size: var(--fs-2xs);
   color: var(--ink2);
   white-space: nowrap;
   overflow: hidden;
@@ -1626,7 +1664,7 @@ body.np-float .np-title {
   position: absolute;
   top: -2px;
   inset-inline-end: -2px;
-  font-size: 8.5px;
+  font-size: var(--fs-3xs);
   font-weight: 800;
   background: var(--gold);
   color: var(--on-gold);
@@ -1683,7 +1721,7 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 }
 
 .pb-progress .t {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   color: var(--ink2);
   font-variant-numeric: tabular-nums;
   min-width: 36px
@@ -1768,7 +1806,7 @@ html[dir="rtl"] .prog .fill {
   border-radius: 20px;
   border: 1px solid var(--line);
   background: var(--surface2);
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   cursor: pointer;
   color: var(--ink2)
 }
@@ -1792,7 +1830,7 @@ html[dir="rtl"] .prog .fill {
   position: absolute;
   top: -4px;
   inset-inline-end: -4px;
-  font-size: 8px;
+  font-size: var(--fs-3xs);
   background: var(--gold);
   color: var(--on-gold);
   border-radius: 8px;
@@ -1829,7 +1867,7 @@ html[dir="rtl"] .prog .fill {
   justify-content: space-between;
   padding: 8px 12px;
   border-radius: 8px;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   color: var(--ink2)
 }
 
@@ -1885,7 +1923,7 @@ html[dir="rtl"] .prog .fill {
 }
 
 .ov-top .lbl {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--gold-ink);
@@ -1938,7 +1976,7 @@ html[dir="rtl"] .prog .fill {
 
 .ov-artist {
   color: var(--ink2);
-  font-size: 15px;
+  font-size: var(--fs-md);
   margin-top: 4px;
   position: relative;
   z-index: 1
@@ -2034,7 +2072,7 @@ html[dir="rtl"] .prog .fill {
 }
 
 .modal h3 {
-  font-size: 20px;
+  font-size: var(--fs-2xl);
   margin-bottom: 18px;
   display: flex;
   align-items: center;
@@ -2059,12 +2097,12 @@ html[dir="rtl"] .prog .fill {
 }
 
 .set-row .sl {
-  font-size: 13.5px;
+  font-size: var(--fs-sm);
   font-weight: 600
 }
 
 .set-row .sd {
-  font-size: 11.5px;
+  font-size: var(--fs-2xs);
   color: var(--ink2)
 }
 
@@ -2079,7 +2117,7 @@ html[dir="rtl"] .prog .fill {
 .seg button {
   padding: 6px 16px;
   border-radius: 30px;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--ink2);
   transition: .15s
@@ -2098,7 +2136,7 @@ html[dir="rtl"] .prog .fill {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--ink2)
 }
 
@@ -2107,7 +2145,7 @@ kbd {
   border: 1px solid var(--line2);
   border-radius: 6px;
   padding: 1px 8px;
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   font-family: inherit
 }
 
@@ -2152,7 +2190,7 @@ kbd {
 }
 
 .drawer .d-head b {
-  font-size: 14px;
+  font-size: var(--fs-base);
   flex: 1
 }
 
@@ -2165,7 +2203,7 @@ kbd {
 }
 
 .dl-job {
-  font-size: 12px
+  font-size: var(--fs-xs)
 }
 
 .dl-job .dj-t {
@@ -2185,7 +2223,7 @@ kbd {
 .dl-job .dj-s {
   color: var(--ink2);
   flex: none;
-  font-size: 11px
+  font-size: var(--fs-2xs)
 }
 
 .dl-job .dj-bar {
@@ -2227,7 +2265,7 @@ kbd {
   color: var(--bg);
   padding: 11px 18px;
   border-radius: var(--r-md);
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 500;
   box-shadow: var(--shadow);
   display: flex;
@@ -2240,7 +2278,7 @@ kbd {
 .toast button {
   color: var(--gold-on-ink);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   flex: none
 }
 
@@ -2394,14 +2432,6 @@ kbd {
     display: grid
   }
 
-  main {
-    padding: 6px 16px 24px
-  }
-
-  .topbar {
-    padding: 12px 16px 8px
-  }
-
   .reciter-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px
@@ -2494,10 +2524,10 @@ body.mushaf-full #view {
   padding: 7px 26px 7px 12px;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: var(--surface2) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F6E5B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center / 14px;
+  background: var(--surface2) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2357654F' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center / 14px;
   color: var(--ink);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   cursor: pointer;
   text-overflow: ellipsis;
@@ -2524,14 +2554,14 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mt-center span {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--ink2);
   font-variant-numeric: tabular-nums;
   white-space: nowrap
 }
 
 .mt-center b {
-  font-size: 15.5px
+  font-size: var(--fs-md)
 }
 
 .mt-actions {
@@ -2597,7 +2627,7 @@ html[dir="rtl"] .mt-sel {
   color: var(--ink);
   border: 1px solid var(--line2);
   box-shadow: var(--shadow2);
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   padding: 8px 16px
 }
 
@@ -2737,11 +2767,11 @@ html[dir="rtl"] .mt-sel {
 }
 
 .ma-card b {
-  font-size: 16px
+  font-size: var(--fs-lg)
 }
 
 .ma-card span {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--ink2);
   margin-bottom: 6px
 }
@@ -2754,7 +2784,7 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mf-num {
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   color: var(--ink2);
   font-variant-numeric: tabular-nums;
   min-width: 86px;
@@ -2809,12 +2839,12 @@ html[dir="rtl"] .back-btn .ic {
   }
 
   .hero .eyebrow {
-    font-size: 11px;
+    font-size: var(--fs-2xs);
     margin-bottom: 7px
   }
 
   .hero p {
-    font-size: 13.5px
+    font-size: var(--fs-sm)
   }
 
   .mt-nav {
@@ -2823,7 +2853,7 @@ html[dir="rtl"] .back-btn .ic {
 
   .mt-sel {
     max-width: 130px;
-    font-size: 12px;
+    font-size: var(--fs-xs);
     padding-block: 6px
   }
 
@@ -2854,7 +2884,7 @@ html[dir="rtl"] .back-btn .ic {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   color: var(--ink2);
   margin-top: 4px
@@ -2890,7 +2920,7 @@ html[dir="rtl"] .back-btn .ic {
 .prayer-loc b {
   flex: 1;
   min-width: 0;
-  font-size: 15px;
+  font-size: var(--fs-md);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap
@@ -2915,7 +2945,7 @@ html[dir="rtl"] .back-btn .ic {
   padding: 9px 12px;
   color: var(--ink);
   font: inherit;
-  font-size: 13.5px
+  font-size: var(--fs-sm)
 }
 
 .prayer-search input:focus {
@@ -2930,7 +2960,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .lr-empty {
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   color: var(--ink2);
   padding: 4px 2px
 }
@@ -2943,7 +2973,7 @@ html[dir="rtl"] .back-btn .ic {
   padding: 9px 12px;
   color: var(--ink);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2959,13 +2989,13 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .loc-chips-lab {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   color: var(--ink2)
 }
 
 .loc-chip {
   font-family: inherit;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--ink);
   background: var(--surface2);
   border: 1px solid var(--line);
@@ -3008,12 +3038,12 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .prayer-next span {
-  font-size: 14px;
+  font-size: var(--fs-base);
   opacity: .92
 }
 
 .prayer-next b {
-  font-size: 30px;
+  font-size: var(--fs-6xl);
   font-variant-numeric: tabular-nums;
   letter-spacing: 1px;
   white-space: nowrap
@@ -3037,12 +3067,12 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .prayer-card span {
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   color: var(--ink2)
 }
 
 .prayer-card b {
-  font-size: 22px;
+  font-size: var(--fs-3xl);
   font-variant-numeric: tabular-nums;
   color: var(--ink)
 }
@@ -3059,7 +3089,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .prayer-date {
   text-align: center;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   color: var(--ink2);
   margin-top: 4px;
   padding-top: 16px;
@@ -3080,11 +3110,11 @@ html[dir="rtl"] .back-btn .ic {
   }
 
   .prayer-next b {
-    font-size: 24px
+    font-size: var(--fs-4xl)
   }
 
   .prayer-loc b {
-    font-size: 13.5px
+    font-size: var(--fs-sm)
   }
 }
 
@@ -3165,7 +3195,7 @@ html[dir="rtl"] .back-btn .ic {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--fs-base);
   color: var(--gold2-ink);
   font-weight: 700
 }
@@ -3180,13 +3210,13 @@ html[dir="rtl"] .back-btn .ic {
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
-  font-size: 28px;
+  font-size: var(--fs-6xl);
   font-weight: 800;
   margin-top: 6px
 }
 
 .hp-time {
-  font-size: 20px;
+  font-size: var(--fs-2xl);
   font-weight: 700;
   color: var(--gold2-ink);
   font-variant-numeric: tabular-nums
@@ -3196,7 +3226,7 @@ html[dir="rtl"] .back-btn .ic {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  font-size: 15px;
+  font-size: var(--fs-md);
   color: rgba(247, 243, 232, .75)
 }
 
@@ -3215,21 +3245,21 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .hp-weather .hw-ic {
-  font-size: 34px;
+  font-size: var(--fs-7xl);
   line-height: 1;
   flex: none
 }
 
 .hp-weather .hw-t {
   font-weight: 800;
-  font-size: 25px;
+  font-size: var(--fs-4xl);
   color: #F7F3E8;
   font-variant-numeric: tabular-nums;
   flex: none
 }
 
 .hp-weather .hw-d {
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   line-height: 1.35;
   color: rgba(247, 243, 232, .78);
   overflow: hidden;
@@ -3264,7 +3294,7 @@ html[dir="rtl"] .back-btn .ic {
   flex: 1;
   min-width: 64px;
   font-weight: 700;
-  font-size: 13px
+  font-size: var(--fs-sm)
 }
 
 .poff-row .poff-val {
@@ -3288,7 +3318,7 @@ html[dir="rtl"] .back-btn .ic {
   margin-top: 14px;
   padding-top: 10px;
   border-top: 1px solid rgba(226, 210, 166, .25);
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: rgba(247, 243, 232, .65)
 }
 
@@ -3302,7 +3332,7 @@ html[dir="rtl"] .back-btn .ic {
   align-items: center;
   gap: 8px;
   color: var(--gold2-ink);
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: .4px;
   margin-bottom: 10px
@@ -3318,14 +3348,14 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .hero h1 {
-  font-size: 32px;
+  font-size: var(--fs-7xl);
   margin-bottom: 8px;
   color: #F7F3E8
 }
 
 .hero p {
   color: rgba(247, 243, 232, .78);
-  font-size: 14.5px;
+  font-size: var(--fs-base);
   line-height: 1.75;
   max-width: 52ch
 }
@@ -3349,12 +3379,12 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .btn-col span {
-  font-size: 11.5px;
+  font-size: var(--fs-2xs);
   opacity: .85
 }
 
 .btn-col b {
-  font-size: 13.5px
+  font-size: var(--fs-sm)
 }
 
 .hero-cta {
@@ -3372,7 +3402,7 @@ html[dir="rtl"] .back-btn .ic {
   padding: 10px 20px;
   border-radius: 40px;
   font-weight: 600;
-  font-size: 13.5px;
+  font-size: var(--fs-sm);
   border: 1px solid var(--line2);
   background: var(--surface2);
   color: var(--ink);
@@ -3413,7 +3443,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .btn.sm {
   padding: 7px 14px;
-  font-size: 12.5px
+  font-size: var(--fs-xs)
 }
 
 .chips {
@@ -3430,7 +3460,7 @@ html[dir="rtl"] .back-btn .ic {
   border-radius: 30px;
   border: 1px solid var(--line);
   background: var(--surface);
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   font-weight: 500;
   color: var(--ink2);
   cursor: pointer;
@@ -3452,12 +3482,12 @@ html[dir="rtl"] .back-btn .ic {
 
 .chip .n {
   opacity: .65;
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   margin-inline-start: 5px
 }
 
 .tag {
-  font-size: 10px;
+  font-size: var(--fs-3xs);
   padding: 2px 8px;
   border-radius: 20px;
   background: var(--bg2);
@@ -3475,7 +3505,7 @@ html[dir="rtl"] .back-btn .ic {
 .reciter-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(174px, 1fr));
-  gap: 16px
+  gap: var(--grid-gap)
 }
 
 .reciter-card {
@@ -3566,7 +3596,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .reciter-card .rn {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--fs-base);
   line-height: 1.35;
   margin-bottom: 6px;
   display: -webkit-box;
@@ -3577,7 +3607,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .reciter-card .rm {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   color: var(--ink2);
   display: flex;
   gap: 5px;
@@ -3588,7 +3618,7 @@ html[dir="rtl"] .back-btn .ic {
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
-  gap: 10px;
+  gap: var(--grid-gap);
   margin-bottom: 26px
 }
 
@@ -3650,7 +3680,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .quick-surah .qn {
   font-family: "Amiri", serif;
-  font-size: 21px;
+  font-size: var(--fs-3xl);
   color: var(--gold-ink);
   width: 32px;
   text-align: center;
@@ -3658,13 +3688,13 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .quick-surah .qt {
-  font-size: 36px;
+  font-size: var(--fs-8xl);
   font-weight: 400;
   display: block
 }
 
 .quick-surah .qs {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   color: var(--ink2)
 }
 
@@ -3716,7 +3746,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .recent-card .rt {
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -3724,13 +3754,13 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .recent-card .rt.sn-font {
-  font-size: 20px;
+  font-size: var(--fs-2xl);
   font-weight: 400;
   line-height: 1.3
 }
 
 .recent-card .rs {
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   color: var(--ink2);
   white-space: nowrap;
   overflow: hidden;
@@ -3773,11 +3803,11 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .prayer-grid.alt .prayer-card span {
-  font-size: 11.5px
+  font-size: var(--fs-2xs)
 }
 
 .prayer-grid.alt .prayer-card b {
-  font-size: 17px;
+  font-size: var(--fs-xl);
   color: var(--ink2)
 }
 
@@ -3818,16 +3848,16 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ak-hero b {
-  font-size: 15px
+  font-size: var(--fs-md)
 }
 
 .ak-hero span {
-  font-size: 11.5px;
+  font-size: var(--fs-2xs);
   color: var(--ink2)
 }
 
 .ak-prog {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   font-weight: 600;
   color: var(--gold-ink);
   background: var(--glow2);
@@ -3836,13 +3866,13 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ak-more {
-  font-size: 17px
+  font-size: var(--fs-xl)
 }
 
 .ak-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px
+  gap: var(--grid-gap)
 }
 
 .ak-cat {
@@ -3856,7 +3886,7 @@ html[dir="rtl"] .back-btn .ic {
   padding: 12px 14px;
   cursor: pointer;
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--ink);
   text-align: start;
   transition: .18s
@@ -3868,7 +3898,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ak-cat .n {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   color: var(--gold-ink);
   background: var(--glow2);
   border-radius: 20px;
@@ -3899,7 +3929,7 @@ html[dir="rtl"] .back-btn .ic {
 
 .ak-text {
   font-family: "Amiri", serif;
-  font-size: 19px;
+  font-size: var(--fs-2xl);
   line-height: 2;
   margin-bottom: 12px
 }
@@ -3928,11 +3958,11 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ak-tap b {
-  font-size: 16px
+  font-size: var(--fs-lg)
 }
 
 .ak-tap span {
-  font-size: 11px;
+  font-size: var(--fs-2xs);
   opacity: .75
 }
 
@@ -3948,7 +3978,7 @@ html[dir="rtl"] .back-btn .ic {
   }
 
   .ak-text {
-    font-size: 17px
+    font-size: var(--fs-xl)
   }
 }
 
@@ -3992,7 +4022,7 @@ html[dir="rtl"] .back-btn .ic {
 .yt-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 14px
+  gap: var(--grid-gap)
 }
 
 .yt-card {
@@ -4062,12 +4092,12 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .yt-card b {
-  font-size: 15px;
+  font-size: var(--fs-md);
   margin-top: 4px
 }
 
 .yt-card>span:last-child {
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   opacity: .7
 }
 
@@ -4082,7 +4112,7 @@ html[dir="rtl"] .back-btn .ic {
   }
 
   .yt-card b {
-    font-size: 13px
+    font-size: var(--fs-sm)
   }
 }
 
@@ -4133,11 +4163,11 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ab-txt b {
-  font-size: 15px
+  font-size: var(--fs-md)
 }
 
 .ab-txt span {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--gold2-ink)
 }
 
@@ -4148,7 +4178,7 @@ html[dir="rtl"] .back-btn .ic {
   border-radius: 30px;
   padding: 7px 16px;
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   cursor: pointer;
   transition: .18s
@@ -4163,7 +4193,7 @@ html[dir="rtl"] .back-btn .ic {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: var(--fs-md);
   font-weight: 800;
   color: var(--ink);
   padding-bottom: 12px;
@@ -4191,11 +4221,11 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ps-lab b {
-  font-size: 14px
+  font-size: var(--fs-base)
 }
 
 .ps-lab span {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--ink2)
 }
 
@@ -4213,7 +4243,7 @@ html[dir="rtl"] .back-btn .ic {
   background: var(--surface2);
   color: var(--ink);
   font-family: inherit;
-  font-size: 13px
+  font-size: var(--fs-sm)
 }
 
 .yt-player .yt-grad {
@@ -4271,11 +4301,11 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .yt-cap b {
-  font-size: 14px
+  font-size: var(--fs-base)
 }
 
 .yt-cap span {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   opacity: .85
 }
 
@@ -4315,7 +4345,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .yt-time {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: rgba(255, 255, 255, .9);
   font-variant-numeric: tabular-nums;
   flex: none
@@ -4419,7 +4449,7 @@ html[dir="rtl"] .back-btn .ic {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 700
 }
 
@@ -4438,7 +4468,7 @@ html[dir="rtl"] .back-btn .ic {
 .sp-marks {
   display: flex;
   justify-content: space-between;
-  font-size: 10.5px;
+  font-size: var(--fs-3xs);
   color: var(--ink2)
 }
 
@@ -4488,11 +4518,11 @@ html[dir="rtl"] .back-btn .ic {
   }
 
   .hero h1 {
-    font-size: 24px
+    font-size: var(--fs-4xl)
   }
 
   .hero p {
-    font-size: 13.5px
+    font-size: var(--fs-sm)
   }
 }
 
@@ -4509,7 +4539,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 [data-theme="dark"] .mushaf-page.cover-page img{filter:none}
 .mushaf-stage{-webkit-tap-highlight-color:transparent}
-.loc-approx{flex:none;font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(186,151,67,.14);color:var(--ink2);border:1px solid rgba(186,151,67,.35);white-space:nowrap;cursor:help}
+.loc-approx{flex:none;font-size: var(--fs-2xs);padding:3px 9px;border-radius:999px;background:rgba(186,151,67,.14);color:var(--ink2);border:1px solid rgba(186,151,67,.35);white-space:nowrap;cursor:help}
 
 /* ══════════════════════════════════════════════════════════════════
    reciter cards — centered text on desktop, horizontal row on phones
@@ -4519,7 +4549,7 @@ html[dir="rtl"] .back-btn .ic {
 @media(max-width:640px){
   .reciter-card{display:grid;grid-template-columns:64px 1fr;grid-template-rows:auto auto;column-gap:12px;row-gap:3px;align-items:center;padding:11px 12px;text-align:start}
   .reciter-card .ava{grid-row:1/3;grid-column:1;width:64px;height:64px;margin:0}
-  .reciter-card .rn{grid-column:2;grid-row:1;min-height:0;margin-bottom:0;-webkit-line-clamp:1;font-size:13.5px}
+  .reciter-card .rn{grid-column:2;grid-row:1;min-height:0;margin-bottom:0;-webkit-line-clamp:1;font-size: var(--fs-sm)}
   .reciter-card .rm{grid-column:2;grid-row:2;justify-content:flex-start}
   .reciter-card .play-ov span{width:34px;height:34px}
   .reciter-card .play-ov .ic{width:14px;height:14px}
@@ -4547,7 +4577,7 @@ html[dir="rtl"] .back-btn .ic {
 /* ─── Latin surah names in collection & surah cards (EN mode) ─── */
 .surah-row .sa.en-name {
   font-family: 'Alan Sans', sans-serif;
-  font-size: 21px;
+  font-size: var(--fs-3xl);
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: .1px
@@ -4588,9 +4618,9 @@ body.mushaf-full .np-card{display:none!important}
   body.has-track .np-card{display:flex}
   .np-card .npc-art{width:48px;height:48px;flex:none;border-radius:12px;object-fit:cover;background:var(--bg2);border:1px solid var(--line)}
   .np-card .npc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-  .np-card .npc-title{font-size:15px;font-weight:700;line-height:1.35;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np-card .npc-title{font-size: var(--fs-md);font-weight:700;line-height:1.35;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .np-card .npc-title.sn-font{line-height:1.5}
-  .np-card .npc-artist{font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np-card .npc-artist{font-size: var(--fs-2xs);color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .np-card .npc-prog{height:3px;border-radius:3px;background:var(--line);overflow:hidden}
   .np-card .npc-fill{height:100%;width:0;background:var(--gold);border-radius:3px;transition:width .25s linear}
   .np-card .npc-ctrl{display:flex;align-items:center;gap:2px;flex:none}
@@ -4607,4 +4637,51 @@ body.mushaf-full .np-card{display:none!important}
   .np-card{inset-inline:8px;gap:9px;padding:8px 9px}
   .np-card .npc-art{width:44px;height:44px}
   body.has-track main{padding-bottom:calc(70px + 28px)}
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   B1 — responsive pass. Tiny phones (≤380), low-height landscape and
+   small-screen polish. Kept last so it wins the cascade over the older,
+   scattered media blocks above.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* honour the phone home-indicator / safe area under the player footer */
+@media(max-width:900px){
+  .player{
+    height:calc(var(--player) + env(safe-area-inset-bottom, 0px));
+    padding-bottom:env(safe-area-inset-bottom, 0px)
+  }
+}
+
+/* very small phones (e.g. 360 / 320) */
+@media(max-width:380px){
+  :root{--player:80px}
+  .icon-btn{width:34px;height:34px}
+  .icon-btn .ic{width:18px;height:18px}
+  .brand-mark{width:42px;height:42px}
+  .hero-main{padding:20px 16px 6px}
+  .hero-side{padding:0 16px 16px}
+  .hero .eyebrow{font-size:var(--fs-2xs)}
+  .modal{padding:20px 16px;border-radius:var(--r-lg)}
+  .ma-card{padding:18px 16px}
+  .mt-sel{max-width:104px}
+  .mt-actions .icon-btn{width:32px;height:32px}
+  .chip,.loc-chip{padding-inline:10px}
+  .drawer{width:calc(100vw - 24px)}
+}
+
+/* small phones */
+@media(max-width:479px){
+  .modal{width:min(480px, 94vw)}
+}
+
+/* low-height landscape (phones held sideways) — reclaim vertical space */
+@media(max-height:520px) and (orientation:landscape){
+  :root{--player:72px}
+  .hero-main{padding:20px 24px}
+  .hero-side{padding:0 24px 20px}
+  .ov-mandala{width:min(42vh, 200px)}
+  .mushaf-stage{padding:6px 8%}
+  .drawer{max-height:72vh}
+  #toasts{bottom:calc(var(--player) + 10px)}
 }
