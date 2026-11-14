@@ -138,7 +138,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A16 | sitemap.xml, robots, manifest screenshots/shortcuts | **done** — `@astrojs/sitemap` integration added (`site` already set) generating `sitemap-index.xml` + `sitemap-0.xml` at build; `robots.txt` now links the sitemap; manifest gained 2 real screenshots captured from the built app (`public/screenshots/home-wide.jpg` 1280x720 wide, `home-narrow.jpg` 720x1280 narrow) and 4 shortcuts (Mushaf, prayer times, reciters, adhkar) backed by new deep-link support in `app.js` (`/?view=...` handled at boot) |
 | A17 | Accessibility (slider roles, focus-visible, aria-labels) | **done** — div-based bars (`#progBar`, `#ovProg`, `#volBar`) now expose `role="slider"` + `tabindex="0"` + `aria-valuemin/max/now` + `aria-valuetext` (kept in sync in `updateProgress()`, `updateVolUI()` and drag handlers) with keyboard support (arrows ±5s / ±5%, Home/End) via `barKeys()`; global `:focus-visible` outline rule added and all 5 `outline:none` occurrences removed from `global.css`; new `data-i18n-aria` mechanism in `applyI18nStatic()` labels the fullscreen overlay controls and `#dlClose`, plus explicit `aria-label` on unfav/download mini-buttons and mushaf theme/exit icon buttons |
 | A18 | Escape all API-sourced `innerHTML` fields | **done** — `prayerCardsHTML()` now escapes every AlAdhan-sourced field (`timings` via `prayerTime()`, `hijri.day/month.ar/month.en/year`, `date.readable`); `reciterCard` (`data-rid`) and surah/collection rows (`data-key`, `data-fav`, `data-unfav`, `data-dl`) escape API ids in attributes; rest of the audit found the other consumers already escaped (Nominatim results, reciter/moshaf/track names, queue, badges, adhan banner, adhkar text, weather uses numbers + static table); proven by a Playwright injection test: hostile AlAdhan mock executed `onerror` on the old build and renders fully inert text after the fix |
-| A19 | Self-host Google fonts | pending |
+| A19 | Self-host Google fonts | **done** — Alan Sans (variable 300–900, arabic/latin/latin-ext) and Amiri (400/700, same subsets) downloaded into `src/assets/fonts/` and declared via 9 `@font-face` rules with the original `unicode-range` splits at the top of `global.css`; Google Fonts `<link>`s and preconnects removed from `Base.astro`; Vite bundles them hashed under `dist/_astro/` and the SW caches them same-origin; NOTICE updated with OFL attribution |
 | B1–B3 | Systematic responsive + type/spacing scale pass | pending |
 | B4 | Adhan pauses all players | pending |
 | B5 | Mandala rotation bug (transform-origin, rAF-driven) | pending |
@@ -149,6 +149,6 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 ## Suggested order
 
 Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
-A18–A19 in numeric order (A1 deployment setup before the next production
+All A stages are complete; remaining work is B1–B6 (A1 deployment setup before the next production
 deploy). Each stage ships independently on its own branch/PR; no breaking
 changes to existing `ouns_` state keys.
