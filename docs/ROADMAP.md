@@ -1,157 +1,147 @@
 # Ouns — Implementation Roadmap
 
-Updated plan for the four upcoming features. The app stays a single-file vanilla
-HTML/CSS/JS application (no build step), RTL-first, with the existing helpers:
-`api()` for JSON endpoints, `store` for `ouns_`-prefixed localStorage state,
-`I18N` ar/en dictionary, and the view router in `render()`.
+> Status updated to match the actual codebase. The app is an **Astro static
+> site + one client-side vanilla JS module** (`src/scripts/app.js`) — it has a
+> build step (`npm run build`), despite earlier drafts describing a
+> single-file no-build app. RTL-first, ar/en, light/dark, `ouns_`-prefixed
+> localStorage state, `api()` helper for JSON endpoints, `render()` view
+> router.
 
 ---
 
 ## Phase 1 — Mushaf reading tab (real Madani pages)
 
-**Goal**: read the actual printed Madani mushaf (KFGQPC, Hafs 'an 'Asim,
-604 pages) in a dedicated reading tab in the sidebar — not reflowed ayah
-text, and not inside the fullscreen player.
-
 **Status**: **shipped** — per product decisions: ayah-by-ayah playback was
-cancelled (audio quality from full surah files is the top priority), the
+cancelled (audio quality from full-surah files is the top priority), the
 fullscreen verses panel was removed, and the mushaf became a reading-only
-sidebar tab showing real page images.
+fullscreen tab.
 
-- Sidebar tab "المصحف / Mushaf": **fullscreen immersive reading mode** —
-  while in the tab the sidebar, top bar, player bar and NP panel are all
-  hidden; the surah index is removed (surah navigation will return later
-  as a tab bar).
-- Every entry shows the **cover page — page 0 of the reading flow**: the
-  provided ornamental cover artwork (`public/mushaf-cover.jpg`, compressed
-  from the original 1640×2500 upload to a 1100px JPEG) at full container
-  width; its button reads "تابع القراءة — صفحة N" (continue at last page)
-  once a page was read, "ابدأ القراءة" on first visit.
-- Page turns treat the cover as page 0: cover → spread **(1,2)** → spread
-  **(3,4)** → … → **(603,604)** — odd page on the right, even on the left;
-  prev from (1,2) returns to the cover. Mobile shows one page per screen
-  (cover → 1 → 2 → …), so the resumed page always opens in its spread.
-- Reader top/bottom bars are **hidden by default** and overlay the page:
-  tap the page (or use the arrow keys) to reveal them; they auto-hide
-  after 3 seconds. Back and close buttons return to Home.
-- Inner pages are inset 6.25% from each side of the stage (60px per side
-  at a 960px-wide cover).
-- Reader view: surah name + juz/page indicator (juz start-page table), page
-  fitted to the viewport height, page-turn arrows in a bottom bar.
-- Reader view: **open-book two-page spread on desktop** (≥900px): even page
-  on the right, odd on the left (page 2 faces page 3; page 1 and 604 render
-  alone), subtle spine shadows, page-turn steps by 2; single page below the
-  breakpoint, with live re-render when crossing it while reading.
-- Reader view: one page at a time on mobile, **SVG vector pages** (crisp at any zoom)
-  from `raw.githubusercontent.com/Younes12345698/pro-muslim-mushaf` (KFGQPC
-  artwork, Quran.ws/quranpedia SVG conversion, CC BY 4.0), with automatic
-  fallback to the PNG CDN `SakinaDevGroup/mushaf-madani-cdn` (light/dark
-  themes).
-- Pages 1–604, prev/next navigation (RTL-aware), keyboard arrows, Escape
-  exits to the app, page label with Arabic digits, last page persisted in
-  `store`.
-- Dark theme: native dark PNG fallback available; SVG pages are inverted
-  via CSS filter (black ink → light ink) on the theme-matched background.
-- Mobile pass: compact fullscreen-player overlay (mandala sized to the
-  viewport, smaller controls), compressed mushaf chrome (icon-only page-turn
-  buttons), tighter hero/topbar spacing on small and low (landscape) screens;
-  below 480px the player bar hides the reciter art, download and dock-panel
-  buttons and centers the play/pause transport on screen.
+Implemented:
 
-**Code touchpoints** (done):
-- `SURAH_PAGE` mapping (surah → Madani start page), `mushafSVGURL` /
-  `mushafPNGURL`, `mushafGo()`, `viewMushaf()`, `viewRead()` in `app.js`.
-- `S.readN` (current page or null = index), `S.mushafPage` persisted;
-  `mushafBook()` / `mushafRight()` / `mushafStep()` spread helpers.
-- Sidebar nav item `data-view="mushaf"`; `render()` branch + `#view`
-  delegation (`[data-read]`, `mushafback`, `mprev`, `mnext`).
+- Sidebar tab «المصحف»: fullscreen immersive reading mode — sidebar, top bar,
+  player bar and NP panel are hidden while reading; opening jumps straight to
+  the last page read (no surah index; surah/juz navigation lives in the top
+  bar dropdowns).
+- Cover page = page 0 of the reading flow (per-riwaya cover:
+  `public/mushaf-cover.jpg` Warsh, `public/mushaf-cover-hafs.jpg` Hafs),
+  full container width, with a «continue reading — page N» button and a
+  resume popup.
+- Page turns treat the cover as page 0: cover → spread (1,2) → (3,4) → … →
+  (603,604); odd page right, even left. Mobile shows one page per screen with
+  swipe gestures.
+- Open-book two-page spread on desktop (≥900px) with live re-render when
+  crossing the breakpoint.
+- **Pages are self-hosted SVGs** in `src/assets/mushaf/` (Hafs 604) and
+  `src/assets/mushaf-warsh/` (Warsh), resolved at build time via
+  `import.meta.glob`. Missing pages fall back to a remote chain
+  (jsdelivr SVG → raw GitHub SVG → PNG CDN). Pages 1–2 are pre-wrapped into
+  the standard 345×550 page frame. **License: CC-BY-NC 4.0** (see `NOTICE`).
+- «Download all pages» ZIP: **streamed** (deflate, per-file fetch, progress,
+  cancel, failure cap) — no 100MB+ memory spike.
+- Riwaya chooser popup on first visit + setting; Hafs and Warsh 'an Nafi'.
+- Top bar: surah dropdown + juz dropdown; bottom bar full-width slider;
+  bars hidden by default, revealed by tap, auto-hide after 3s.
+- Dark theme: SVG pages inverted via CSS filter, **except the cover**
+  (`filter:none` on `.cover-page`).
+- Touch/swipe navigation available across pages and the app.
+
+Pending polish: none planned for this phase.
 
 ---
 
 ## Phase 2 — Prayer times with adhan
 
-**Goal**: next-prayer countdown in the sidebar, a full prayer-times view, and an
-optional adhan when a prayer time enters while the app is open.
+**Status**: **shipped** (core), with pending items below.
 
-**Data source**: `https://api.aladhan.com/v1/timings/{DD-MM-YYYY}` — free, no
-key, returns all five prayers + sunrise/midnight. Params: `latitude`,
-`longitude`, `method` (calculation method), `school` (Asr madhab).
+Implemented:
 
-**Location**: browser geolocation on first use (explicit permission), with a
-manual city fallback list (major cities, AR/EN labels) stored via `store`.
-Never block the UI on geolocation.
+- Hero next-prayer card with weather (Open-Meteo) and countdown; full prayer
+  view with today's prayers, sunrise, first/last third of the night.
+- Data: `api.aladhan.com/v1/timings` (method 3), daily cache.
+- Location: GPS geolocation + network/IP fallback + city search via Nominatim,
+  with a default city; manual search UI.
+- Adhan: 7 selectable voices self-hosted under `public/adhan/`
+  (Makkah, Madinah, Aqsa, Egypt, Turkey, Qatami, Algeria/Boulaidi), played
+  from a dedicated `Audio` element; on-screen adhan card with stop button.
+- Per-prayer ±minutes offset correction (each prayer individually).
+- Settings live in a modal opened from the prayer view.
 
-**Code touchpoints**:
-- New sidebar view `prayer` + compact widget card under the verse card showing
-  next prayer name/time and a live countdown (reuse `sleepTick`-style interval).
-- Settings: calculation method select (list from
-  `https://api.aladhan.com/v1/methods`), Asr school, city override.
-- Adhan: bundled `audio/adhan.mp3` in the repo (short Makkah adhan), played via
-  a second `Audio` element at prayer time only if the Quran player is idle (or
-  ducked, per setting). Optional desktop notification via the Notification API.
-- State: `S.prayerCity`, `S.prayerMethod`, `S.adhan` (`'off'|'on'|'duck'`),
-  daily timings cache keyed by date (one API call per day).
-
-**Effort**: small-medium. **Risk**: geolocation denial (mitigated by city
-fallback); adhan only works while a tab is open (documented in settings).
+**Pending** (tracked in the audit):
+- Adhan must pause **all** players (Quran audio + YouTube) — currently the
+  recitation keeps playing (audit item B4).
+- `duck` mode (lower recitation volume instead of silence) and optional
+  desktop notifications (audit item A9).
 
 ---
 
-## Phase 3 — Adhkar sabah / masaa
+## Phase 3 — Adhkar
 
-**Goal**: morning and evening remembrances with tap counters and daily progress.
+**Status**: **shipped** (core), with pending persistence below.
 
-**Data**: static, bundled in the app (no API): Hisn al-Muslim (public domain)
-— أذكار الصباح and أذكار المساء sections. Each item: `{text, count, source,
-virtue?}`. Stored as a JS object in the single file (keeps offline/file://
-behavior); ar text is original, en translation included.
+Implemented:
 
-**UI**:
-- New sidebar view `adhkar` with two tabs (صباح / مساء). Auto-select tab by time
-  of day (morning until Zuhr, evening after Asr), overridable.
-- Card per dhikr: Amiri text, source line, and a tap counter that decrements
-  `count` with a subtle fill animation; completed items collapse.
-- Progress header ("7 / 12") persisted per calendar day in `store`
-  (`ouns_adhkar_YYYY-MM-DD`), resetting automatically the next day.
+- Sidebar view with categories (morning, evening, sleep, after prayer, …)
+  from `src/data/adhkar.json` (Hisn al-Muslim based, see `NOTICE`).
+- Card per dhikr with tap counter; completion state per category.
 
-**Code touchpoints**: `I18N` keys, view renderer, small CSS block. No changes
-to the player.
-
-**Effort**: small. **Risk**: none (static data).
+**Pending** (audit item A8): daily progress persistence
+(`ouns_adhkar_YYYY-MM-DD`, auto-reset next day), «done X/Y» header, and
+automatic morning/evening tab selection by time of day.
 
 ---
 
 ## Phase 4 — YouTube player for best recitations
 
-**Goal**: curated video recitations watchable inside Ouns, without breaking the
-audio player's state.
+**Status**: **shipped** (core), with pending polish below.
 
-**Approach**:
-- **Curated catalog, no API key**: a `RECITER_VIDEOS` map (reciter key → list of
-  `{videoId, title}`) maintained in code, embedded via the IFrame Player API
-  with `youtube-nocookie.com`. A YouTube Data API key setting can be added later
-  for search, but the default flow needs no key.
-- New "Videos" tab inside the reciter page (next to the surah list) + a Videos
-  view in the sidebar for featured playlists.
-- Only one player active at a time: starting a video pauses the Quran audio
-  (and vice versa). The sleep timer applies to video playback too.
-- Theater-style frame reusing the full-screen overlay styles; mediaSession
-  metadata updated for videos.
+Implemented:
 
-**Code touchpoints**: lazy-load the IFrame API script only when the tab is
-opened; new `videoView()` renderer; playback-state guard in `loadTrack()`.
+- Independent «أفضل التلاوات» tab: curated video catalog embedded via the
+  IFrame Player API; videos are fully standalone in their tab (no coupling
+  with the audio player's queue state).
+- In-site navigation only between the site's videos (no external exits).
 
-**Effort**: medium. **Risk**: video availability/region restrictions (curated
-list mitigates); no background audio on mobile (platform limitation).
+**Pending** (user feedback): the custom player shell still lacks a CC
+disable button and a fullscreen button; polish tracked under the B-stage
+responsive/UX pass.
+
+---
+
+## Audit stages (A1–A19, B1–B6)
+
+Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
+
+| Stage | Scope | Status |
+|---|---|---|
+| A1 | Deployment setup (Cloudflare) | **pending** — no wrangler config/CI in repo yet |
+| A2 | Mushaf pages off GitHub raw → self-hosted + CDN chain + Warsh PNG fallback | **done** |
+| A3 | Streaming ZIP download with progress/cancel | **done** |
+| A4 | CORS-safe audio (selective routing + element swap) | **done** |
+| A5 | LICENSE + NOTICE + README attribution | **done** |
+| A6 | Dead assets removed; adhan mp3s out of the bundle (`_astro` 8.5MB → 1.3MB) | **done** |
+| A7 | This documentation sync | **done** |
+| A8 | Adhkar daily progress | pending |
+| A9 | Adhan duck mode + notifications + location hardening | pending |
+| A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | pending |
+| A11 | Deduplicate CSS; single `#view` click delegator | pending |
+| A12 | `markPlayingRows()` null-number bug | pending |
+| A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | pending |
+| A14 | Service worker cache versioning + mushaf offline | pending |
+| A15 | SSR-time lang/dir + missing i18n keys | pending |
+| A16 | sitemap.xml, robots, manifest screenshots/shortcuts | pending |
+| A17 | Accessibility (slider roles, focus-visible, aria-labels) | pending |
+| A18 | Escape all API-sourced `innerHTML` fields | pending |
+| A19 | Self-host Google fonts | pending |
+| B1–B3 | Systematic responsive + type/spacing scale pass | pending |
+| B4 | Adhan pauses all players | pending |
+| B5 | Mandala rotation bug (transform-origin, rAF-driven) | pending |
+| B6 | WCAG AA contrast in both themes | pending |
 
 ---
 
 ## Suggested order
 
-1. **Phase 3** (adhkar) — smallest, fully offline, high daily-use value
-2. **Phase 2** (prayer times + adhan) — small, complements adhkar
-3. **Phase 1** (mushaf tab) — core reading upgrade, medium effort
-4. **Phase 4** (YouTube) — largest surface, depends on curated catalog
-
-Each phase ships independently behind the existing view router; no breaking
-changes to current state keys.
+Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
+A8–A19 in numeric order (A1 deployment setup before the next production
+deploy). Each stage ships independently on its own branch/PR; no breaking
+changes to existing `ouns_` state keys.
