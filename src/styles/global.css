@@ -717,27 +717,11 @@ main {
 
 /* ═══════════════ mobile responsiveness ═══════════════ */
 @media(max-width:640px){
-  .np-overlay{padding:16px}
-  .ov-mandala{width:min(36vh,64vw,280px)}
-  .ov-badges{margin:10px 0 12px}
-  .ov-progress{margin-bottom:12px}
-  .ov-controls{gap:14px;margin-bottom:10px}
-  .ov-controls .play-btn{width:58px;height:58px}
-  .ov-controls .play-btn .ic{width:22px;height:22px}
-  .ov-controls .ctrl{width:40px;height:40px}
   .mushaf-top{padding:8px 10px;gap:8px}
   .mt-actions .icon-btn{width:36px;height:36px}
   .mushaf-stage{padding:8px 4%}
   .mushaf-foot .btn span{display:none}
   .mf-num{min-width:64px}
-}
-@media(max-height:560px) and (orientation:landscape){
-  .ov-mandala{width:min(30vh,220px);margin:1vh 0}
-  .ov-title{font-size:clamp(22px,4vh,30px)}
-  .ov-badges{margin:6px 0 8px}
-  .ov-progress{margin-bottom:8px}
-  .ov-controls{gap:12px;margin-bottom:8px}
-  .ov-controls .play-btn{width:52px;height:52px}
 }
 @media(max-width:400px){
   .topbar{gap:6px}
@@ -2062,7 +2046,7 @@ html[dir="rtl"] .prog .fill {
 .ov-mandala {
   width: min(60vh, 470px);
   aspect-ratio: 1;
-  margin: 2vh 0 1vh;
+  margin: 1.5vh 0 .5vh;
   position: relative;
   z-index: 1
 }
@@ -2090,7 +2074,7 @@ html[dir="rtl"] .prog .fill {
 .ov-badges {
   display: flex;
   gap: 8px;
-  margin: 14px 0 20px;
+  margin: 12px 0 16px;
   position: relative;
   z-index: 1;
   flex-wrap: wrap;
@@ -2138,6 +2122,39 @@ html[dir="rtl"] .prog .fill {
   gap: 10px;
   position: relative;
   z-index: 1
+}
+
+@media(max-width:640px){
+  .np-overlay{padding:16px}
+  .ov-mandala{width:min(34vh,72vw,270px)}
+  .ov-badges{margin:10px 0 12px}
+  .ov-progress{margin-bottom:12px}
+  .ov-controls{gap:14px;margin-bottom:10px}
+  .ov-controls .play-btn{width:58px;height:58px}
+  .ov-controls .play-btn .ic{width:22px;height:22px}
+  .ov-controls .ctrl{width:40px;height:40px}
+}
+
+@media(max-width:400px){
+  .ov-mandala{width:min(32vh,74vw,240px)}
+  .ov-title{font-size:clamp(24px,4.5vh,34px)}
+  .ov-controls{gap:10px}
+}
+
+@media(max-height:560px) and (orientation:landscape){
+  .np-overlay{padding:10px 26px}
+  .ov-mandala{width:min(24vh,130px);margin:.5vh 0}
+  .ov-title{font-size:clamp(18px,4vh,24px);line-height:1.25}
+  .ov-title .sn-font{font-size:clamp(18px,4.5vh,26px)}
+  .ov-artist{margin-top:1px;font-size:var(--fs-sm)}
+  .ov-badges{margin:4px 0 6px}
+  .ov-progress{margin-bottom:6px}
+  .ov-controls{gap:10px;margin-bottom:6px}
+  .ov-controls .play-btn{width:46px;height:46px}
+  .ov-controls .play-btn .ic{width:18px;height:18px}
+  .ov-controls .ctrl{width:36px;height:36px}
+  .ov-actions{gap:8px}
+  .ov-actions .btn{padding:5px 10px}
 }
 
 /* ═══════════════ MODALS / DRAWER / TOAST ═══════════════ */
@@ -5328,7 +5345,7 @@ body.mushaf-full .np-card{display:none!important}
   :root{--player:72px}
   .hero-main{padding:20px 24px}
   .hero-side{padding:0 24px 20px}
-  .ov-mandala{width:min(42vh, 200px)}
+  .ov-mandala{width:min(28vh, 150px)}
   .mushaf-stage{padding:6px 8%}
   .drawer{max-height:72vh}
   #toasts{bottom:calc(var(--player) + 10px)}
