@@ -120,7 +120,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 
 | Stage | Scope | Status |
 |---|---|---|
-| A1 | Deployment setup (Cloudflare) | **pending** — no wrangler config/CI in repo yet |
+| A1 | Deployment setup (Cloudflare) | **done** — single path chosen and documented: static build → **Cloudflare Workers Static Assets** (`wrangler.jsonc`, worker `ounsapp` → `ounsapp.musbch.workers.dev`, no server adapter); `wrangler` added as a dev dependency + `npm run deploy` (`build` then `wrangler deploy`); GitHub Actions workflow (`.github/workflows/deploy.yml`) lints/tests/builds/deploys on push to `main`; README has a repeatable Deploy section. Verified with `wrangler deploy --dry-run` (reads `dist/`, no bindings) |
 | A2 | Mushaf pages off GitHub raw → self-hosted + CDN chain + Warsh PNG fallback | **done** |
 | A3 | Streaming ZIP download with progress/cancel | **done** |
 | A4 | CORS-safe audio (selective routing + element swap) | **done** |
@@ -148,8 +148,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 
 ## Suggested order
 
-All audit stages **A2–A19** and **B1–B6** are complete. The only remaining
-item is **A1 — deployment setup**: choose one path (Cloudflare Workers via
-`@astrojs/cloudflare` + a wrangler config, or a static Cloudflare Pages
-deploy), commit the config and document a repeatable build/deploy. Each stage
-ships independently; no breaking changes to existing `ouns_` state keys.
+All audit stages **A1–A19** and **B1–B6** are now complete. Remaining wishlist
+items are outside the audit: a CC-disable and a fullscreen button for the
+YouTube shell (see Phase 4). Each stage ships independently; no breaking
+changes to existing `ouns_` state keys.

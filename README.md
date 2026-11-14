@@ -25,6 +25,28 @@ npm run build     # outputs static site to dist/
 npm run preview   # serve the build locally
 ```
 
+## Deploy
+
+The app is a **fully static** build, deployed to **Cloudflare Workers Static
+Assets** — see [wrangler.jsonc](wrangler.jsonc) (worker `ounsapp` →
+`ounsapp.<account>.workers.dev`, matching `site` in `astro.config.mjs`). No
+server adapter is required because there is no SSR or API route.
+
+Manual deploy:
+
+```bash
+npm install
+npx wrangler login    # once — opens the browser to authorise your account
+npm run deploy        # astro build (+ SW cache bump) then wrangler deploy
+```
+
+`npm run deploy` uploads `dist/` as static assets via `wrangler deploy`.
+
+CI: a push to `main` lints, tests, builds and deploys through
+[.github/workflows/deploy.yml](.github/workflows/deploy.yml). Add two
+repository secrets first — `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID`.
+
 ## Quality checks
 
 ```bash
@@ -57,9 +79,9 @@ timer), a full mushaf reading tab (Hafs + Warsh, self-hosted pages), prayer
 times with per-prayer adhan and offsets, adhkar with daily progress, and a
 YouTube player for video recitations.
 
-See `docs/ROADMAP.md` for the full status. Every audit stage except **A1 —
-deployment setup** (Cloudflare Workers/Pages config + a documented deploy) is
-done.
+See `docs/ROADMAP.md` for the full status. The A1–A19 and B1–B6 audit stages
+are all done; the only open wishlist items (a CC-disable and a fullscreen
+button for the YouTube shell) sit outside that audit.
 
 ## Licenses & attribution
 

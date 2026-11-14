@@ -10,6 +10,7 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/bump-sw.mjs",
     "preview": "astro preview",
+    "deploy": "npm run build && wrangler deploy",
     "test": "node --test \"tests/**/*.test.mjs\"",
     "lint": "eslint src/scripts/lib tests",
     "format": "prettier --write src/scripts/lib tests"
@@ -22,6 +23,7 @@
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
-    "prettier": "^3.7.4"
+    "prettier": "^3.7.4",
+    "wrangler": "^4.162.0"
   }
 }
