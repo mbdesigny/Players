@@ -102,7 +102,7 @@ function avatarURI(seed,letter){
   for(let i=0;i<8;i++){const a=i*Math.PI/4;dots+=`<circle cx="${(100+87*Math.cos(a)).toFixed(1)}" cy="${(100+87*Math.sin(a)).toFixed(1)}" r="3" fill="${pt}" opacity=".85"/>`}
   return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="117" text-anchor="middle" font-size="50" font-family="Amiri,serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
 }
-let FRAME_TPL=null,phSeq=0;
+let FRAME_TPL=null,phSeq=0,mandalaSig='';
 function frameInner(){
   if(FRAME_TPL==null){const el=document.getElementById('playerFrame');FRAME_TPL=el?el.textContent.trim():''}
   return FRAME_TPL.replace(/^[\s\S]*?<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
@@ -389,7 +389,8 @@ function updateNowPlaying(){
   const seed=tr.rar,num=S.lang==='ar'?arDigits(tr.n):String(tr.n),sub=trackName(tr);
   const photo=photoURL(tr.rar,tr.rid);
   const args=[seed,num,sub,photo,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق'];
-  $('#npMandala').innerHTML=mandalaSVG(...args);$('#ovMandala').innerHTML=mandalaSVG(...args);
+  const mSig=args.join('\u0001');
+  if(mSig!==mandalaSig){mandalaSig=mSig;const svg=mandalaSVG(...args);$('#npMandala').innerHTML=svg;$('#ovMandala').innerHTML=svg}
   $('#ovPhoto').innerHTML=photo?`<img src="${photo}" alt="" onerror="this.remove()">`:'';
   const ava=photo||avatarURI(tr.rar,(S.lang==='ar'?tr.rar:tr.ren).trim()[0]||'ق');
   $('#pbArtImg').src=ava;$('#pbArtImg').onerror=function(){this.onerror=null;this.src=avatarURI(tr.rar,'ق')} ;

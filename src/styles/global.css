@@ -1105,11 +1105,16 @@ body:not(.playing) .eq i {
   filter: drop-shadow(0 10px 26px rgba(0, 0, 0, .2))
 }
 
+/* B5: spin each ring around its OWN bounding-box centre (fill-box) so the
+   mandala turns about its true centre on every screen/breakpoint. Using
+   view-box relied on a recent Chrome-only value; when it was ignored the
+   rotation pivoted off-centre and read as a fast, drifting spin. fill-box is
+   supported everywhere and is unambiguous. Durations stay long and slow. */
 .mandala-svg .spin-a,
 .mandala-svg .spin-b,
 .mandala-svg .spin-c {
-  transform-box: view-box;
-  transform-origin: center
+  transform-box: fill-box;
+  transform-origin: 50% 50%
 }
 
 .mandala-svg .spin-a {
@@ -1124,10 +1129,24 @@ body:not(.playing) .eq i {
   animation: spin 120s linear infinite
 }
 
+body.playing .mandala-svg .spin-a,
+body.playing .mandala-svg .spin-b,
+body.playing .mandala-svg .spin-c {
+  will-change: transform
+}
+
 body:not(.playing) .mandala-svg .spin-a,
 body:not(.playing) .mandala-svg .spin-b,
 body:not(.playing) .mandala-svg .spin-c {
   animation-play-state: paused
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .mandala-svg .spin-a,
+  .mandala-svg .spin-b,
+  .mandala-svg .spin-c {
+    animation: none !important
+  }
 }
 
 .mandala-svg .m-num {
