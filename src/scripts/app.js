@@ -127,6 +127,7 @@ function mandalaSVG(seed, numTxt, subTxt, photo, phLetter) {
 }
 const reciterLetter = r => { const n = (S.lang === 'ar' ? r.name : r.name_en || r.name).trim(); return n[0] || 'ق' };
 const reciterName = r => S.lang === 'ar' ? r.name : (r.name_en || r.name);
+const moshafRewaya = m => m.rewaya || (m.name || '').split('-')[0].replace(/\s+/g, ' ').trim();
 const RECITER_PHOTOS = { 'منشاوي': 'minshawi', 'عبدالباسط': 'abdulbasit', 'التركي': 'badr-turki', 'شريم': 'shuraim', 'ديبروف': 'dibirov', 'دوسري': 'dosari', 'معيقلي': 'muaiqly', 'الموسى': 'al-mousa', 'سحيم': 'suhaim', 'الدخين': 'dukayn', 'السديس': 'sudais', 'العفاسي': 'afasy', 'الحصري': 'husary', 'العجمي': 'ajmi', 'عباد': 'faris-abbad' };
 const RECITER_PHOTOS_EXACT = { 'سعودالشريم': 'shuraim', 'ياسرالدوسري': 'dosari', 'محمدصديقالمنشاوي': 'minshawi', 'عبدالباسطعبدالصمد': 'abdulbasit', 'بدرالتركي': 'badr-turki', 'ماهرالمعيقلي': 'muaiqly', 'عبداللهالموسى': 'al-mousa', 'عبدالعزيزسحيم': 'suhaim', 'عبدالعزيزالسحيم': 'suhaim', 'هيثمالدخين': 'dukayn', 'محمدديبروف': 'dibirov', 'عبدالرحمنالسديس': 'sudais', 'مشاريراشدالعفاسي': 'afasy', 'محمودخليلالحصري': 'husary', 'أحمدالعجمي': 'ajmi', 'سعدالغامدي': 'saad-ghamdi', 'فارسعباد': 'faris-abbad', 'مصطفىاسماعيل': 'mustafa', 'مصطفياسماعيل': 'mustafa' };
 function photoURL(name, id) { const n = norm2(name); const ex = RECITER_PHOTOS_EXACT[n]; if (ex) return 'img/' + ex + '.jpg'; if (n.includes(norm2('الشريمي')) || n.includes(norm2('الدوسري')) || n.includes(norm2('التركي')) || (n.includes(norm2('منشاوي')) && n.includes(norm2('طه')))) return id ? 'img/' + id + '.jpg' : ''; for (const k in RECITER_PHOTOS) { if (n.includes(norm2(k))) return 'img/' + RECITER_PHOTOS[k] + '.jpg' } return id ? 'img/' + id + '.jpg' : '' }
@@ -138,7 +139,7 @@ function makeTrack(r, m, n) {
   const meta = SURAH[n - 1];
   return {
     key: `${r.id}:${m.id}:${n}`, n, name_ar: meta[0], name_en: meta[1], ayahs: meta[2], type: meta[3],
-    rid: r.id, mid: m.id, rar: r.name, ren: r.name_en || r.name, rewaya: m.rewaya, mname: m.name || m.rewaya,
+    rid: r.id, mid: m.id, rar: r.name, ren: r.name_en || r.name, rewaya: moshafRewaya(m), mname: m.name || moshafRewaya(m),
     server: m.server, sources: buildSources(r.name, r.name_en || r.name, m, n, EDITIONS), duration: 0
   };
 }
@@ -159,14 +160,14 @@ async function loadData() {
 }
 function buildRiwayat() {
   const map = new Map();
-  S.reciters.forEach(r => r.moshaf.forEach(m => { const k = norm(m.rewaya); if (!k) return; if (!map.has(k)) map.set(k, { key: k, name: m.rewaya, count: 0 }); map.get(k).count++ }));
+  S.reciters.forEach(r => r.moshaf.forEach(m => { const rw = moshafRewaya(m); const k = norm(rw); if (!k) return; if (!map.has(k)) map.set(k, { key: k, name: rw, count: 0 }); map.get(k).count++ }));
   const rank = k => /حفص|hafs/.test(k) ? 0 : /ورش|warsh/.test(k) ? 1 : /قالون|qaloon|qalun/.test(k) ? 2 : /الدوري|duri/.test(k) ? 3 : 9;
   S.riwayat = [...map.values()].sort((a, b) => rank(a.key) - rank(b.key) || b.count - a.count);
 }
 function filteredReciters() {
   const q = norm2(S.query);
   let list = S.reciters.filter(r => {
-    const okR = S.rewaya === '__all' || r.moshaf.some(m => norm(m.rewaya) === S.rewaya);
+    const okR = S.rewaya === '__all' || r.moshaf.some(m => norm(moshafRewaya(m)) === S.rewaya);
     const okQ = !q || norm2(r.name + ' ' + r.name_en).includes(q);
     return okR && okQ
   });
@@ -250,7 +251,7 @@ function viewHome() {
   <div class="view-head"><div><h2>${t('recentView')}</h2></div><button class="icon-btn" data-act="openrecent" aria-label="${t('recentView')}"><svg class="ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
   <div class="recent-row">${S.recent.slice(0, 10).map((f, i) => `<button class="recent-card" data-coll="${i}">
     <img src="${avatarURI(f.rar, reciterLetter({ name: f.rar, name_en: f.ren }))}" alt="" loading="lazy">
-    <span class="rc-txt"><span class="rt${S.lang === 'ar' ? ' sn-font' : ''}">${S.lang === 'ar' ? surahNameGlyph(f.n) : esc(surahName(f.n, S.lang))}</span><br><span class="rs">${esc(S.lang === 'ar' ? f.rar : (f.ren || f.rar))} · ${esc(f.rewaya || '')}</span></span>
+    <span class="rc-txt"><span class="rt${S.lang === 'ar' ? ' sn-font' : ''}">${S.lang === 'ar' ? surahNameGlyph(f.n) : esc(surahName(f.n, S.lang))}</span><br><span class="rs">${esc(S.lang === 'ar' ? f.rar : (f.ren || f.rar))} · ${esc(f.rewaya || f.mname || '')}</span></span>
     <span class="rplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`).join('')}</div>
   ${orn}` : ''}
   <div class="view-head"><div><h2>${t('quickSurahs')}</h2></div></div>
@@ -272,8 +273,8 @@ function viewHome() {
   <div class="reciter-grid">${feat.slice(0, 16).map(reciterCard).join('')}</div>`;
 }
 function reciterCard(r) {
-  const ms = S.rewaya === '__all' ? r.moshaf : r.moshaf.filter(m => norm(m.rewaya) === S.rewaya);
-  const rw = [...new Set(ms.map(m => m.rewaya).filter(Boolean))].slice(0, 2);
+  const ms = S.rewaya === '__all' ? r.moshaf : r.moshaf.filter(m => norm(moshafRewaya(m)) === S.rewaya);
+  const rw = [...new Set(ms.map(m => moshafRewaya(m)).filter(Boolean))].slice(0, 2);
   return `<button class="reciter-card ${S.reciter && S.reciter.id === r.id ? 'active' : ''}" data-rid="${esc(r.id)}">
     <div class="ava">${reciterImg(r)}
     <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
@@ -297,11 +298,11 @@ function viewSurahs() {
   return `<button class="back-btn" data-act="back"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
   <section class="reciter-hero">${reciterImg(r)}
     <div class="rh-info"><h2>${esc(reciterName(r))}</h2>
-      <div class="rh-meta"><span class="tag gold">${esc(m.rewaya)}</span><span class="tag">${esc(m.name || m.rewaya)}</span><span class="tag">${S.tracks.length} ${t('surahCount')}</span></div>
+      <div class="rh-meta"><span class="tag gold">${esc(moshafRewaya(m))}</span><span class="tag">${esc(m.name || moshafRewaya(m))}</span><span class="tag">${S.tracks.length} ${t('surahCount')}</span></div>
       <div class="rh-actions">
         <button class="btn primary sm" data-act="playall"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('playAll')}</button>
         <button class="btn sm" data-act="dlall"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg>${t('downloadAll')}</button>
-        ${ms.length > 1 ? `<select id="moshafSel">${ms.map((x, i) => `<option value="${i}" ${x.id === m.id ? 'selected' : ''}>${esc(x.name || x.rewaya)} — ${esc(x.rewaya)}</option>`).join('')}</select>` : ''}
+        ${ms.length > 1 ? `<select id="moshafSel">${ms.map((x, i) => `<option value="${i}" ${x.id === m.id ? 'selected' : ''}>${esc(x.name || moshafRewaya(x))} — ${esc(moshafRewaya(x))}</option>`).join('')}</select>` : ''}
       </div></div></section>
   <div class="surah-list">${list.length ? list.map(tr => surahRow(tr, S.tracks.indexOf(tr))).join('') : `<div class="empty"><p>${t('noResults')}</p></div>`}</div>`;
 }
@@ -364,8 +365,8 @@ function collectionRow(f, tr, i, isFav) {
   const prim = S.lang === 'ar' ? tr.name_ar : tr.name_en;
   return `<div class="surah-row ${playing ? 'playing' : ''}" data-coll="${i}" data-n="${tr.n}" data-key="${esc(tr.key)}">
     <span class="sn">${playing ? '<span class="eq"><i></i><i></i><i></i></span>' : `<b>${S.lang === 'ar' ? arDigits(tr.n) : tr.n}</b>`}</span>
-    <span class="si">${S.lang === 'ar' ? `<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>` : `<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
-    <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
+    <span class="si">${S.lang === 'ar' ? `<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>` : `<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya || f.mname || '')}</span></span>
+    <span class="sfoot"><span class="tag gold">${esc(f.rewaya || f.mname || '')}</span>
     <span class="acts">
       ${isFav ? `<button class="mini-btn faved" data-unfav="${esc(tr.key)}" aria-label="${t('favorite')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>` : ''}
       <button class="mini-btn" data-dl="${esc(tr.key)}" aria-label="${t('download')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
@@ -376,7 +377,7 @@ function collectionRow(f, tr, i, isFav) {
 function openReciter(id, autoplay = false) {
   const r = S.reciters.find(x => x.id === id); if (!r) return;
   S.reciter = r;
-  const ms = S.rewaya === '__all' ? r.moshaf : r.moshaf.filter(m => norm(m.rewaya) === S.rewaya);
+  const ms = S.rewaya === '__all' ? r.moshaf : r.moshaf.filter(m => norm(moshafRewaya(m)) === S.rewaya);
   S.moshaf = ms[0] || r.moshaf[0];
   S.tracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
   S.view = 'surahs'; S.query = ''; $('#searchInput').value = '';
@@ -457,7 +458,7 @@ function updateNowPlaying() {
 function updateBadges() {
   const tr = S.current; if (!tr) return;
   const src = currentSources()[S.srcIdx] || tr.sources[0];
-  const html = `<span class="tag gold">${esc(tr.rewaya)}</span><span class="tag" id="qBadge">${src.bitrate} ${t('kbps')}</span><span class="tag">${esc(src.provider)}</span>`;
+  const html = `<span class="tag gold">${esc(tr.rewaya || tr.mname || '')}</span><span class="tag" id="qBadge">${src.bitrate} ${t('kbps')}</span><span class="tag">${esc(src.provider)}</span>`;
   $('#npBadges').innerHTML = html; $('#ovBadges').innerHTML = html;
 }
 async function probeBitrate() {
