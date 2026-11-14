@@ -30,18 +30,16 @@ const FALLBACK = [["مشاري راشد العفاسي", "Mishary Rashid Alafasy
 let EDITIONS = [];
 
 /* ── Verses ── */
-const VERSES = [["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَمِعُوا لَهُ وَأَنصِتُوا لَعَلَّكُمْ تُرْحَمُونَ", "الأعراف · ٢٠٤", "When the Qur'an is recited, listen to it attentively, so you may receive mercy.", "Al-A'raf · 204"], ["الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ ۗ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "الرعد · ٢٨", "Those who believe, and whose hearts find comfort in the remembrance of Allah.", "Ar-Ra'd · 28"], ["وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا", "المزمل · ٤", "And recite the Qur'an with measured recitation.", "Al-Muzzammil · 4"], ["إِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ وَإِنَّا لَهُ لَحَافِظُونَ", "الحجر · ٩", "Indeed, it is We who sent down the Reminder, and indeed, We will be its guardian.", "Al-Hijr · 9"]];
+const VERSES = [["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَمِعُوا لَهُ وَأَنصِتُوا لَعَلَّكُمْ تُرْحَمُونَ", "الأعراف · 204", "When the Qur'an is recited, listen to it attentively, so you may receive mercy.", "Al-A'raf · 204"], ["الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ ۗ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "الرعد · 28", "Those who believe, and whose hearts find comfort in the remembrance of Allah.", "Ar-Ra'd · 28"], ["وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا", "المزمل · 4", "And recite the Qur'an with measured recitation.", "Al-Muzzammil · 4"], ["إِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ وَإِنَّا لَهُ لَحَافِظُونَ", "الحجر · 9", "Indeed, it is We who sent down the Reminder, and indeed, We will be its guardian.", "Al-Hijr · 9"]];
 
 /* ── i18n ── */
 const I18N = {
-  ar: { library: "المكتبة", home: "الرئيسية", reciters: "القرّاء", favorites: "المفضلة", recent: "آخر الاستماع", downloads: "التنزيلات", verseLabel: "آية وتدبّر", tagline: "رفيقك لتلاوة القرآن الكريم", nowPlaying: "يُتلى الآن", chooseReciter: "اختر قارئًا لبدء التلاوة", upNext: "التالي في القائمة", favorite: "المفضلة", download: "تنزيل", settings: "الإعدادات", theme: "المظهر", themeDesc: "نهاري بيج / ليلي OLED", light: "نهاري", dark: "ليلي", language: "اللغة", audioSource: "مصدر الصوت", audioSourceDesc: "يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل", shortcuts: "اختصارات لوحة المفاتيح", kPlay: "تشغيل / إيقاف", kSeek: "تقديم / ترجيع ٥ ثوانٍ", kNext: "التالي / السابق", kFav: "المفضلة", kMute: "كتم الصوت", kSearch: "بحث", done: "تم", cancel: "إلغاء", confirm: "تأكيد", chooseFolder: "مجلد الحفظ", noDownloads: "لا توجد تنزيلات بعد", loading: "جارٍ تحميل المكتبة…", offline: "تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت", searchReciters: "ابحث عن قارئ…", searchSurahs: "ابحث عن سورة…", searchFav: "ابحث في المفضلة…", searchRecent: "ابحث في آخر الاستماع…", greetM: "صباح النور والقرآن", greetE: "مساء النور والقرآن", heroSub: "تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.", continueL: "واصل الاستماع", browse: "تصفّح القرّاء", featured: "قرّاء مختارون", quickSurahs: "سور يُكثر الاستماع إليها", allRiwayat: "كل الروايات", riwayat: "الروايات", sortName: "الاسم", sortCount: "عدد المصاحف", moshaf: "مصحف", surahs: "سورة", playAll: "تشغيل الكل", downloadAll: "تنزيل الكل", back: "عودة للقرّاء", ayahs: "آية", meccan: "مكية", medinan: "مدنية", noFav: "لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة", noRecent: "لم تستمع إلى شيء بعد", clearRecent: "مسح السجل", cleared: "تم مسح السجل", undo: "تراجع", addedFav: "أُضيفت إلى المفضلة", removedFav: "أُزيلت من المفضلة", qAuto: "أعلى جودة", qHigh: "١٩٢+", qStd: "١٢٨", qSave: "توفير البيانات", sleep: "مؤقت النوم", sleepOff: "إيقاف", min: "دقيقة", timerSet: "سيتوقف التشغيل بعد", timerEnd: "انتهى مؤقت النوم — تصبح على خير", confirmDlAll: "تنزيل جميع سور هذا المصحف؟", confirmDlAllMsg: "قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.", saved: "تم الحفظ", failed: "فشل", downloading: "جارٍ التنزيل", pending: "بالانتظار", cancelled: "أُلغي", dlDone: "اكتمل التنزيل", errorAudio: "تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر", noResults: "لا توجد نتائج مطابقة", reciter: "قارئ", tracks: "تلاوة", kbps: "kbps", provider: "المصدر", resume: "استئناف", playing: "يُتلى الآن", selectReciterFirst: "اختر قارئًا أولًا", favView: "المفضلة", recentView: "آخر الاستماع", favSub: "سورك المحفوظة للتلاوة الدائمة", recentSub: "آخر ما استمعت إليه", recitersSub: "قرّاء من حول العالم، بروايات متعددة", surahCount: "سورة متاحة", dlFolder: "اختر مجلدًا لحفظ التلاوات تلقائيًا", folderOk: "سيتم الحفظ في", quality: "الجودة", speed: "السرعة", volume: "الصوت", mute: "كتم", expand: "ملء الشاشة", close: "إغلاق", previous: "السابق", next: "التالي", shuffle: "عشوائي", repeat: "تكرار", play: "تشغيل", pause: "إيقاف", remove: "إزالة", clear: "مسح", about: "أُنس — مشغل القرآن الكريم", aboutSub: "تلاوات كاملة، روايات متعددة، أعلى جودة", pin: "تثبيت اللوحة", unpin: "إلغاء التثبيت", hidePanel: "إخفاء اللوحة", showPanel: "إظهار اللوحة", floatPanel: "فصل اللوحة كنافذة عائمة", dockPanel: "إرجاع اللوحة إلى الجانب", mushaf: "المصحف", quranName: "القرآن الكريم", startReading: "ابدأ القراءة", continueReading: "تابع القراءة", mushafSub: "قراءة المصحف — رواية حفص عن عاصم", page: "صفحة", juz: "الجزء", rwHafs: "حفص عن عاصم", rwWarsh: "ورش عن نافع", mushafRiwaya: "رواية المصحف", mushafRiwayaDesc: "المصحف المكتوب — حفص عن عاصم / ورش عن نافع", chooseRiwaya: "اختر رواية المصحف", chooseRiwayaDesc: "يمكنك تغييرها لاحقاً من الإعدادات", dlPages: "تحميل جميع الصفحات", prayerTimes: "مواقيت الصلاة", prayerSub: "مواقيت الصلاة لموقعك", nextPrayer: "الصلاة القادمة", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", location: "الموقع", changeLoc: "تغيير الموقع", searchLoc: "ابحث عن مدينة…", locNotFound: "لم يتم العثور على الموقع", search: "بحث", locAuto: "تحديد الموقع تلقائياً", locGps: "عبر GPS", locNet: "عبر الشبكة", locDetecting: "جارٍ تحديد الموقع…", locFail: "تعذّر تحديد الموقع", locApprox: "تقريبي — الشبكة", locApproxT: "تم التحديد عبر الشبكة وقد يكون غير دقيق — استعمل GPS أو ابحث عن مدينتك", adhan: "الأذان", adhanDesc: "تشغيل الأذان تلقائياً عند دخول وقت الصلاة", adhanNow: "حان الآن وقت", stopAdhan: "إيقاف الأذان", adhanOn: "مفعّل", adhanOff: "معطّل", firstThird: "الثلث الأول من الليل", lastThird: "الثلث الأخير من الليل", prOffset: "تصحيح المواقيت", prOffsetDesc: "تقديم أو تأخير المواقيت بالدقائق", untilAdhan: "بقي على رفع الآذان", cc: "الترجمة", adhkar: "الأذكار", adhkarSub: "من حصن المسلم", dhikr: "ذكر", allCats: "جميع الأقسام", akDone: "تمّت الأذكار — تقبّل الله", akProgress: "تمّ", ytView: "أفضل التلاوات", ytSub: "مجموعة مختارة من أجمل التلاوات المرئية", ytAll: "كل التلاوات", prToday: "صلوات اليوم", prNight: "الشروق وأوقات الليل", adhanVoice: "صوت المؤذن", adhanVoiceDesc: "اختر صوت الأذان المستعمل عند دخول وقت الصلاة", preview: "استماع", adhanMode: "سلوك الأذان", adhanModeDesc: "عند دخول وقت الصلاة: إيقاف التلاوة أو خفض صوتها أثناء الأذان", adhanStop: "إيقاف التلاوة", adhanDuck: "خفض الصوت", notify: "إشعار سطح المكتب", notifyDesc: "إشعار عند دخول وقت الصلاة", adhanSec: "الإذان والتنبيهات", quickCities: "مدن سريعة", sideFoot: "أُنس · رفيق التلاوة" },
-  en: { library: "Library", home: "Home", reciters: "Reciters", favorites: "Favorites", recent: "Recently Played", downloads: "Downloads", verseLabel: "Verse & Reflect", tagline: "Your companion for Qur'an listening", nowPlaying: "Now Reciting", chooseReciter: "Choose a reciter to begin", upNext: "Up Next", favorite: "Favorite", download: "Download", settings: "Settings", theme: "Theme", themeDesc: "Beige light / OLED dark", light: "Light", dark: "Dark", language: "Language", audioSource: "Audio source", audioSourceDesc: "Highest quality chosen automatically, with fallback", shortcuts: "Keyboard shortcuts", kPlay: "Play / pause", kSeek: "Seek ±5 seconds", kNext: "Next / previous", kFav: "Favorite", kMute: "Mute", kSearch: "Search", done: "Done", cancel: "Cancel", confirm: "Confirm", chooseFolder: "Save folder", noDownloads: "No downloads yet", loading: "Loading library…", offline: "Could not reach the source — showing a compact online catalog", searchReciters: "Search reciters…", searchSurahs: "Search surahs…", searchFav: "Search favorites…", searchRecent: "Search recent…", greetM: "Good morning, with Qur'an", greetE: "Good evening, with Qur'an", heroSub: "Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.", continueL: "Continue listening", browse: "Browse reciters", featured: "Featured reciters", quickSurahs: "Frequently recited surahs", allRiwayat: "All riwayat", riwayat: "Riwayat", sortName: "Name", sortCount: "Mushaf count", moshaf: "mushaf", surahs: "surahs", playAll: "Play all", downloadAll: "Download all", back: "Back to reciters", ayahs: "ayahs", meccan: "Meccan", medinan: "Medinan", noFav: "No favorites yet — tap ♥ on any surah", noRecent: "Nothing played yet", clearRecent: "Clear history", cleared: "History cleared", undo: "Undo", addedFav: "Added to favorites", removedFav: "Removed from favorites", qAuto: "Best quality", qHigh: "192+", qStd: "128", qSave: "Save data", sleep: "Sleep timer", sleepOff: "Off", min: "min", timerSet: "Playback will stop in", timerEnd: "Sleep timer ended — good night", confirmDlAll: "Download all surahs of this mushaf?", confirmDlAllMsg: "Total size may exceed 500 MB. Downloads run in the background.", saved: "Saved", failed: "Failed", downloading: "Downloading", pending: "Pending", cancelled: "Cancelled", dlDone: "Download complete", errorAudio: "Could not play this recitation — try another source", noResults: "No matching results", reciter: "reciters", tracks: "recitations", kbps: "kbps", provider: "Source", resume: "Resume", playing: "Now reciting", selectReciterFirst: "Choose a reciter first", favView: "Favorites", recentView: "Recently Played", favSub: "Your saved surahs for anytime recitation", recentSub: "What you listened to last", recitersSub: "Reciters worldwide, across multiple riwayat", surahCount: "surahs available", dlFolder: "Choose a folder to save recitations automatically", folderOk: "Saving to", quality: "Quality", speed: "Speed", volume: "Volume", mute: "Mute", expand: "Fullscreen", close: "Close", previous: "Previous", next: "Next", shuffle: "Shuffle", repeat: "Repeat", play: "Play", pause: "Pause", remove: "Remove", clear: "Clear", about: "Ouns — Qur'an Player", aboutSub: "Full recitations, multiple riwayat, highest quality", pin: "Pin panel", unpin: "Unpin", hidePanel: "Hide panel", showPanel: "Show panel", floatPanel: "Float panel", dockPanel: "Dock panel", mushaf: "Mushaf", quranName: "The Holy Qur'an", startReading: "Start reading", continueReading: "Continue reading", mushafSub: "Read the Qur'an — Hafs 'an 'Asim", page: "Page", juz: "Juz", rwHafs: "Hafs 'an 'Asim", rwWarsh: "Warsh 'an Nafi'", mushafRiwaya: "Mushaf riwayah", mushafRiwayaDesc: "Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'", chooseRiwaya: "Choose mushaf riwayah", chooseRiwayaDesc: "You can change it later in Settings", dlPages: "Download all pages", prayerTimes: "Prayer times", prayerSub: "Prayer times for your location", nextPrayer: "Next prayer", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", location: "Location", changeLoc: "Change location", searchLoc: "Search a city…", locNotFound: "Location not found", search: "Search", locAuto: "Detect location", locGps: "Via GPS", locNet: "Via network", locDetecting: "Detecting location…", locFail: "Could not detect your location", locApprox: "Approximate", locApproxT: "Detected via network and may be imprecise — use GPS or search your city", adhan: "Adhan", adhanDesc: "Play the adhan automatically at prayer time", adhanNow: "It is now time for", stopAdhan: "Stop adhan", adhanOn: "On", adhanOff: "Off", firstThird: "First third of the night", lastThird: "Last third of the night", prOffset: "Time adjustment", prOffsetDesc: "Shift prayer times earlier or later (minutes)", untilAdhan: "Adhan in", cc: "Captions", adhkar: "Adhkar", adhkarSub: "From Hisn al-Muslim", dhikr: "dhikr", allCats: "All categories", akDone: "Adhkar complete — may Allah accept", akProgress: "Done", ytView: "Best recitations", ytSub: "A curated selection of the finest video recitations", ytAll: "All recitations", prToday: "Today's prayers", prNight: "Sunrise & night quarters", adhanVoice: "Adhan voice", adhanVoiceDesc: "Choose the adhan recitation played at prayer time", preview: "Preview", adhanMode: "Adhan behavior", adhanModeDesc: "At prayer time: pause recitation or lower its volume during the adhan", adhanStop: "Pause recitation", adhanDuck: "Lower volume", notify: "Desktop notification", notifyDesc: "Notify when a prayer time enters", adhanSec: "Adhan & alerts", quickCities: "Quick cities", sideFoot: "Ouns · Recitation Companion" }
+  ar: { library: "المكتبة", home: "الرئيسية", reciters: "القرّاء", favorites: "المفضلة", recent: "آخر الاستماع", downloads: "التنزيلات", verseLabel: "آية وتدبّر", tagline: "رفيقك لتلاوة القرآن الكريم", nowPlaying: "يُتلى الآن", chooseReciter: "اختر قارئًا لبدء التلاوة", upNext: "التالي في القائمة", favorite: "المفضلة", download: "تنزيل", settings: "الإعدادات", theme: "المظهر", themeDesc: "نهاري بيج / ليلي OLED", light: "نهاري", dark: "ليلي", language: "اللغة", audioSource: "مصدر الصوت", audioSourceDesc: "يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل", shortcuts: "اختصارات لوحة المفاتيح", kPlay: "تشغيل / إيقاف", kSeek: "تقديم / ترجيع 5 ثوانٍ", kNext: "التالي / السابق", kFav: "المفضلة", kMute: "كتم الصوت", kSearch: "بحث", done: "تم", cancel: "إلغاء", confirm: "تأكيد", chooseFolder: "مجلد الحفظ", noDownloads: "لا توجد تنزيلات بعد", loading: "جارٍ تحميل المكتبة…", offline: "تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت", searchReciters: "ابحث عن قارئ…", searchSurahs: "ابحث عن سورة…", searchFav: "ابحث في المفضلة…", searchRecent: "ابحث في آخر الاستماع…", greetM: "صباح النور والقرآن", greetE: "مساء النور والقرآن", heroSub: "تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.", continueL: "واصل الاستماع", browse: "تصفّح القرّاء", featured: "قرّاء مختارون", quickSurahs: "سور يُكثر الاستماع إليها", allRiwayat: "كل الروايات", riwayat: "الروايات", sortName: "الاسم", sortCount: "عدد المصاحف", moshaf: "مصحف", surahs: "سورة", playAll: "تشغيل الكل", downloadAll: "تنزيل الكل", back: "عودة للقرّاء", ayahs: "آية", meccan: "مكية", medinan: "مدنية", noFav: "لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة", noRecent: "لم تستمع إلى شيء بعد", clearRecent: "مسح السجل", cleared: "تم مسح السجل", undo: "تراجع", addedFav: "أُضيفت إلى المفضلة", removedFav: "أُزيلت من المفضلة", qAuto: "أعلى جودة", qHigh: "192+", qStd: "128", qSave: "توفير البيانات", sleep: "مؤقت النوم", sleepOff: "إيقاف", min: "دقيقة", timerSet: "سيتوقف التشغيل بعد", timerEnd: "انتهى مؤقت النوم — تصبح على خير", confirmDlAll: "تنزيل جميع سور هذا المصحف؟", confirmDlAllMsg: "قد يتجاوز الحجم 500 ميغابايت. سيبدأ التنزيل في الخلفية.", saved: "تم الحفظ", failed: "فشل", downloading: "جارٍ التنزيل", pending: "بالانتظار", cancelled: "أُلغي", dlDone: "اكتمل التنزيل", errorAudio: "تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر", noResults: "لا توجد نتائج مطابقة", reciter: "قارئ", tracks: "تلاوة", kbps: "kbps", provider: "المصدر", resume: "استئناف", playing: "يُتلى الآن", selectReciterFirst: "اختر قارئًا أولًا", favView: "المفضلة", recentView: "آخر الاستماع", favSub: "سورك المحفوظة للتلاوة الدائمة", recentSub: "آخر ما استمعت إليه", recitersSub: "قرّاء من حول العالم، بروايات متعددة", surahCount: "سورة متاحة", dlFolder: "اختر مجلدًا لحفظ التلاوات تلقائيًا", folderOk: "سيتم الحفظ في", quality: "الجودة", speed: "السرعة", volume: "الصوت", mute: "كتم", expand: "ملء الشاشة", close: "إغلاق", previous: "السابق", next: "التالي", shuffle: "عشوائي", repeat: "تكرار", play: "تشغيل", pause: "إيقاف", remove: "إزالة", clear: "مسح", about: "أُنس — مشغل القرآن الكريم", aboutSub: "تلاوات كاملة، روايات متعددة، أعلى جودة", pin: "تثبيت اللوحة", unpin: "إلغاء التثبيت", hidePanel: "إخفاء اللوحة", showPanel: "إظهار اللوحة", floatPanel: "فصل اللوحة كنافذة عائمة", dockPanel: "إرجاع اللوحة إلى الجانب", mushaf: "المصحف", quranName: "القرآن الكريم", startReading: "ابدأ القراءة", continueReading: "تابع القراءة", mushafSub: "قراءة المصحف — رواية حفص عن عاصم", page: "صفحة", juz: "الجزء", rwHafs: "حفص عن عاصم", rwWarsh: "ورش عن نافع", mushafRiwaya: "رواية المصحف", mushafRiwayaDesc: "المصحف المكتوب — حفص عن عاصم / ورش عن نافع", chooseRiwaya: "اختر رواية المصحف", chooseRiwayaDesc: "يمكنك تغييرها لاحقاً من الإعدادات", dlPages: "تحميل جميع الصفحات", prayerTimes: "مواقيت الصلاة", prayerSub: "مواقيت الصلاة لموقعك", nextPrayer: "الصلاة القادمة", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", location: "الموقع", changeLoc: "تغيير الموقع", searchLoc: "ابحث عن مدينة…", locNotFound: "لم يتم العثور على الموقع", search: "بحث", locAuto: "تحديد الموقع تلقائياً", locGps: "عبر GPS", locNet: "عبر الشبكة", locDetecting: "جارٍ تحديد الموقع…", locFail: "تعذّر تحديد الموقع", locApprox: "تقريبي — الشبكة", locApproxT: "تم التحديد عبر الشبكة وقد يكون غير دقيق — استعمل GPS أو ابحث عن مدينتك", adhan: "الأذان", adhanDesc: "تشغيل الأذان تلقائياً عند دخول وقت الصلاة", adhanNow: "حان الآن وقت", stopAdhan: "إيقاف الأذان", adhanOn: "مفعّل", adhanOff: "معطّل", firstThird: "الثلث الأول من الليل", lastThird: "الثلث الأخير من الليل", prOffset: "تصحيح المواقيت", prOffsetDesc: "تقديم أو تأخير المواقيت بالدقائق", untilAdhan: "بقي على رفع الآذان", cc: "الترجمة", adhkar: "الأذكار", adhkarSub: "من حصن المسلم", dhikr: "ذكر", allCats: "جميع الأقسام", akDone: "تمّت الأذكار — تقبّل الله", akProgress: "تمّ", ytView: "أفضل التلاوات", ytSub: "مجموعة مختارة من أجمل التلاوات المرئية", ytAll: "كل التلاوات", prToday: "صلوات اليوم", prNight: "الشروق وأوقات الليل", adhanVoice: "صوت المؤذن", adhanVoiceDesc: "اختر صوت الأذان المستعمل عند دخول وقت الصلاة", preview: "استماع", adhanMode: "سلوك الأذان", adhanModeDesc: "عند دخول وقت الصلاة: إيقاف التلاوة أو خفض صوتها أثناء الأذان", adhanStop: "إيقاف التلاوة", adhanDuck: "خفض الصوت", notify: "إشعار سطح المكتب", notifyDesc: "إشعار عند دخول وقت الصلاة", adhanSec: "الإذان والتنبيهات", numerals: "الأرقام", numeralsDesc: "الأرقام المشرقية (٠١٢٣) أو اللاتينية (0123)", quickCities: "مدن سريعة", sideFoot: "أُنس · رفيق التلاوة" },
+  en: { library: "Library", home: "Home", reciters: "Reciters", favorites: "Favorites", recent: "Recently Played", downloads: "Downloads", verseLabel: "Verse & Reflect", tagline: "Your companion for Qur'an listening", nowPlaying: "Now Reciting", chooseReciter: "Choose a reciter to begin", upNext: "Up Next", favorite: "Favorite", download: "Download", settings: "Settings", theme: "Theme", themeDesc: "Beige light / OLED dark", light: "Light", dark: "Dark", language: "Language", audioSource: "Audio source", audioSourceDesc: "Highest quality chosen automatically, with fallback", shortcuts: "Keyboard shortcuts", kPlay: "Play / pause", kSeek: "Seek ±5 seconds", kNext: "Next / previous", kFav: "Favorite", kMute: "Mute", kSearch: "Search", done: "Done", cancel: "Cancel", confirm: "Confirm", chooseFolder: "Save folder", noDownloads: "No downloads yet", loading: "Loading library…", offline: "Could not reach the source — showing a compact online catalog", searchReciters: "Search reciters…", searchSurahs: "Search surahs…", searchFav: "Search favorites…", searchRecent: "Search recent…", greetM: "Good morning, with Qur'an", greetE: "Good evening, with Qur'an", heroSub: "Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.", continueL: "Continue listening", browse: "Browse reciters", featured: "Featured reciters", quickSurahs: "Frequently recited surahs", allRiwayat: "All riwayat", riwayat: "Riwayat", sortName: "Name", sortCount: "Mushaf count", moshaf: "mushaf", surahs: "surahs", playAll: "Play all", downloadAll: "Download all", back: "Back to reciters", ayahs: "ayahs", meccan: "Meccan", medinan: "Medinan", noFav: "No favorites yet — tap ♥ on any surah", noRecent: "Nothing played yet", clearRecent: "Clear history", cleared: "History cleared", undo: "Undo", addedFav: "Added to favorites", removedFav: "Removed from favorites", qAuto: "Best quality", qHigh: "192+", qStd: "128", qSave: "Save data", sleep: "Sleep timer", sleepOff: "Off", min: "min", timerSet: "Playback will stop in", timerEnd: "Sleep timer ended — good night", confirmDlAll: "Download all surahs of this mushaf?", confirmDlAllMsg: "Total size may exceed 500 MB. Downloads run in the background.", saved: "Saved", failed: "Failed", downloading: "Downloading", pending: "Pending", cancelled: "Cancelled", dlDone: "Download complete", errorAudio: "Could not play this recitation — try another source", noResults: "No matching results", reciter: "reciters", tracks: "recitations", kbps: "kbps", provider: "Source", resume: "Resume", playing: "Now reciting", selectReciterFirst: "Choose a reciter first", favView: "Favorites", recentView: "Recently Played", favSub: "Your saved surahs for anytime recitation", recentSub: "What you listened to last", recitersSub: "Reciters worldwide, across multiple riwayat", surahCount: "surahs available", dlFolder: "Choose a folder to save recitations automatically", folderOk: "Saving to", quality: "Quality", speed: "Speed", volume: "Volume", mute: "Mute", expand: "Fullscreen", close: "Close", previous: "Previous", next: "Next", shuffle: "Shuffle", repeat: "Repeat", play: "Play", pause: "Pause", remove: "Remove", clear: "Clear", about: "Ouns — Qur'an Player", aboutSub: "Full recitations, multiple riwayat, highest quality", pin: "Pin panel", unpin: "Unpin", hidePanel: "Hide panel", showPanel: "Show panel", floatPanel: "Float panel", dockPanel: "Dock panel", mushaf: "Mushaf", quranName: "The Holy Qur'an", startReading: "Start reading", continueReading: "Continue reading", mushafSub: "Read the Qur'an — Hafs 'an 'Asim", page: "Page", juz: "Juz", rwHafs: "Hafs 'an 'Asim", rwWarsh: "Warsh 'an Nafi'", mushafRiwaya: "Mushaf riwayah", mushafRiwayaDesc: "Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'", chooseRiwaya: "Choose mushaf riwayah", chooseRiwayaDesc: "You can change it later in Settings", dlPages: "Download all pages", prayerTimes: "Prayer times", prayerSub: "Prayer times for your location", nextPrayer: "Next prayer", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", location: "Location", changeLoc: "Change location", searchLoc: "Search a city…", locNotFound: "Location not found", search: "Search", locAuto: "Detect location", locGps: "Via GPS", locNet: "Via network", locDetecting: "Detecting location…", locFail: "Could not detect your location", locApprox: "Approximate", locApproxT: "Detected via network and may be imprecise — use GPS or search your city", adhan: "Adhan", adhanDesc: "Play the adhan automatically at prayer time", adhanNow: "It is now time for", stopAdhan: "Stop adhan", adhanOn: "On", adhanOff: "Off", firstThird: "First third of the night", lastThird: "Last third of the night", prOffset: "Time adjustment", prOffsetDesc: "Shift prayer times earlier or later (minutes)", untilAdhan: "Adhan in", cc: "Captions", adhkar: "Adhkar", adhkarSub: "From Hisn al-Muslim", dhikr: "dhikr", allCats: "All categories", akDone: "Adhkar complete — may Allah accept", akProgress: "Done", ytView: "Best recitations", ytSub: "A curated selection of the finest video recitations", ytAll: "All recitations", prToday: "Today's prayers", prNight: "Sunrise & night quarters", adhanVoice: "Adhan voice", adhanVoiceDesc: "Choose the adhan recitation played at prayer time", preview: "Preview", adhanMode: "Adhan behavior", adhanModeDesc: "At prayer time: pause recitation or lower its volume during the adhan", adhanStop: "Pause recitation", adhanDuck: "Lower volume", notify: "Desktop notification", notifyDesc: "Notify when a prayer time enters", adhanSec: "Adhan & alerts", numerals: "Numerals", numeralsDesc: "Arabic-Indic (٠١٢٣) or Latin (0123)", quickCities: "Quick cities", sideFoot: "Ouns · Recitation Companion" }
 };
-const t = k => I18N[S.lang][k] ?? k;
-
 /* ── State ── */
 const S = {
-  lang: store.get('lang', 'ar'), theme: store.get('theme', 'light'),
+  lang: store.get('lang', 'ar'), numerals: store.get('numerals', null), theme: store.get('theme', 'light'),
   quality: store.get('quality', 'auto'), speed: store.get('speed', 1),
   view: 'home', query: '', rewaya: '__all', sort: 'name',
   reciters: [], riwayat: [], editionsReady: false,
@@ -61,6 +59,9 @@ const S = {
   adhanMode: store.get('adhanMode', 'stop'), notifyOn: store.get('notifyOn', false), adhanDuckV: null,
   adhkarCat: null, ytId: null, weather: null
 };
+if (!S.numerals) S.numerals = S.lang === 'ar' ? 'arabic' : 'latin';
+const N = v => S.numerals === 'latin' ? String(v) : arDigits(v);
+const t = k => N(I18N[S.lang][k] ?? k);
 if (store.get('mushafLast', 0) > 1 && !store.get('mushafLast_hafs', 0)) store.set('mushafLast_hafs', store.get('mushafLast', 0));
 let audio = $('#audio');
 audio.volume = store.get('volume', 1);
@@ -200,7 +201,7 @@ const weatherInfo = c => WEATHER.find(w => w[0] === c) || WEATHER[2];
 function paintWeather() {
   const el = $('#hpWeather'); if (!el || !S.weather) return;
   const w = weatherInfo(S.weather.c);
-  el.innerHTML = `<span class="hw-ic">${w[3]}</span><span class="hw-t" dir="ltr">${S.weather.t}°</span><span class="hw-d">${S.lang === 'ar' ? w[1] : w[2]}</span>`;
+  el.innerHTML = `<span class="hw-ic">${w[3]}</span><span class="hw-t" dir="ltr">${N(S.weather.t)}°</span><span class="hw-d">${S.lang === 'ar' ? w[1] : w[2]}</span>`;
 }
 async function loadWeather() {
   const L = S.prayerLoc;
@@ -220,13 +221,13 @@ function viewHome() {
   let feat = featKeys.map(ks => ks.map(k => S.reciters.find(r => norm2(r.name).includes(norm2(k)))).find(Boolean)).filter(Boolean);
   if (feat.length < 6) feat = [...feat, ...S.reciters.filter(r => !feat.includes(r))].slice(0, 16);
   const quick = [1, 2, 18, 36, 55, 56, 67, 76, 112, 113, 114];
-  const num = n => S.lang === 'ar' ? arDigits(n) : n;
+  const num = n => N(n);
   const npKey = nextPrayerKey();
   const hpCard = npKey && S.prayerData ? `
       <div class="hp-weather" id="hpWeather"><span class="hw-d">${t('loading')}</span></div>
       <div class="hp-top"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c2 2 4 3.6 4 6H8c0-2.4 2-4 4-6z"/><path d="M5 21v-8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8"/><path d="M3 21h18"/><path d="M10 21v-4h4v4"/></svg><span>${t('nextPrayer')}</span></div>
-      <div class="hp-name">${S.lang === 'ar' ? 'صلاة ' : ''}${t(npKey.toLowerCase())}<span class="hp-time" dir="ltr">${prayerTime(npKey)}</span></div>
-      <div class="hp-count"><span>${t('untilAdhan')}</span><b class="pr-count" dir="ltr">${prayerCountdownStr()}</b></div>
+      <div class="hp-name">${S.lang === 'ar' ? 'صلاة ' : ''}${t(npKey.toLowerCase())}<span class="hp-time" dir="ltr">${N(prayerTime(npKey))}</span></div>
+      <div class="hp-count"><span>${t('untilAdhan')}</span><b class="pr-count" dir="ltr">${N(prayerCountdownStr())}</b></div>
       <div class="hp-loc">${esc(S.prayerLoc.name)}</div>` : `
       <div class="hp-top"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c2 2 4 3.6 4 6H8c0-2.4 2-4 4-6z"/><path d="M5 21v-8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8"/><path d="M3 21h18"/><path d="M10 21v-4h4v4"/></svg><span>${t('prayerTimes')}</span></div>
       <div class="hp-name">${t('prayerTimes')}</div>
@@ -263,7 +264,7 @@ function viewHome() {
 </span>
  <span class="qplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span>
 
-   <span class="qs">${m[2]} ${t('ayahs')} · ${m[3] ? t('medinan') : t('meccan')}</span>
+   <span class="qs">${N(m[2])} ${t('ayahs')} · ${m[3] ? t('medinan') : t('meccan')}</span>
  </button>` }).join('')}</div>
   ${orn}
   <div class="view-head"><div><h2>${t('featured')}</h2><div class="sub">${t('recitersSub')}</div></div><button class="btn sm" data-act="browse">${t('browse')}</button></div>
@@ -276,12 +277,12 @@ function reciterCard(r) {
     <div class="ava">${reciterImg(r)}
     <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
     <div class="rn">${esc(reciterName(r))}</div>
-    <div class="rm">${rw.map(x => `<span class="tag">${esc(x)}</span>`).join('')}<span class="tag gold">${r.moshaf.length} ${t('moshaf')}</span></div></button>`;
+    <div class="rm">${rw.map(x => `<span class="tag">${esc(x)}</span>`).join('')}<span class="tag gold">${N(r.moshaf.length)} ${t('moshaf')}</span></div></button>`;
 }
 function viewReciters() {
   const list = filteredReciters();
   const chips = [{ key: '__all', name: t('allRiwayat'), count: S.reciters.length }, ...S.riwayat];
-  return `<div class="view-head"><div><h2>${t('reciters')}</h2><div class="sub">${list.length} ${t('reciter')} · ${t('recitersSub')}</div></div>
+  return `<div class="view-head"><div><h2>${t('reciters')}</h2><div class="sub">${N(list.length)} ${t('reciter')} · ${t('recitersSub')}</div></div>
     <select id="sortSel" class="btn sm" style="border-radius:30px"><option value="name" ${S.sort === 'name' ? 'selected' : ''}>${t('sortName')}</option><option value="count" ${S.sort === 'count' ? 'selected' : ''}>${t('sortCount')}</option></select></div>
   <div class="chips">${chips.map(c => `<button class="chip ${S.rewaya === c.key ? 'active' : ''}" data-rw="${esc(c.key)}">${esc(c.name)}<span class="n">${c.count}</span></button>`).join('')}</div>
   ${list.length ? `<div class="reciter-grid">${list.map(reciterCard).join('')}</div>` : `<div class="empty"><p>${t('noResults')}</p></div>`}`;
@@ -295,7 +296,7 @@ function viewSurahs() {
   return `<button class="back-btn" data-act="back"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
   <section class="reciter-hero">${reciterImg(r)}
     <div class="rh-info"><h2>${esc(reciterName(r))}</h2>
-      <div class="rh-meta"><span class="tag gold">${esc(m.rewaya)}</span><span class="tag">${esc(m.name || m.rewaya)}</span><span class="tag">${S.tracks.length} ${t('surahCount')}</span></div>
+      <div class="rh-meta"><span class="tag gold">${esc(m.rewaya)}</span><span class="tag">${esc(m.name || m.rewaya)}</span><span class="tag">${N(S.tracks.length)} ${t('surahCount')}</span></div>
       <div class="rh-actions">
         <button class="btn primary sm" data-act="playall"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('playAll')}</button>
         <button class="btn sm" data-act="dlall"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg>${t('downloadAll')}</button>
@@ -306,7 +307,7 @@ function viewSurahs() {
 function surahRow(tr, i) {
   const isPlaying = S.current && S.current.key === tr.key;
   const isFaved = S.favorites.some(f => f.key === tr.key);
-  const trackNum = S.lang === 'ar' ? arDigits(tr.n) : tr.n;
+  const trackNum = N(tr.n);
   const trackName = S.lang === 'ar' ? tr.name_ar : tr.name_en;
 
   const numberContent = isPlaying
@@ -334,8 +335,8 @@ function surahRow(tr, i) {
       <div class="surah-sub-line">
   
         <span class="sfoot">
-              <span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type ? t('medinan') : t('meccan')}</span>
-          <span class="dur">${tr.duration ? fmt(tr.duration) : '—'}</span>
+              <span class="se">${N(tr.ayahs)} ${t('ayahs')} · ${tr.type ? t('medinan') : t('meccan')}</span>
+          <span class="dur">${tr.duration ? N(fmt(tr.duration)) : '—'}</span>
           <span class="acts">
             <button class="mini-btn ${isFaved ? 'faved' : ''}" data-fav="${esc(tr.key)}" aria-label="favorite">
               <svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg>
@@ -361,7 +362,7 @@ function collectionRow(f, tr, i, isFav) {
   const playing = S.current && S.current.key === tr.key;
   const prim = S.lang === 'ar' ? tr.name_ar : tr.name_en;
   return `<div class="surah-row ${playing ? 'playing' : ''}" data-coll="${i}" data-n="${tr.n}" data-key="${esc(tr.key)}">
-    <span class="sn">${playing ? '<span class="eq"><i></i><i></i><i></i></span>' : `<b>${S.lang === 'ar' ? arDigits(tr.n) : tr.n}</b>`}</span>
+    <span class="sn">${playing ? '<span class="eq"><i></i><i></i><i></i></span>' : `<b>${N(tr.n)}</b>`}</span>
     <span class="si">${S.lang === 'ar' ? `<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>` : `<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
     <span class="acts">
@@ -435,7 +436,7 @@ function prevTrack() {
 }
 function updateNowPlaying() {
   const tr = S.current; if (!tr) return;
-  const seed = tr.rar, num = S.lang === 'ar' ? arDigits(tr.n) : String(tr.n), sub = trackName(tr);
+  const seed = tr.rar, num = N(tr.n), sub = trackName(tr);
   const photo = photoURL(tr.rar, tr.rid);
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق'];
   $('#npMandala').innerHTML = mandalaSVG(...args); $('#ovMandala').innerHTML = mandalaSVG(...args);
@@ -455,7 +456,7 @@ function updateNowPlaying() {
 function updateBadges() {
   const tr = S.current; if (!tr) return;
   const src = currentSources()[S.srcIdx] || tr.sources[0];
-  const html = `<span class="tag gold">${esc(tr.rewaya)}</span><span class="tag" id="qBadge">${src.bitrate} ${t('kbps')}</span><span class="tag">${esc(src.provider)}</span>`;
+  const html = `<span class="tag gold">${esc(tr.rewaya)}</span><span class="tag" id="qBadge">${N(src.bitrate)} ${t('kbps')}</span><span class="tag">${esc(src.provider)}</span>`;
   $('#npBadges').innerHTML = html; $('#ovBadges').innerHTML = html;
 }
 async function probeBitrate() {
@@ -464,7 +465,7 @@ async function probeBitrate() {
     const h = await fetch(audio.src, { method: 'HEAD' }); const len = +h.headers.get('content-length');
     if (len && audio.duration) {
       const k = Math.round(len * 8 / audio.duration / 1000);
-      $$('#qBadge').forEach(el => el.textContent = `${k} ${t('kbps')}`);
+      $$('#qBadge').forEach(el => el.textContent = `${N(k)} ${t('kbps')}`);
       const src = currentSources()[S.srcIdx]; if (src) src.bitrate = k;
     }
   } catch (e) { }
@@ -475,7 +476,7 @@ function markPlayingRows() {
     row.classList.toggle('playing', on);
     const sn = row.querySelector('.sn');
     if (on && !sn.querySelector('.eq')) sn.innerHTML = '<span class="eq"><i></i><i></i><i></i></span>';
-    else if (!on && sn.querySelector('.eq')) { const n = +row.dataset.n || 0; sn.innerHTML = `<b>${n ? (S.lang === 'ar' ? arDigits(n) : n) : ''}</b>` }
+    else if (!on && sn.querySelector('.eq')) { const n = +row.dataset.n || 0; sn.innerHTML = `<b>${n ? N(n) : ''}</b>` }
   });
   $$('.quick-surah[data-surah]').forEach(q => q.classList.toggle('playing', !!(S.view === 'home' && S.current && +q.dataset.surah === S.current.n)));
 }
@@ -485,21 +486,21 @@ function renderQueue() {
   q.innerHTML = items.map((tr, k) => {
     const i = start + k; return `<div class="queue-item ${i === S.idx ? 'active' : ''}" draggable="true" data-qi="${i}">
     <span class="grip"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01"/></svg></span>
-    <span class="qi-n">${i === S.idx ? '▸' : (S.lang === 'ar' ? arDigits(tr.n) : tr.n)}</span>
-    <span class="qi-t">${esc(trackName(tr))}</span><span class="qi-d">${tr.duration ? fmt(tr.duration) : ''}</span></div>`
+    <span class="qi-n">${i === S.idx ? '▸' : N(tr.n)}</span>
+    <span class="qi-t">${esc(trackName(tr))}</span><span class="qi-d">${tr.duration ? N(fmt(tr.duration)) : ''}</span></div>`
   }).join('');
 }
 function updateProgress() {
   const d = audio.duration || 0, p = d ? audio.currentTime / d : 0;
-  $('#tCur').textContent = fmt(audio.currentTime); $('#tDur').textContent = fmt(d);
-  $('#ovCur').textContent = fmt(audio.currentTime); $('#ovDur').textContent = fmt(d);
+  $('#tCur').textContent = N(fmt(audio.currentTime)); $('#tDur').textContent = N(fmt(d));
+  $('#ovCur').textContent = N(fmt(audio.currentTime)); $('#ovDur').textContent = N(fmt(d));
   $('#progFill').style.width = (p * 100) + '%'; $('#progThumb').style.insetInlineStart = (p * 100) + '%';
   $('#ovFill').style.width = (p * 100) + '%'; $('#ovThumb').style.insetInlineStart = (p * 100) + '%';
   const now = Math.round(audio.currentTime || 0), max = Math.round(d);
-  ['progBar', 'ovProg'].forEach(id => { const el = $('#' + id); if (!el) return; el.setAttribute('aria-valuemax', max); el.setAttribute('aria-valuenow', now); el.setAttribute('aria-valuetext', fmt(now) + ' / ' + fmt(max)) });
+  ['progBar', 'ovProg'].forEach(id => { const el = $('#' + id); if (!el) return; el.setAttribute('aria-valuemax', max); el.setAttribute('aria-valuenow', now); el.setAttribute('aria-valuetext', N(fmt(now)) + ' / ' + N(fmt(max))) });
   const C = 2 * Math.PI * 45.6;
   $$('.pr-fill').forEach(c => c.style.strokeDashoffset = C * (1 - p));
-  if (S.current && d) { S.current.duration = d; const row = $(`.surah-row[data-key="${S.current.key}"] .dur`); if (row) row.textContent = fmt(d) }
+  if (S.current && d) { S.current.duration = d; const row = $(`.surah-row[data-key="${S.current.key}"] .dur`); if (row) row.textContent = N(fmt(d)) }
 }
 function updateBuffer() {
   try { if (audio.buffered.length && audio.duration) { const b = audio.buffered.end(audio.buffered.length - 1) / audio.duration * 100; $('#progBuf').style.width = b + '%'; $('#ovBuf').style.width = b + '%' } } catch (e) { }
@@ -597,7 +598,7 @@ async function mushafDownloadAll(btn) {
   btn.dataset.busy = '1'; btn.title = t('cancel');
   const rw = S.mushafRiwaya, orig = btn.textContent, ctl = { cancelled: false };
   mushafZipCancel = () => { ctl.cancelled = true };
-  const prog = p => { btn.textContent = `${S.lang === 'ar' ? arDigits(p) : p} / ${S.lang === 'ar' ? arDigits(MUSHAF_PAGES) : MUSHAF_PAGES}` };
+  const prog = p => { btn.textContent = `${N(p)} / ${N(MUSHAF_PAGES)}` };
   const fname = `mushaf-${rw}-svg.zip`;
   let sink = null, wr = null;
   try {
@@ -640,7 +641,7 @@ function mushafPrecache(n, rw) {
 }
 function mushafCoverHTML() {
   const last = mushafLastGet() || S.mushafPage;
-  const lbl = last > 1 ? `${t('continueReading')} — ${t('page')} ${S.lang === 'ar' ? arDigits(last) : last}` : t('startReading');
+  const lbl = last > 1 ? `${t('continueReading')} — ${t('page')} ${N(last)}` : t('startReading');
   const first = !store.get('mushafVisited', false);
   const ask = first ? `<div class="mushaf-ask" data-act="mushafaskclose"><div class="ma-card">
       <b>${t('chooseRiwaya')}</b>
@@ -649,8 +650,8 @@ function mushafCoverHTML() {
       <button class="btn" data-act="mrwset" data-rw="warsh">${t('rwWarsh')}</button>
     </div></div>`: (S.mushafAsk && last > 1 ? `<div class="mushaf-ask" data-act="mushafaskclose"><div class="ma-card">
       <b>${t('continueReading')}</b>
-      <span>${t('page')} ${S.lang === 'ar' ? arDigits(last) : last} · ${t(S.mushafRiwaya === 'warsh' ? 'rwWarsh' : 'rwHafs')}</span>
-      <button class="btn gold" data-act="mresume">${t('resume')} — ${t('page')} ${S.lang === 'ar' ? arDigits(last) : last}</button>
+      <span>${t('page')} ${N(last)} · ${t(S.mushafRiwaya === 'warsh' ? 'rwWarsh' : 'rwHafs')}</span>
+      <button class="btn gold" data-act="mresume">${t('resume')} — ${t('page')} ${N(last)}</button>
       <button class="btn" data-act="mstart">${t('startReading')}</button>
     </div></div>`: '');
   return `<div class="mushaf-wrap">
@@ -678,9 +679,9 @@ function viewRead() {
   if (n <= 0) return mushafCoverHTML();
   const R = book ? mushafRight(n) : n;
   const L = book && R + 1 <= MUSHAF_PAGES ? R + 1 : null;
-  const num = p => S.lang === 'ar' ? arDigits(p) : String(p);
-  const tot = S.lang === 'ar' ? arDigits(MUSHAF_PAGES) : MUSHAF_PAGES;
-  const jz = mushafJuz(R), jn = S.lang === 'ar' ? arDigits(jz) : jz;
+  const num = p => N(p);
+  const tot = N(MUSHAF_PAGES);
+  const jz = mushafJuz(R), jn = N(jz);
   const sc = mushafSurah(R);
   const sm = SURAH[sc - 1], sn = S.lang === 'ar' ? sm[0] : sm[1];
   const rw = S.mushafRiwaya;
@@ -693,7 +694,7 @@ function viewRead() {
       <button class="back-btn" data-act="mushafback"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
       <div class="mt-nav">
         <select class="mt-sel" id="mSurahSel" title="${t('surahs')}">${SURAH.map((s, i) => `<option value="${i + 1}"${i + 1 === sc ? ' selected' : ''}>${esc(S.lang === 'ar' ? s[0] : s[1])}</option>`).join('')}</select>
-        <select class="mt-sel" id="mJuzSel" title="${t('juz')}">${JUZ_PAGE.map((_, j) => `<option value="${j + 1}"${j + 1 === jz ? ' selected' : ''}>${t('juz')} ${S.lang === 'ar' ? arDigits(j + 1) : j + 1}</option>`).join('')}</select>
+        <select class="mt-sel" id="mJuzSel" title="${t('juz')}">${JUZ_PAGE.map((_, j) => `<option value="${j + 1}"${j + 1 === jz ? ' selected' : ''}>${t('juz')} ${N(j + 1)}</option>`).join('')}</select>
       </div>
       <div class="mt-center"><span>${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
@@ -826,11 +827,13 @@ function prayerSettingsHTML() {
       <div class="ps-ctl poff-ctl">
         ${PRAYERS.map(([k, l]) => {
     const v = S.prayerOffset[k] || 0; return `<div class="poff-row"><span class="poff-name">${t(l)}</span>
-        <button class="btn sm" data-poff="-5" data-pr="${k}">−5</button>
-        <button class="btn sm" data-poff="-1" data-pr="${k}">−1</button>
-        <b class="poff-val" dir="ltr">${v > 0 ? '+' : ''}${v}</b>
-        <button class="btn sm" data-poff="1" data-pr="${k}">+1</button>
-        <button class="btn sm" data-poff="5" data-pr="${k}">+5</button></div>`
+        <div class="poff-step" dir="ltr">
+          <button class="btn sm" data-poff="-5" data-pr="${k}">${N('\u22125')}</button>
+          <button class="btn sm" data-poff="-1" data-pr="${k}">${N('\u22121')}</button>
+          <b class="poff-val">${v > 0 ? '+' : ''}${N(v)}</b>
+          <button class="btn sm" data-poff="1" data-pr="${k}">${N('+1')}</button>
+          <button class="btn sm" data-poff="5" data-pr="${k}">${N('+5')}</button>
+        </div></div>`
   }).join('')}
       </div>
     </div>`;
@@ -933,7 +936,7 @@ function akProgress() { return store.get(akTodayKey(), {}) || {} }
 function akCatProgress(ci) { return akProgress()[ci] || {} }
 function akSave(ci, id, left) { const all = akProgress(); (all[ci] = all[ci] || {})[id] = left; store.set(akTodayKey(), all) }
 function akDoneCount(ci) { const p = akCatProgress(ci); return AK_CATS[ci].items.filter(a => (p[a.id] ?? a.count) === 0).length }
-function akDoneChip(ci) { const done = akDoneCount(ci), tot = AK_CATS[ci].items.length; return done ? `<span class="ak-prog">${t('akProgress')} ${arDigits(done)}/${arDigits(tot)}</span>` : '' }
+function akDoneChip(ci) { const done = akDoneCount(ci), tot = AK_CATS[ci].items.length; return done ? `<span class="ak-prog">${t('akProgress')} ${N(done)}/${N(tot)}</span>` : '' }
 function akAutoCat() { const h = new Date().getHours(), m = AK_CATS.findIndex(c => c.name === 'أذكار الصباح'), e = AK_CATS.findIndex(c => c.name === 'أذكار المساء'); if (m < 0 && e < 0) return null; if (m < 0) return e; if (e < 0) return m; return h >= 4 && h < 12 ? m : e }
 function akPurgeOld() { try { const today = 'ouns_' + akTodayKey(); for (let i = localStorage.length - 1; i >= 0; i--) { const k = localStorage.key(i); if (/^ouns_adhkar_\d{4}-\d{2}-\d{2}$/.test(k) && k !== today) localStorage.removeItem(k) } } catch (e) { } }
 const AK_FEATURED = ['أذكار الصباح', 'أذكار المساء', 'أذكار النوم', 'أذكار الاستيقاظ من النوم', 'الأذكار بعد السلام من الصلاة'];
@@ -952,14 +955,14 @@ function viewAdhkar() {
   return `<div class="view-head"><div><h2>${t('adhkar')}</h2><div class="sub">${t('adhkarSub')}</div></div></div>
   <div class="ak-feat">${feat.map(x => `<button class="ak-hero" data-akcat="${x.i}">
     <svg class="ic" viewBox="0 0 24 24">${AK_ICONS[x.c.name] || AK_ICONS['أذكار الصباح']}</svg>
-    <b>${esc(akCatName(x.c.name))}</b><span>${arDigits(x.c.items.length)} ${t('dhikr')}</span>${akDoneChip(x.i)}</button>`).join('')}</div>
-  ${q ? `<div class="ak-grid">${rest.map(x => `<button class="ak-cat" data-akcat="${x.i}"><span>${esc(akCatName(x.c.name))}</span><span class="n">${arDigits(x.c.items.length)}</span></button>`).join('') || `<div class="empty"><p>${t('noResults')}</p></div>`}</div>`
+    <b>${esc(akCatName(x.c.name))}</b><span>${N(x.c.items.length)} ${t('dhikr')}</span>${akDoneChip(x.i)}</button>`).join('')}</div>
+  ${q ? `<div class="ak-grid">${rest.map(x => `<button class="ak-cat" data-akcat="${x.i}"><span>${esc(akCatName(x.c.name))}</span><span class="n">${N(x.c.items.length)}</span></button>`).join('') || `<div class="empty"><p>${t('noResults')}</p></div>`}</div>`
       : `<div class="view-head"><div><h2 class="ak-more">${t('allCats')}</h2></div></div>
-  <div class="ak-grid">${rest.map(x => `<button class="ak-cat" data-akcat="${x.i}"><span>${esc(akCatName(x.c.name))}</span><span class="n">${arDigits(x.c.items.length)}</span></button>`).join('')}</div>`}`;
+  <div class="ak-grid">${rest.map(x => `<button class="ak-cat" data-akcat="${x.i}"><span>${esc(akCatName(x.c.name))}</span><span class="n">${N(x.c.items.length)}</span></button>`).join('')}</div>`}`;
 }
 function viewAdhkarCat() {
   const c = AK_CATS[S.adhkarCat];
-  const num = n => S.lang === 'ar' ? arDigits(n) : n;
+  const num = n => N(n);
   const prog = akCatProgress(S.adhkarCat);
   const done = c.items.filter(a => (prog[a.id] ?? a.count) === 0).length;
   return `<button class="back-btn" data-akback><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
@@ -977,7 +980,7 @@ function akTap(btn) {
   let l = +btn.dataset.left;
   if (l <= 0) return;
   l--; btn.dataset.left = l;
-  const num = n => S.lang === 'ar' ? arDigits(n) : n;
+  const num = n => N(n);
   btn.innerHTML = `<b>${num(l)}</b><span>/${num(btn.dataset.max)}</span>`;
   akSave(S.adhkarCat, +btn.dataset.akdec, l);
   const card = btn.closest('.ak-card');
@@ -1001,7 +1004,7 @@ const YT_LIST = [
   { id: 'SytvCjPesP0', reciter: 'سعود الشريم', title: 'سورة الذاريات كاملة', reciter_en: "Saud Al-Shuraim", title_en: "Surah Adh-Dhariyat — Complete" },
   { id: 'NuWRdPZANNc', reciter: 'سعود الشريم', title: 'سورة القصص كاملة', reciter_en: "Saud Al-Shuraim", title_en: "Surah Al-Qasas — Complete" },
   { id: 'U9PzDaVRmMA', reciter: 'سعود الشريم', title: 'تلاوة خاشعة تهدا العقل وتذهب الهم', reciter_en: "Saud Al-Shuraim", title_en: "A tranquil recitation that calms the mind" },
-  { id: 'JgpefhXIPvs', reciter: 'بدر التركي', title: 'سورة الأحزاب ٢١-٢٧ — من المؤمنين رجال صدقوا', reciter_en: "Badr Al-Turki", title_en: "Surah Al-Ahzab 21–27 — Men of truth" },
+  { id: 'JgpefhXIPvs', reciter: 'بدر التركي', title: 'سورة الأحزاب 21-27 — من المؤمنين رجال صدقوا', reciter_en: "Badr Al-Turki", title_en: "Surah Al-Ahzab 21–27 — Men of truth" },
   { id: '6JdOc53G9Z8', reciter: 'بدر التركي', title: 'سور: يس، الرحمن، الواقعة، الملك', reciter_en: "Badr Al-Turki", title_en: "Surahs Yasin, Ar-Rahman, Al-Waqiah, Al-Mulk" },
   { id: 'Mgtp1SaVvPc', reciter: 'بدر التركي', title: 'تلاوة مؤثرة جداً يأخذك لعالم آخر', reciter_en: "Badr Al-Turki", title_en: "A deeply moving recitation" },
   { id: 'UHKn1WSFJNo', reciter: 'محمد ديبروف', title: 'وما لنا ألا نتوكل على الله وقد هدانا سبلنا', reciter_en: "Muhammad Dibirov", title_en: "Why not rely on Allah — He has guided us" },
@@ -1046,13 +1049,13 @@ function ytStateUI(st) {
 function ytBarInit(p) {
   const d = p.getDuration() || 0;
   const sl = $('#ytSeek'); if (sl) sl.max = Math.max(1, Math.round(d));
-  const du = $('#ytDur'); if (du) du.textContent = fmt(d);
+  const du = $('#ytDur'); if (du) du.textContent = N(fmt(d));
   if (ytTimer) clearInterval(ytTimer);
   ytTimer = setInterval(() => {
     if (!ytPlayer || !ytPlayer.getCurrentTime) return;
     const c = ytPlayer.getCurrentTime() || 0, dd = ytPlayer.getDuration() || 0;
     const se = $('#ytSeek'); if (se && !se.matches(':active')) { se.max = Math.max(1, Math.round(dd)); se.value = Math.round(c) }
-    const tc = $('#ytCur'); if (tc) tc.textContent = fmt(c);
+    const tc = $('#ytCur'); if (tc) tc.textContent = N(fmt(c));
     if (ytPlayer.getPlayerState) ytStateUI(ytPlayer.getPlayerState());
   }, 500);
 }
@@ -1100,7 +1103,7 @@ function viewYt() {
 }
 function prayerCardsHTML() {
   const tm = S.prayerData.timings, hj = S.prayerData.date.hijri;
-  const num = p => S.lang === 'ar' ? arDigits(p) : p;
+  const num = p => N(p);
   const next = nextPrayerKey();
   const cards = PRAYERS.map(([k, l]) => `<div class="prayer-card${k === next ? ' next' : ''}">
     <span>${t(l)}</span><b>${esc(num(prayerTime(k)))}</b>
@@ -1111,20 +1114,20 @@ function prayerCardsHTML() {
   const hdate = `${esc(num(hj.day))} ${esc(S.lang === 'ar' ? hj.month.ar : hj.month.en)} ${esc(num(hj.year))}`;
   return `<div class="prayer-next">
     <span>${t('nextPrayer')} — ${t(next.toLowerCase())}</span>
-    <b id="prCountdown" class="pr-count" dir="ltr">${prayerCountdownStr()}</b>
+    <b id="prCountdown" class="pr-count" dir="ltr">${N(prayerCountdownStr())}</b>
   </div>
   <div class="pr-sec">${t('prToday')}</div>
   <div class="prayer-grid">${cards}</div>
   <div class="pr-sec">${t('prNight')}</div>
   <div class="prayer-grid alt">${extra}</div>
-  <div class="prayer-date">${hdate} · ${esc(S.prayerData.date.readable)}</div>`;
+  <div class="prayer-date">${hdate} · ${esc(N(S.prayerData.date.readable))}</div>`;
 }
 function startPrayerTick() {
   clearInterval(S.prayerTimer);
   S.prayerTimer = setInterval(() => {
     if (!S.prayerData) return;
     const str = prayerCountdownStr();
-    $$('.pr-count').forEach(el => el.textContent = str);
+    $$('.pr-count').forEach(el => el.textContent = N(str));
   }, 1000);
 }
 async function prayerSearch(q) {
@@ -1159,7 +1162,7 @@ function updateFavButtons() {
   $('#pbFav').style.color = on ? 'var(--danger)' : '';
   $('#npFav').classList.toggle('faved', on);
 }
-function updateCounts() { $('#cntFav').textContent = S.favorites.length; $('#cntDl').textContent = DL.jobs.filter(j => j.state === 'done').length }
+function updateCounts() { $('#cntFav').textContent = N(S.favorites.length); $('#cntDl').textContent = N(DL.jobs.filter(j => j.state === 'done').length) }
 
 /* ═══════════════ DOWNLOADS ═══════════════ */
 const DL = { jobs: [], active: 0, conc: 2 };
@@ -1192,7 +1195,7 @@ async function runDL(job) {
       const rd = res.body.getReader(); const chunks = []; let got = 0;
       for (; ;) {
         const { done, value } = await rd.read(); if (done) break; chunks.push(value); got += value.length;
-        job.pct = got / total * 100; job.bar.style.width = job.pct + '%'; job.st.textContent = `${Math.round(got / 1048576)}/${Math.round(total / 1048576)} MB`
+        job.pct = got / total * 100; job.bar.style.width = job.pct + '%'; job.st.textContent = `${N(Math.round(got / 1048576))}/${N(Math.round(total / 1048576))} MB`
       }
       blob = new Blob(chunks, { type: 'audio/mpeg' });
     } else { blob = await res.blob(); job.bar.style.width = '100%' }
@@ -1221,15 +1224,15 @@ function findTrackByKey(k) {
 /* ═══════════════ SLEEP TIMER ═══════════════ */
 const SLEEP_OPTS = [0, 5, 10, 15, 30, 45, 60];
 function renderSleepPop() {
-  $('#sleepPop').innerHTML = SLEEP_OPTS.map(m => `<button data-min="${m}" class="${S.sleepMin === m ? 'on' : ''}"><span>${m === 0 ? t('sleepOff') : m + ' ' + t('min')}</span>${S.sleepMin === m ? '✓' : ''}</button>`).join('');
+  $('#sleepPop').innerHTML = SLEEP_OPTS.map(m => `<button data-min="${m}" class="${S.sleepMin === m ? 'on' : ''}"><span>${m === 0 ? t('sleepOff') : N(m) + ' ' + t('min')}</span>${S.sleepMin === m ? '✓' : ''}</button>`).join('');
 }
 function setSleep(min) {
   S.sleepMin = min; clearTimeout(S.sleepTimer); clearInterval(S.sleepTick);
   $('#sleepBadge').hidden = !min; $('#btnSleep').classList.toggle('on', !!min); renderSleepPop(); $('#sleepPop').classList.remove('open');
   if (!min) return;
-  const end = Date.now() + min * 60000; toast(`${t('timerSet')} ${min} ${t('min')}`);
-  S.sleepTick = setInterval(() => { const left = Math.max(0, Math.round((end - Date.now()) / 60000)); $('#sleepBadge').textContent = left || '<1' }, 10000);
-  $('#sleepBadge').textContent = min;
+  const end = Date.now() + min * 60000; toast(`${t('timerSet')} ${N(min)} ${t('min')}`);
+  S.sleepTick = setInterval(() => { const left = Math.max(0, Math.round((end - Date.now()) / 60000)); $('#sleepBadge').textContent = N(left || '<1') }, 10000);
+  $('#sleepBadge').textContent = N(min);
   S.sleepTimer = setTimeout(() => {
     const v0 = audio.volume; let step = 0;
     const fade = setInterval(() => { step++; audio.volume = Math.max(0, v0 * (1 - step / 10)); if (step >= 10) { clearInterval(fade); audio.pause(); audio.volume = v0; clearInterval(S.sleepTick); S.sleepMin = 0; $('#sleepBadge').hidden = true; $('#btnSleep').classList.remove('on'); renderSleepPop(); toast(t('timerEnd')) } }, 800);
@@ -1245,8 +1248,8 @@ function bindBar(el, onPct) {
     el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up)
   });
 }
-bindBar($('#progBar'), (p, drag) => { if (audio.duration) { if (!drag) audio.currentTime = p * audio.duration; $('#progFill').style.width = p * 100 + '%'; $('#progThumb').style.insetInlineStart = p * 100 + '%'; $('#tCur').textContent = fmt(p * audio.duration); const el = $('#progBar'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
-bindBar($('#ovProg'), (p, drag) => { if (audio.duration) { if (!drag) audio.currentTime = p * audio.duration; $('#ovFill').style.width = p * 100 + '%'; $('#ovThumb').style.insetInlineStart = p * 100 + '%'; $('#ovCur').textContent = fmt(p * audio.duration); const el = $('#ovProg'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
+bindBar($('#progBar'), (p, drag) => { if (audio.duration) { if (!drag) audio.currentTime = p * audio.duration; $('#progFill').style.width = p * 100 + '%'; $('#progThumb').style.insetInlineStart = p * 100 + '%'; $('#tCur').textContent = N(fmt(p * audio.duration)); const el = $('#progBar'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', N(fmt(p * audio.duration)) + ' / ' + N(fmt(audio.duration))) } });
+bindBar($('#ovProg'), (p, drag) => { if (audio.duration) { if (!drag) audio.currentTime = p * audio.duration; $('#ovFill').style.width = p * 100 + '%'; $('#ovThumb').style.insetInlineStart = p * 100 + '%'; $('#ovCur').textContent = N(fmt(p * audio.duration)); const el = $('#ovProg'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', N(fmt(p * audio.duration)) + ' / ' + N(fmt(audio.duration))) } });
 bindBar($('#volBar'), p => { audio.volume = p; store.set('volume', p); updateVolUI() });
 function barKeys(el, onKey) {
   el.addEventListener('keydown', e => {
@@ -1293,9 +1296,10 @@ function applyLang() {
   document.documentElement.lang = S.lang; document.documentElement.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
   $('#langBtn').textContent = S.lang === 'ar' ? 'EN' : 'ع';
   $$('#segLang button').forEach(b => b.classList.toggle('on', b.dataset.lg === S.lang));
+  $$('#segNum button').forEach(b => b.classList.toggle('on', b.dataset.nm === S.numerals));
   applyI18nStatic(); buildQualitySeg(); renderSleepPop();
 }
-function applyI18nStatic() { $$('[data-i18n]').forEach(el => { const k = el.dataset.i18n; if (I18N[S.lang][k]) el.textContent = I18N[S.lang][k] }); $$('[data-i18n-title]').forEach(el => { const k = el.dataset.i18nTitle; if (I18N[S.lang][k]) el.title = I18N[S.lang][k] }); $$('[data-i18n-aria]').forEach(el => { const k = el.dataset.i18nAria; if (I18N[S.lang][k]) el.setAttribute('aria-label', I18N[S.lang][k]) }); $$('.nav-item').forEach(b => { const k = b.dataset.view || 'downloads'; if (I18N[S.lang][k]) b.title = I18N[S.lang][k] }) }
+function applyI18nStatic() { $$('[data-i18n]').forEach(el => { const k = el.dataset.i18n; if (I18N[S.lang][k]) el.textContent = N(I18N[S.lang][k]) }); $$('[data-i18n-title]').forEach(el => { const k = el.dataset.i18nTitle; if (I18N[S.lang][k]) el.title = N(I18N[S.lang][k]) }); $$('[data-i18n-aria]').forEach(el => { const k = el.dataset.i18nAria; if (I18N[S.lang][k]) el.setAttribute('aria-label', N(I18N[S.lang][k])) }); $$('.nav-item').forEach(b => { const k = b.dataset.view || 'downloads'; if (I18N[S.lang][k]) b.title = N(I18N[S.lang][k]) }) }
 function buildQualitySeg() { $$('#segQuality button').forEach(b => b.classList.toggle('on', b.dataset.q === S.quality)) }
 function openQuality() { $('#qualityScrim').classList.add('open') }
 function applySidebar() {
@@ -1318,7 +1322,8 @@ function applyNpPanel() {
   applyNpPos();
 }
 function setTheme(th) { S.theme = th; store.set('theme', th); applyTheme(); if (S.view === 'mushaf') render() }
-function setLang(lg) { S.lang = lg; store.set('lang', lg); applyLang(); render(); if (S.current) updateNowPlaying(); renderQueue(); rotateVerse(true) }
+function setLang(lg) { S.lang = lg; store.set('lang', lg); if (store.get('numerals', null) == null) S.numerals = lg === 'ar' ? 'arabic' : 'latin'; applyLang(); render(); if (S.current) updateNowPlaying(); renderQueue(); rotateVerse(true) }
+function setNumerals(nm) { S.numerals = nm; store.set('numerals', nm); applyLang(); render(); updateProgress(); updateCounts(); renderQueue(); rotateVerse(true) }
 
 /* ═══════════════ VERSE ROTATOR ═══════════════ */
 function rotateVerse(instant = false) {
@@ -1326,7 +1331,7 @@ function rotateVerse(instant = false) {
   const show = () => {
     const v = VERSES[S.verseIdx % VERSES.length];
     $('#verseText').textContent = S.lang === 'ar' ? v[0] : v[2];
-    $('#verseRef').textContent = S.lang === 'ar' ? v[1] : v[3]; card.classList.remove('fade')
+    $('#verseRef').textContent = N(S.lang === 'ar' ? v[1] : v[3]); card.classList.remove('fade')
   };
   if (instant) { show(); return }
   card.classList.add('fade'); setTimeout(() => { S.verseIdx++; show() }, 500);
@@ -1443,6 +1448,7 @@ $('#themeBtn').onclick = () => setTheme(S.theme === 'light' ? 'dark' : 'light');
 $('#langBtn').onclick = () => setLang(S.lang === 'ar' ? 'en' : 'ar');
 $$('#segTheme button').forEach(b => b.onclick = () => setTheme(b.dataset.th));
 $$('#segLang button').forEach(b => b.onclick = () => setLang(b.dataset.lg));
+$$('#segNum button').forEach(b => b.onclick = () => setNumerals(b.dataset.nm));
 $$('#segMushafRw button').forEach(b => { b.onclick = () => setMushafRiwaya(b.dataset.mrw); b.classList.toggle('on', b.dataset.mrw === S.mushafRiwaya) });
 function updateAdhanSeg() { $$('#segAdhan button').forEach(b => b.classList.toggle('on', b.dataset.adh === (S.adhanOn ? 'on' : 'off'))) }
 $$('#segAdhan button').forEach(b => { b.onclick = () => { S.adhanOn = b.dataset.adh === 'on'; store.set('adhanOn', S.adhanOn); if (!S.adhanOn) stopAdhan(); updateAdhanSeg(); $$('#segAdhanPg button').forEach(x => x.classList.toggle('on', x.dataset.adhpg === (S.adhanOn ? 'on' : 'off'))) } });
@@ -1570,7 +1576,7 @@ $('#view').addEventListener('input', e => {
   if (e.target.id === 'ytVol' && ytPlayer && ytPlayer.setVolume) { ytPlayer.setVolume(+e.target.value); ytPlayer.unMute() }
   if (e.target.id !== 'mSlider') return;
   const v = +e.target.value, el = $('#view .mf-num');
-  if (el) el.textContent = S.lang === 'ar' ? `${arDigits(v)} / ${arDigits(MUSHAF_PAGES)}` : `${v} / ${MUSHAF_PAGES}`;
+  if (el) el.textContent = `${N(v)} / ${N(MUSHAF_PAGES)}`;
 });
 /* mushaf: touch swipe to turn pages */
 let swX = null, swY = null, swT = 0;

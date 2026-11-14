@@ -3288,7 +3288,8 @@ html[dir="rtl"] .back-btn .ic {
 .poff-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 10px;
   padding: 7px 12px
 }
 
@@ -3303,17 +3304,39 @@ html[dir="rtl"] .back-btn .ic {
   font-size: var(--fs-sm)
 }
 
-.poff-row .poff-val {
-  min-width: 44px;
+.poff-step {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  overflow: hidden
+}
+
+.poff-step .btn.sm {
+  border: 0;
+  border-radius: 0;
+  border-inline-start: 1px solid var(--line);
+  background: transparent;
+  padding: 5px 9px;
+  min-width: 38px;
+  font-weight: 700
+}
+
+.poff-step .btn.sm:first-child {
+  border-inline-start: 0
+}
+
+.poff-step .btn.sm:hover {
+  background: var(--surface2)
+}
+
+.poff-step .poff-val {
+  min-width: 40px;
   text-align: center;
   font-weight: 800;
   color: var(--gold-ink);
   font-variant-numeric: tabular-nums
-}
-
-.poff-row .btn.sm {
-  padding: 4px 10px;
-  min-width: 40px
 }
 
 .hp-loc {
@@ -4233,7 +4256,11 @@ html[dir="rtl"] .back-btn .ic {
 .ps-sec {
   display: flex;
   flex-direction: column;
-  gap: 14px
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px
 }
 
 .ps-loc-cur {
@@ -4266,7 +4293,7 @@ html[dir="rtl"] .back-btn .ic {
 .ps-loc-search input {
   flex: 1;
   min-width: 0;
-  background: var(--surface);
+  background: var(--surface2);
   border: 1px solid var(--line2);
   border-radius: var(--r-sm);
   padding: 9px 12px;
