@@ -15,7 +15,7 @@
     </div>
     <div class="pb-progress" dir="ltr">
       <span class="t" id="tCur">0:00</span>
-      <div class="prog" id="progBar"><div class="rail"><div class="buf" id="progBuf"></div><div class="fill" id="progFill"></div><div class="thumb" id="progThumb"></div></div></div>
+      <div class="prog" id="progBar" role="slider" tabindex="0" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" data-i18n-aria="kSeek" aria-label="تقدّم / إيقاع ٥ ثوانٍ"><div class="rail"><div class="buf" id="progBuf"></div><div class="fill" id="progFill"></div><div class="thumb" id="progThumb"></div></div></div>
       <span class="t" id="tDur">0:00</span>
     </div>
   </div>
@@ -36,7 +36,7 @@
     </div>
     <div class="vol">
       <button class="ctrl" id="btnMute" aria-label="mute"><svg class="ic" id="volIcon" viewBox="0 0 24 24"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg></button>
-      <div class="prog" id="volBar" dir="ltr"><div class="rail"><div class="fill" id="volFill"></div><div class="thumb" id="volThumb"></div></div></div>
+      <div class="prog" id="volBar" dir="ltr" role="slider" tabindex="0" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-i18n-aria="volume" aria-label="مستوى الصوت"><div class="rail"><div class="fill" id="volFill"></div><div class="thumb" id="volThumb"></div></div></div>
     </div>
     <button class="ctrl" id="btnDl" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
     <button class="ctrl" id="btnExpand" aria-label="expand"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
