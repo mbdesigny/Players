@@ -134,7 +134,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A12 | `markPlayingRows()` null-number bug | **done** — rows now carry `data-n` (both reciter rows and collection rows), so un-marking always restores the real surah number; removed the dead `(row.dataset.coll!=null?null:null)` expression |
 | A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | **done** — `src/scripts/lib/api.js`: `apiFetch` with AbortController timeout, retry with backoff (5xx/429/network, fail-fast on 4xx), in-memory TTL cache; wired into mp3quran, alquran.cloud editions, open-meteo, bigdatacloud, geo IP chain, aladhan; `nominatimSearch` sends `Accept-Language` + identifying `User-Agent` and throttles to ~1 req/sec |
 | A14 | Service worker cache versioning + mushaf offline | **done** — cache name versioned at build time from a content hash (`scripts/bump-sw.mjs`, `ouns-app-<hash>`); fixed a latent bug where same-origin responses were never cached (`res.clone()` ran after the browser consumed the body); mushaf pages cache-first in a dedicated unversioned `ouns-mushaf` cache (remote sources intercepted + `precache-mushaf` message from `mushafGo` for the current and next spread, capped at 700 entries); verified offline serving of shell, pages and cover |
-| A15 | SSR-time lang/dir + missing i18n keys | pending |
+| A15 | SSR-time lang/dir + missing i18n keys | **done** — blocking inline script in `Base.astro` `<head>` reads `ouns_lang` (JSON with bare-value fallback) and sets `documentElement.lang/dir` before first paint, so English users get `dir=ltr` with no flash (build default stays `lang="ar" dir="rtl"`); added missing translations: sidebar footer (`sideFoot` key + `data-i18n`), adhan voice names (`name_en` on all 8 voices, used in settings select and adhan banner), YouTube list (`reciter_en`/`title_en` on all 30 entries, used in cards and player caption), and adhkar categories (`AK_CAT_EN` generated from `adhkar.json`, 134 entries, full coverage — `akAutoCat`/`AK_FEATURED`/`AK_ICONS` still match on Arabic names) |
 | A16 | sitemap.xml, robots, manifest screenshots/shortcuts | pending |
 | A17 | Accessibility (slider roles, focus-visible, aria-labels) | pending |
 | A18 | Escape all API-sourced `innerHTML` fields | pending |
@@ -149,6 +149,6 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 ## Suggested order
 
 Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
-A12–A19 in numeric order (A1 deployment setup before the next production
+A16–A19 in numeric order (A1 deployment setup before the next production
 deploy). Each stage ships independently on its own branch/PR; no breaking
 changes to existing `ouns_` state keys.

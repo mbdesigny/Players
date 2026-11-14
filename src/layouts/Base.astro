@@ -33,8 +33,19 @@ const ldJson = JSON.stringify({
 
 <!doctype html>
 <html lang="ar" dir="rtl">
+<!-- lang/dir are corrected before first paint by the inline script above when the saved language is English -->
   <head>
     <meta charset="utf-8">
+    <script is:inline>
+      try {
+        var raw = localStorage.getItem('ouns_lang');
+        var lang = null;
+        try { lang = JSON.parse(raw); } catch (e) { lang = raw; }
+        if (lang !== 'ar' && lang !== 'en') lang = 'ar';
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+      } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <title>{title}</title>
     <meta name="description" content={description}>
