@@ -2959,32 +2959,6 @@ html[dir="rtl"] .back-btn .ic {
   white-space: nowrap
 }
 
-.prayer-search {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  padding: 12px 16px
-}
-
-.prayer-search input {
-  flex: 1;
-  min-width: 180px;
-  background: var(--surface2);
-  border: 1px solid var(--line2);
-  border-radius: var(--r-sm);
-  padding: 9px 12px;
-  color: var(--ink);
-  font: inherit;
-  font-size: var(--fs-sm)
-}
-
-.prayer-search input:focus {
-  border-color: var(--gold)
-}
-
 .loc-res {
   flex-basis: 100%;
   display: flex;
@@ -4247,6 +4221,66 @@ html[dir="rtl"] .back-btn .ic {
   width: 17px;
   height: 17px;
   color: var(--gold-ink)
+}
+
+#prayerSetBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 4px
+}
+
+.ps-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 14px
+}
+
+.ps-loc-cur {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap
+}
+
+.ps-loc-cur b {
+  flex: 1;
+  min-width: 140px;
+  font-size: var(--fs-base);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+
+.ps-loc-btns {
+  display: flex;
+  gap: 8px;
+  flex: none
+}
+
+.ps-loc-search {
+  display: flex;
+  gap: 8px
+}
+
+.ps-loc-search input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  border-radius: var(--r-sm);
+  padding: 9px 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm)
+}
+
+.ps-loc-search input:focus {
+  border-color: var(--gold)
+}
+
+#prayerSetBody .loc-res:empty {
+  display: none
 }
 
 .ps-row {
