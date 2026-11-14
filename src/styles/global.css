@@ -481,7 +481,6 @@ svg {
   border: 1px solid var(--line);
   border-radius: 40px;
   font-size: 13.5px;
-  outline: none;
   transition: .2s
 }
 
@@ -689,7 +688,6 @@ main {
   border: 1px solid var(--line2);
   background: var(--surface2);
   font-size: 12.5px;
-  outline: none;
   max-width: 290px
 }
 
@@ -1660,7 +1658,6 @@ html[dir="rtl"] .prog .fill {
   border: 1px solid var(--line);
   background: var(--surface2);
   font-size: 11px;
-  outline: none;
   cursor: pointer;
   color: var(--ink2)
 }
@@ -2403,7 +2400,6 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mt-sel:focus {
-  outline: none;
   border-color: var(--gold)
 }
 
@@ -2812,7 +2808,6 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .prayer-search input:focus {
-  outline: none;
   border-color: var(--gold)
 }
 
@@ -4446,3 +4441,9 @@ html[dir="rtl"] .back-btn .ic {
   line-height: 1.4;
   letter-spacing: .1px
 }
+
+
+
+/* A17: visible keyboard focus for every interactive element */
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.prog:focus-visible{outline-offset:3px;border-radius:8px}

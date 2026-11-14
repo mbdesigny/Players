@@ -136,7 +136,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A14 | Service worker cache versioning + mushaf offline | **done** — cache name versioned at build time from a content hash (`scripts/bump-sw.mjs`, `ouns-app-<hash>`); fixed a latent bug where same-origin responses were never cached (`res.clone()` ran after the browser consumed the body); mushaf pages cache-first in a dedicated unversioned `ouns-mushaf` cache (remote sources intercepted + `precache-mushaf` message from `mushafGo` for the current and next spread, capped at 700 entries); verified offline serving of shell, pages and cover |
 | A15 | SSR-time lang/dir + missing i18n keys | **done** — blocking inline script in `Base.astro` `<head>` reads `ouns_lang` (JSON with bare-value fallback) and sets `documentElement.lang/dir` before first paint, so English users get `dir=ltr` with no flash (build default stays `lang="ar" dir="rtl"`); added missing translations: sidebar footer (`sideFoot` key + `data-i18n`), adhan voice names (`name_en` on all 8 voices, used in settings select and adhan banner), YouTube list (`reciter_en`/`title_en` on all 30 entries, used in cards and player caption), and adhkar categories (`AK_CAT_EN` generated from `adhkar.json`, 134 entries, full coverage — `akAutoCat`/`AK_FEATURED`/`AK_ICONS` still match on Arabic names) |
 | A16 | sitemap.xml, robots, manifest screenshots/shortcuts | **done** — `@astrojs/sitemap` integration added (`site` already set) generating `sitemap-index.xml` + `sitemap-0.xml` at build; `robots.txt` now links the sitemap; manifest gained 2 real screenshots captured from the built app (`public/screenshots/home-wide.jpg` 1280x720 wide, `home-narrow.jpg` 720x1280 narrow) and 4 shortcuts (Mushaf, prayer times, reciters, adhkar) backed by new deep-link support in `app.js` (`/?view=...` handled at boot) |
-| A17 | Accessibility (slider roles, focus-visible, aria-labels) | pending |
+| A17 | Accessibility (slider roles, focus-visible, aria-labels) | **done** — div-based bars (`#progBar`, `#ovProg`, `#volBar`) now expose `role="slider"` + `tabindex="0"` + `aria-valuemin/max/now` + `aria-valuetext` (kept in sync in `updateProgress()`, `updateVolUI()` and drag handlers) with keyboard support (arrows ±5s / ±5%, Home/End) via `barKeys()`; global `:focus-visible` outline rule added and all 5 `outline:none` occurrences removed from `global.css`; new `data-i18n-aria` mechanism in `applyI18nStatic()` labels the fullscreen overlay controls and `#dlClose`, plus explicit `aria-label` on unfav/download mini-buttons and mushaf theme/exit icon buttons |
 | A18 | Escape all API-sourced `innerHTML` fields | pending |
 | A19 | Self-host Google fonts | pending |
 | B1–B3 | Systematic responsive + type/spacing scale pass | pending |
@@ -149,6 +149,6 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 ## Suggested order
 
 Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
-A16–A19 in numeric order (A1 deployment setup before the next production
+A17–A19 in numeric order (A1 deployment setup before the next production
 deploy). Each stage ships independently on its own branch/PR; no breaking
 changes to existing `ouns_` state keys.

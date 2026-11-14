@@ -315,8 +315,8 @@ function collectionRow(f,tr,i,isFav){
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
     <span class="acts">
-      ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
-      <button class="mini-btn" data-dl="${tr.key}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+      ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}" aria-label="${t('favorite')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
+      <button class="mini-btn" data-dl="${tr.key}" aria-label="${t('download')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
     </span></span></div>`;
 }
 
@@ -441,6 +441,8 @@ function updateProgress(){
   $('#ovCur').textContent=fmt(audio.currentTime);$('#ovDur').textContent=fmt(d);
   $('#progFill').style.width=(p*100)+'%';$('#progThumb').style.insetInlineStart=(p*100)+'%';
   $('#ovFill').style.width=(p*100)+'%';$('#ovThumb').style.insetInlineStart=(p*100)+'%';
+  const now=Math.round(audio.currentTime||0),max=Math.round(d);
+  ['progBar','ovProg'].forEach(id=>{const el=$('#'+id);if(!el)return;el.setAttribute('aria-valuemax',max);el.setAttribute('aria-valuenow',now);el.setAttribute('aria-valuetext',fmt(now)+' / '+fmt(max))});
   const C=2*Math.PI*45.6;
   $$('.pr-fill').forEach(c=>c.style.strokeDashoffset=C*(1-p));
   if(S.current&&d){S.current.duration=d;const row=$(`.surah-row[data-key="${S.current.key}"] .dur`);if(row)row.textContent=fmt(d)}
@@ -641,8 +643,8 @@ function viewRead(){
       </div>
       <div class="mt-center"><span>${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
-        <button class="icon-btn" data-act="mtheme" title="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
-        <button class="icon-btn" data-act="mushafexit" title="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="icon-btn" data-act="mtheme" title="${t('theme')}" aria-label="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
+        <button class="icon-btn" data-act="mushafexit" title="${t('close')}" aria-label="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
     </div>
     <div class="mushaf-stage${book?' book':''}">
@@ -1157,12 +1159,27 @@ function bindBar(el,onPct){
     const mv=ev=>onPct(pct(ev),true);const up=ev=>{onPct(pct(ev),false);el.classList.remove('scrub');el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up)};
     el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)});
 }
-bindBar($('#progBar'),(p,drag)=>{if(audio.duration){if(!drag)audio.currentTime=p*audio.duration;$('#progFill').style.width=p*100+'%';$('#progThumb').style.insetInlineStart=p*100+'%';$('#tCur').textContent=fmt(p*audio.duration)}});
-bindBar($('#ovProg'),(p,drag)=>{if(audio.duration){if(!drag)audio.currentTime=p*audio.duration;$('#ovFill').style.width=p*100+'%';$('#ovThumb').style.insetInlineStart=p*100+'%';$('#ovCur').textContent=fmt(p*audio.duration)}});
+bindBar($('#progBar'),(p,drag)=>{if(audio.duration){if(!drag)audio.currentTime=p*audio.duration;$('#progFill').style.width=p*100+'%';$('#progThumb').style.insetInlineStart=p*100+'%';$('#tCur').textContent=fmt(p*audio.duration);const el=$('#progBar');el.setAttribute('aria-valuenow',Math.round(p*audio.duration));el.setAttribute('aria-valuetext',fmt(p*audio.duration)+' / '+fmt(audio.duration))}});
+bindBar($('#ovProg'),(p,drag)=>{if(audio.duration){if(!drag)audio.currentTime=p*audio.duration;$('#ovFill').style.width=p*100+'%';$('#ovThumb').style.insetInlineStart=p*100+'%';$('#ovCur').textContent=fmt(p*audio.duration);const el=$('#ovProg');el.setAttribute('aria-valuenow',Math.round(p*audio.duration));el.setAttribute('aria-valuetext',fmt(p*audio.duration)+' / '+fmt(audio.duration))}});
 bindBar($('#volBar'),p=>{audio.volume=p;store.set('volume',p);updateVolUI()});
+function barKeys(el,onKey){
+  el.addEventListener('keydown',e=>{
+    let h=null;
+    if(e.key==='ArrowRight'||e.key==='ArrowUp')h=1;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowDown')h=-1;
+    else if(e.key==='Home')h='home';
+    else if(e.key==='End')h='end';
+    if(h===null)return;
+    e.preventDefault();e.stopPropagation();onKey(h);
+  });
+}
+barKeys($('#progBar'),h=>{if(!audio.duration)return;const d=audio.duration;if(h==='home')audio.currentTime=0;else if(h==='end')audio.currentTime=d;else audio.currentTime=Math.max(0,Math.min(d,audio.currentTime+h*5))});
+barKeys($('#ovProg'),h=>{if(!audio.duration)return;const d=audio.duration;if(h==='home')audio.currentTime=0;else if(h==='end')audio.currentTime=d;else audio.currentTime=Math.max(0,Math.min(d,audio.currentTime+h*5))});
+barKeys($('#volBar'),h=>{const v=h==='home'?0:h==='end'?1:audio.volume+h*.05;audio.volume=Math.max(0,Math.min(1,v));store.set('volume',audio.volume);updateVolUI()});
 function updateVolUI(){
   const v=audio.muted?0:audio.volume;
   $('#volFill').style.width=v*100+'%';$('#volThumb').style.insetInlineStart=v*100+'%';
+  const vb=$('#volBar');if(vb){vb.setAttribute('aria-valuenow',Math.round(v*100));vb.setAttribute('aria-valuetext',Math.round(v*100)+'%')}
   $('#volIcon').innerHTML=v===0?'<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="m16 9 5 6M21 9l-5 6"/>':v<.5?'<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/>':'<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/>';
 }
 
@@ -1192,7 +1209,7 @@ function applyLang(){
   $$('#segLang button').forEach(b=>b.classList.toggle('on',b.dataset.lg===S.lang));
   applyI18nStatic();buildQualitySeg();renderSleepPop();
 }
-function applyI18nStatic(){$$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I18N[S.lang][k])el.textContent=I18N[S.lang][k]});$$('[data-i18n-title]').forEach(el=>{const k=el.dataset.i18nTitle;if(I18N[S.lang][k])el.title=I18N[S.lang][k]});$$('.nav-item').forEach(b=>{const k=b.dataset.view||'downloads';if(I18N[S.lang][k])b.title=I18N[S.lang][k]})}
+function applyI18nStatic(){$$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I18N[S.lang][k])el.textContent=I18N[S.lang][k]});$$('[data-i18n-title]').forEach(el=>{const k=el.dataset.i18nTitle;if(I18N[S.lang][k])el.title=I18N[S.lang][k]});$$('[data-i18n-aria]').forEach(el=>{const k=el.dataset.i18nAria;if(I18N[S.lang][k])el.setAttribute('aria-label',I18N[S.lang][k])});$$('.nav-item').forEach(b=>{const k=b.dataset.view||'downloads';if(I18N[S.lang][k])b.title=I18N[S.lang][k]})}
 function buildQualitySeg(){$$('#segQuality button').forEach(b=>b.classList.toggle('on',b.dataset.q===S.quality))}
 function openQuality(){$('#qualityScrim').classList.add('open')}
 function applySidebar(){
