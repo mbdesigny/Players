@@ -25,6 +25,28 @@ npm run build     # outputs static site to dist/
 npm run preview   # serve the build locally
 ```
 
+## Deploy
+
+The app is a **fully static** build, deployed to **Cloudflare Workers Static
+Assets** — see [wrangler.jsonc](wrangler.jsonc) (worker `ounsapp` →
+`ounsapp.<account>.workers.dev`, matching `site` in `astro.config.mjs`). No
+server adapter is required because there is no SSR or API route.
+
+Manual deploy:
+
+```bash
+npm install
+npx wrangler login    # once — opens the browser to authorise your account
+npm run deploy        # astro build (+ SW cache bump) then wrangler deploy
+```
+
+`npm run deploy` uploads `dist/` as static assets via `wrangler deploy`.
+
+CI: a push to `main` lints, tests, builds and deploys through
+[.github/workflows/deploy.yml](.github/workflows/deploy.yml). Add two
+repository secrets first — `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID`.
+
 ## Quality checks
 
 ```bash
@@ -50,11 +72,16 @@ gradual.
 - `src/assets/player-frame.svg` — player mandala design source (embedded inline)
 - `public/img/` — reciter photos (see `public/img/README.md`)
 
-## Roadmap
+## Features & roadmap
 
-See `docs/ROADMAP.md` for the planned features: ayah-by-ayah text in the
-full-screen player, prayer times with adhan, adhkar sabah/masaa, and a YouTube
-player for video recitations.
+Shipped: a reciters/riwayat player (favorites, recents, downloads, sleep
+timer), a full mushaf reading tab (Hafs + Warsh, self-hosted pages), prayer
+times with per-prayer adhan and offsets, adhkar with daily progress, and a
+YouTube player for video recitations.
+
+See `docs/ROADMAP.md` for the full status. All A1–A19 and B1–B6 audit stages
+are done, and the YouTube shell's caption toggle and fullscreen button are in
+place — no pending items remain.
 
 ## Licenses & attribution
 

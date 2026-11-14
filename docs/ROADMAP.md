@@ -51,7 +51,7 @@ Pending polish: none planned for this phase.
 
 ## Phase 2 — Prayer times with adhan
 
-**Status**: **shipped** (core), with pending items below.
+**Status**: **shipped** (core + adhan coordination).
 
 Implemented:
 
@@ -72,10 +72,11 @@ optional desktop notification at prayer time (Notification API, permission
 requested when enabled), and a fixed quick-cities list in the location
 search panel as a reliable fallback when detection fails.
 
-**Pending** (tracked in the audit):
-- Adhan must pause **all** players (Quran audio + YouTube) — the Quran
-  audio element is paused in `stop` mode, but YouTube pausing and full
-  visual state rollback are audit item B4.
+**Adhan coordination is complete** (audit item B4 done): `playAdhan()` now
+pauses **all** players at once — the Quran `audio` element, the YouTube
+player (`ytPlayer.pauseVideo()`), and the playing visual state — via
+`pauseAllPlayers()`, and blocks any player from starting while the adhan
+sounds. Duck mode lowers the recitation to 15% and still pauses the video.
 
 ---
 
@@ -99,7 +100,7 @@ day (overridable via the back button).
 
 ## Phase 4 — YouTube player for best recitations
 
-**Status**: **shipped** (core), with pending polish below.
+**Status**: **shipped**.
 
 Implemented:
 
@@ -107,10 +108,14 @@ Implemented:
   IFrame Player API; videos are fully standalone in their tab (no coupling
   with the audio player's queue state).
 - In-site navigation only between the site's videos (no external exits).
-
-**Pending** (user feedback): the custom player shell still lacks a CC
-disable button and a fullscreen button; polish tracked under the B-stage
-responsive/UX pass.
+- Custom player shell: the native YouTube controls are disabled
+  (`controls:0`) and replaced by a bottom bar (prev/play/next, seek, mute +
+  volume for desktop, caption toggle, fullscreen).
+- **Captions toggle** (`#ytCcBtn`): turns the `ar` caption track on/off via
+  `loadModule('captions')` / `unloadModule('captions')`; CC starts off
+  (`cc_load_policy:0`).
+- **Fullscreen** (`#ytFsBtn`): requests fullscreen on the player box and
+  exits it again; the box is restyled via `.yt-player:fullscreen`.
 
 ---
 
@@ -120,7 +125,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 
 | Stage | Scope | Status |
 |---|---|---|
-| A1 | Deployment setup (Cloudflare) | **pending** — no wrangler config/CI in repo yet |
+| A1 | Deployment setup (Cloudflare) | **done** — single path chosen and documented: static build → **Cloudflare Workers Static Assets** (`wrangler.jsonc`, worker `ounsapp` → `ounsapp.musbch.workers.dev`, no server adapter); `wrangler` added as a dev dependency + `npm run deploy` (`build` then `wrangler deploy`); GitHub Actions workflow (`.github/workflows/deploy.yml`) lints/tests/builds/deploys on push to `main`; README has a repeatable Deploy section. Verified with `wrangler deploy --dry-run` (reads `dist/`, no bindings) |
 | A2 | Mushaf pages off GitHub raw → self-hosted + CDN chain + Warsh PNG fallback | **done** |
 | A3 | Streaming ZIP download with progress/cancel | **done** |
 | A4 | CORS-safe audio (selective routing + element swap) | **done** |
@@ -139,16 +144,16 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A17 | Accessibility (slider roles, focus-visible, aria-labels) | **done** — div-based bars (`#progBar`, `#ovProg`, `#volBar`) now expose `role="slider"` + `tabindex="0"` + `aria-valuemin/max/now` + `aria-valuetext` (kept in sync in `updateProgress()`, `updateVolUI()` and drag handlers) with keyboard support (arrows ±5s / ±5%, Home/End) via `barKeys()`; global `:focus-visible` outline rule added and all 5 `outline:none` occurrences removed from `global.css`; new `data-i18n-aria` mechanism in `applyI18nStatic()` labels the fullscreen overlay controls and `#dlClose`, plus explicit `aria-label` on unfav/download mini-buttons and mushaf theme/exit icon buttons |
 | A18 | Escape all API-sourced `innerHTML` fields | **done** — `prayerCardsHTML()` now escapes every AlAdhan-sourced field (`timings` via `prayerTime()`, `hijri.day/month.ar/month.en/year`, `date.readable`); `reciterCard` (`data-rid`) and surah/collection rows (`data-key`, `data-fav`, `data-unfav`, `data-dl`) escape API ids in attributes; rest of the audit found the other consumers already escaped (Nominatim results, reciter/moshaf/track names, queue, badges, adhan banner, adhkar text, weather uses numbers + static table); proven by a Playwright injection test: hostile AlAdhan mock executed `onerror` on the old build and renders fully inert text after the fix |
 | A19 | Self-host Google fonts | **done** — Alan Sans (variable 300–900, arabic/latin/latin-ext) and Amiri (400/700, same subsets) downloaded into `src/assets/fonts/` and declared via 9 `@font-face` rules with the original `unicode-range` splits at the top of `global.css`; Google Fonts `<link>`s and preconnects removed from `Base.astro`; Vite bundles them hashed under `dist/_astro/` and the SW caches them same-origin; NOTICE updated with OFL attribution |
-| B1–B3 | Systematic responsive + type/spacing scale pass | pending |
-| B4 | Adhan pauses all players | pending |
-| B5 | Mandala rotation bug (transform-origin, rAF-driven) | pending |
-| B6 | WCAG AA contrast in both themes | pending |
+| B1–B3 | Responsive pass + mobile now-playing card + type/spacing scale | **done** — unified type scale (`--fs-3xs…--fs-9xl`), spacing scale (`--sp-1…--sp-10`) and fluid gutters (`--gutter`/`--gutter-y`/`--grid-gap`) in `:root`; 138 hard-coded `font-size` values tokenized, display sizes left fluid via `clamp()`; `main`/`.topbar` padding and 5 grid gaps driven by the tokens; responsive pass adds `env(safe-area-inset-bottom)` for `.player` under 900px, very-small-phone (≤380px), small-phone (≤479px) and low-height-landscape rules; dead `≤640px` font-size overrides dropped (`97147d9`). B2: mobile now-playing card shown ≤1280px docked above the player footer, wired to the playing/progress state and the fullscreen overlay, hidden while the adhan shows (`3cca6b2`) |
+| B4 | Adhan pauses all players | **done** — `pauseAllPlayers()` pauses the Quran `audio`, calls `ytPlayer.pauseVideo()`, clears the `#ytPlayerBox.playing` state and resets the playing UI; `playAdhan()` calls it in stop mode (duck mode lowers the recitation to 15% and still pauses the video); `adhanBlocking()` prevents any player from starting while the adhan sounds; `<body class="adhan">` hides the NP surfaces (`3cca6b2`) |
+| B5 | Mandala rotation bug (transform-origin, rAF-driven) | **done** — rings now use `transform-box: fill-box` + `transform-origin: 50% 50%` (replacing the Chrome-only `view-box` value that left the pivot off-centre), `will-change` only while playing, `prefers-reduced-motion` stops them, and the SVG is rebuilt only when its argument signature changes so the animation is not restarted (`6db8caa`) |
+| B6 | WCAG AA contrast in both themes | **done** — new text-safe tokens (`--gold-ink`, `--gold2-ink`, `--gold-on-ink`, `--on-gold`) with dark-theme counterparts, and deeper `--ink2`/`--danger`/`--warn`/`--info` in the light theme; textual `var(--gold)`/`var(--gold2)` uses swapped to the AA-safe tokens (`e86f533`) |
 
 ---
 
 ## Suggested order
 
-Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
-All A stages are complete; remaining work is B1–B6 (A1 deployment setup before the next production
-deploy). Each stage ships independently on its own branch/PR; no breaking
-changes to existing `ouns_` state keys.
+All audit stages **A1–A19** and **B1–B6** are complete, along with the earlier
+Phase 4 wishlist (the YouTube shell's caption toggle and fullscreen button).
+No pending items remain. Each stage ships independently; no breaking changes
+to existing `ouns_` state keys.
