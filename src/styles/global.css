@@ -4531,3 +4531,53 @@ html[dir="rtl"] .back-btn .ic {
 /* A17: visible keyboard focus for every interactive element */
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .prog:focus-visible{outline-offset:3px;border-radius:8px}
+
+/* ══════════════════════════════════════════════════════════════════
+   B2 — بطاقة «يُتلى الآن» للهاتف، ملتصقة فوق فوتر المشغّل
+   تظهر فقط حيث تُخفى لوحة الديسكتوب .np-panel (≤1280px)
+   ══════════════════════════════════════════════════════════════════ */
+.np-card{display:none}
+body.np-open .np-card{display:none!important}
+body.adhan .np-card{display:none!important}
+body.mushaf-full .np-card{display:none!important}
+
+@media(max-width:1280px){
+  .np-card{
+    position:fixed;
+    z-index:60;
+    inset-inline:10px;
+    bottom:calc(var(--player) + 8px + env(safe-area-inset-bottom,0px));
+    display:none;
+    align-items:center;
+    gap:11px;
+    padding:9px 11px;
+    min-height:70px;
+    background:var(--surface);
+    border:1px solid var(--line2);
+    border-radius:var(--r-md);
+    box-shadow:var(--shadow);
+    cursor:pointer
+  }
+  body.has-track .np-card{display:flex}
+  .np-card .npc-art{width:48px;height:48px;flex:none;border-radius:12px;object-fit:cover;background:var(--bg2);border:1px solid var(--line)}
+  .np-card .npc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+  .np-card .npc-title{font-size:15px;font-weight:700;line-height:1.35;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np-card .npc-title.sn-font{line-height:1.5}
+  .np-card .npc-artist{font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np-card .npc-prog{height:3px;border-radius:3px;background:var(--line);overflow:hidden}
+  .np-card .npc-fill{height:100%;width:0;background:var(--gold);border-radius:3px;transition:width .25s linear}
+  .np-card .npc-ctrl{display:flex;align-items:center;gap:2px;flex:none}
+  .np-card .npc-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--ink);transition:background .2s,color .2s}
+  .np-card .npc-btn:hover{background:var(--surface2)}
+  .np-card .npc-btn .ic{width:20px;height:20px}
+  .np-card #npcPlay{background:var(--accent);color:var(--on-accent)}
+  .np-card #npcPlay .ic{fill:currentColor;stroke:none}
+  .np-card .npc-expand .ic{width:18px;height:18px;color:var(--gold)}
+  body.has-track main{padding-bottom:calc(70px + 32px)}
+}
+
+@media(max-width:640px){
+  .np-card{inset-inline:8px;gap:9px;padding:8px 9px}
+  .np-card .npc-art{width:44px;height:44px}
+  body.has-track main{padding-bottom:calc(70px + 28px)}
+}
