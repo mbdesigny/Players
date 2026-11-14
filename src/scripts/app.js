@@ -1,13 +1,13 @@
 'use strict';
-import adhanUrl from '../assets/adhan/adhan.mp3';
-import adhanFajrUrl from '../assets/adhan/adhan-fajr.mp3';
-import vMakkah from '../assets/adhan/voices/makkah.mp3';
-import vMadinah from '../assets/adhan/voices/madinah.mp3';
-import vAqsa from '../assets/adhan/voices/aqsa.mp3';
-import vEgypt from '../assets/adhan/voices/egypt.mp3';
-import vTurkey from '../assets/adhan/voices/turkey.mp3';
-import vBaldi from '../assets/adhan/voices/baldi.mp3';
-import vQatami from '../assets/adhan/voices/qatami.mp3';
+const adhanUrl='/adhan/adhan.mp3';
+const adhanFajrUrl='/adhan/adhan-fajr.mp3';
+const vMakkah='/adhan/voices/makkah.mp3';
+const vMadinah='/adhan/voices/madinah.mp3';
+const vAqsa='/adhan/voices/aqsa.mp3';
+const vEgypt='/adhan/voices/egypt.mp3';
+const vTurkey='/adhan/voices/turkey.mp3';
+const vBaldi='/adhan/voices/baldi.mp3';
+const vQatami='/adhan/voices/qatami.mp3';
 import mosqueUrl from '../assets/hero/mosque.jpg?url';
 import ADHKAR from '../data/adhkar.json';
 /* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
