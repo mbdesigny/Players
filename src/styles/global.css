@@ -4539,3 +4539,12 @@ html[dir="rtl"] .back-btn .ic {
 @media(prefers-reduced-motion:reduce){.ov-aurora i{animation:none}}
 [data-theme="dark"] .ov-aurora{opacity:.7}
 [data-theme="dark"] .ov-waves{opacity:.95}
+
+/* ─── Latin surah names in collection & surah cards (EN mode) ─── */
+.surah-row .sa.en-name {
+  font-family: 'Alan Sans', sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: .1px
+}
