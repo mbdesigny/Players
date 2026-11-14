@@ -1,0 +1,112 @@
+<div class="audio-bg" aria-hidden="true">
+  <div class="audio-bg-in">
+    <div class="orb orb-bass"></div>
+    <div class="orb orb-mid"></div>
+    <div class="orb orb-treble"></div>
+  </div>
+</div>
+<style is:global>
+  @property --bass {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --mid {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --treble {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .np-overlay .audio-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none
+  }
+
+  .np-overlay .audio-bg-in {
+    position: absolute;
+    inset: -12%;
+    opacity: .9;
+    transform: scale(calc(1 + var(--bass) * .08));
+    will-change: transform
+  }
+
+  .np-overlay .audio-bg .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(48px);
+    mix-blend-mode: multiply;
+    animation: audio-float 14s ease-in-out infinite alternate;
+    will-change: transform, opacity
+  }
+
+  .np-overlay .orb-bass {
+    width: 48vmax;
+    height: 48vmax;
+    top: -14vmax;
+    inset-inline-start: -12vmax;
+    background: radial-gradient(circle, rgba(143, 188, 143, .95) 0%, transparent 68%);
+    transform: scale(calc(.85 + var(--bass) * .55));
+    opacity: calc(.35 + var(--bass) * .55)
+  }
+
+  .np-overlay .orb-mid {
+    width: 40vmax;
+    height: 40vmax;
+    bottom: -12vmax;
+    inset-inline-end: -10vmax;
+    background: radial-gradient(circle, rgba(186, 151, 67, .9) 0%, transparent 68%);
+    transform: scale(calc(.85 + var(--mid) * .5));
+    opacity: calc(.32 + var(--mid) * .55);
+    animation-duration: 18s;
+    animation-delay: -5s
+  }
+
+  .np-overlay .orb-treble {
+    width: 30vmax;
+    height: 30vmax;
+    top: 34%;
+    inset-inline-end: 18%;
+    background: radial-gradient(circle, rgba(61, 103, 69, .85) 0%, transparent 68%);
+    transform: scale(calc(.8 + var(--treble) * .7));
+    opacity: calc(.25 + var(--treble) * .6);
+    animation-duration: 22s;
+    animation-delay: -9s
+  }
+
+  @keyframes audio-float {
+    0% {
+      translate: -4% -4%
+    }
+
+    100% {
+      translate: 6% 6%
+    }
+  }
+
+  [data-theme="dark"] .np-overlay .audio-bg-in {
+    opacity: 1
+  }
+
+  [data-theme="dark"] .np-overlay .audio-bg .orb {
+    mix-blend-mode: screen
+  }
+
+  @media(prefers-reduced-motion:reduce) {
+    .np-overlay .audio-bg-in {
+      transform: none
+    }
+
+    .np-overlay .audio-bg .orb {
+      animation: none
+    }
+  }
+</style>

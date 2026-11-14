@@ -1459,7 +1459,7 @@ setInterval(() => rotateVerse(), 22000);
 
 /* ═══════════════ OVERLAYS ═══════════════ */
 /* ═══════════ fullscreen waves visualizer ═══════════ */
-let acx = null, analyser = null, freqData = null, waveRaf = 0, smLevel = 0, layerLvl = [0, 0, 0];
+let acx = null, analyser = null, freqData = null, waveRaf = 0, smLevel = 0, layerLvl = [0, 0, 0], orbLvl = [0, 0, 0], orbPeak = [0, 0, 0], orbBase = [0, 0, 0];
 function ensureAnalyser() {
   if (acx !== null || (!window.AudioContext && !window.webkitAudioContext)) return;
   try {
@@ -1471,6 +1471,12 @@ function ensureAnalyser() {
   } catch (e) { acx = null; analyser = null }
 }
 document.addEventListener('pointerdown', () => { if (acx && acx.state === 'suspended') acx.resume() }, { capture: true });
+function setOrbVars(b) {
+  const ov = $('#npOverlay'); if (!ov) return;
+  ov.style.setProperty('--bass', b[0].toFixed(3));
+  ov.style.setProperty('--mid', b[1].toFixed(3));
+  ov.style.setProperty('--treble', b[2].toFixed(3));
+}
 function drawWaves(ts) {
   const cv = $('#ovWaves'); if (!cv) { waveRaf = 0; return }
   const dpr = Math.min(2, devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight;
@@ -1478,16 +1484,26 @@ function drawWaves(ts) {
   if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr) }
   const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
   const playing = !audio.paused;
-  let bands = [0, 0, 0];
+  let bands = [0, 0, 0], obands = [0, 0, 0];
   if (analyser && freqData && playing) {
     analyser.getByteFrequencyData(freqData);
-    const band = (f0, f1) => { let s = 0; for (let i = f0; i < f1; i++)s += freqData[i]; return Math.min(1, s / ((f1 - f0) * 255) * 2.1) };
-    bands = [band(2, 10), band(8, 24), band(18, 48)];
+    const band = (f0, f1, g) => { let s = 0; for (let i = f0; i < f1; i++)s += freqData[i]; return Math.min(1, s / ((f1 - f0) * 255) * g) };
+    bands = [band(2, 10, 2.1), band(8, 24, 2.1), band(18, 48, 2.1)];
+    obands = [band(2, 10, 1.15), band(8, 24, 1.15), band(18, 48, 1.15)];
   } else if (playing) {
     const tt = ts / 1000;
     bands = [.3 + .2 * Math.sin(tt * 1.1), .24 + .16 * Math.sin(tt * .9 + 1.3), .18 + .13 * Math.sin(tt * .7 + 2.1)];
+    obands = bands;
   }
   smLevel += (Math.max(...bands) - smLevel) * .12;
+  obands.forEach((v, i) => {
+    orbBase[i] += (v - orbBase[i]) * .01;
+    const d = Math.max(0, v - orbBase[i]);
+    orbPeak[i] = Math.max(d, orbPeak[i] * .995, .05);
+    const n = Math.min(1, d / orbPeak[i]);
+    orbLvl[i] += (n - orbLvl[i]) * (n > orbLvl[i] ? .4 : playing ? .08 : .25);
+  });
+  setOrbVars(orbLvl);
   const t = ts / 1000;
   const layers = [[.9, .5, 'rgba(186,151,67,.16)', 0], [1.35, .8, 'rgba(186,151,67,.28)', 1], [1.9, 1.2, 'rgba(186,151,67,.5)', 2]];
   layers.forEach(([wl, sp, col, bi], li) => {
@@ -1510,8 +1526,8 @@ function startWaves() {
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   waveRaf = requestAnimationFrame(drawWaves);
 }
-function stopWaves() { if (waveRaf) cancelAnimationFrame(waveRaf); waveRaf = 0 }
-window.__waves = () => ({ ctx: acx ? acx.state : 'none', has: !!analyser, lvl: +smLevel.toFixed(3), layers: layerLvl.map(v => +v.toFixed(3)), paused: audio.paused });
+function stopWaves() { if (waveRaf) cancelAnimationFrame(waveRaf); waveRaf = 0; orbLvl = [0, 0, 0]; orbBase = [0, 0, 0]; setOrbVars([0, 0, 0]) }
+window.__waves = () => ({ ctx: acx ? acx.state : 'none', has: !!analyser, lvl: +smLevel.toFixed(3), layers: layerLvl.map(v => +v.toFixed(3)), orbs: orbLvl.map(v => +v.toFixed(3)), paused: audio.paused });
 function openOverlay() { $('#npOverlay').classList.add('open'); startWaves() }
 function closeOverlay() { $('#npOverlay').classList.remove('open'); stopWaves() }
 function closeSidebar() { $('#sidebar').classList.remove('open'); $('#scrimSide').classList.remove('open') }
