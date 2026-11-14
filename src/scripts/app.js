@@ -85,7 +85,7 @@ function swapAudioEl() {
   return el;
 }
 function bindAudio(el) {
-  el.addEventListener('play', () => { if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
+  el.addEventListener('play', () => { setPlayingUI(true); if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
   el.addEventListener('pause', () => { setPlayingUI(false); saveSession() });
   el.addEventListener('timeupdate', () => { updateProgress(); if (Math.floor(el.currentTime) % 5 === 0) saveSession() });
   el.addEventListener('progress', updateBuffer);
