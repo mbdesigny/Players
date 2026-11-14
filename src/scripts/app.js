@@ -499,41 +499,77 @@ function setMushafRiwaya(rw){
 }
 const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c}return t})();
 const crc32=b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_TABLE[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0};
-async function mushafZipAll(rw,onProg){
+const zipDeflate=async raw=>{
+  if(typeof CompressionStream==='undefined')return{data:raw,method:0};
+  try{
+    const out=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
+    return out.length<raw.length?{data:out,method:8}:{data:raw,method:0};
+  }catch(e){return{data:raw,method:0}}
+};
+let mushafZipCancel=null;
+const ctlCancelMushafZip=()=>{if(mushafZipCancel)mushafZipCancel()};
+async function mushafZipAll(rw,onProg,ctl,sink){
   const enc=new TextEncoder(),parts=[],central=[];
-  let offset=0,count=0;
+  let offset=0,count=0,fail=0;
   const u16=v=>new Uint8Array([v&255,(v>>8)&255]);
   const u32=v=>new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255]);
+  const put=sink?u8=>sink.write(u8):u8=>{parts.push(u8)};
   for(let n=1;n<=MUSHAF_PAGES;n++){
+    if(ctl&&ctl.cancelled)throw new Error('cancelled');
     let txt=null;
     for(const u of mushafSources(n,rw)){
       try{const res=await fetch(u);if(!res.ok)throw new Error(res.status);txt=await res.text();break}catch(e){}
     }
-    if(txt==null){onProg(n);continue}
-    const data=enc.encode(txt),crc=crc32(data),nameB=enc.encode(`${pad(n)}.svg`);
-    const lh=new Uint8Array(30);lh.set(u32(0x04034b50),0);lh.set(u16(20),4);lh.set(u16(0),8);lh.set(u16(0),10);lh.set(u32(crc),14);
-    lh.set(u32(data.length),18);lh.set(u32(data.length),22);lh.set(u16(nameB.length),26);
-    parts.push(lh,nameB,data);offset+=lh.length+nameB.length+data.length;
-    const ch=new Uint8Array(46);ch.set(u32(0x02014b50),0);ch.set(u16(20),4);ch.set(u16(20),6);ch.set(u32(crc),16);
-    ch.set(u32(data.length),20);ch.set(u32(data.length),24);ch.set(u16(nameB.length),28);ch.set(u32(offset-(lh.length+nameB.length+data.length)),42);
+    if(txt==null){onProg(n);if(++fail>=25)throw new Error('too-many-failures');continue}
+    fail=0;
+    const raw=enc.encode(txt);txt=null;
+    const crc=crc32(raw),{data,method}=await zipDeflate(raw);
+    const csz=method===8?data.length:raw.length;
+    const nameB=enc.encode(`${pad(n)}.svg`);
+    const lh=new Uint8Array(30);lh.set(u32(0x04034b50),0);lh.set(u16(20),4);lh.set(u16(0),8);lh.set(u16(method),10);lh.set(u32(crc),14);
+    lh.set(u32(csz),18);lh.set(u32(raw.length),22);lh.set(u16(nameB.length),26);
+    await put(lh);await put(nameB);await put(data);
+    offset+=lh.length+nameB.length+csz;
+    const ch=new Uint8Array(46);ch.set(u32(0x02014b50),0);ch.set(u16(20),4);ch.set(u16(20),6);ch.set(u16(method),10);ch.set(u32(crc),16);
+    ch.set(u32(csz),20);ch.set(u32(raw.length),24);ch.set(u16(nameB.length),28);ch.set(u32(offset-(lh.length+nameB.length+csz)),42);
     central.push(ch,nameB);count++;onProg(n);
+    if(n%6===0)await new Promise(r=>setTimeout(r,0));
   }
   if(!count)throw new Error('no pages');
   const cdSize=central.reduce((s,a)=>s+a.length,0);
   const eo=new Uint8Array(22);eo.set(u32(0x06054b50),0);eo.set(u16(count),8);eo.set(u16(count),10);eo.set(u32(cdSize),12);eo.set(u32(offset),16);
+  if(sink){for(const c of central)await sink.write(c);await sink.write(eo);await sink.close();return null}
   return new Blob([...parts,...central,eo],{type:'application/zip'});
 }
 async function mushafDownloadAll(btn){
-  if(btn.dataset.busy)return;btn.dataset.busy='1';btn.disabled=true;
-  const rw=S.mushafRiwaya,orig=btn.textContent;
+  if(btn.dataset.busy){ctlCancelMushafZip();return}
+  btn.dataset.busy='1';btn.title=t('cancel');
+  const rw=S.mushafRiwaya,orig=btn.textContent,ctl={cancelled:false};
+  mushafZipCancel=()=>{ctl.cancelled=true};
+  const prog=p=>{btn.textContent=`${S.lang==='ar'?arDigits(p):p} / ${S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES}`};
+  const fname=`mushaf-${rw}-svg.zip`;
+  let sink=null,wr=null;
   try{
-    const blob=await mushafZipAll(rw,p=>{btn.textContent=`${S.lang==='ar'?arDigits(p):p} / ${S.lang==='ar'?arDigits(MUSHAF_PAGES):MUSHAF_PAGES}`});
-    const fname=`mushaf-${rw}-svg.zip`;
-    if(S.dirHandle){const fh=await S.dirHandle.getFileHandle(fname,{create:true});const w=await fh.createWritable();await w.write(blob);await w.close()}
-    else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),60000)}
+    if(S.dirHandle){
+      const fh=await S.dirHandle.getFileHandle(fname,{create:true});
+      wr=await fh.createWritable();
+    }else if(window.showSaveFilePicker){
+      try{
+        const fh=await window.showSaveFilePicker({suggestedName:fname,types:[{description:'ZIP',accept:{'application/zip':['.zip']}}]});
+        wr=await fh.createWritable();
+      }catch(e){if(e&&e.name==='AbortError')throw new Error('cancelled')}
+    }
+    if(wr)sink={write:async u8=>{if(ctl.cancelled)throw new Error('cancelled');await wr.write(u8)},close:async()=>{await wr.close()}};
+    const blob=await mushafZipAll(rw,prog,ctl,sink);
+    if(blob){
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),60000);
+    }
     toast(t('saved'));
-  }catch(e){toast(t('failed'))}
-  btn.textContent=orig;btn.disabled=false;delete btn.dataset.busy;
+  }catch(e){
+    if(wr&&wr.abort)try{wr.abort()}catch(_){ }
+    toast(e&&e.message==='cancelled'?t('cancelled'):t('failed'));
+  }
+  btn.textContent=orig;btn.title='';btn.disabled=false;delete btn.dataset.busy;mushafZipCancel=null;
 }
 const mushafJuz=n=>{let j=1;for(let i=0;i<JUZ_PAGE.length;i++)if(JUZ_PAGE[i]<=n)j=i+1;return j};
 const mushafSurah=n=>{let s=1;for(let i=0;i<SURAH_PAGE.length;i++)if(SURAH_PAGE[i]<=n)s=i+1;return s};
