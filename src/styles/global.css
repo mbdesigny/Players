@@ -2566,14 +2566,23 @@ kbd {
 
 /* ═════════════ mushaf (fullscreen reading) ═════════════ */
 body.mushaf-full .shell {
-  grid-template-columns: minmax(0, 1fr)
+  grid-template-columns: var(--sidebar) minmax(0, 1fr)
 }
 
-body.mushaf-full .sidebar,
 body.mushaf-full .np-panel,
 body.mushaf-full .player,
 body.mushaf-full .topbar {
   display: none
+}
+
+@media (max-width: 899px) {
+  body.mushaf-full .shell {
+    grid-template-columns: minmax(0, 1fr)
+  }
+
+  body.mushaf-full .sidebar {
+    display: none
+  }
 }
 
 body.mushaf-full main {
@@ -2599,9 +2608,7 @@ body.mushaf-full #view {
 }
 
 .mushaf-top {
-  position: absolute;
-  top: 0;
-  inset-inline: 0;
+  position: relative;
   z-index: 6;
   display: flex;
   align-items: center;
@@ -2609,10 +2616,7 @@ body.mushaf-full #view {
   padding: 10px 18px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: .25s;
-  pointer-events: none
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .07)
 }
 
 .mt-nav {
@@ -2715,23 +2719,19 @@ html[dir="rtl"] .mt-sel {
   display: none
 }
 
-.mc-open {
-  position: absolute;
-  bottom: 4%;
-  inset-inline-start: 50%;
-  transform: translateX(-50%);
-  box-shadow: var(--shadow2)
+.mc-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 14px 16px
 }
 
 .mc-dl {
-  position: absolute;
-  bottom: calc(4% + 46px);
-  inset-inline-start: 50%;
-  transform: translateX(-50%);
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--line2);
-  box-shadow: var(--shadow2);
   font-size: var(--fs-xs);
   padding: 8px 16px
 }
@@ -2791,9 +2791,7 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mushaf-foot {
-  position: absolute;
-  bottom: 0;
-  inset-inline: 0;
+  position: relative;
   z-index: 6;
   display: flex;
   align-items: center;
@@ -2802,10 +2800,136 @@ html[dir="rtl"] .mt-sel {
   padding: 10px 18px;
   background: var(--surface);
   border-top: 1px solid var(--line);
-  opacity: 0;
-  transform: translateY(100%);
-  transition: .25s;
-  pointer-events: none
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, .07)
+}
+
+.mushaf-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex
+}
+
+.mushaf-side {
+  display: none
+}
+
+.mnav {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 7;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: var(--shadow2);
+  transition: .2s
+}
+
+.mnav.prev {
+  inset-inline-start: 14px
+}
+
+.mnav.next {
+  inset-inline-end: 14px
+}
+
+.mnav:disabled {
+  opacity: .35;
+  cursor: default
+}
+
+.mnav:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold-ink)
+}
+
+.mrestore {
+  display: none
+}
+
+body.mushaf-clean .mushaf-side,
+body.mushaf-clean .mushaf-top,
+body.mushaf-clean .mushaf-foot,
+body.mushaf-clean .mnav {
+  display: none
+}
+
+body.mushaf-clean .mrestore {
+  display: flex;
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
+  z-index: 8;
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  box-shadow: var(--shadow2)
+}
+
+@media (min-width: 900px) {
+
+  .mushaf-top,
+  .mushaf-foot {
+    display: none
+  }
+
+  .mushaf-side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: none;
+    width: 252px;
+    padding: 18px 14px;
+    border-inline-start: 1px solid var(--line);
+    background: var(--bg);
+    overflow-y: auto
+  }
+
+  .mnav {
+    display: flex
+  }
+}
+
+.ms-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+.ms-lab {
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--ink2);
+  font-weight: 700
+}
+
+.ms-sec .mt-sel {
+  max-width: none;
+  width: 100%
+}
+
+.ms-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line)
+}
+
+.ms-actions .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px
 }
 
 .mf-slider {
@@ -2882,13 +3006,6 @@ html[dir="rtl"] .mt-sel {
   font-size: var(--fs-sm);
   color: var(--ink2);
   margin-bottom: 6px
-}
-
-.mushaf-wrap.bars .mushaf-top,
-.mushaf-wrap.bars .mushaf-foot {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto
 }
 
 .mf-num {
@@ -3625,7 +3742,8 @@ html[dir="rtl"] .back-btn .ic {
   overflow: hidden;
   position: relative;
   margin: 0 auto 12px;
-  border: 1px solid var(--line)
+  border: 1px solid rgba(186, 151, 67, .35);
+  box-shadow: 0 0 0 3px rgba(186, 151, 67, .08)
 }
 
 .reciter-card .ava img {
