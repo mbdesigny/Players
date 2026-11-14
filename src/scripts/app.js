@@ -255,7 +255,7 @@ function viewHome(){
 function reciterCard(r){
   const ms=S.rewaya==='__all'?r.moshaf:r.moshaf.filter(m=>norm(m.rewaya)===S.rewaya);
   const rw=[...new Set(ms.map(m=>m.rewaya).filter(Boolean))].slice(0,2);
-  return `<button class="reciter-card ${S.reciter&&S.reciter.id===r.id?'active':''}" data-rid="${r.id}">
+  return `<button class="reciter-card ${S.reciter&&S.reciter.id===r.id?'active':''}" data-rid="${esc(r.id)}">
     <div class="ava">${reciterImg(r)}
     <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
     <div class="rn">${esc(reciterName(r))}</div>
@@ -291,13 +291,13 @@ function surahRow(tr,i){
   const faved=S.favorites.some(f=>f.key===tr.key);
   const num=S.lang==='ar'?arDigits(tr.n):tr.n;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
-  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-n="${tr.n}" data-key="${tr.key}" title="${esc(prim)}">
+  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-n="${tr.n}" data-key="${esc(tr.key)}" title="${esc(prim)}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span>
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type?t('medinan'):t('meccan')}</span></span>
     <span class="sfoot"><span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
     <span class="acts">
-      <button class="mini-btn ${faved?'faved':''}" data-fav="${tr.key}" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
-      <button class="mini-btn" data-dl="${tr.key}" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+      <button class="mini-btn ${faved?'faved':''}" data-fav="${esc(tr.key)}" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
+      <button class="mini-btn" data-dl="${esc(tr.key)}" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
     </span></span></div>`;
 }
 function viewCollection(items,title,sub,isFav){
@@ -310,13 +310,13 @@ function viewCollection(items,title,sub,isFav){
 function collectionRow(f,tr,i,isFav){
   const playing=S.current&&S.current.key===tr.key;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
-  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-n="${tr.n}" data-key="${tr.key}">
+  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-n="${tr.n}" data-key="${esc(tr.key)}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
     <span class="acts">
-      ${isFav?`<button class="mini-btn faved" data-unfav="${tr.key}" aria-label="${t('favorite')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
-      <button class="mini-btn" data-dl="${tr.key}" aria-label="${t('download')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+      ${isFav?`<button class="mini-btn faved" data-unfav="${esc(tr.key)}" aria-label="${t('favorite')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>`:''}
+      <button class="mini-btn" data-dl="${esc(tr.key)}" aria-label="${t('download')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
     </span></span></div>`;
 }
 
@@ -1028,12 +1028,12 @@ function prayerCardsHTML(){
   const num=p=>S.lang==='ar'?arDigits(p):p;
   const next=nextPrayerKey();
   const cards=PRAYERS.map(([k,l])=>`<div class="prayer-card${k===next?' next':''}">
-    <span>${t(l)}</span><b>${num(prayerTime(k))}</b>
+    <span>${t(l)}</span><b>${esc(num(prayerTime(k)))}</b>
   </div>`).join('');
   const extra=PRAYER_EXTRA.map(([k,l])=>`<div class="prayer-card alt">
-    <span>${t(l)}</span><b>${num(prayerTime(k))}</b>
+    <span>${t(l)}</span><b>${esc(num(prayerTime(k)))}</b>
   </div>`).join('');
-  const hdate=`${num(hj.day)} ${S.lang==='ar'?hj.month.ar:hj.month.en} ${num(hj.year)}`;
+  const hdate=`${esc(num(hj.day))} ${esc(S.lang==='ar'?hj.month.ar:hj.month.en)} ${esc(num(hj.year))}`;
   return `<div class="prayer-next">
     <span>${t('nextPrayer')} — ${t(next.toLowerCase())}</span>
     <b id="prCountdown" class="pr-count" dir="ltr">${prayerCountdownStr()}</b>
@@ -1042,7 +1042,7 @@ function prayerCardsHTML(){
   <div class="prayer-grid">${cards}</div>
   <div class="pr-sec">${t('prNight')}</div>
   <div class="prayer-grid alt">${extra}</div>
-  <div class="prayer-date">${hdate} · ${S.prayerData.date.readable}</div>`;
+  <div class="prayer-date">${hdate} · ${esc(S.prayerData.date.readable)}</div>`;
 }
 function startPrayerTick(){
   clearInterval(S.prayerTimer);
