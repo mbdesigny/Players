@@ -468,6 +468,7 @@ svg {
 }
 
 .nav-label {
+  visibility: hidden;
   font-size: var(--fs-3xs);
   letter-spacing: 1.6px;
   text-transform: uppercase;
@@ -4367,7 +4368,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ak-text {
-  font-family: "Amiri", serif;
+  font-family: 'Alan Sans', serif;
   font-size: var(--fs-2xl);
   line-height: 2;
   margin-bottom: 12px
