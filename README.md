@@ -41,3 +41,11 @@ npm run preview   # serve the build locally
 See `docs/ROADMAP.md` for the planned features: ayah-by-ayah text in the
 full-screen player, prayer times with adhan, adhkar sabah/masaa, and a YouTube
 player for video recitations.
+
+## Licenses & attribution
+
+The project code is MIT-licensed (see `LICENSE`). Bundled third-party assets
+(mushaf pages CC-BY-NC, reciter photos from Wikimedia Commons, adhan
+recordings, adhkar texts) and runtime data sources are documented with their
+licenses in [`NOTICE`](NOTICE). The mushaf pages are **non-commercial**
+(CC-BY-NC 4.0) — review `NOTICE` before any commercial redistribution.
