@@ -291,7 +291,7 @@ function surahRow(tr,i){
   const faved=S.favorites.some(f=>f.key===tr.key);
   const num=S.lang==='ar'?arDigits(tr.n):tr.n;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
-  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-key="${tr.key}" title="${esc(prim)}">
+  return `<div class="surah-row ${playing?'playing':''}" data-idx="${i}" data-n="${tr.n}" data-key="${tr.key}" title="${esc(prim)}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${num}</b>`}</span>
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${tr.ayahs} ${t('ayahs')} · ${tr.type?t('medinan'):t('meccan')}</span></span>
     <span class="sfoot"><span class="dur">${tr.duration?fmt(tr.duration):'—'}</span>
@@ -310,7 +310,7 @@ function viewCollection(items,title,sub,isFav){
 function collectionRow(f,tr,i,isFav){
   const playing=S.current&&S.current.key===tr.key;
   const prim=S.lang==='ar'?tr.name_ar:tr.name_en;
-  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-key="${tr.key}">
+  return `<div class="surah-row ${playing?'playing':''}" data-coll="${i}" data-n="${tr.n}" data-key="${tr.key}">
     <span class="sn">${playing?'<span class="eq"><i></i><i></i><i></i></span>':`<b>${S.lang==='ar'?arDigits(tr.n):tr.n}</b>`}</span>
     <span class="si">${S.lang==='ar'?`<span class="sa sn-font" aria-label="${esc(prim)}"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>`:`<span class="sa en-name">${esc(prim)}</span>`}<span class="se">${esc(trackReciter(tr))} · ${esc(f.rewaya)}</span></span>
     <span class="sfoot"><span class="tag gold">${esc(f.rewaya)}</span>
@@ -423,7 +423,7 @@ function markPlayingRows(){
     row.classList.toggle('playing',on);
     const sn=row.querySelector('.sn');
     if(on&&!sn.querySelector('.eq'))sn.innerHTML='<span class="eq"><i></i><i></i><i></i></span>';
-    else if(!on&&sn.querySelector('.eq')){const idx=+row.dataset.idx;const n=S.tracks[idx]?S.tracks[idx].n:(row.dataset.coll!=null?null:null);sn.innerHTML=`<b>${S.lang==='ar'?arDigits(n||''):n||''}</b>`}
+    else if(!on&&sn.querySelector('.eq')){const n=+row.dataset.n||0;sn.innerHTML=`<b>${n?(S.lang==='ar'?arDigits(n):n):''}</b>`}
   });
   $$('.quick-surah[data-surah]').forEach(q=>q.classList.toggle('playing',!!(S.view==='home'&&S.current&&+q.dataset.surah===S.current.n)));
 }

@@ -131,7 +131,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A9 | Adhan duck mode + notifications + location hardening | **done** |
 | A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | **done** — pure logic in `src/scripts/lib/` (text/surah/mushaf/sources/prayer), 29 unit tests via `node:test`, ESLint + Prettier wired (`npm run lint`/`format`/`test`), `engines.node >=18` |
 | A11 | Deduplicate CSS; single `#view` click delegator | **done** — removed duplicate MUSHAF-1 section (merged unique props into MUSHAF-2), slimmed duplicate MOBILE-2 media blocks to unique rules (kept after base mushaf rules so cascade still wins), merged the two `#view` click handlers into one delegator; RESTORED-BASE section analyzed and intentionally kept (its 2 overlapping selectors are live partial overrides, not dead duplication) |
-| A12 | `markPlayingRows()` null-number bug | pending |
+| A12 | `markPlayingRows()` null-number bug | **done** — rows now carry `data-n` (both reciter rows and collection rows), so un-marking always restores the real surah number; removed the dead `(row.dataset.coll!=null?null:null)` expression |
 | A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | pending |
 | A14 | Service worker cache versioning + mushaf offline | pending |
 | A15 | SSR-time lang/dir + missing i18n keys | pending |
