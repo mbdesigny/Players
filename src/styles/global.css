@@ -4698,7 +4698,7 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .ov-waves {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   inset-inline: 0;
   width: 100%;
