@@ -130,7 +130,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A8 | Adhkar daily progress | **done** |
 | A9 | Adhan duck mode + notifications + location hardening | **done** |
 | A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | **done** — pure logic in `src/scripts/lib/` (text/surah/mushaf/sources/prayer), 29 unit tests via `node:test`, ESLint + Prettier wired (`npm run lint`/`format`/`test`), `engines.node >=18` |
-| A11 | Deduplicate CSS; single `#view` click delegator | pending |
+| A11 | Deduplicate CSS; single `#view` click delegator | **done** — removed duplicate MUSHAF-1 section (merged unique props into MUSHAF-2), slimmed duplicate MOBILE-2 media blocks to unique rules (kept after base mushaf rules so cascade still wins), merged the two `#view` click handlers into one delegator; RESTORED-BASE section analyzed and intentionally kept (its 2 overlapping selectors are live partial overrides, not dead duplication) |
 | A12 | `markPlayingRows()` null-number bug | pending |
 | A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | pending |
 | A14 | Service worker cache versioning + mushaf offline | pending |
@@ -149,6 +149,6 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 ## Suggested order
 
 Remaining work, highest impact first: **B4 → B2 → B5 → B6 → B1/B3**, then
-A11–A19 in numeric order (A1 deployment setup before the next production
+A12–A19 in numeric order (A1 deployment setup before the next production
 deploy). Each stage ships independently on its own branch/PR; no breaking
 changes to existing `ouns_` state keys.

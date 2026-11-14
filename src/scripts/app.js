@@ -1368,6 +1368,10 @@ $('#view').addEventListener('click',async e=>{
   const favB=e.target.closest('[data-fav]');if(favB){const tr=findTrackByKey(favB.dataset.fav);if(tr)toggleFav(tr);return}
   const unfavB=e.target.closest('[data-unfav]');if(unfavB){const tr=findTrackByKey(unfavB.dataset.unfav);if(tr)toggleFav(tr);return}
   const dlB=e.target.closest('[data-dl]');if(dlB){const tr=findTrackByKey(dlB.dataset.dl);if(tr)enqueueDownloads([tr]);return}
+  const loc=e.target.closest('[data-loc]');
+  if(loc){const[lat,lng,name]=loc.dataset.loc.split(',');
+    S.prayerLoc={lat:+lat,lng:+lng,name};store.set('prayerLoc',S.prayerLoc);
+    S.prayerSearch=null;S.prayerData=null;render();return}
   const act=e.target.closest('[data-act]');
   if(act){const a=act.dataset.act;
     if(a==='browse')setView('reciters');
@@ -1420,12 +1424,6 @@ $('#view').addEventListener('click',async e=>{
   const ytc=e.target.closest('[data-yt]');if(ytc){audio.pause();S.ytId=ytc.dataset.yt;render();return}
   const coll=e.target.closest('[data-coll]');if(coll){playCollection(+coll.dataset.coll,S.view==='favorites');return}
   const row=e.target.closest('.surah-row[data-idx]');if(row){loadTrack(+row.dataset.idx,true);return}
-});
-$('#view').addEventListener('click',e=>{
-  const loc=e.target.closest('[data-loc]');
-  if(loc){const[lat,lng,name]=loc.dataset.loc.split(',');
-    S.prayerLoc={lat:+lat,lng:+lng,name};store.set('prayerLoc',S.prayerLoc);
-    S.prayerSearch=null;S.prayerData=null;render();return}
 });
 $('#view').addEventListener('change',e=>{
   if(e.target.id==='sortSel'){S.sort=e.target.value;render()}

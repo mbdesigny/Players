@@ -575,44 +575,8 @@ main {
   height: 16px
 }
 
-/* ═════════════ mushaf (fullscreen reading) ═════════════ */
-body.mushaf-full .shell{grid-template-columns:minmax(0,1fr)}
-body.mushaf-full .sidebar,body.mushaf-full .np-panel,body.mushaf-full .player,body.mushaf-full .topbar{display:none}
-body.mushaf-full main{padding:0;overflow:hidden;display:flex}
-body.mushaf-full #view{flex:1;min-height:0;display:flex;flex-direction:column}
-.mushaf-wrap{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;width:100%}
-.mushaf-top{position:absolute;top:0;inset-inline:0;z-index:6;display:flex;align-items:center;gap:12px;padding:10px 18px;
-  background:var(--surface);border-bottom:1px solid var(--line);opacity:0;transform:translateY(-100%);transition:.25s;pointer-events:none}
-.mt-center{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center}
-.mt-center b{font-size:15.5px}
-.mt-center span{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
-.mt-actions{display:flex;gap:8px;margin-inline-start:auto}
-.mushaf-stage{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:center;padding:14px 6.25%}
-.mc-open{position:absolute;bottom:4%;inset-inline-start:50%;transform:translateX(-50%);box-shadow:var(--shadow2)}
-.mushaf-page{height:100%;aspect-ratio:345/550;display:flex;align-items:center;justify-content:center;background:#fff;
-  border-radius:6px;overflow:hidden;box-shadow:var(--shadow)}
-.mushaf-page.cover-page{position:relative;cursor:pointer;background:#E2D2A6;border:1px solid rgba(186,151,67,.4)}
-.mushaf-page.cover-page img{object-fit:cover}
-[data-theme="dark"] .mushaf-page{background:#0D0F12}
-.mushaf-page img{width:100%;height:100%;object-fit:contain;border-radius:6px}
-[data-theme="dark"] .mushaf-page img{filter:invert(1) hue-rotate(180deg)}
-.mushaf-page img.broken{display:none}
-.mushaf-foot{position:absolute;bottom:0;inset-inline:0;z-index:6;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px;
-  background:var(--surface);border-top:1px solid var(--line);opacity:0;transform:translateY(100%);transition:.25s;pointer-events:none}
-.mushaf-wrap.bars .mushaf-top,.mushaf-wrap.bars .mushaf-foot{opacity:1;transform:none;pointer-events:auto}
-.mf-num{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums;min-width:86px;text-align:center}
-html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(-1)}
-.mushaf-stage.book{direction:rtl;gap:6px}
-.mushaf-stage.book .mushaf-page{max-width:calc(50% - 4px);position:relative}
-.mushaf-stage.book .mushaf-page::after{content:"";position:absolute;inset:0;border-radius:6px;pointer-events:none}
-.mushaf-stage.book .mushaf-page:first-child::after{box-shadow:inset 26px 0 30px -26px rgba(0,0,0,.4)}
-.mushaf-stage.book .mushaf-page:last-child::after{box-shadow:inset -26px 0 30px -26px rgba(0,0,0,.4)}
-.mushaf-stage.book .mushaf-page{padding:10px}
-.mushaf-stage.book .mushaf-page img{max-height:100%;max-width:100%;object-fit:contain;border-radius:6px;box-shadow:none}
-
 /* ═══════════════ mobile responsiveness ═══════════════ */
 @media(max-width:640px){
-  .hero{padding:20px 18px}
   .hero h1{font-size:24px}
   .view-head h2{font-size:21px}
   .np-overlay{padding:16px}
@@ -626,7 +590,6 @@ html[dir="rtl"] .mushaf-foot .ic,html[dir="rtl"] .back-btn .ic{transform:scaleX(
   .mushaf-top{padding:8px 10px;gap:8px}
   .mt-actions .icon-btn{width:36px;height:36px}
   .mushaf-stage{padding:8px 4%}
-  .mushaf-foot{gap:10px;padding:8px}
   .mushaf-foot .btn span{display:none}
   .mf-num{min-width:64px}
 }
@@ -2448,6 +2411,7 @@ html[dir="rtl"] .mt-sel {
   flex: 0 1 auto;
   min-width: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   text-align: center
 }
@@ -2457,6 +2421,10 @@ html[dir="rtl"] .mt-sel {
   color: var(--ink2);
   font-variant-numeric: tabular-nums;
   white-space: nowrap
+}
+
+.mt-center b {
+  font-size: 15.5px
 }
 
 .mt-actions {
@@ -2471,6 +2439,7 @@ html[dir="rtl"] .mt-sel {
   overflow: auto;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 14px 6.25%
 }
 
@@ -2532,10 +2501,14 @@ html[dir="rtl"] .mt-sel {
 
 .mushaf-page {
   height: 100%;
+  aspect-ratio: 345/550;
   display: flex;
   justify-content: center;
+  align-items: center;
   background: #fff;
-  border-radius: 6px
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow)
 }
 
 [data-theme="dark"] .mushaf-page {
@@ -2543,12 +2516,29 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mushaf-page img {
+  width: 100%;
+  height: 100%;
   max-height: 100%;
   max-width: 100%;
   padding: 30px;
   object-fit: contain;
   border-radius: 6px;
   box-shadow: var(--shadow-page)
+}
+
+.mushaf-page.cover-page {
+  position: relative;
+  cursor: pointer;
+  background: #E2D2A6;
+  border: 1px solid rgba(186, 151, 67, .4)
+}
+
+.mushaf-page.cover-page img {
+  object-fit: cover
+}
+
+[data-theme="dark"] .mushaf-page img {
+  filter: invert(1) hue-rotate(180deg)
 }
 
 .mushaf-page img.broken {
@@ -2562,6 +2552,7 @@ html[dir="rtl"] .mt-sel {
   z-index: 6;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   padding: 10px 18px;
   background: var(--surface);
@@ -2674,11 +2665,9 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .mushaf-stage.book .mushaf-page {
-  max-width: calc(50% - 4px)
-}
-
-.mushaf-stage.book .mushaf-page {
-  position: relative
+  max-width: calc(50% - 4px);
+  position: relative;
+  padding: 10px
 }
 
 .mushaf-stage.book .mushaf-page::after {
@@ -2697,15 +2686,19 @@ html[dir="rtl"] .back-btn .ic {
   box-shadow: inset -26px 0 30px -26px rgba(0, 0, 0, .4)
 }
 
-/* ═══════════════ mobile responsiveness ═══════════════ */
+.mushaf-stage.book .mushaf-page img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: none
+}
+
+/* ═══════════════ mobile responsiveness — mushaf/hero additions (kept after base mushaf rules so they win) ═══════════════ */
 @media(max-width:640px) {
   .hero {
     padding: 22px 18px;
     gap: 18px
-  }
-
-  .hero h1 {
-    font-size: 24px
   }
 
   .hero .eyebrow {
@@ -2715,51 +2708,6 @@ html[dir="rtl"] .back-btn .ic {
 
   .hero p {
     font-size: 13.5px
-  }
-
-  .view-head h2 {
-    font-size: 21px
-  }
-
-  .np-overlay {
-    padding: 16px
-  }
-
-  .ov-mandala {
-    width: min(36vh, 64vw, 280px)
-  }
-
-  .ov-badges {
-    margin: 10px 0 12px
-  }
-
-  .ov-progress {
-    margin-bottom: 12px
-  }
-
-  .ov-controls {
-    gap: 14px;
-    margin-bottom: 10px
-  }
-
-  .ov-controls .play-btn {
-    width: 58px;
-    height: 58px
-  }
-
-  .ov-controls .play-btn .ic {
-    width: 22px;
-    height: 22px
-  }
-
-  .ov-controls .ctrl {
-    width: 40px;
-    height: 40px
-  }
-
-  .mushaf-top {
-    padding: 8px 10px;
-    gap: 8px
   }
 
   .mt-nav {
@@ -2776,15 +2724,6 @@ html[dir="rtl"] .back-btn .ic {
     display: none
   }
 
-  .mt-actions .icon-btn {
-    width: 36px;
-    height: 36px
-  }
-
-  .mushaf-stage {
-    padding: 8px 4%
-  }
-
   .mushaf-stage.cover {
     padding: 8px
   }
@@ -2792,86 +2731,6 @@ html[dir="rtl"] .back-btn .ic {
   .mushaf-foot {
     gap: 10px;
     padding: 8px 12px
-  }
-
-  .mushaf-foot .btn span {
-    display: none
-  }
-
-  .mf-num {
-    min-width: 64px
-  }
-}
-
-@media(max-height:560px) and (orientation:landscape) {
-  .ov-mandala {
-    width: min(30vh, 220px);
-    margin: 1vh 0
-  }
-
-  .ov-title {
-    font-size: clamp(22px, 4vh, 30px)
-  }
-
-  .ov-badges {
-    margin: 6px 0 8px
-  }
-
-  .ov-progress {
-    margin-bottom: 8px
-  }
-
-  .ov-controls {
-    gap: 12px;
-    margin-bottom: 8px
-  }
-
-  .ov-controls .play-btn {
-    width: 52px;
-    height: 52px
-  }
-}
-
-@media(max-width:400px) {
-  .topbar {
-    gap: 6px
-  }
-
-  .top-actions {
-    gap: 6px
-  }
-
-  .icon-btn {
-    width: 36px;
-    height: 36px
-  }
-}
-
-@media(max-width:479px) {
-  .pb-art {
-    display: none
-  }
-
-  #btnDl,
-  #npDl,
-  #npDock {
-    display: none
-  }
-
-  .player {
-    grid-template-columns: 1fr auto 1fr
-  }
-
-  .pb-track {
-    justify-content: flex-start
-  }
-
-  .pb-center {
-    justify-self: center
-  }
-
-  .pb-right {
-    justify-content: flex-end
   }
 }
 /* ═══════════════════ PRAYER TIMES ═══════════════════ */
