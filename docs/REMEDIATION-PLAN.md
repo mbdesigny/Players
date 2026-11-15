@@ -1,184 +1,228 @@
-# Ouns / Players — Remediation Implementation Plan
+# Remediation Implementation Plan — Ouns / Players
 
-> **Scope:** Remediation of all 46 active findings (5 Medium, 41 Low, 0 High/Critical) identified in the 11-Phase Audit Report (commit `49de07a`).  
-> **Target Architecture:** Pure static Astro 7.4.11 on Cloudflare Workers Static Assets.  
-> **Status:** Active / In Progress.
+Derived from the 11-phase audit report (commit `49de07a`): 47 findings recorded, 46 active, 5 Medium (F-21, F-31, F-38, F-41, F-43), 41 Low, 0 High / 0 Critical. Key findings were re-verified against the working tree before this plan was written (deploy.yml, sw.js, app.js, wrangler.jsonc all match the audit's evidence).
 
----
-
-## 1. Executive Phasing Strategy
-
-The remediation is sequenced across **6 discrete, verifiable phases** designed to eliminate high-leverage security risks first, followed by accessibility, persistence hygiene, reliability, and modular code architecture.
-
-```mermaid
-flowchart LR
-    P1["Phase 1: CI/CD & Provenance<br/>(F-37, F-41, F-42, F-47)"] --> P2["Phase 2: Security Headers & Supply Chain<br/>(F-43, F-44, F-45, F-46)"]
-    P2 --> P3["Phase 3: WCAG & Accessibility<br/>(F-31, F-32, F-33, F-34, F-35, F-36)"]
-    P3 --> P4["Phase 4: Persistence & Concurrency<br/>(F-25, F-26, F-27, F-28, F-29, F-30)"]
-    P4 --> P5["Phase 5: Reliability & Observability<br/>(F-21, F-22, F-23)"]
-    P5 --> P6["Phase 6: Testing & Modular Architecture<br/>(F-12, F-38, F-39, F-40)"]
-```
+Severities and finding IDs below reference the audit ledger. Each workstream lists concrete file-level actions, acceptance criteria, and verification steps. Workstreams are ordered so the highest-leverage, lowest-effort fixes land first.
 
 ---
 
-## 2. Phase 1: CI/CD Pipeline & Dependency Provenance (Immediate)
+## Wave 1 — Immediate (same day, ~1 hour)
 
-### Objectives
-- Prevent untested code from merging to `main`.
-- Pin all GitHub Actions to immutable commit SHAs with minimal permissions.
-- Resolve lockfile packages cleanly to the canonical npm registry.
-- Establish automated dependency patch tracking.
+### 1.1 CI/CD pipeline hardening — fixes F-41 (Medium), F-37
 
-### Findings Addressed
-| Finding | Severity | Target File(s) | Summary |
-|---|---|---|---|
-| **F-37** | Low | `.github/workflows/deploy.yml` | Add `pull_request` trigger with decoupled test/deploy jobs |
-| **F-41** | **Medium** | `.github/workflows/deploy.yml` | SHA-pin all Actions; enforce `permissions: contents: read` |
-| **F-42** | Low | `package-lock.json` | Re-resolve 57 `registry.npmmirror.com` entries back to `registry.npmjs.org` |
-| **F-47** | Low | `.github/dependabot.yml` | Add Dependabot configuration for GitHub Actions and npm dependencies |
+File: `.github/workflows/deploy.yml`
 
-### Detailed Implementation Steps
-
-#### 1.1 Hardening `.github/workflows/deploy.yml` (F-37, F-41)
-Refactor the workflow into two separate jobs:
-1. `validate` (runs on `pull_request` to `main`, `push` to `main`, and `workflow_dispatch`):
-   - Permissions: `contents: read`
-   - Actions SHA-pinned:
-     - `actions/checkout@v4` &rarr; `actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683` (# v4.2.2)
-     - `actions/setup-node@v4` &rarr; `actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af` (# v4.1.0)
-   - Steps: `npm ci`, `npm run lint`, `npm test`, `npm run build`.
-2. `deploy` (runs only on `push` to `main` or manual trigger after `validate` succeeds):
-   - Action SHA-pinned:
-     - `cloudflare/wrangler-action@v3` &rarr; `cloudflare/wrangler-action@68d9f104d412bf2541a774619a9735d55b0a3407` (# v3.14.0)
-   - Steps: `wrangler deploy`.
-
-#### 1.2 Lockfile Clean Re-resolution (F-42)
-- Re-install using standard npm registry configuration:
-  ```bash
-  npm install --package-lock-only --registry=https://registry.npmjs.org
+- [ ] Pin every Action to a full-length commit SHA instead of a tag:
+  - `actions/checkout@v4` → `actions/checkout@<sha>` (v4.x latest release SHA)
+  - `actions/setup-node@v4` → `actions/setup-node@<sha>`
+  - `cloudflare/wrangler-action@v3` → `cloudflare/wrangler-action@<sha>`
+- [ ] Add a least-privilege top-level permissions block:
+  ```yaml
+  permissions:
+    contents: read
   ```
-- Verify zero occurrences of `registry.npmmirror.com` in `package-lock.json`.
-- Verify `npm audit` remains clean at 0 vulnerabilities.
+- [ ] Add a `pull_request` trigger so PR code is tested before merge:
+  ```yaml
+  on:
+    push:
+      branches: [main]
+    pull_request:
+    workflow_dispatch:
+  ```
+- [ ] Add a `concurrency` group for PR runs (or gate deploy steps on `github.ref == 'refs/heads/main'`) so PR builds cannot deploy. Concretely: wrap the "Deploy to Cloudflare Workers" step in `if: github.event_name == 'push' && github.ref == 'refs/heads/main'`.
+- [ ] Scope the Cloudflare API token (Cloudflare dashboard → API Tokens): permissions limited to **Account → Workers Scripts → Edit** for zone/account `ounsapp` only. This is a dashboard action, not a repo change.
 
-#### 1.3 Dependabot Setup (F-47)
-Create `.github/dependabot.yml`:
-- Package ecosystems: `npm` (weekly) and `github-actions` (weekly).
-- Target directory: `/`.
+Acceptance: workflow file contains only SHA-pinned uses, a `permissions:` block, a `pull_request` trigger, and deploy gated to main. A test PR shows lint/test/build running on the PR without deploying.
 
----
+Verification: `actionlint` (or careful YAML read); open a draft PR and confirm checks run; confirm no deployment log appears on the PR run.
 
-## 3. Phase 2: Security Response Headers, External Trust Surface & Privacy
+### 1.2 Security response headers — fixes F-44 (extends F-04)
 
-### Objectives
-- Enforce defence-in-depth HTTP security headers on Cloudflare Workers Static Assets.
-- Constrain YouTube runtime script injection via Content Security Policy (CSP).
-- Pin external Mushaf fallback assets to immutable commit SHAs.
-- Provide transparent user privacy notices for IP/GPS geocoding requests.
+New file: `public/_headers` (copied to `dist/` by the Astro static build; consumed by Workers Static Assets).
 
-### Findings Addressed
-| Finding | Severity | Target File(s) | Summary |
-|---|---|---|---|
-| **F-44** | Low | `public/_headers` | Add CSP, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
-| **F-43** | **Medium** | `public/_headers`, `src/scripts/app.js` | Restrict YouTube loader via CSP; pass origin & restrict DOM access |
-| **F-45** | Low | `src/scripts/app.js` | Pin mushaf fallback URLs from `@main` to specific commit SHAs |
-| **F-46** | Low | `src/scripts/app.js`, `src/components/Modals.astro` | Consolidate IP-geo chain; add location privacy disclosure |
-
-### Detailed Implementation Steps
-
-#### 2.1 Static Security Headers (F-44, F-43)
-Create `public/_headers` (deployed by Astro into `dist/_headers`):
-```text
+```
 /*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com; img-src 'self' data: https:; media-src 'self' blob: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://mp3quran.net https://*.mp3quran.net https://api.alquran.cloud https://cdn.islamic.network https://api.aladhan.com https://api.open-meteo.com https://nominatim.openstreetmap.org https://api.bigdatacloud.net https://get.geojs.io https://ipwho.is https://ipapi.co https://cdn.jsdelivr.net https://raw.githubusercontent.com https://i.ytimg.com https://www.youtube.com; frame-src https://www.youtube.com; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'
   X-Content-Type-Options: nosniff
-  X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=()
-  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com https://cdn.jsdelivr.net https://raw.githubusercontent.com; media-src 'self' blob: https://*.mp3quran.net https://cdn.islamic.network; connect-src 'self' https://mp3quran.net https://*.mp3quran.net https://api.alquran.cloud https://api.aladhan.com https://api.open-meteo.com https://nominatim.openstreetmap.org https://api.bigdatacloud.net https://get.geojs.io https://ipwho.is https://ipapi.co https://cdn.jsdelivr.net https://raw.githubusercontent.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
 ```
 
-#### 2.2 Mushaf Fallback SHA Pinning (F-45)
-In `src/scripts/app.js` (lines 535–544):
-- Replace mutable branch tags (`@main` and `/main/`) with verified immutable commit SHAs for:
-  - `Younes12345698/pro-muslim-mushaf`
-  - `SakinaDevGroup/mushaf-madani-cdn`
-  - `quran-ws/quran-svg`
+Notes:
+- `style-src 'unsafe-inline'` is required because Astro inlines component styles; tighten later if the build emits no inline styles (check `dist/` after a build).
+- `connect-src` must enumerate exactly the 12 runtime endpoints in the audit's trust-surface map (Section 7). Keep that table as the living source of truth: any new endpoint requires a `connect-src` update.
+- `frame-ancestors 'none'` supersedes `X-Frame-Options` but both are harmless to send.
+- Verify Cloudflare Workers Static Assets honors `_headers` for the configured `assets.directory`; if not, add the headers via a `wrangler.jsonc`-compatible mechanism (e.g. a tiny Worker wrapper or `_routes`-based middleware) — test on a preview deployment first.
 
-#### 2.3 Privacy Disclosure & Geolocation Consent (F-46)
-- Add a subtle informational note in the Prayer Location modal explaining that geolocation requests query public geo-IP lookup services (`geojs.io` / `ipwho.is`) to compute prayer times.
-- Ensure GPS coords passed to `api.bigdatacloud.net` are truncated to 3 decimal places (~100m precision) before transmission.
+Acceptance: `curl -sI https://ounsapp.musbch.workers.dev/` returns CSP, XCTO, Referrer-Policy, Permissions-Policy, HSTS. App functionality (audio, mushaf images, YT embed, geo/prayer APIs) unaffected.
 
----
-
-## 4. Phase 3: Accessibility (WCAG 2.1 AA), i18n & Contrast
-
-### Objectives
-- Bring all overlay layers up to WCAG 2.4.3 (Focus Order) and 4.1.2 (Dialog Semantics).
-- Ensure 100% of interactive toggles reflect their state via ARIA attributes.
-- Fix low-contrast elements on the light theme.
-- Eliminate hardcoded English accessibility labels.
-
-### Findings Addressed
-| Finding | Severity | Target File(s) | Summary |
-|---|---|---|---|
-| **F-31** | **Medium** | `src/components/Modals.astro`, `src/scripts/app.js` | Add `role="dialog"`, `aria-modal`, focus traps, and Escape close for `confirmScrim` |
-| **F-32** | Low | `src/components/Modals.astro`, `src/scripts/app.js` | Add `aria-pressed` / `aria-checked` to segmented controls and toggles |
-| **F-33** | Low | `src/components/*.astro` | Replace hardcoded English `aria-label`s with `data-i18n-aria` |
-| **F-34** | Low | `src/scripts/app.js`, `src/components/` | Add `<bdi>` and `dir="auto"` wrappers for mixed-direction interpolations |
-| **F-35** | Low | `src/styles/global.css` | Define high-contrast `--focus-ring` (pass WCAG 1.4.11 3:1 on light theme) |
-| **F-36** | Low | `src/pages/index.astro`, `src/scripts/app.js` | Add `role="status"` and `aria-live="polite"` to `#toasts` container |
+Verification: `npm run build && npm run preview`, exercise all player paths; then deploy and curl the live origin.
 
 ---
 
-## 5. Phase 4: Client-Side Persistence, Concurrency & State Integrity
+## Wave 2 — Short term (1–2 weeks)
 
-### Objectives
-- Establish an explicit storage schema version and formal migration pipeline.
-- Validate all incoming values from `localStorage` defensively before consuming them.
-- Eliminate light-theme flash on initial page load (FOUC).
-- Synchronize state changes across concurrent browser tabs.
-- Ensure browser notification permissions are handled asynchronously and accurately reflect state.
+### 2.1 Constrain the YouTube loader — fixes F-43 (Medium), closes F-04
 
-### Findings Addressed
-| Finding | Severity | Target File(s) | Summary |
-|---|---|---|---|
-| **F-25** | Low | `src/scripts/app.js` | Await `Notification.requestPermission()`; reconcile UI toggle state |
-| **F-26** | Low | `src/scripts/app.js` | Implement `ouns_schema_version`, central migration runner, remove orphaned keys |
-| **F-27** | Low | `src/scripts/app.js` | Implement read-side type validation schemas for `store.get` |
-| **F-28** | Low | `src/scripts/app.js` | Surface `QuotaExceededError` via toast rather than silent empty catch |
-| **F-29** | Low | `src/scripts/app.js` | Listen for `storage` events across tabs; throttle session persistence |
-| **F-30** | Low | `src/layouts/Base.astro` | Pre-paint restore `ouns_theme` in `<head>` script to avoid light flash |
+File: `src/scripts/app.js:1146` (`loadYtApi`)
+
+- [ ] Keep the CSP `script-src` allowlist from 1.2 as the primary bound.
+- [ ] Add `sc.integrity` is not possible for the rotating `iframe_api` loader (it redirects and mutates) — instead document this explicitly in the trust-surface table and rely on CSP + `frame-src` sandboxing of the actual player iframe.
+- [ ] Load the player inside a sandboxed iframe rather than the IFrame API where feasible: `allow="autoplay; encrypted-media"`, `sandbox="allow-scripts allow-same-origin allow-presentation"`. Evaluate against the fullscreen-player feature set (currentTime polling, seek, captions toggle at `app.js:1148-1160`) — if postMessage control requires the API, keep the API but confirm the CSP `script-src` entry is the only YouTube origin allowed.
+- [ ] Lazy-load: only call `loadYtApi()` when the user first opens a YouTube-backed item (verify current behavior; if it fires on init, defer it).
+
+Acceptance: no YouTube-origin script beyond the CSP allowlist can execute; loader is deferred until first use.
+
+Verification: browser devtools network tab — confirm `iframe_api`/`www-widgetapi.js` load only on first YT item; CSP report-only phase (`Content-Security-Policy-Report-Only`) for one deploy before enforcing.
+
+### 2.2 Overlay dialog semantics + focus management — fixes F-31 (Medium)
+
+Files: `src/components/Modals.astro`, `src/scripts/app.js:1815-1826`, all 6 overlays (4 modals + 2 drawers)
+
+- [ ] Replicate the `npOverlay` focus pattern (the existing exemplar) to every overlay: on open, save `document.activeElement`, focus the first focusable element; on close, restore it.
+- [ ] Add `role="dialog"` + `aria-modal="true"` + `aria-labelledby` pointing at each overlay's title element.
+- [ ] Implement a single shared Escape handler: close the topmost open overlay, including `confirmScrim` (currently omitted at `app.js:1815-1826`).
+- [ ] Add a focus trap (Tab/Shift+Tab cycle within the overlay) — a small shared helper in `app.js` or a new `lib/focus.js` pure module (testable per F-38 direction).
+
+Acceptance: keyboard-only pass: Tab into modal, focus is trapped, Escape closes topmost overlay (including the confirm scrim), focus returns to the trigger on close.
+
+Verification: manual keyboard test + a new `tests/focus.test.mjs` for the pure trap helper (`node --test`).
+
+### 2.3 Client error telemetry — fixes F-21 (Medium)
+
+Files: `src/layouts/Base.astro:81-84`, `wrangler.jsonc`
+
+- [ ] Add an inline pre-paint script in `Base.astro` wiring `window.onerror`, `window.addEventListener('unhandledrejection', …)`, and replacing the bare `.catch(()=>{})` on SW registration with a logged handler.
+- [ ] Ship errors to a collector. Zero-dependency options in order of preference:
+  1. Cloudflare Workers Logpush / Tail via a small error-beacon route (requires moving off pure-static assets — weigh against architecture);
+  2. A self-hosted beacon endpoint (same constraint);
+  3. Minimal viable: batch errors into `localStorage` (`ouns_errors`, capped ring buffer of 50) and expose a debug dump — plus enable Cloudflare Web Analytics for usage signal.
+- [ ] Sample: cap at N errors per session to avoid loops; never include localStorage contents or coordinates in payloads.
+
+Acceptance: a thrown exception in a staging build is captured with message + stack + URL; no PII transmitted.
+
+Verification: temporary `throw` in a dev build; confirm capture path fires.
+
+### 2.4 A11y finishing cluster — fixes F-32, F-33, F-34, F-35, F-36
+
+- [ ] **F-35** `src/styles/global.css:124,5332-5335`: darken gold `#B99745` to a ≥3:1 non-text contrast variant (e.g. `#8a6d1f`-family; compute exact value against both themes) for the `:focus-visible` outline and light-theme gold UI elements. Keep the decorative brand gold where contrast does not apply.
+- [ ] **F-36** `src/pages/index.astro:31`: add `role="status" aria-live="polite"` to the toast container; announce view rebuilds by updating a visually-hidden live region with the view title (`app.js:1399-1405`).
+- [ ] **F-33**: replace the 5 hardcoded English `aria-label`s (starting `src/components/FullscreenPlayer.astro:13`) with `data-i18n-aria` keys + `I18N` entries (ar+en).
+- [ ] **F-32**: add `aria-pressed` to all toggle buttons, `aria-checked` where a switch pattern applies (adhan toggle, CC toggle), updated in the same handlers that flip visual state.
+- [ ] **F-34**: wrap user/reciter/surah names and any mixed-direction strings in `<bdi>` or add `dir="auto"`; add `lang="ar"` on Arabic content nodes rendered inside English context (and vice versa).
+
+Acceptance: axe/devtools audit shows no critical a11y issues on main views; `aria-pressed` grep returns non-zero; all `aria-label`s resolve through `t()`.
+
+Verification: `npm run lint`; manual screen-reader spot-check (VoiceOver/NVDA) on player, favorites, settings.
+
+### 2.5 Supply-chain content fixes — fixes F-45, F-42
+
+- [ ] **F-45** `src/scripts/app.js:535-544`: pin the three fallback repos to immutable commit SHAs instead of `@main` (both `cdn.jsdelivr.net/gh/<repo>@<sha>/…` and `raw.githubusercontent.com/<repo>/<sha>/…`). Resolve current SHAs once, record them in `src/assets/mushaf/README.md` and `src/assets/mushaf-warsh/README.md` alongside the documented fallback order.
+- [ ] **F-42**: regenerate `package-lock.json` against `registry.npmjs.org` (`rm package-lock.json && npm install` with default registry), verify `npm audit` still reports 0 and all 417 integrity fields persist; commit the regenerated lockfile. Optionally add `.npmrc` with `registry=https://registry.npmjs.org/` to prevent recurrence.
+
+Acceptance: zero `registry.npmmirror.com` URLs in the lockfile; zero `@main` references in fallback chains.
+
+Verification: `grep -c npmmirror package-lock.json` → 0; `grep '@main' src/scripts/app.js` → 0; `npm ci && npm test && npm run build`.
+
+### 2.6 SW + fetch resilience — fixes F-22, F-23, F-25
+
+- [ ] **F-22** `public/sw.js:23,27-33`: remove `clients.claim()` from activate (or gate it on `navigator.serviceWorker.controller === null` for first install only). Keep `skipWaiting` only if paired with a page-reload prompt; simplest safe form: let the new SW wait until all tabs close (drop `skipWaiting`). Ensure old caches are purged only after the new SW controls.
+- [ ] **F-23**: route the SW precache loop (`sw.js:43`) through a timeout-wrapped fetch (mirror `apiFetch`'s 10 s AbortController pattern; a shared tiny helper is fine to duplicate in the SW since it can't import app modules). Add `online`/`offline` listeners in `app.js` to pause/resume background fetch work (mushaf precache, weather refresh).
+- [ ] **F-25** `app.js:1581`: `await Notification.requestPermission()` and write the result into the adhan toggle state; when `denied`, render the toggle OFF/disabled with an explanatory toast (i18n'd).
+
+Acceptance: deploy with an open tab produces no 404 dynamic imports; permission-denied state is reflected in the UI.
+
+Verification: two-tab manual deploy simulation; `npm run build && npm run preview` update flow.
 
 ---
 
-## 6. Phase 5: Reliability, Observability & Service Worker Hygiene
+## Wave 3 — Mid term (1–2 months)
 
-### Objectives
-- Establish client-side runtime error monitoring without third-party external trackers.
-- Guard Service Worker cache upgrades against breaking open tabs.
-- Unify retry, backoff, and network timeout handling across the entire app.
+### 3.1 Module extraction from app.js — fixes F-38 (Medium)
 
-### Findings Addressed
-| Finding | Severity | Target File(s) | Summary |
-|---|---|---|---|
-| **F-21** | **Medium** | `src/layouts/Base.astro`, `src/scripts/lib/telemetry.js` | Add sampled runtime error listener (`window.onerror` / `unhandledrejection`) |
-| **F-22** | Low | `public/sw.js` | Avoid purging active version caches immediately while tabs are open |
-| **F-23** | Low | `public/sw.js`, `src/scripts/app.js` | Align SW fetches with timeout/backoff; add `online`/`offline` listeners |
+Files: `src/scripts/app.js` (1,884 lines, 0 exports) → `src/scripts/lib/`
+
+Strategy: incremental strangler pattern, following the existing 6-module pure-lib convention (see `lib/api.js` for the exemplar). Each extraction ships with tests in the same PR.
+
+Extraction order (highest value / lowest DOM coupling first):
+1. State reducers: favorites/recents/settings mutations (pure functions over plain state objects).
+2. Source-picking logic: fallback catalog resolution (`FALLBACK` at `app.js:19`), edition matching.
+3. Player queue logic: next/prev/shuffle/repeat as pure transitions.
+4. Persistence layer: replace the inline `store` (app.js:20) with `lib/storage.js` (see 3.2).
+5. DOM-coupled controllers remain in `app.js`, which shrinks each wave.
+
+Acceptance: `app.js` exports nothing at top level still, but ≥3 new pure modules exist with ≥85% line coverage; `npm test` suite grows accordingly; no behavior change (manual smoke of player, mushaf, favorites).
+
+Verification: `node --test` on new suites; `npm run build` size diff reviewed.
+
+### 3.2 Persistence hardening batch — fixes F-26, F-27, F-28, F-29, F-30
+
+New module: `src/scripts/lib/storage.js` (pure, testable)
+
+- [ ] **F-26**: introduce `ouns_schemaVersion` (v1); a single `migrate(storage, fromVersion)` function replaces the two inline migration blocks (`app.js:56-61,64`); on init, delete known-orphaned legacy keys.
+- [ ] **F-27**: per-key read validators (a `SCHEMA` map: key → type/shape check + safe default), applied in `store.get`. Start with `recent` (validate each item), `favorites`, `prayerLoc` (reuse the `isNaN` exemplar pattern from `detectIP`).
+- [ ] **F-28**: `store.set` catches `QuotaExceededError` distinctly → surface a one-time user toast (i18n'd) and log via the 2.3 telemetry hook.
+- [ ] **F-29**: listen for the `storage` event and re-sync affected keys cross-tab (last-writer-wins is acceptable for most keys; `session`/`player` state should prefer the most recent write with a timestamp); coalesce the 5 s session writes.
+- [ ] **F-30** `src/layouts/Base.astro:40-49,88`: extend the existing documented pre-paint bypass to read the theme key (tiny inline script setting `data-theme` before first paint).
+
+Acceptance: corrupted localStorage value for any schema'd key recovers to default without breaking init; quota error shows a toast; second tab reflects a favorites change within ~1 s.
+
+Verification: new `tests/storage.test.mjs` covering migration, validators, quota path; manual two-tab test.
+
+### 3.3 Privacy disclosure + geo consolidation — fixes F-46
+
+Files: `src/scripts/app.js:856,869-878`, settings UI, `I18N`
+
+- [ ] Reduce the IP-geo chain from 3 services to 1 primary + 1 fallback (recommend `get.geojs.io` → `ipwho.is`; drop `ipapi.co`), cutting the third disclosure entirely.
+- [ ] Add an in-app privacy notice (settings section + first-run disclosure on the location feature): plain-language ar+en text stating that IP / GPS coordinates are sent to named third-party services (mp3quran, Aladhan, Open-Meteo, BigDataCloud, geojs/ipwho.is) solely for prayer times and weather, with a link/section listing all endpoints (from the audit's trust-surface map).
+- [ ] Gate the network-location path behind explicit user opt-in where the feature allows (default to manual city search via Nominatim, which discloses only the typed query).
+
+Acceptance: no IP transmission before opt-in on the location path; privacy text present in both languages; endpoint list matches the trust-surface table.
+
+Verification: fresh-profile network log — confirm no geo requests until opt-in; grep for the new i18n keys.
+
+### 3.4 ARIA states + bidi completion (remainder of F-32/F-34 if not finished in 2.4)
+
+Tracked in 2.4; carry-over items only.
 
 ---
 
-## 7. Phase 6: Testing, Code Architecture & QA Gating
+## Wave 4 — Ongoing hygiene
 
-### Objectives
-- Guard calculations against NaN in prayer time computations.
-- Achieve 100% test coverage over sacred Quran metadata (`surah.js`).
-- Introduce code coverage measurement into CI.
-- Break down the 1,884-line monolithic `app.js` into modular, unit-testable libraries.
+### 4.1 Dependency automation — fixes F-47
 
-### Findings Addressed
-| Finding | Severity | Target File(s) | Summary |
-|---|---|---|---|
-| **F-12** | Low | `src/scripts/lib/prayer.js` | Guard calculations against NaN; validate input strings |
-| **F-39** | Low | `tests/surah.test.mjs` | Add full test suite covering all 114 Surah entries |
-| **F-40** | Low | `tests/prayer.test.mjs`, `package.json` | Add negative test cases for prayer times; configure test coverage |
-| **F-38** | **Medium** | `src/scripts/lib/*.js`, `src/scripts/app.js` | Extract pure domain logic (queue, audio picker, storage) out of `app.js` |
+- [ ] Add `.github/dependabot.yml`: npm ecosystem, weekly, group minor/patch; GitHub Actions ecosystem, weekly (keeps SHA pins in 1.1 updated).
+- [ ] Pin the toolchain: add `packageManager` field (corepack) and `.nvmrc` (`22`), align `engines` with CI (`"node": ">=22"`).
+- [ ] Optional: `npm audit` step in CI (`npm audit --omit=dev || true` initially to avoid breakage, tighten after baseline review).
+
+### 4.2 Test coverage — fixes F-39, F-40, closes F-12
+
+- [ ] Add `tests/surah.test.mjs`: structurally validate all 114 entries (id 1–114 contiguous, non-empty ar/en names, page counts monotonic, ayah counts > 0) — this retires the audit's 9/114 spot-check gap.
+- [ ] Add negative tests for the prayer NaN path (F-12): malformed lat/lng, missing fields, extreme dates → assert `prayerTimeStr`/`countdownStr` return safe fallbacks rather than `"NaN:NaN"`.
+- [ ] Add coverage measurement: `node --test --experimental-test-coverage` in a CI step (report-only at first).
+
+### 4.3 Living trust-surface document
+
+- [ ] Add `docs/TRUST-SURFACE.md` containing the audit's Section 7 endpoint table; make it a review checklist item: any PR adding a new external endpoint must update CSP `connect-src` and this table.
+
+---
+
+## Traceability
+
+| Wave | Findings closed | Severities |
+|---|---|---|
+| 1 | F-41, F-37, F-44 (+F-04 partial) | 1 Medium, 2 Low |
+| 2 | F-43, F-31, F-21, F-32, F-33, F-34, F-35, F-36, F-45, F-42, F-22, F-23, F-25 | 2 Medium, 11 Low |
+| 3 | F-38, F-26, F-27, F-28, F-29, F-30, F-46 | 1 Medium, 6 Low |
+| 4 | F-47, F-39, F-40, F-12 | 4 Low |
+
+All 5 Medium findings (F-21, F-31, F-38, F-41, F-43) are addressed by end of Wave 3; 4 of 5 are touched in Waves 1–2. Findings closed as a side effect: F-04 (via 1.2 + 2.1), F-05 residual dimensions (via 1.1). F-24 is superseded per the audit's COR-2 and requires no action.
+
+## Definition of done (per workstream)
+
+- Lint + tests + build pass locally (`npm run lint && npm test && npm run build`).
+- No new external endpoints without a CSP `connect-src` entry and a `docs/TRUST-SURFACE.md` row.
+- No secrets, no PII in telemetry, no new dependencies beyond what the package already uses.
+- Each workstream lands as its own focused PR so review and revert stay cheap.
