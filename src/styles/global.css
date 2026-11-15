@@ -2124,6 +2124,37 @@ html[dir="rtl"] .prog .fill {
   z-index: 1
 }
 
+.ov-queue {
+  width: min(560px, 100%);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 14px
+}
+
+.ov-queue .oq-head {
+  font-size: var(--fs-2xs);
+  color: var(--gold-ink);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  text-align: start
+}
+
+.ov-queue .ov-queue-list {
+  max-height: 30vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 6px
+}
+
+@media(max-height:560px) and (orientation:landscape) {
+  .ov-queue .ov-queue-list {
+    max-height: 24vh
+  }
+}
+
 @media(max-width:640px){
   .np-overlay{padding:16px}
   .ov-mandala{width:min(34vh,72vw,270px)}
@@ -5249,6 +5280,41 @@ html[dir="rtl"] .back-btn .ic {
 :focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px
+}
+
+/* ═══════════════════════════════ touch devices ═══════════════════════════════ */
+* {
+  -webkit-tap-highlight-color: transparent
+}
+
+button,
+a,
+select,
+[role="slider"] {
+  touch-action: manipulation
+}
+
+.np-overlay:focus {
+  outline: none
+}
+
+@media(hover:none) {
+  .recent-card .rplay {
+    opacity: 1;
+    transform: none
+  }
+
+  .reciter-card .play-ov {
+    opacity: 1
+  }
+
+  .reciter-card .play-ov span {
+    transform: none
+  }
+
+  .queue-item .qmv {
+    opacity: .8
+  }
 }
 
 .prog:focus-visible {
