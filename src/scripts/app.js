@@ -963,7 +963,7 @@ function openPrayerSettings() {
   $('#prayerSetBody').innerHTML = prayerSettingsHTML();
   const q = $('#locQ');
   if (q) q.addEventListener('keydown', ev => { if (ev.key === 'Enter') { const v = q.value.trim(); if (v) prayerSearch(v) } });
-  $('#prayerScrim').classList.add('open');
+  openModal('#prayerScrim');
 }
 async function fetchPrayer() {
   const L = S.prayerLoc, d = new Date();
@@ -1405,27 +1405,46 @@ function toast(msg, action) {
   const kill = () => { el.classList.add('out'); setTimeout(() => el.remove(), 300) };
   setTimeout(kill, action ? 6000 : 3200);
 }
+const scrimPrevFocus = new Map();
+function openModal(scrim) {
+  const el = typeof scrim === 'string' ? $(scrim) : scrim;
+  if (!el) return;
+  scrimPrevFocus.set(el, document.activeElement instanceof HTMLElement ? document.activeElement : null);
+  el.classList.add('open');
+  const target = el.querySelector('button:not([hidden]), [href], input, [tabindex="0"]');
+  if (target) try { target.focus({ preventScroll: true }) } catch (_) {}
+}
+function closeModal(scrim) {
+  const el = typeof scrim === 'string' ? $(scrim) : scrim;
+  if (!el) return;
+  el.classList.remove('open');
+  const prev = scrimPrevFocus.get(el);
+  if (prev) {
+    try { prev.focus({ preventScroll: true }) } catch (_) {}
+    scrimPrevFocus.delete(el);
+  }
+}
 let confirmRes = null;
-function confirmDlg(title, msg) { $('#confirmTitle').textContent = title; $('#confirmMsg').textContent = msg; $('#confirmScrim').classList.add('open'); return new Promise(r => confirmRes = r) }
-$('#confirmYes').onclick = () => { $('#confirmScrim').classList.remove('open'); confirmRes && confirmRes(true) };
-$('#confirmNo').onclick = () => { $('#confirmScrim').classList.remove('open'); confirmRes && confirmRes(false) };
+function confirmDlg(title, msg) { $('#confirmTitle').textContent = title; $('#confirmMsg').textContent = msg; openModal('#confirmScrim'); return new Promise(r => confirmRes = r) }
+$('#confirmYes').onclick = () => { closeModal('#confirmScrim'); confirmRes && confirmRes(true) };
+$('#confirmNo').onclick = () => { closeModal('#confirmScrim'); confirmRes && confirmRes(false) };
 
 /* ═══════════════ THEME / LANG ═══════════════ */
 function applyTheme() {
   document.body.dataset.theme = S.theme;
   document.querySelector('meta[name=theme-color]').content = S.theme === 'dark' ? '#000000' : '#F3EFE4';
   $('#themeIcon').innerHTML = S.theme === 'dark' ? '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/>' : '<path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/>';
-  $$('#segTheme button').forEach(b => b.classList.toggle('on', b.dataset.th === S.theme));
+  $$('#segTheme button').forEach(b => { const on = b.dataset.th === S.theme; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') });
 }
 function applyLang() {
   document.documentElement.lang = S.lang; document.documentElement.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
   $('#langBtn').textContent = S.lang === 'ar' ? 'EN' : 'ع';
-  $$('#segLang button').forEach(b => b.classList.toggle('on', b.dataset.lg === S.lang));
+  $$('#segLang button').forEach(b => { const on = b.dataset.lg === S.lang; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') });
   applyI18nStatic(); buildQualitySeg(); renderSleepPop();
 }
 function applyI18nStatic() { $$('[data-i18n]').forEach(el => { const k = el.dataset.i18n; if (I18N[S.lang][k]) el.textContent = I18N[S.lang][k] }); $$('[data-i18n-title]').forEach(el => { const k = el.dataset.i18nTitle; if (I18N[S.lang][k]) el.title = I18N[S.lang][k] }); $$('[data-i18n-aria]').forEach(el => { const k = el.dataset.i18nAria; if (I18N[S.lang][k]) el.setAttribute('aria-label', I18N[S.lang][k]) }); $$('.nav-item').forEach(b => { const k = b.dataset.view || 'downloads'; if (I18N[S.lang][k]) b.title = I18N[S.lang][k] }) }
-function buildQualitySeg() { $$('#segQuality button').forEach(b => b.classList.toggle('on', b.dataset.q === S.quality)) }
-function openQuality() { $('#qualityScrim').classList.add('open') }
+function buildQualitySeg() { $$('#segQuality button').forEach(b => { const on = b.dataset.q === S.quality; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') }) }
+function openQuality() { openModal('#qualityScrim') }
 function applySidebar() {
   document.body.classList.toggle('side-collapsed', S.sideMode === 'collapsed');
   const b = $('#sideBtn'); if (b) b.classList.toggle('on', S.sideMode === 'collapsed');
@@ -1558,11 +1577,11 @@ function closeSidebar() { $('#sidebar').classList.remove('open'); $('#scrimSide'
 $('#menuBtn').onclick = () => { $('#sidebar').classList.add('open'); $('#scrimSide').classList.add('open') };
 $('#scrimSide').onclick = closeSidebar;
 $('#pbArt').onclick = openOverlay; $('#btnExpand').onclick = openOverlay; $('#npExpand').onclick = openOverlay; $('#ovClose').onclick = closeOverlay;
-$('#settingsBtn').onclick = () => $('#settingsScrim').classList.add('open');
-$('#settingsClose').onclick = () => $('#settingsScrim').classList.remove('open');
-$('#settingsScrim').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open') });
-$('#prayerSetClose').onclick = () => $('#prayerScrim').classList.remove('open');
-$('#prayerScrim').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open') });
+$('#settingsBtn').onclick = () => openModal('#settingsScrim');
+$('#settingsClose').onclick = () => closeModal('#settingsScrim');
+$('#settingsScrim').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(e.currentTarget) });
+$('#prayerSetClose').onclick = () => closeModal('#prayerScrim');
+$('#prayerScrim').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(e.currentTarget) });
 $('#prayerScrim').addEventListener('click', e => {
   const adhpg = e.target.closest('[data-adhpg]');
   if (adhpg) {
@@ -1594,9 +1613,9 @@ $('#prayerScrim').addEventListener('click', e => {
 $('#prayerScrim').addEventListener('change', e => {
   if (e.target.id === 'adhanVoiceSel') { S.adhanVoice = e.target.value; store.set('adhanVoice', S.adhanVoice) }
 });
-$('#confirmScrim').addEventListener('click', e => { if (e.target === e.currentTarget) { e.currentTarget.classList.remove('open'); confirmRes && confirmRes(false) } });
-$('#navDownloads').onclick = () => { $('#dlDrawer').classList.add('open'); closeSidebar() };
-$('#dlClose').onclick = () => $('#dlDrawer').classList.remove('open');
+$('#confirmScrim').addEventListener('click', e => { if (e.target === e.currentTarget) { closeModal(e.currentTarget); confirmRes && confirmRes(false) } });
+$('#navDownloads').onclick = () => { openModal('#dlDrawer'); closeSidebar() };
+$('#dlClose').onclick = () => closeModal('#dlDrawer');
 $('#btnSleep').onclick = e => { e.stopPropagation(); renderSleepPop(); $('#sleepPop').classList.toggle('open') };
 document.addEventListener('click', e => { if (!e.target.closest('.sleep-wrap')) $('#sleepPop').classList.remove('open') });
 $('#sleepPop').addEventListener('click', e => { const b = e.target.closest('[data-min]'); if (b) setSleep(+b.dataset.min) });
@@ -1619,7 +1638,7 @@ $('#qualityScrim').addEventListener('click', e => {
     if (S.current) { const pos = audio.currentTime, was = !audio.paused; S.srcIdx = 0; S.srcOrder = pickSource(S.current, S.quality); setAudioSrc(S.srcOrder[0].url); audio.addEventListener('loadedmetadata', () => { audio.currentTime = pos }, { once: true }); if (was) audio.play().catch(() => { }); updateBadges() }
     return
   }
-  if (e.target.id === 'qualityClose' || e.target.id === 'qualityScrim') $('#qualityScrim').classList.remove('open');
+  if (e.target.id === 'qualityClose' || e.target.id === 'qualityScrim') closeModal('#qualityScrim');
 });
 $('#btnQuality').onclick = openQuality;
 function setSpeed(v) {
@@ -1827,7 +1846,11 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'n' || e.key === 'N') nextTrack();
   else if (e.key === 'p' || e.key === 'P') prevTrack();
   else if (e.key === '/') { e.preventDefault(); $('#searchInput').focus() }
-  else if (e.key === 'Escape') { if (S.view === 'mushaf') { if (document.body.classList.contains('mushaf-clean')) { document.body.classList.remove('mushaf-clean'); return } setView('home'); return } closeOverlay(); $('#settingsScrim').classList.remove('open'); $('#prayerScrim').classList.remove('open'); $('#qualityScrim').classList.remove('open'); $('#dlDrawer').classList.remove('open'); closeSidebar() }
+  else if (e.key === 'Escape') {
+    if ($('#confirmScrim') && $('#confirmScrim').classList.contains('open')) { closeModal('#confirmScrim'); confirmRes && confirmRes(false); return }
+    if (S.view === 'mushaf') { if (document.body.classList.contains('mushaf-clean')) { document.body.classList.remove('mushaf-clean'); return } setView('home'); return }
+    closeOverlay(); closeModal('#settingsScrim'); closeModal('#prayerScrim'); closeModal('#qualityScrim'); closeModal('#dlDrawer'); closeSidebar();
+  }
 });
 window.addEventListener('beforeunload', saveSession);
 
