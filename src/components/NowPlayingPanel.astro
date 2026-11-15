@@ -1,16 +1,16 @@
   <!-- ══════════ NOW PLAYING PANEL ══════════ -->
   <aside class="np-panel">
-    <div class="np-head"><span class="np-label" data-i18n="nowPlaying">يُتلى الآن</span><button class="icon-btn" id="npDock" data-i18n-title="floatPanel" aria-label="float panel"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12.5" y="11.5" width="6.5" height="5" rx="1"/></svg></button></div>
+    <div class="np-head"><span class="np-label" data-i18n="nowPlaying">يُتلى الآن</span><button class="icon-btn" id="npDock" data-i18n-title="floatPanel" data-i18n-aria="floatPanel" aria-label="فصل اللوحة"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12.5" y="11.5" width="6.5" height="5" rx="1"/></svg></button></div>
     <div class="np-art"><div class="mandala-glow"></div><div class="mandala-wrap" id="npMandala"></div></div>
     <div>
-      <div class="np-title amiri" id="npTitle">أُنس</div>
-      <div class="np-artist" id="npArtist" data-i18n="chooseReciter">اختر قارئًا لبدء التلاوة</div>
+      <div class="np-title amiri" id="npTitle" dir="auto">أُنس</div>
+      <div class="np-artist" id="npArtist" dir="auto" data-i18n="chooseReciter">اختر قارئًا لبدء التلاوة</div>
       <div class="np-badges" id="npBadges"></div>
     </div>
     <div class="np-actions">
-      <button class="icon-btn" id="npFav" aria-label="favorite"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
-      <button class="icon-btn" id="npDl" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
-      <button class="icon-btn" id="npExpand" aria-label="expand"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
+      <button class="icon-btn" id="npFav" data-i18n-aria="favorite" aria-label="المفضلة"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.6a5.2 5.2 0 0 1 9.3 4.9c-1.8 4.4-9.3 9-9.3 9z"/></svg></button>
+      <button class="icon-btn" id="npDl" data-i18n-aria="download" aria-label="تنزيل"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
+      <button class="icon-btn" id="npExpand" data-i18n-aria="expand" aria-label="ملء الشاشة"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
     </div>
     <div class="queue-head" data-i18n="upNext">التالي في القائمة</div>
     <div class="queue" id="npQueue"></div>

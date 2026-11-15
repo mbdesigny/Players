@@ -38,12 +38,20 @@ const ldJson = JSON.stringify({
     <meta charset="utf-8">
     <script is:inline>
       try {
-        var raw = localStorage.getItem('ouns_lang');
-        var lang = null;
-        try { lang = JSON.parse(raw); } catch (e) { lang = raw; }
+        var rawLang = localStorage.getItem('ouns_lang');
+        var lang = 'ar';
+        try { lang = JSON.parse(rawLang); } catch (e) { lang = rawLang; }
         if (lang !== 'ar' && lang !== 'en') lang = 'ar';
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+
+        var rawTheme = localStorage.getItem('ouns_theme');
+        var theme = 'light';
+        try { theme = JSON.parse(rawTheme); } catch (e) { theme = rawTheme; }
+        if (theme !== 'dark' && theme !== 'light') theme = 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        var metaTc = document.querySelector('meta[name=theme-color]');
+        if (metaTc && theme === 'dark') metaTc.content = '#000000';
       } catch (e) {}
     </script>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -86,6 +94,7 @@ const ldJson = JSON.stringify({
     </script>
   </head>
   <body data-theme="light">
+    <script is:inline>try{var th=document.documentElement.getAttribute('data-theme');if(th)document.body.dataset.theme=th}catch(e){}</script>
     <slot />
   </body>
 </html>

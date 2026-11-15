@@ -28,7 +28,7 @@ import frame from '../assets/player-frame.svg?raw';
       <button class="ab-stop" id="adhanStop" data-i18n="stopAdhan">إيقاف الأذان</button>
     </div>
   </div>
-  <div id="toasts"></div>
+  <div id="toasts" role="status" aria-live="polite" aria-atomic="true"></div>
   <audio id="audio" preload="metadata"></audio>
 
   <script is:inline type="text/svg-template" id="playerFrame" set:html={frame} />

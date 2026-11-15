@@ -123,6 +123,7 @@
   --accent2: #8FBC8F;
   --gold: #B99745;
   --gold-ink: #6F5521;
+  --focus-ring: var(--gold-ink);
   --gold2: #E2D2A6;
   --gold2-ink: #E2D2A6;
   --gold-on-ink: #E2D2A6;
@@ -201,6 +202,7 @@
   --accent2: #6E9B74;
   --gold: #D4B36A;
   --gold-ink: #D4B36A;
+  --focus-ring: var(--gold);
   --gold2: #8A7440;
   --gold2-ink: #D4B36A;
   --gold-on-ink: #6B5827;
@@ -5330,7 +5332,7 @@ html[dir="rtl"] .back-btn .ic {
 
 /* A17: visible keyboard focus for every interactive element */
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--focus-ring, var(--gold));
   outline-offset: 2px
 }
 

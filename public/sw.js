@@ -27,7 +27,12 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((ks) => Promise.all(ks.filter((k) => k !== CACHE && k !== MUSHAF_CACHE).map((k) => caches.delete(k))))
+      .then((ks) => {
+        const appCaches = ks.filter((k) => k.startsWith('ouns-app-') && k !== CACHE);
+        const toDelete = appCaches.slice(0, Math.max(0, appCaches.length - 1));
+        const others = ks.filter((k) => !k.startsWith('ouns-app-') && k !== MUSHAF_CACHE);
+        return Promise.all([...toDelete, ...others].map((k) => caches.delete(k)));
+      })
       .then(() => self.clients.claim())
   );
 });
@@ -38,14 +43,19 @@ self.addEventListener('message', (e) => {
     e.waitUntil((async () => {
       const c = await caches.open(MUSHAF_CACHE);
       for (const u of d.urls.slice(0, 12)) {
+        const ctrl = new AbortController();
+        const tm = setTimeout(() => ctrl.abort(), 8000);
         try {
-          if (await c.match(u)) continue;
-          const res = await fetch(u, { mode: 'no-cors' });
+          if (await c.match(u)) { clearTimeout(tm); continue; }
+          const res = await fetch(u, { mode: 'no-cors', signal: ctrl.signal });
+          clearTimeout(tm);
           if (res && (res.ok || res.type === 'opaque')) {
             const clone = res.clone();
             await c.put(u, clone);
           }
-        } catch (_) {}
+        } catch (_) {
+          clearTimeout(tm);
+        }
       }
       await trimCache(MUSHAF_CACHE, MUSHAF_CACHE_MAX);
     })());
