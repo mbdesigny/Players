@@ -2930,11 +2930,63 @@ body.mushaf-noside .mushaf-side {
   top: 32px;
   bottom: 32px;
   left: 50%;
-  width: 120px;
+  width: 96px;
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 500;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .05) 30%, rgba(0, 0, 0, .22) 50%, rgba(0, 0, 0, .05) 70%, rgba(0, 0, 0, 0))
+  background: linear-gradient(90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, .02) 20%,
+    rgba(0, 0, 0, .06) 38%,
+    rgba(0, 0, 0, .14) 46%,
+    rgba(0, 0, 0, .30) 49.2%,
+    rgba(0, 0, 0, .38) 50%,
+    rgba(0, 0, 0, .30) 50.8%,
+    rgba(0, 0, 0, .14) 54%,
+    rgba(0, 0, 0, .06) 62%,
+    rgba(0, 0, 0, .02) 80%,
+    rgba(0, 0, 0, 0) 100%)
+}
+
+.flip-spine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28%;
+  width: 44%;
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, .10) 42%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, .10) 58%,
+    rgba(255, 255, 255, 0))
+}
+
+.flip-spine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - .75px);
+  width: 1.5px;
+  background: rgba(0, 0, 0, .40);
+  filter: blur(.5px)
+}
+
+[data-theme="dark"] .mushaf-stage.flip-on:has(.stf__wrapper.--landscape) .flip-spine {
+  background: linear-gradient(90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, .10) 38%,
+    rgba(0, 0, 0, .45) 49.2%,
+    rgba(0, 0, 0, .6) 50%,
+    rgba(0, 0, 0, .45) 50.8%,
+    rgba(0, 0, 0, .10) 62%,
+    rgba(0, 0, 0, 0) 100%)
+}
+
+[data-theme="dark"] .flip-spine::after {
+  background: rgba(0, 0, 0, .75)
 }
 
 .flip-page {
@@ -5322,56 +5374,35 @@ select,
   border-radius: 8px
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   B2 — بطاقة «يُتلى الآن» للهاتف، ملتصقة فوق فوتر المشغّل
-   تظهر فقط حيث تُخفى لوحة الديسكتوب .np-panel (≤1280px)
-   ══════════════════════════════════════════════════════════════════ */
-.np-card{display:none}
-body.np-open .np-card{display:none!important}
-body.adhan .np-card{display:none!important}
-body.mushaf-full .np-card{display:none!important}
-
-@media(max-width:1280px){
-  .np-card{
-    position:fixed;
-    z-index:60;
-    inset-inline:10px;
-    bottom:calc(var(--player) + 8px + env(safe-area-inset-bottom,0px));
-    display:none;
-    align-items:center;
-    gap:11px;
-    padding:9px 11px;
-    min-height:70px;
-    background:var(--surface);
-    border:1px solid var(--line2);
-    border-radius:var(--r-md);
-    box-shadow:var(--shadow);
-    cursor:pointer
-  }
-  body.has-track .np-card{display:flex}
-  .np-card .npc-art{width:48px;height:48px;flex:none;border-radius:12px;object-fit:cover;background:var(--bg2);border:1px solid var(--line)}
-  .np-card .npc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-  .np-card .npc-title{font-size: var(--fs-md);font-weight:700;line-height:1.35;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .np-card .npc-title.sn-font{line-height:1.5}
-  .np-card .npc-artist{font-size: var(--fs-2xs);color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .np-card .npc-prog{height:3px;border-radius:3px;background:var(--line);overflow:hidden}
-  .np-card .npc-fill{height:100%;width:0;background:var(--gold);border-radius:3px;transition:width .25s linear}
-  .np-card .npc-ctrl{display:flex;align-items:center;gap:2px;flex:none}
-  .np-card .npc-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--ink);transition:background .2s,color .2s}
-  .np-card .npc-btn:hover{background:var(--surface2)}
-  .np-card .npc-btn .ic{width:20px;height:20px}
-  .np-card #npcPlay{background:var(--accent);color:var(--on-accent)}
-  .np-card #npcPlay .ic{fill:currentColor;stroke:none}
-  .np-card .npc-expand .ic{width:18px;height:18px;color:var(--gold-ink)}
-  body.has-track main{padding-bottom:calc(70px + 32px)}
-}
-
+/* ═══════════════════════════════════════════════════════════════════
+   B2 — now-playing في فوتر المشغّل على الهاتف: صورة القارئ + الاسم +
+   اسم السورة + أزرار التحكم + زر الشاشة الكاملة (حيث تُخفى لوحة
+   الديسكتوب .np-panel ≤1280px)
+   ═══════════════════════════════════════════════════════════════ */
 @media(max-width:640px){
-  .np-card{inset-inline:8px;gap:9px;padding:8px 9px}
-  .np-card .npc-art{width:44px;height:44px}
-  body.has-track main{padding-bottom:calc(70px + 28px)}
+  .player{
+    grid-template-columns:minmax(0,1fr) auto auto;
+    gap:10px;
+    padding:0 12px
+  }
+  .pb-track{flex:1;min-width:0}
+  .pb-info{display:block;flex:1;min-width:0}
+  .pb-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pb-art{width:46px;height:46px;border-radius:10px}
+  .pb-art .ov-ic .ic{width:14px;height:14px}
+  .pb-buttons{gap:6px}
+  .pb-buttons .ctrl:first-child,
+  .pb-buttons .ctrl:last-child{display:none}
+  .pb-progress{display:none}
+  .pb-right{gap:2px}
+  .pb-right #btnExpand{display:grid}
 }
 
+@media(max-width:479px){
+  .pb-art{display:block;width:42px;height:42px}
+  .pb-title{font-size:var(--fs-sm)}
+  .pb-sub{font-size:var(--fs-3xs)}
+}
 /* ══════════════════════════════════════════════════════════════════
    B1 — responsive pass. Tiny phones (≤380), low-height landscape and
    small-screen polish. Kept last so it wins the cascade over the older,
