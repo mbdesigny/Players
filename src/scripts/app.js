@@ -16,6 +16,8 @@ import { MUSHAF_PAGES, JUZ_PAGE, mushafJuz, mushafSurah, mushafRight, mushafStep
 import { ED_KEYS, CORS_AUDIO_HOST, corsAudio, serverURL, parseList, buildSources, pickSource } from './lib/sources.js';
 import { prayerTimeStr, countdownStr } from './lib/prayer.js';
 import { apiFetch, nominatimSearch } from './lib/api.js';
+import { initTelemetry, logError } from './lib/telemetry.js';
+initTelemetry();
 /* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const API = 'https://mp3quran.net/api/v3';
@@ -1933,6 +1935,14 @@ document.addEventListener('keydown', e => {
   }
 });
 window.addEventListener('beforeunload', saveSession);
+window.addEventListener('online', () => {
+  S.offline = false;
+  toast(S.lang === 'ar' ? 'تمت استعادة الاتصال بالإنترنت' : 'Internet connection restored');
+});
+window.addEventListener('offline', () => {
+  S.offline = true;
+  toast(t('offline'));
+});
 window.addEventListener('storage', e => {
   if (!e.key || !e.key.startsWith('ouns_') || e.newValue == null) return;
   const k = e.key.slice(5);
