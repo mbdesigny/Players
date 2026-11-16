@@ -88,7 +88,7 @@ const ldJson = JSON.stringify({
     <script is:inline>
       if ('serviceWorker' in navigator) {
         addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
+          navigator.serviceWorker.register('/sw.js').catch(err => { console.error('[Ouns] service worker registration failed:', err) });
         });
       }
     </script>
