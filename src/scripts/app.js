@@ -16,6 +16,7 @@ import { MUSHAF_PAGES, JUZ_PAGE, mushafJuz, mushafSurah, mushafRight, mushafStep
 import { ED_KEYS, CORS_AUDIO_HOST, corsAudio, serverURL, parseList, buildSources, pickSource } from './lib/sources.js';
 import { prayerTimeStr, countdownStr } from './lib/prayer.js';
 import { apiFetch, nominatimSearch } from './lib/api.js';
+import { nextFocusable } from './lib/focus.js';
 import { initTelemetry, logError } from './lib/telemetry.js';
 initTelemetry();
 /* ═══════════════════════ OUNS · Quran Player ═══════════════════════ */
@@ -1907,8 +1908,36 @@ if ('mediaSession' in navigator) {
   navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
   navigator.mediaSession.setActionHandler('seekto', e => { if (e.seekTime != null) audio.currentTime = e.seekTime });
 }
+/* ── Focus trap (F-31): cycle Tab/Shift+Tab inside the topmost open overlay ──
+   Priority order = stacking order: confirm dialog first, then modals, drawer,
+   fullscreen player, and the sidebar drawer (signalled by #scrimSide.open —
+   the sidebar's own .open class is also used for the desktop state). */
+const TRAP_ROOTS = [
+  ['#confirmScrim', null], ['#qualityScrim', null], ['#prayerScrim', null],
+  ['#settingsScrim', null], ['#dlDrawer', null], ['#npOverlay', null],
+  ['#sidebar', '#scrimSide']
+];
+const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function trapTab(e) {
+  const active = document.activeElement;
+  let root = null;
+  for (const [sel, signal] of TRAP_ROOTS) {
+    const el = $(sel);
+    if (!el || !el.classList.contains('open')) continue;
+    if (signal) { const sg = $(signal); if (!sg || !sg.classList.contains('open')) continue }
+    if (el.contains(active)) { root = el; break }
+    if (!root) root = el;
+  }
+  if (!root) return false;
+  const list = [...root.querySelectorAll(FOCUSABLE_SEL)].filter(el => el.getClientRects().length > 0);
+  if (!list.length) return false;
+  const next = nextFocusable(list, root.contains(active) ? active : null, e.shiftKey ? -1 : 1);
+  if (next && next !== active) { e.preventDefault(); next.focus(); return true }
+  return false;
+}
 /* keyboard */
 document.addEventListener('keydown', e => {
+  if (e.key === 'Tab' && trapTab(e)) return;
   if (e.target.id === 'msSearch') {
     if (e.key === 'Enter') { e.preventDefault(); mushafSearchGo(e.target.value) }
     else if (e.key === 'Escape') { e.target.value = ''; e.target.hidden = true }

@@ -19,12 +19,18 @@ async function trimCache(name, max) {
 /* clone() must run synchronously: once the response is handed to respondWith,
    the browser consumes its body and a later clone() throws "body already used". */
 self.addEventListener('install', (e) => {
+  /* No skipWaiting (F-22): let the new worker wait until every tab has closed.
+     Claiming mid-session while an old HTML still references old hashed assets
+     is what caused 404s on lazy-loaded chunks during deploys. */
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE).then((c) => c.addAll(PRECACHE))
   );
 });
 
 self.addEventListener('activate', (e) => {
+  /* No clients.claim (F-22): the activated worker takes over pages on their
+     next navigation, never mid-session. Old caches are purged only after the
+     new worker is active, so open tabs keep serving a consistent set. */
   e.waitUntil(
     caches.keys()
       .then((ks) => {
@@ -33,7 +39,6 @@ self.addEventListener('activate', (e) => {
         const others = ks.filter((k) => !k.startsWith('ouns-app-') && k !== MUSHAF_CACHE);
         return Promise.all([...toDelete, ...others].map((k) => caches.delete(k)));
       })
-      .then(() => self.clients.claim())
   );
 });
 

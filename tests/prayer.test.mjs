@@ -48,3 +48,45 @@ test('countdownStr renders hh:mm:ss remaining', () => {
   const now = new Date('2025-06-15T11:26:05+02:00').getTime();
   assert.equal(countdownStr(TIMINGS, null, now), '01:03:55');
 });
+
+/* ── F-12 negative paths: malformed input must never crash or emit "NaN" ── */
+
+test('prayerTimeStr degrades to placeholder on malformed input', () => {
+  assert.equal(prayerTimeStr(null), '--:--');
+  assert.equal(prayerTimeStr(undefined), '--:--');
+  assert.equal(prayerTimeStr(''), '--:--');
+  assert.equal(prayerTimeStr('garbage'), '--:--');
+  assert.equal(prayerTimeStr(42), '--:--');
+  assert.equal(prayerTimeStr({}), '--:--');
+  assert.equal(prayerTimeStr('2025-06-15'), '--:--');
+});
+
+test('prayerTimeStr tolerates a non-numeric offset', () => {
+  assert.equal(prayerTimeStr('2025-06-15T05:12:00+02:00', 'abc'), '05:12');
+  assert.equal(prayerTimeStr('2025-06-15T05:12:00+02:00', NaN), '05:12');
+});
+
+test('nextPrayerTime skips malformed timings and honors valid ones', () => {
+  const now = new Date('2025-06-15T11:00:00+02:00').getTime();
+  const mixed = { Fajr: 'oops', Dhuhr: '2025-06-15T12:30:00+02:00', Asr: 'nope', Maghrib: '2025-06-15T18:20:00+02:00', Isha: null };
+  const dhuhr = new Date('2025-06-15T12:30:00+02:00').getTime();
+  assert.equal(nextPrayerTime(mixed, null, now), dhuhr);
+});
+
+test('nextPrayerTime returns null when every timing is invalid', () => {
+  const now = Date.now();
+  assert.equal(nextPrayerTime(null, null, now), null);
+  assert.equal(nextPrayerTime({}, null, now), null);
+  assert.equal(nextPrayerTime({ Fajr: 'nope', Dhuhr: 42, Asr: null }, null, now), null);
+  assert.equal(nextPrayerTime({ Fajr: '2025-06-15T25:99:00+02:00' }, null, now), null);
+  assert.equal(nextPrayerTime(TIMINGS, null, NaN), null);
+});
+
+test('countdownStr degrades to placeholder on malformed input', () => {
+  const now = Date.now();
+  assert.equal(countdownStr(null, null, now), '--:--:--');
+  assert.equal(countdownStr(undefined, null, now), '--:--:--');
+  assert.equal(countdownStr({}, null, now), '--:--:--');
+  assert.equal(countdownStr({ Fajr: 'garbage' }, null, now), '--:--:--');
+  assert.equal(countdownStr(TIMINGS, null, NaN), '--:--:--');
+});
