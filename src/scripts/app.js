@@ -64,7 +64,7 @@ const store = {
       localStorage.setItem('ouns_' + k, JSON.stringify(v));
     } catch (e) {
       if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
-        try { toast(t('quotaExceeded')) } catch (_) {}
+        try { toast(t('quotaExceeded')) } catch (_) { }
       }
     }
   }
@@ -79,10 +79,10 @@ const store = {
       if (oldMushafLast > 1 && !store.get('mushafLast_hafs', 0)) {
         store.set('mushafLast_hafs', oldMushafLast);
       }
-      try { localStorage.removeItem('ouns_mushafLast') } catch (_) {}
+      try { localStorage.removeItem('ouns_mushafLast') } catch (_) { }
       store.set('schema_version', 1);
     }
-  } catch (_) {}
+  } catch (_) { }
 })();
 
 /* ── Surah metadata (114) ── */
@@ -320,7 +320,8 @@ function viewHome() {
     <span class="rplay"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>`).join('')}</div>
   ${orn}` : ''}
   <div class="view-head"><div><h2>${t('quickSurahs')}</h2></div></div>
-  <div class="quick-grid">${quick.map(n => { const m = SURAH[n - 1]; return `
+  <div class="quick-grid">${quick.map(n => {
+    const m = SURAH[n - 1]; return `
     
     <button class="quick-surah" data-surah="${n}" title="${esc(surahName(n, S.lang))}"><span class="qsurah sn-font" aria-hidden="true">
   
@@ -1476,7 +1477,7 @@ function openModal(scrim) {
   scrimPrevFocus.set(el, document.activeElement instanceof HTMLElement ? document.activeElement : null);
   el.classList.add('open');
   const target = el.querySelector('button:not([hidden]), [href], input, [tabindex="0"]');
-  if (target) try { target.focus({ preventScroll: true }) } catch (_) {}
+  if (target) try { target.focus({ preventScroll: true }) } catch (_) { }
 }
 function closeModal(scrim) {
   const el = typeof scrim === 'string' ? $(scrim) : scrim;
@@ -1484,7 +1485,7 @@ function closeModal(scrim) {
   el.classList.remove('open');
   const prev = scrimPrevFocus.get(el);
   if (prev) {
-    try { prev.focus({ preventScroll: true }) } catch (_) {}
+    try { prev.focus({ preventScroll: true }) } catch (_) { }
     scrimPrevFocus.delete(el);
   }
 }
@@ -1954,7 +1955,7 @@ window.addEventListener('storage', e => {
     else if (k === 'recent') { S.recent = val; if (S.view === 'recent') render() }
     else if (k === 'quality' && val !== S.quality) { S.quality = val; buildQualitySeg() }
     else if (k === 'mushafRiwaya' && val !== S.mushafRiwaya) { S.mushafRiwaya = val; if (S.view === 'mushaf') render() }
-  } catch (_) {}
+  } catch (_) { }
 });
 
 /* ═══════════════ INIT ═══════════════ */
