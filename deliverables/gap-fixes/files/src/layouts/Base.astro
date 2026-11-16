@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+
+const site = Astro.site ?? new URL('https://ounsapp.musbch.workers.dev/');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL('/og.png', site).href;
+const title = 'أُنْس · Ouns — القرآن الكريم: تلاوات، مصحف، مواقيت الصلاة وأذكار';
+const description =
+  'أُنْس — مشغّل قرآني أنيق بالعربية والإنجليزية: تلاوات مختارة بجودة عالية، مصحف كامل بروايتي حفص وورش، مواقيت الصلاة مع الأذان، أذكار الصباح والمساء، وأفضل التلاوات المرئية.';
+const keywords =
+  'القرآن الكريم, تلاوات, مصحف, رواية حفص, رواية ورش, مواقيت الصلاة, الأذان, أذكار الصباح, أذكار المساء, Quran, Quran player, recitations, mushaf, Hafs, Warsh, prayer times, adhan, adhkar';
+
+const ldJson = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'أُنْس · Ouns',
+  alternateName: 'Ouns Quran Player',
+  url: site.href,
+  description,
+  inLanguage: ['ar', 'en'],
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Quran recitations in high quality',
+    'Full mushaf — Hafs and Warsh riwayat',
+    'Prayer times with adhan',
+    'Morning and evening adhkar',
+  ],
+});
+---
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<!-- lang/dir are corrected before first paint by the inline script above when the saved language is English -->
+  <head>
+    <meta charset="utf-8">
+    <script is:inline>
+      try {
+        var rawLang = localStorage.getItem('ouns_lang');
+        var lang = 'ar';
+        try { lang = JSON.parse(rawLang); } catch (e) { lang = rawLang; }
+        if (lang !== 'ar' && lang !== 'en') lang = 'ar';
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+
+        var rawTheme = localStorage.getItem('ouns_theme');
+        var theme = 'light';
+        try { theme = JSON.parse(rawTheme); } catch (e) { theme = rawTheme; }
+        if (theme !== 'dark' && theme !== 'light') theme = 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        var metaTc = document.querySelector('meta[name=theme-color]');
+        if (metaTc && theme === 'dark') metaTc.content = '#000000';
+      } catch (e) {}
+    </script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="keywords" content={keywords}>
+    <meta name="author" content="mbdesigny">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href={canonical}>
+    <meta name="theme-color" content="#F3EFE4">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="أُنْس">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="أُنْس · Ouns">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta property="og:image" content={ogImage}>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ar_AR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={ogImage}>
+    <script type="application/ld+json" set:html={ldJson} />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => { console.error('[Ouns] service worker registration failed:', err) });
+        });
+      }
+    </script>
+  </head>
+  <body data-theme="light">
+    <script is:inline>try{var th=document.documentElement.getAttribute('data-theme');if(th)document.body.dataset.theme=th}catch(e){}</script>
+    <slot />
+  </body>
+</html>
