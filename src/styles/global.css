@@ -2731,13 +2731,14 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mushaf-stage {
+  --mzoom: 1;
   flex: 1;
   min-height: 0;
   overflow: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px 6.25%
+  padding: 10px 14px;
 }
 
 .mushaf-stage.cover {
@@ -2911,6 +2912,10 @@ body.mushaf-noside .mushaf-side {
   overflow: hidden
 }
 
+.mushaf-stage.flip-on.mushaf-zoomed {
+  overflow: auto
+}
+
 .mushaf-stage.flip-on .mushaf-page {
   display: none
 }
@@ -2918,8 +2923,10 @@ body.mushaf-noside .mushaf-side {
 .mushaf-stage.flip-on .flip-host {
   display: block;
   position: absolute;
-  inset: 32px;
-  transform: scaleX(-1)
+  inset: 12px;
+  transform: scaleX(-1) scale(var(--mzoom, 1));
+  transform-origin: center center;
+  transition: transform .18s ease-out
 }
 
 .mushaf-stage.flip-on .flip-host .stf__wrapper {
@@ -2935,6 +2942,84 @@ body.mushaf-noside .mushaf-side {
   width: 100%;
   height: 100%;
   box-sizing: border-box
+}
+
+.mushaf-stage:not(.flip-on) .mushaf-page {
+  transform: scale(var(--mzoom, 1));
+  transform-origin: center center;
+  transition: transform .18s ease-out
+}
+
+.mushaf-stage.single:not(.flip-on) .mushaf-page {
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 345/550;
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+.mushaf-stage.single:not(.flip-on) .mushaf-page img {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 12px
+}
+
+.mzoom-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 4px;
+  gap: 2px
+}
+
+.mzoom-group .icon-btn {
+  width: 28px;
+  height: 28px;
+  padding: 5px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 999px
+}
+
+.mzoom-group .icon-btn:hover {
+  background: var(--surface);
+  color: var(--gold-ink)
+}
+
+.mzoom-pill {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 8px;
+  border: none;
+  background: transparent;
+  color: var(--ink2);
+  cursor: pointer;
+  border-radius: 999px;
+  line-height: 1
+}
+
+.mzoom-pill:hover {
+  color: var(--gold-ink);
+  background: var(--surface)
+}
+
+@media(max-width:899px) {
+  [data-act="mlayout"] {
+    display: none !important
+  }
+}
+
+@media(max-width:640px) {
+  .mzoom-group {
+    display: none !important
+  }
 }
 
 .flip-spine {

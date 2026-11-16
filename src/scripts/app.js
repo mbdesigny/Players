@@ -99,8 +99,8 @@ const VERSES = [["وَإِذَا قُرِئَ الْقُرْآنُ فَاسْت�
 
 /* ── i18n ── */
 const I18N = {
-  ar: { library: "المكتبة", home: "الرئيسية", reciters: "القرّاء", favorites: "المفضلة", recent: "سجل الاستماع", downloads: "التنزيلات", verseLabel: "آية وتدبّر", tagline: "رفيقك لتلاوة القرآن الكريم", nowPlaying: "يُتلى الآن", chooseReciter: "اختر قارئًا لبدء التلاوة", upNext: "التالي في القائمة", favorite: "المفضلة", download: "تنزيل", settings: "الإعدادات", theme: "المظهر", themeDesc: "نهاري بيج / ليلي OLED", light: "نهاري", dark: "ليلي", language: "اللغة", audioSource: "مصدر الصوت", audioSourceDesc: "يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل", shortcuts: "اختصارات لوحة المفاتيح", kPlay: "تشغيل / إيقاف", kSeek: "تقديم / ترجيع ٥ ثوانٍ", kNext: "التالي / السابق", kFav: "المفضلة", kMute: "كتم الصوت", kSearch: "بحث", done: "تم", cancel: "إلغاء", confirm: "تأكيد", chooseFolder: "مجلد الحفظ", noDownloads: "لا توجد تنزيلات بعد", loading: "جارٍ تحميل المكتبة…", offline: "تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت", searchReciters: "ابحث عن قارئ…", searchSurahs: "ابحث عن سورة…", searchFav: "ابحث في المفضلة…", searchRecent: "ابحث في سجل الاستماع…", greetM: "صباح النور والقرآن", greetE: "مساء النور والقرآن", heroSub: "تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.", continueL: "واصل الاستماع", browse: "تصفّح القرّاء", featured: "قرّاء مختارون", quickSurahs: "سور يُكثر الاستماع إليها", allRiwayat: "كل الروايات", riwayat: "الروايات", sortName: "الاسم", sortCount: "عدد المصاحف", moshaf: "مصحف", surahs: "سورة", playAll: "تشغيل الكل", downloadAll: "تنزيل الكل", back: "عودة للصفحة السابقة", ayahs: "آية", meccan: "مكية", medinan: "مدنية", noFav: "لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة", noRecent: "لم تستمع إلى شيء بعد", clearRecent: "مسح السجل", cleared: "تم مسح السجل", undo: "تراجع", addedFav: "أُضيفت إلى المفضلة", removedFav: "أُزيلت من المفضلة", qAuto: "أعلى جودة", qHigh: "١٩٢+", qStd: "١٢٨", qSave: "توفير البيانات", sleep: "مؤقت النوم", sleepOff: "إيقاف", min: "دقيقة", timerSet: "سيتوقف التشغيل بعد", timerEnd: "انتهى مؤقت النوم — تصبح على خير", confirmDlAll: "تنزيل جميع سور هذا المصحف؟", confirmDlAllMsg: "قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.", saved: "تم الحفظ", failed: "فشل", downloading: "جارٍ التنزيل", pending: "بالانتظار", cancelled: "أُلغي", dlDone: "اكتمل التنزيل", errorAudio: "تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر", noResults: "لا توجد نتائج مطابقة", reciter: "قارئ", tracks: "تلاوة", kbps: "kbps", provider: "المصدر", resume: "استئناف", playing: "يُتلى الآن", selectReciterFirst: "اختر قارئًا أولًا", favView: "المفضلة", recentView: "سجل الاستماع", favSub: "سورك المحفوظة للتلاوة الدائمة", recentSub: "آخر ما استمعت إليه", recitersSub: "قرّاء من حول العالم، بروايات متعددة", surahCount: "سورة متاحة", dlFolder: "اختر مجلدًا لحفظ التلاوات تلقائيًا", folderOk: "سيتم الحفظ في", quality: "الجودة", speed: "السرعة", volume: "الصوت", mute: "كتم", expand: "ملء الشاشة", close: "إغلاق", previous: "السابق", next: "التالي", shuffle: "عشوائي", repeat: "تكرار", play: "تشغيل", pause: "إيقاف", remove: "إزالة", clear: "مسح", about: "أُنس — مشغل القرآن الكريم", aboutSub: "تلاوات كاملة، روايات متعددة، أعلى جودة", pin: "تثبيت اللوحة", unpin: "إلغاء التثبيت", hidePanel: "إخفاء اللوحة", showPanel: "إظهار اللوحة", floatPanel: "فصل اللوحة كنافذة عائمة", dockPanel: "إرجاع اللوحة إلى الجانب", mushaf: "المصحف", quranName: "القرآن الكريم", startReading: "ابدأ القراءة", continueReading: "تابع القراءة", mushafSub: "قراءة المصحف — رواية حفص عن عاصم", page: "صفحة", juz: "الجزء", rwHafs: "حفص عن عاصم", rwWarsh: "ورش عن نافع", mushafRiwaya: "رواية المصحف", mushafRiwayaDesc: "المصحف المكتوب — حفص عن عاصم / ورش عن نافع", chooseRiwaya: "اختر رواية المصحف", chooseRiwayaDesc: "يمكنك تغييرها لاحقاً من الإعدادات", dlPages: "تحميل جميع الصفحات", prayerTimes: "مواقيت الصلاة", prayerSub: "مواقيت الصلاة لموقعك", nextPrayer: "الصلاة القادمة", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", location: "الموقع", changeLoc: "تغيير الموقع", searchLoc: "ابحث عن مدينة…", locNotFound: "لم يتم العثور على الموقع", search: "بحث", locAuto: "تحديد الموقع تلقائياً", locGps: "عبر GPS", locNet: "عبر الشبكة", locDetecting: "جارٍ تحديد الموقع…", locFail: "تعذّر تحديد الموقع", locApprox: "تقريبي — الشبكة", locApproxT: "تم التحديد عبر الشبكة وقد يكون غير دقيق — استعمل GPS أو ابحث عن مدينتك", adhan: "الأذان", adhanDesc: "تشغيل الأذان تلقائياً عند دخول وقت الصلاة", adhanNow: "حان الآن وقت", stopAdhan: "إيقاف الأذان", adhanOn: "مفعّل", adhanOff: "معطّل", firstThird: "الثلث الأول من الليل", lastThird: "الثلث الأخير من الليل", prOffset: "تصحيح المواقيت", prOffsetDesc: "تقديم أو تأخير المواقيت بالدقائق", untilAdhan: "بقي على رفع الآذان", cc: "الترجمة", adhkar: "الأذكار", adhkarSub: "من حصن المسلم", dhikr: "ذكر", allCats: "جميع الأقسام", akDone: "تمّت الأذكار — تقبّل الله", akProgress: "تمّ", ytView: "أفضل التلاوات", ytSub: "مجموعة مختارة من أجمل التلاوات المرئية", ytAll: "كل التلاوات", prToday: "صلوات اليوم", prNight: "الشروق وأوقات الليل", adhanVoice: "صوت المؤذن", adhanVoiceDesc: "اختر صوت الأذان المستعمل عند دخول وقت الصلاة", preview: "استماع", adhanMode: "سلوك الأذان", adhanModeDesc: "عند دخول وقت الصلاة: إيقاف التلاوة أو خفض صوتها أثناء الأذان", adhanStop: "إيقاف التلاوة", adhanDuck: "خفض الصوت", notify: "إشعار سطح المكتب", notifyDesc: "إشعار عند دخول وقت الصلاة", adhanSec: "الإذان والتنبيهات", quickCities: "مدن سريعة", sideFoot: "أُنس · رفيق التلاوة", focusMode: "قراءة نظيفة", mSearch: "انتقل إلى صفحة أو سورة…", mvUp: "تحريك لأعلى", mvDown: "تحريك لأسفل", locPrivacy: "يُستخدم تحديد الموقع لحساب مواقيت الصلاة عبر خدمات عامة دون تخزين بيانات خاصة.", quotaExceeded: "مساحة التخزين ممتلئة — تعذّر حفظ البيانات", notifyDenied: "تم حظر الإشعارات في متصفحك" },
-  en: { library: "Library", home: "Home", reciters: "Reciters", favorites: "Favorites", recent: "Recently Played", downloads: "Downloads", verseLabel: "Verse & Reflect", tagline: "Your companion for Qur'an listening", nowPlaying: "Now Reciting", chooseReciter: "Choose a reciter to begin", upNext: "Up Next", favorite: "Favorite", download: "Download", settings: "Settings", theme: "Theme", themeDesc: "Beige light / OLED dark", light: "Light", dark: "Dark", language: "Language", audioSource: "Audio source", audioSourceDesc: "Highest quality chosen automatically, with fallback", shortcuts: "Keyboard shortcuts", kPlay: "Play / pause", kSeek: "Seek ±5 seconds", kNext: "Next / previous", kFav: "Favorite", kMute: "Mute", kSearch: "Search", done: "Done", cancel: "Cancel", confirm: "Confirm", chooseFolder: "Save folder", noDownloads: "No downloads yet", loading: "Loading library…", offline: "Could not reach the source — showing a compact online catalog", searchReciters: "Search reciters…", searchSurahs: "Search surahs…", searchFav: "Search favorites…", searchRecent: "Search recent…", greetM: "Good morning, with Qur'an", greetE: "Good evening, with Qur'an", heroSub: "Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.", continueL: "Continue listening", browse: "Browse reciters", featured: "Featured reciters", quickSurahs: "Frequently recited surahs", allRiwayat: "All riwayat", riwayat: "Riwayat", sortName: "Name", sortCount: "Mushaf count", moshaf: "mushaf", surahs: "surahs", playAll: "Play all", downloadAll: "Download all", back: "Back to reciters", ayahs: "ayahs", meccan: "Meccan", medinan: "Medinan", noFav: "No favorites yet — tap ♥ on any surah", noRecent: "Nothing played yet", clearRecent: "Clear history", cleared: "History cleared", undo: "Undo", addedFav: "Added to favorites", removedFav: "Removed from favorites", qAuto: "Best quality", qHigh: "192+", qStd: "128", qSave: "Save data", sleep: "Sleep timer", sleepOff: "Off", min: "min", timerSet: "Playback will stop in", timerEnd: "Sleep timer ended — good night", confirmDlAll: "Download all surahs of this mushaf?", confirmDlAllMsg: "Total size may exceed 500 MB. Downloads run in the background.", saved: "Saved", failed: "Failed", downloading: "Downloading", pending: "Pending", cancelled: "Cancelled", dlDone: "Download complete", errorAudio: "Could not play this recitation — try another source", noResults: "No matching results", reciter: "reciters", tracks: "recitations", kbps: "kbps", provider: "Source", resume: "Resume", playing: "Now reciting", selectReciterFirst: "Choose a reciter first", favView: "Favorites", recentView: "Recently Played", favSub: "Your saved surahs for anytime recitation", recentSub: "What you listened to last", recitersSub: "Reciters worldwide, across multiple riwayat", surahCount: "surahs available", dlFolder: "Choose a folder to save recitations automatically", folderOk: "Saving to", quality: "Quality", speed: "Speed", volume: "Volume", mute: "Mute", expand: "Fullscreen", close: "Close", previous: "Previous", next: "Next", shuffle: "Shuffle", repeat: "Repeat", play: "Play", pause: "Pause", remove: "Remove", clear: "Clear", about: "Ouns — Qur'an Player", aboutSub: "Full recitations, multiple riwayat, highest quality", pin: "Pin panel", unpin: "Unpin", hidePanel: "Hide panel", showPanel: "Show panel", floatPanel: "Float panel", dockPanel: "Dock panel", mushaf: "Mushaf", quranName: "The Holy Qur'an", startReading: "Start reading", continueReading: "Continue reading", mushafSub: "Read the Qur'an — Hafs 'an 'Asim", page: "Page", juz: "Juz", rwHafs: "Hafs 'an 'Asim", rwWarsh: "Warsh 'an Nafi'", mushafRiwaya: "Mushaf riwayah", mushafRiwayaDesc: "Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'", chooseRiwaya: "Choose mushaf riwayah", chooseRiwayaDesc: "You can change it later in Settings", dlPages: "Download all pages", prayerTimes: "Prayer times", prayerSub: "Prayer times for your location", nextPrayer: "Next prayer", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", location: "Location", changeLoc: "Change location", searchLoc: "Search a city…", locNotFound: "Location not found", search: "Search", locAuto: "Detect location", locGps: "Via GPS", locNet: "Via network", locDetecting: "Detecting location…", locFail: "Could not detect your location", locApprox: "Approximate", locApproxT: "Detected via network and may be imprecise — use GPS or search your city", adhan: "Adhan", adhanDesc: "Play the adhan automatically at prayer time", adhanNow: "It is now time for", stopAdhan: "Stop adhan", adhanOn: "On", adhanOff: "Off", firstThird: "First third of the night", lastThird: "Last third of the night", prOffset: "Time adjustment", prOffsetDesc: "Shift prayer times earlier or later (minutes)", untilAdhan: "Adhan in", cc: "Captions", adhkar: "Adhkar", adhkarSub: "From Hisn al-Muslim", dhikr: "dhikr", allCats: "All categories", akDone: "Adhkar complete — may Allah accept", akProgress: "Done", ytView: "Best recitations", ytSub: "A curated selection of the finest video recitations", ytAll: "All recitations", prToday: "Today's prayers", prNight: "Sunrise & night quarters", adhanVoice: "Adhan voice", adhanVoiceDesc: "Choose the adhan recitation played at prayer time", preview: "Preview", adhanMode: "Adhan behavior", adhanModeDesc: "At prayer time: pause recitation or lower its volume during the adhan", adhanStop: "Pause recitation", adhanDuck: "Lower volume", notify: "Desktop notification", notifyDesc: "Notify when a prayer time enters", adhanSec: "Adhan & alerts", quickCities: "Quick cities", sideFoot: "Ouns · Recitation Companion", focusMode: "Clean reading", mSearch: "Go to page or surah…", mvUp: "Move up", mvDown: "Move down", locPrivacy: "Location is used solely to compute prayer times via public services without storing private data.", quotaExceeded: "Storage quota exceeded — could not save data", notifyDenied: "Notifications blocked by browser" }
+  ar: { library: "المكتبة", home: "الرئيسية", reciters: "القرّاء", favorites: "المفضلة", recent: "سجل الاستماع", downloads: "التنزيلات", verseLabel: "آية وتدبّر", tagline: "رفيقك لتلاوة القرآن الكريم", nowPlaying: "يُتلى الآن", chooseReciter: "اختر قارئًا لبدء التلاوة", upNext: "التالي في القائمة", favorite: "المفضلة", download: "تنزيل", settings: "الإعدادات", theme: "المظهر", themeDesc: "نهاري بيج / ليلي OLED", light: "نهاري", dark: "ليلي", language: "اللغة", audioSource: "مصدر الصوت", audioSourceDesc: "يُختار الأعلى جودة تلقائيًا مع تجاوز عند الفشل", shortcuts: "اختصارات لوحة المفاتيح", kPlay: "تشغيل / إيقاف", kSeek: "تقديم / ترجيع ٥ ثوانٍ", kNext: "التالي / السابق", kFav: "المفضلة", kMute: "كتم الصوت", kSearch: "بحث", done: "تم", cancel: "إلغاء", confirm: "تأكيد", chooseFolder: "مجلد الحفظ", noDownloads: "لا توجد تنزيلات بعد", loading: "جارٍ تحميل المكتبة…", offline: "تعذّر الاتصال بالمصدر — عُرضت مكتبة مختصرة تعمل عبر الإنترنت", searchReciters: "ابحث عن قارئ…", searchSurahs: "ابحث عن سورة…", searchFav: "ابحث في المفضلة…", searchRecent: "ابحث في سجل الاستماع…", greetM: "صباح النور والقرآن", greetE: "مساء النور والقرآن", heroSub: "تلاوات خاشعة بأعلى جودة، بروايات متعددة وقرّاء من حول العالم. اختر قارئًا ودع القرآن يؤنسك.", continueL: "واصل الاستماع", browse: "تصفّح القرّاء", featured: "قرّاء مختارون", quickSurahs: "سور يُكثر الاستماع إليها", allRiwayat: "كل الروايات", riwayat: "الروايات", sortName: "الاسم", sortCount: "عدد المصاحف", moshaf: "مصحف", surahs: "سورة", playAll: "تشغيل الكل", downloadAll: "تنزيل الكل", back: "عودة للصفحة السابقة", ayahs: "آية", meccan: "مكية", medinan: "مدنية", noFav: "لا توجد سور في المفضلة بعد — اضغط ♥ على أي سورة", noRecent: "لم تستمع إلى شيء بعد", clearRecent: "مسح السجل", cleared: "تم مسح السجل", undo: "تراجع", addedFav: "أُضيفت إلى المفضلة", removedFav: "أُزيلت من المفضلة", qAuto: "أعلى جودة", qHigh: "١٩٢+", qStd: "١٢٨", qSave: "توفير البيانات", sleep: "مؤقت النوم", sleepOff: "إيقاف", min: "دقيقة", timerSet: "سيتوقف التشغيل بعد", timerEnd: "انتهى مؤقت النوم — تصبح على خير", confirmDlAll: "تنزيل جميع سور هذا المصحف؟", confirmDlAllMsg: "قد يتجاوز الحجم ٥٠٠ ميغابايت. سيبدأ التنزيل في الخلفية.", saved: "تم الحفظ", failed: "فشل", downloading: "جارٍ التنزيل", pending: "بالانتظار", cancelled: "أُلغي", dlDone: "اكتمل التنزيل", errorAudio: "تعذّر تشغيل هذه التلاوة — جرّب مصدرًا آخر", noResults: "لا توجد نتائج مطابقة", reciter: "قارئ", tracks: "تلاوة", kbps: "kbps", provider: "المصدر", resume: "استئناف", playing: "يُتلى الآن", selectReciterFirst: "اختر قارئًا أولًا", favView: "المفضلة", recentView: "سجل الاستماع", favSub: "سورك المحفوظة للتلاوة الدائمة", recentSub: "آخر ما استمعت إليه", recitersSub: "قرّاء من حول العالم، بروايات متعددة", surahCount: "سورة متاحة", dlFolder: "اختر مجلدًا لحفظ التلاوات تلقائيًا", folderOk: "سيتم الحفظ في", quality: "الجودة", speed: "السرعة", volume: "الصوت", mute: "كتم", expand: "ملء الشاشة", close: "إغلاق", previous: "السابق", next: "التالي", shuffle: "عشوائي", repeat: "تكرار", play: "تشغيل", pause: "إيقاف", remove: "إزالة", clear: "مسح", about: "أُنس — مشغل القرآن الكريم", aboutSub: "تلاوات كاملة، روايات متعددة، أعلى جودة", pin: "تثبيت اللوحة", unpin: "إلغاء التثبيت", hidePanel: "إخفاء اللوحة", showPanel: "إظهار اللوحة", floatPanel: "فصل اللوحة كنافذة عائمة", dockPanel: "إرجاع اللوحة إلى الجانب", mushaf: "المصحف", quranName: "القرآن الكريم", startReading: "ابدأ القراءة", continueReading: "تابع القراءة", mushafSub: "قراءة المصحف — رواية حفص عن عاصم", page: "صفحة", juz: "الجزء", rwHafs: "حفص عن عاصم", rwWarsh: "ورش عن نافع", mushafRiwaya: "رواية المصحف", mushafRiwayaDesc: "المصحف المكتوب — حفص عن عاصم / ورش عن نافع", chooseRiwaya: "اختر رواية المصحف", chooseRiwayaDesc: "يمكنك تغييرها لاحقاً من الإعدادات", dlPages: "تحميل جميع الصفحات", prayerTimes: "مواقيت الصلاة", prayerSub: "مواقيت الصلاة لموقعك", nextPrayer: "الصلاة القادمة", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", location: "الموقع", changeLoc: "تغيير الموقع", searchLoc: "ابحث عن مدينة…", locNotFound: "لم يتم العثور على الموقع", search: "بحث", locAuto: "تحديد الموقع تلقائياً", locGps: "عبر GPS", locNet: "عبر الشبكة", locDetecting: "جارٍ تحديد الموقع…", locFail: "تعذّر تحديد الموقع", locApprox: "تقريبي — الشبكة", locApproxT: "تم التحديد عبر الشبكة وقد يكون غير دقيق — استعمل GPS أو ابحث عن مدينتك", adhan: "الأذان", adhanDesc: "تشغيل الأذان تلقائياً عند دخول وقت الصلاة", adhanNow: "حان الآن وقت", stopAdhan: "إيقاف الأذان", adhanOn: "مفعّل", adhanOff: "معطّل", firstThird: "الثلث الأول من الليل", lastThird: "الثلث الأخير من الليل", prOffset: "تصحيح المواقيت", prOffsetDesc: "تقديم أو تأخير المواقيت بالدقائق", untilAdhan: "بقي على رفع الآذان", cc: "الترجمة", adhkar: "الأذكار", adhkarSub: "من حصن المسلم", dhikr: "ذكر", allCats: "جميع الأقسام", akDone: "تمّت الأذكار — تقبّل الله", akProgress: "تمّ", ytView: "أفضل التلاوات", ytSub: "مجموعة مختارة من أجمل التلاوات المرئية", ytAll: "كل التلاوات", prToday: "صلوات اليوم", prNight: "الشروق وأوقات الليل", adhanVoice: "صوت المؤذن", adhanVoiceDesc: "اختر صوت الأذان المستعمل عند دخول وقت الصلاة", preview: "استماع", adhanMode: "سلوك الأذان", adhanModeDesc: "عند دخول وقت الصلاة: إيقاف التلاوة أو خفض صوتها أثناء الأذان", adhanStop: "إيقاف التلاوة", adhanDuck: "خفض الصوت", notify: "إشعار سطح المكتب", notifyDesc: "إشعار عند دخول وقت الصلاة", adhanSec: "الإذان والتنبيهات", quickCities: "مدن سريعة", sideFoot: "أُنس · رفيق التلاوة", focusMode: "قراءة نظيفة", mSearch: "انتقل إلى صفحة أو سورة…", mvUp: "تحريك لأعلى", mvDown: "تحريك لأسفل", locPrivacy: "يُستخدم تحديد الموقع لحساب مواقيت الصلاة عبر خدمات عامة دون تخزين بيانات خاصة.", quotaExceeded: "مساحة التخزين ممتلئة — تعذّر حفظ البيانات", notifyDenied: "تم حظر الإشعارات في متصفحك", onePage: "صفحة واحدة", twoPages: "صفحتان (كتاب)", zoomIn: "تكبير", zoomOut: "تصغير", zoomReset: "إعادة ضبط الحجم", layoutMode: "نمط العرض" },
+  en: { library: "Library", home: "Home", reciters: "Reciters", favorites: "Favorites", recent: "Recently Played", downloads: "Downloads", verseLabel: "Verse & Reflect", tagline: "Your companion for Qur'an listening", nowPlaying: "Now Reciting", chooseReciter: "Choose a reciter to begin", upNext: "Up Next", favorite: "Favorite", download: "Download", settings: "Settings", theme: "Theme", themeDesc: "Beige light / OLED dark", light: "Light", dark: "Dark", language: "Language", audioSource: "Audio source", audioSourceDesc: "Highest quality chosen automatically, with fallback", shortcuts: "Keyboard shortcuts", kPlay: "Play / pause", kSeek: "Seek ±5 seconds", kNext: "Next / previous", kFav: "Favorite", kMute: "Mute", kSearch: "Search", done: "Done", cancel: "Cancel", confirm: "Confirm", chooseFolder: "Save folder", noDownloads: "No downloads yet", loading: "Loading library…", offline: "Could not reach the source — showing a compact online catalog", searchReciters: "Search reciters…", searchSurahs: "Search surahs…", searchFav: "Search favorites…", searchRecent: "Search recent…", greetM: "Good morning, with Qur'an", greetE: "Good evening, with Qur'an", heroSub: "Humble recitations in the highest quality, across multiple riwayat and reciters worldwide. Pick a reciter and let the Qur'an keep you company.", continueL: "Continue listening", browse: "Browse reciters", featured: "Featured reciters", quickSurahs: "Frequently recited surahs", allRiwayat: "All riwayat", riwayat: "Riwayat", sortName: "Name", sortCount: "Mushaf count", moshaf: "mushaf", surahs: "surahs", playAll: "Play all", downloadAll: "Download all", back: "Back to reciters", ayahs: "ayahs", meccan: "Meccan", medinan: "Medinan", noFav: "No favorites yet — tap ♥ on any surah", noRecent: "Nothing played yet", clearRecent: "Clear history", cleared: "History cleared", undo: "Undo", addedFav: "Added to favorites", removedFav: "Removed from favorites", qAuto: "Best quality", qHigh: "192+", qStd: "128", qSave: "Save data", sleep: "Sleep timer", sleepOff: "Off", min: "min", timerSet: "Playback will stop in", timerEnd: "Sleep timer ended — good night", confirmDlAll: "Download all surahs of this mushaf?", confirmDlAllMsg: "Total size may exceed 500 MB. Downloads run in the background.", saved: "Saved", failed: "Failed", downloading: "Downloading", pending: "Pending", cancelled: "Cancelled", dlDone: "Download complete", errorAudio: "Could not play this recitation — try another source", noResults: "No matching results", reciter: "reciters", tracks: "recitations", kbps: "kbps", provider: "Source", resume: "Resume", playing: "Now reciting", selectReciterFirst: "Choose a reciter first", favView: "Favorites", recentView: "Recently Played", favSub: "Your saved surahs for anytime recitation", recentSub: "What you listened to last", recitersSub: "Reciters worldwide, across multiple riwayat", surahCount: "surahs available", dlFolder: "Choose a folder to save recitations automatically", folderOk: "Saving to", quality: "Quality", speed: "Speed", volume: "Volume", mute: "Mute", expand: "Fullscreen", close: "Close", previous: "Previous", next: "Next", shuffle: "Shuffle", repeat: "Repeat", play: "Play", pause: "Pause", remove: "Remove", clear: "Clear", about: "Ouns — Qur'an Player", aboutSub: "Full recitations, multiple riwayat, highest quality", pin: "Pin panel", unpin: "Unpin", hidePanel: "Hide panel", showPanel: "Show panel", floatPanel: "Float panel", dockPanel: "Dock panel", mushaf: "Mushaf", quranName: "The Holy Qur'an", startReading: "Start reading", continueReading: "Continue reading", mushafSub: "Read the Qur'an — Hafs 'an 'Asim", page: "Page", juz: "Juz", rwHafs: "Hafs 'an 'Asim", rwWarsh: "Warsh 'an Nafi'", mushafRiwaya: "Mushaf riwayah", mushafRiwayaDesc: "Written mushaf — Hafs 'an 'Asim / Warsh 'an Nafi'", chooseRiwaya: "Choose mushaf riwayah", chooseRiwayaDesc: "You can change it later in Settings", dlPages: "Download all pages", prayerTimes: "Prayer times", prayerSub: "Prayer times for your location", nextPrayer: "Next prayer", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", location: "Location", changeLoc: "Change location", searchLoc: "Search a city…", locNotFound: "Location not found", search: "Search", locAuto: "Detect location", locGps: "Via GPS", locNet: "Via network", locDetecting: "Detecting location…", locFail: "Could not detect your location", locApprox: "Approximate", locApproxT: "Detected via network and may be imprecise — use GPS or search your city", adhan: "Adhan", adhanDesc: "Play the adhan automatically at prayer time", adhanNow: "It is now time for", stopAdhan: "Stop adhan", adhanOn: "On", adhanOff: "Off", firstThird: "First third of the night", lastThird: "Last third of the night", prOffset: "Time adjustment", prOffsetDesc: "Shift prayer times earlier or later (minutes)", untilAdhan: "Adhan in", cc: "Captions", adhkar: "Adhkar", adhkarSub: "From Hisn al-Muslim", dhikr: "dhikr", allCats: "All categories", akDone: "Adhkar complete — may Allah accept", akProgress: "Done", ytView: "Best recitations", ytSub: "A curated selection of the finest video recitations", ytAll: "All recitations", prToday: "Today's prayers", prNight: "Sunrise & night quarters", adhanVoice: "Adhan voice", adhanVoiceDesc: "Choose the adhan recitation played at prayer time", preview: "Preview", adhanMode: "Adhan behavior", adhanModeDesc: "At prayer time: pause recitation or lower its volume during the adhan", adhanStop: "Pause recitation", adhanDuck: "Lower volume", notify: "Desktop notification", notifyDesc: "Notify when a prayer time enters", adhanSec: "Adhan & alerts", quickCities: "Quick cities", sideFoot: "Ouns · Recitation Companion", focusMode: "Clean reading", mSearch: "Go to page or surah…", mvUp: "Move up", mvDown: "Move down", locPrivacy: "Location is used solely to compute prayer times via public services without storing private data.", quotaExceeded: "Storage quota exceeded — could not save data", notifyDenied: "Notifications blocked by browser", onePage: "Single page", twoPages: "Two pages (book)", zoomIn: "Zoom in", zoomOut: "Zoom out", zoomReset: "Reset zoom", layoutMode: "Display mode" }
 };
 const t = k => I18N[S.lang][k] ?? k;
 
@@ -115,7 +115,7 @@ const S = {
   favorites: store.get('favorites', []), recent: store.get('recent', []),
   current: null, srcIdx: 0, dirHandle: null, sleepMin: 0, sleepTimer: null, sleepTick: null,
   verseIdx: 0, offline: false, npMode: (() => { const v = store.get('npMode', 'hidden'); return v === 'pinned' || v === 'float' ? v : 'hidden' })(), npPos: store.get('npPos', null), sideMode: store.get('sideMode', 'open'),
-  readN: null, mushafPage: store.get('mushafPage', 0), mushafRiwaya: store.get('mushafRiwaya', 'hafs'), mushafAsk: true,
+  readN: null, mushafPage: store.get('mushafPage', 0), mushafRiwaya: store.get('mushafRiwaya', 'hafs'), mushafAsk: true, mushafLayout: store.get('mushafLayout', 'book'), mushafZoom: store.get('mushafZoom', 1),
   prayerLoc: store.get('prayerLoc', { name: 'وادي العثمانية، ميلة', lat: 36.2662, lng: 6.3118 }), prayerData: null, prayerTimer: null,
   prayerOffset: (() => {
     const v = store.get('prayerOffset', 0); const base = { Fajr: 0, Dhuhr: 0, Asr: 0, Maghrib: 0, Isha: 0 };
@@ -742,7 +742,37 @@ function mushafCoverHTML() {
   </div>`;
 }
 function viewMushaf() { return mushafCoverHTML() }
-const mushafBook = () => typeof window.matchMedia === 'function' && window.matchMedia('(min-width:900px)').matches;
+const mushafBook = () => S.mushafLayout !== 'single' && typeof window.matchMedia === 'function' && window.matchMedia('(min-width:900px)').matches;
+const MUSHAF_ZOOMS = [0.85, 1.0, 1.15, 1.3, 1.45, 1.6, 1.8, 2.0];
+function setMushafZoom(z) {
+  const clamped = Math.min(2.0, Math.max(0.85, Math.round(z * 100) / 100));
+  S.mushafZoom = clamped;
+  store.set('mushafZoom', clamped);
+  applyMushafZoom();
+}
+function applyMushafZoom() {
+  const stg = $('#view .mushaf-stage');
+  if (stg) {
+    stg.style.setProperty('--mzoom', String(S.mushafZoom || 1));
+    stg.classList.toggle('mushaf-zoomed', (S.mushafZoom || 1) > 1.0);
+  }
+  $$('#view [data-mzoom-val]').forEach(el => {
+    el.textContent = `${Math.round((S.mushafZoom || 1) * 100)}%`;
+  });
+  if (flip) {
+    requestAnimationFrame(() => { if (flip) try { flip.update() } catch (_) { } });
+  }
+}
+function mushafZoomStep(dir) {
+  const cur = S.mushafZoom || 1;
+  if (dir > 0) {
+    const next = MUSHAF_ZOOMS.find(z => z > cur + 0.02) || 2.0;
+    setMushafZoom(next);
+  } else {
+    const prev = [...MUSHAF_ZOOMS].reverse().find(z => z < cur - 0.02) || 0.85;
+    setMushafZoom(prev);
+  }
+}
 function mushafFocus() {
   document.body.classList.toggle('mushaf-clean');
   if (flip) {
@@ -768,6 +798,7 @@ function mushafSyncUI() {
   const L = book && R + 1 <= MUSHAF_PAGES ? R + 1 : null;
   const footNum = L ? `${num(R)} – ${num(L)}` : `${num(R)} / ${num(MUSHAF_PAGES)}`;
   $$('#view .mf-num').forEach(el => el.textContent = footNum);
+  $$('#view .mt-center span').forEach(el => el.textContent = `${t('page')} ${footNum}`);
   ['mSlider', 'mSliderSide'].forEach(id => { const el = document.getElementById(id); if (el) el.value = n });
   const sc = mushafSurah(R), jz = mushafJuz(R);
   ['mSurahSel', 'mSurahSelSide'].forEach(id => { const el = document.getElementById(id); if (el) el.value = sc });
@@ -783,7 +814,11 @@ async function mountFlip() {
   try {
     const { PageFlip } = await import('page-flip');
     if (!document.contains(host) || flip) return;
-    if (stg) stg.classList.add('flip-on');
+    if (stg) {
+      stg.classList.add('flip-on');
+      stg.style.setProperty('--mzoom', String(S.mushafZoom || 1));
+      stg.classList.toggle('mushaf-zoomed', (S.mushafZoom || 1) > 1.0);
+    }
     const frag = document.createDocumentFragment();
     for (let p = 1; p <= MUSHAF_PAGES; p++) {
       const d = document.createElement('div');
@@ -795,7 +830,7 @@ async function mountFlip() {
     host.innerHTML = ''; host.appendChild(frag);
     const pf = new PageFlip(host, {
       width: 345, height: 550, size: 'stretch', autoSize: false,
-      minWidth: 200, maxWidth: 620, minHeight: 260, maxHeight: 900,
+      minWidth: 200, maxWidth: 1200, minHeight: 260, maxHeight: 1800,
       usePortrait: !book, showCover: false, mobileScrollSupport: false,
       drawShadow: true, maxShadowOpacity: .45, flippingTime: 700,
       startPage: Math.max(0, (book ? mushafRight(n) : n) - 1), swipeDistance: 18
@@ -804,14 +839,19 @@ async function mountFlip() {
     flip = pf;
     const ui = pf.getUI();
     if (ui && typeof ui.getMousePos === 'function') {
-      const origGetMousePos = ui.getMousePos.bind(ui);
       ui.getMousePos = function(x, y) {
-        const p = origGetMousePos(x, y);
-        const rect = this.distElement ? this.distElement.getBoundingClientRect() : null;
-        const w = rect ? rect.width : (this.wrapper ? this.wrapper.offsetWidth : 0);
+        const el = this.distElement || this.wrapper;
+        if (!el) return { x, y };
+        const rect = el.getBoundingClientRect();
+        const baseW = el.offsetWidth || rect.width || 1;
+        const baseH = el.offsetHeight || rect.height || 1;
+        const scaleX = rect.width / baseW;
+        const scaleY = rect.height / baseH;
+        const localX = (x - rect.left) / (scaleX || 1);
+        const localY = (y - rect.top) / (scaleY || 1);
         return {
-          x: w ? Math.max(0, Math.min(w, w - p.x)) : p.x,
-          y: p.y
+          x: Math.max(0, Math.min(baseW, baseW - localX)),
+          y: Math.max(0, Math.min(baseH, localY))
         };
       };
     }
@@ -880,13 +920,19 @@ function viewRead() {
       </div>
       <div class="mt-center"><span>${t('page')} ${footNum}</span></div>
       <div class="mt-actions">
+        <button class="icon-btn" data-act="mlayout" title="${book ? t('onePage') : t('twoPages')}" aria-label="${book ? t('onePage') : t('twoPages')}">${book ? '<svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' : '<svg class="ic" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'}</button>
+        <div class="mzoom-group" role="group" aria-label="${t('zoomIn')} / ${t('zoomOut')}">
+          <button class="icon-btn" data-act="mzoomout" title="${t('zoomOut')}" aria-label="${t('zoomOut')}"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+          <button class="mzoom-pill" data-act="mzoomreset" title="${t('zoomReset')}" aria-label="${t('zoomReset')}"><span data-mzoom-val>${Math.round((S.mushafZoom || 1) * 100)}%</span></button>
+          <button class="icon-btn" data-act="mzoomin" title="${t('zoomIn')}" aria-label="${t('zoomIn')}"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+        </div>
         <button class="icon-btn" data-act="mfocus" title="${t('focusMode')}" aria-label="${t('focusMode')}"><svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}" aria-label="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafexit" title="${t('close')}" aria-label="${t('close')}"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
     </div>
     <div class="mushaf-body">
-      <div class="mushaf-stage${book ? ' book' : ''}">
+      <div class="mushaf-stage${book ? ' book' : ' single'}${S.mushafZoom > 1.0 ? ' mushaf-zoomed' : ''}" style="--mzoom:${S.mushafZoom || 1}">
         <div class="mushaf-page" data-page="${R}">${img(R)}</div>
         ${L ? `<div class="mushaf-page" data-page="${L}">${img(L)}</div>` : ''}
         <div class="flip-host" id="flipHost"></div>
@@ -899,6 +945,9 @@ function viewRead() {
         <button class="icon-btn" data-act="mushafback" title="${t('back')}" aria-label="${t('back')}"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       </div>
       <div class="mushaf-corner end">
+        <button class="icon-btn" data-act="mlayout" title="${book ? t('onePage') : t('twoPages')}" aria-label="${book ? t('onePage') : t('twoPages')}">${book ? '<svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' : '<svg class="ic" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'}</button>
+        <button class="icon-btn" data-act="mzoomout" title="${t('zoomOut')}" aria-label="${t('zoomOut')}"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+        <button class="icon-btn" data-act="mzoomin" title="${t('zoomIn')}" aria-label="${t('zoomIn')}"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
         <button class="icon-btn" data-act="mfocus" title="${t('focusMode')}" aria-label="${t('focusMode')}"><svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
         <button class="icon-btn" data-act="mtheme" title="${t('theme')}" aria-label="${t('theme')}"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg></button>
         <button class="icon-btn" data-act="mushafdlall" title="${t('dlPages')}" aria-label="${t('dlPages')}"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
@@ -1811,6 +1860,15 @@ $('#view').addEventListener('click', async e => {
     else if (a === 'mushafaskclose') { if (e.target === act) { S.mushafAsk = false; render() } }
     else if (a === 'mushafdlall') mushafDownloadAll(act);
     else if (a === 'mfocus') mushafFocus();
+    else if (a === 'mlayout') {
+      S.mushafLayout = S.mushafLayout === 'single' ? 'book' : 'single';
+      store.set('mushafLayout', S.mushafLayout);
+      destroyFlip();
+      render();
+    }
+    else if (a === 'mzoomin') mushafZoomStep(1);
+    else if (a === 'mzoomout') mushafZoomStep(-1);
+    else if (a === 'mzoomreset') setMushafZoom(1.0);
     else if (a === 'mushafside') {
       document.body.classList.toggle('mushaf-noside');
       const closed = document.body.classList.contains('mushaf-noside'), lbl = closed ? t('showPanel') : t('hidePanel');
@@ -1930,6 +1988,12 @@ $('#npQueue').addEventListener('drop', e => {
   } dragIdx = null
 });
 $('#npQueue').addEventListener('dragend', () => { dragIdx = null; $$('.queue-item').forEach(x => x.classList.remove('dragover')) });
+$('#view').addEventListener('wheel', e => {
+  if (S.view === 'mushaf' && e.ctrlKey) {
+    e.preventDefault();
+    mushafZoomStep(e.deltaY < 0 ? 1 : -1);
+  }
+}, { passive: false });
 
 if (window.matchMedia) { const mqBook = window.matchMedia('(min-width:900px)'); if (mqBook.addEventListener) mqBook.addEventListener('change', () => { if (S.view === 'mushaf' && S.readN) render() }) }
 
@@ -1982,7 +2046,10 @@ document.addEventListener('keydown', e => {
   if (e.code === 'Space') { e.preventDefault(); togglePlay() }
   else if (S.view === 'mushaf' && S.mushafAsk && e.key === 'Escape') { e.preventDefault(); S.mushafAsk = false; render() }
   else if (S.view === 'mushaf' && !S.readN && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); if (mushafLastGet() > 1) { S.mushafAsk = true; render() } else mushafGo(1) }
-  else if (S.view === 'mushaf' && S.readN && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); const rtl = document.documentElement.dir === 'rtl'; mushafGo(mushafStep(S.readN, (e.key === 'ArrowLeft') === rtl ? 1 : -1)) }
+  else if (S.view === 'mushaf' && (e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '+')) { e.preventDefault(); mushafZoomStep(1) }
+  else if (S.view === 'mushaf' && (e.ctrlKey || e.metaKey) && e.key === '-') { e.preventDefault(); mushafZoomStep(-1) }
+  else if (S.view === 'mushaf' && (e.ctrlKey || e.metaKey) && e.key === '0') { e.preventDefault(); setMushafZoom(1.0) }
+  else if (S.view === 'mushaf' && S.readN && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); const rtl = document.documentElement.dir === 'rtl'; mushafGo(mushafStep(S.readN, (e.key === 'ArrowLeft') === rtl ? 1 : -1, mushafBook())) }
   else if (e.key === 'ArrowRight') audio.currentTime = Math.min((audio.duration || 0), audio.currentTime + 5);
   else if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
   else if (e.key === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + .05); store.set('volume', audio.volume); updateVolUI() }
