@@ -110,7 +110,7 @@ const S = {
   quality: store.get('quality', 'auto'), speed: store.get('speed', 1),
   view: 'home', query: '', rewaya: '__all', sort: 'name',
   reciters: [], riwayat: [], editionsReady: false,
-  reciter: null, moshaf: null, tracks: [], idx: -1,
+  reciter: null, moshaf: null, reciterTracks: [], tracks: [], idx: -1,
   shuffle: store.get('shuffle', false), repeat: store.get('repeat', 0),
   favorites: store.get('favorites', []), recent: store.get('recent', []),
   current: null, srcIdx: 0, dirHandle: null, sleepMin: 0, sleepTimer: null, sleepTick: null,
@@ -423,19 +423,20 @@ function viewReciters() {
 function viewSurahs() {
   if (!S.reciter || !S.moshaf) return viewReciters();
   const r = S.reciter, m = S.moshaf;
+  const all = S.reciterTracks && S.reciterTracks.length ? S.reciterTracks : S.tracks;
   const q = norm2(S.query);
-  const list = S.tracks.filter(tr => !q || norm2(tr.name_ar + ' ' + tr.name_en + ' ' + tr.n).includes(q));
+  const list = all.filter(tr => !q || norm2(tr.name_ar + ' ' + tr.name_en + ' ' + tr.n).includes(q));
   const ms = r.moshaf;
   return `<button class="back-btn" data-act="back"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
   <section class="reciter-hero">${reciterImg(r)}
     <div class="rh-info"><h2>${esc(reciterName(r))}</h2>
-      <div class="rh-meta"><span class="tag gold">${esc(moshafRewaya(m))}</span><span class="tag">${esc(m.name || moshafRewaya(m))}</span><span class="tag">${S.tracks.length} ${t('surahCount')}</span></div>
+      <div class="rh-meta"><span class="tag gold">${esc(moshafRewaya(m))}</span><span class="tag">${esc(m.name || moshafRewaya(m))}</span><span class="tag">${all.length} ${t('surahCount')}</span></div>
       <div class="rh-actions">
         <button class="btn primary sm" data-act="playall"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${t('playAll')}</button>
         <button class="btn sm" data-act="dlall"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg>${t('downloadAll')}</button>
         ${ms.length > 1 ? `<select id="moshafSel">${ms.map((x, i) => `<option value="${i}" ${x.id === m.id ? 'selected' : ''}>${esc(x.name || moshafRewaya(x))} — ${esc(moshafRewaya(x))}</option>`).join('')}</select>` : ''}
       </div></div></section>
-  <div class="surah-list">${list.length ? list.map(tr => surahRow(tr, S.tracks.indexOf(tr))).join('') : `<div class="empty"><p>${t('noResults')}</p></div>`}</div>`;
+  <div class="surah-list">${list.length ? list.map(tr => surahRow(tr, all.indexOf(tr))).join('') : `<div class="empty"><p>${t('noResults')}</p></div>`}</div>`;
 }
 function surahRow(tr, i) {
   const isPlaying = S.current && S.current.key === tr.key;
@@ -516,23 +517,27 @@ function openReciter(id, autoplay = false) {
   S.reciter = r;
   const ms = S.rewaya === '__all' ? r.moshaf : r.moshaf.filter(m => norm(moshafRewaya(m)) === S.rewaya);
   S.moshaf = ms[0] || r.moshaf[0];
-  S.tracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
+  S.reciterTracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
   S.view = 'surahs'; S.query = ''; $('#searchInput').value = '';
   $$('.nav-item[data-view]').forEach(b => b.classList.remove('active'));
   render();
-  if (autoplay && S.tracks.length) loadTrack(0, true);
+  if (autoplay && S.reciterTracks.length) {
+    S.tracks = [...S.reciterTracks];
+    loadTrack(0, true);
+  }
 }
 function setMoshaf(i) {
   const r = S.reciter; S.moshaf = r.moshaf[i];
-  const curN = S.current ? S.current.n : null;
-  S.tracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
-  render(); renderQueue();
-  if (curN) { const idx = S.tracks.findIndex(x => x.n === curN); if (idx >= 0) loadTrack(idx, !audio.paused) }
+  S.reciterTracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
+  render();
 }
 function playQuick(n) {
   if (!S.reciter) { const r = S.reciters.find(x => norm2(x.name).includes('عفاسي')) || S.reciters[0]; openReciter(r.id, false) }
-  const idx = S.tracks.findIndex(x => x.n === n);
-  if (idx >= 0) loadTrack(idx, true); else { loadTrack(0, true) }
+  const tr = (S.reciterTracks && S.reciterTracks.find(x => x.n === n)) || (S.reciter && S.moshaf ? makeTrack(S.reciter, S.moshaf, n) : null);
+  if (tr) {
+    S.tracks = [tr];
+    loadTrack(0, true);
+  }
 }
 function playCollection(i, isFav) {
   const items = isFav ? S.favorites : S.recent; const f = items[i]; if (!f) return;
@@ -1655,7 +1660,7 @@ async function saveBlob(blob, tr, fname) {
   } else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${safeName(trackReciter(tr))} - ${fname}`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 30000) }
 }
 function findTrackByKey(k) {
-  let tr = S.tracks.find(x => x.key === k); if (tr) return tr;
+  let tr = (S.reciterTracks && S.reciterTracks.find(x => x.key === k)) || S.tracks.find(x => x.key === k); if (tr) return tr;
   const f = [...S.favorites, ...S.recent].find(x => x.key === k); return f ? rebuildTrack(f) : null;
 }
 function trackFromKey(k) {
@@ -2145,12 +2150,19 @@ $('#view').addEventListener('click', async e => {
       const f = S.recent[0]; const r = S.reciters.find(x => x.id === f.rid);
       if (r) {
         openReciter(r.id, false); const mi = r.moshaf.findIndex(m => m.id === f.mid); if (mi >= 0 && mi !== 0) setMoshaf(mi);
-        const idx = S.tracks.findIndex(x => x.n === f.n); const sess = store.get('session', null); loadTrack(idx >= 0 ? idx : 0, true, sess && sess.n === f.n ? sess.pos : 0)
+        const tr = (S.reciterTracks && S.reciterTracks.find(x => x.n === f.n)) || makeTrack(r, S.moshaf, f.n);
+        S.tracks = [tr]; const sess = store.get('session', null); loadTrack(0, true, sess && sess.n === f.n ? sess.pos : 0);
       }
       else { S.tracks = [rebuildTrack(f)]; loadTrack(0, true) }
     }
-    else if (a === 'playall' && S.tracks.length) loadTrack(0, true);
-    else if (a === 'dlall') { if (await confirmDlg(t('confirmDlAll'), t('confirmDlAllMsg'))) enqueueDownloads(S.tracks) }
+    else if (a === 'playall' && ((S.reciterTracks && S.reciterTracks.length) || S.tracks.length)) {
+      if (S.reciterTracks && S.reciterTracks.length) S.tracks = [...S.reciterTracks];
+      loadTrack(0, true);
+    }
+    else if (a === 'dlall') {
+      const allTr = (S.reciterTracks && S.reciterTracks.length) ? S.reciterTracks : S.tracks;
+      if (allTr.length && await confirmDlg(t('confirmDlAll'), t('confirmDlAllMsg'))) enqueueDownloads(allTr);
+    }
     else if (a === 'clearrecent') { const bak = [...S.recent]; S.recent = []; store.set('recent', []); render(); toast(t('cleared'), { label: t('undo'), fn: () => { S.recent = bak; store.set('recent', bak); render() } }) }
     return
   }
@@ -2177,7 +2189,16 @@ $('#view').addEventListener('click', async e => {
   }
   const ytc = e.target.closest('[data-yt]'); if (ytc) { audio.pause(); S.ytId = ytc.dataset.yt; render(); return }
   const coll = e.target.closest('[data-coll]'); if (coll) { playCollection(+coll.dataset.coll, S.view === 'favorites'); return }
-  const row = e.target.closest('.surah-row[data-idx]'); if (row) { loadTrack(+row.dataset.idx, true); return }
+  const row = e.target.closest('.surah-row[data-idx]');
+  if (row) {
+    const idx = +row.dataset.idx;
+    const target = (S.reciterTracks && S.reciterTracks[idx]) || trackFromKey(row.dataset.key) || S.tracks[idx];
+    if (target) {
+      S.tracks = [target];
+      loadTrack(0, true);
+    }
+    return;
+  }
 });
 $('#view').addEventListener('change', e => {
   if (e.target.id === 'sortSel') { S.sort = e.target.value; render() }
@@ -2554,13 +2575,12 @@ window.addEventListener('storage', e => {
     const r = S.reciters.find(x => x.id === sess.rid);
     if (r) {
       S.reciter = r; S.moshaf = r.moshaf.find(m => m.id === sess.mid) || r.moshaf[0];
-      S.tracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
-      const idx = S.tracks.findIndex(x => x.n === sess.n);
-      if (idx >= 0) {
-        S.idx = idx; S.current = S.tracks[idx]; S.srcOrder = pickSource(S.current, S.quality); S.srcIdx = 0;
-        setAudioSrc(S.srcOrder[0].url); audio.addEventListener('loadedmetadata', () => { audio.currentTime = sess.pos || 0; updateProgress() }, { once: true });
-        updateNowPlaying(); renderQueue()
-      }
+      S.reciterTracks = parseList(S.moshaf.surah_list, S.moshaf.surah_total).map(n => makeTrack(r, S.moshaf, n));
+      const tr = S.reciterTracks.find(x => x.n === sess.n) || makeTrack(r, S.moshaf, sess.n);
+      S.tracks = [tr];
+      S.idx = 0; S.current = tr; S.srcOrder = pickSource(S.current, S.quality); S.srcIdx = 0;
+      setAudioSrc(S.srcOrder[0].url); audio.addEventListener('loadedmetadata', () => { audio.currentTime = sess.pos || 0; updateProgress() }, { once: true });
+      updateNowPlaying(); renderQueue();
     } else { const tr = rebuildTrack(sess); S.tracks = [tr]; S.idx = 0; S.current = tr; S.srcOrder = pickSource(tr, S.quality); setAudioSrc(S.srcOrder[0].url); updateNowPlaying() }
   }
   /* deep link: /?view=... (PWA shortcuts) */
