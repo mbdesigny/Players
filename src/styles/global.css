@@ -740,13 +740,37 @@ main {
   .pb-right{justify-content:flex-end}
 }
 
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface2);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease-out;
+  margin-bottom: 14px
+}
+
 .back-btn:hover {
-  color: var(--accent)
+  background: var(--surface);
+  border-color: var(--gold);
+  color: var(--gold-ink)
 }
 
 .back-btn .ic {
   width: 15px;
-  height: 15px
+  height: 15px;
+  flex-shrink: 0
+}
+
+.view-head .back-btn {
+  margin-bottom: 0
 }
 
 .reciter-hero {
@@ -4167,7 +4191,7 @@ body.mushaf-clean .mrestore {
 html[dir="rtl"] .mushaf-foot .ic,
 html[dir="rtl"] .mnav .ic,
 html[dir="rtl"] .mushaf-corner [data-act="mushafback"] .ic,
-html[dir="rtl"] .back-btn .ic {
+html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   transform: scaleX(-1)
 }
 
