@@ -204,7 +204,7 @@ function mandalaSVG(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
       images += `<image href="${placeholderImg}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice"/>`;
     }
     if (photo) {
-      images += `<image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>`;
+      images += `<image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" data-err-remove="1"/>`;
     }
     center = `<circle cx="48" cy="48" r="21.5" fill="#21402f"/><clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath>${fallbackText}${images}<circle cx="48" cy="48" r="21.5" fill="none" stroke="#ba9743" stroke-width="0.75"/>`;
   } else {
@@ -238,7 +238,7 @@ function photoURL(name, id) {
   }
   return id ? 'img/' + id + '.jpg' : '';
 }
-const reciterImg = (r, cls = '') => { const p = photoURL(r.name, r.id); const ava = avatarURI(r.name, reciterLetter(r)); return p ? `<img class="${cls}" src="${p}" alt="${esc(reciterName(r))}" loading="lazy" onerror="this.onerror=null;this.src='${ava}'">` : `<img class="${cls}" src="${ava}" alt="${esc(reciterName(r))}" loading="lazy">` };
+const reciterImg = (r, cls = '') => { const p = photoURL(r.name, r.id); const ava = avatarURI(r.name, reciterLetter(r)); return p ? `<img class="${cls}" src="${p}" alt="${esc(reciterName(r))}" loading="lazy" data-err-fallback="${ava}">` : `<img class="${cls}" src="${ava}" alt="${esc(reciterName(r))}" loading="lazy">` };
 
 /* ═══════════════ DATA ═══════════════ */
 async function api(path, params = {}) { const u = new URL(API + path); Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v)); return apiFetch(u.toString(), { timeout: 12000, retries: 1, ttl: 300000 }) }
@@ -622,7 +622,7 @@ function updateNowPlaying() {
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
   $('#npMandala').innerHTML = mandalaSVG(...args);
   if ($('#npOverlay').classList.contains('open')) $('#ovMandala').innerHTML = mandalaSVG(...args);
-  $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.remove()">` : (mosquePlaceholder ? `<img src="${mosquePlaceholder}" alt="">` : '');
+  $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" data-err-remove="1">` : (mosquePlaceholder ? `<img src="${mosquePlaceholder}" alt="">` : '');
   const ava = photo || avatarURI(tr.rar, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق');
   $('#pbArtImg').src = ava; $('#pbArtImg').onerror = function () { this.onerror = null; this.src = avatarURI(tr.rar, 'ق') };
   const titleHTML = S.lang === 'ar' && tr.n != null ? `<span class="sn-font sg-pair"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>` : esc(trackName(tr));
@@ -882,7 +882,7 @@ function mushafCoverHTML() {
   return `<div class="mushaf-wrap">
     <div class="mushaf-stage cover">
       <div class="mushaf-page cover-page" data-act="mushafopen">
-        <img src="${S.mushafRiwaya === 'warsh' ? '/mushaf-cover.jpg' : '/mushaf-cover-hafs.jpg'}" alt="${t('quranName')}" onerror="this.classList.add('broken')">
+        <img src="${S.mushafRiwaya === 'warsh' ? '/mushaf-cover.jpg' : '/mushaf-cover-hafs.jpg'}" alt="${t('quranName')}" data-err-broken="1">
       </div>
     </div>
     ${ask}
@@ -1141,8 +1141,7 @@ function viewRead() {
   const sc = mushafSurah(R);
   const sm = SURAH[sc - 1], sn = S.lang === 'ar' ? sm[0] : sm[1];
   const rw = S.mushafRiwaya;
-  const img = p => `<img src="${mushafSVGURL(p, rw)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-alts="${esc(mushafSources(p, rw).slice(1).join('|'))}"
-      onerror="const alts=(this.dataset.alts||'').split('|').filter(Boolean);if(alts.length){this.src=alts.shift();this.dataset.alts=alts.join('|')}else{this.classList.add('broken')}">`;
+  const img = p => `<img src="${mushafSVGURL(p, rw)}" alt="${t('mushaf')} — ${t('page')} ${num(p)}" data-alts="${esc(mushafSources(p, rw).slice(1).join('|'))}">`;
   const prevOff = false, nextOff = book ? R >= MUSHAF_PAGES - 1 : n >= MUSHAF_PAGES;
   const footNum = L ? `${num(R)} – ${num(L)}` : `${num(R)} / ${tot}`;
 
@@ -1893,6 +1892,14 @@ function ensureAnalyser() {
   } catch (e) { acx = null; analyser = null }
 }
 document.addEventListener('pointerdown', () => { if (acx && acx.state === 'suspended') acx.resume() }, { capture: true });
+document.addEventListener('error', e => {
+  const el = e.target;
+  if (!el || !el.dataset) return;
+  if (el.dataset.errRemove != null) { el.remove(); return }
+  if (el.dataset.errFallback) { const fb = el.dataset.errFallback; el.removeAttribute('data-err-fallback'); el.setAttribute('src', fb); return }
+  if (el.dataset.alts != null) { const alts = el.dataset.alts.split('|').filter(Boolean); if (alts.length) { el.setAttribute('src', alts.shift()); el.dataset.alts = alts.join('|') } else el.classList.add('broken'); return }
+  if (el.dataset.errBroken != null) el.classList.add('broken');
+}, true);
 function setOrbVars(b) {
   const ov = $('#npOverlay'); if (!ov) return;
   ov.style.setProperty('--bass', b[0].toFixed(3));

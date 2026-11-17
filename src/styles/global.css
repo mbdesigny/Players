@@ -865,6 +865,12 @@ main {
   }
 }
 
+@media (min-width:1181px) and (max-width:1525px) {
+  body:not(.np-collapsed):not(.np-float) .surah-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  }
+}
+
 
 .surah-row {
   display: flex;
