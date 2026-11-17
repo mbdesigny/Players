@@ -12,6 +12,11 @@
       <button class="icon-btn" id="npDl" data-i18n-aria="download" aria-label="تنزيل"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
       <button class="icon-btn" id="npExpand" data-i18n-aria="expand" aria-label="ملء الشاشة"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg></button>
     </div>
-    <div class="queue-head" data-i18n="upNext">التالي في القائمة</div>
+    <div class="queue-head">
+      <span data-i18n="upNext">التالي في القائمة</span>
+      <button class="mini-btn" id="npQueueAddBtn" data-act="openqueueadd" title="إضافة سورة" aria-label="إضافة سورة" data-i18n-title="addSurah" style="margin-inline-start:auto;width:24px;height:24px">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
     <div class="queue" id="npQueue"></div>
   </aside>

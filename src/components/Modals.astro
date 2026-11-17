@@ -57,6 +57,56 @@
   </div>
 </div>
 
+<!-- ══════════ ADD TO QUEUE ══════════ -->
+<div class="scrim" id="queueAddScrim">
+  <div class="modal queue-add-modal" role="dialog" aria-modal="true" aria-labelledby="queueAddTitle" style="width:min(520px,94vw)">
+    <div class="qa-head">
+      <h3 id="queueAddTitle">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h12M4 18h8"/><path d="M18 12v8"/><path d="m15 17 3 3 3-3"/></svg>
+        <span data-i18n="addToQueue">إضافة إلى قائمة التشغيل</span>
+      </h3>
+      <button class="mini-btn" id="queueAddClose" data-i18n-aria="close" aria-label="إغلاق"><svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="qa-body">
+      <div class="qa-field">
+        <label for="qaReciterSel" class="qa-label">
+          <span class="qa-step">١</span>
+          <span data-i18n="selectReciter">اختر القارئ</span>
+        </label>
+        <div class="qa-select-wrap">
+          <select id="qaReciterSel" class="qa-select"></select>
+        </div>
+      </div>
+      <div class="qa-field" id="qaMoshafField">
+        <label for="qaMoshafSel" class="qa-label">
+          <span class="qa-step">٢</span>
+          <span data-i18n="selectRewaya">المصحف / الرواية</span>
+        </label>
+        <div class="qa-select-wrap">
+          <select id="qaMoshafSel" class="qa-select"></select>
+        </div>
+      </div>
+      <div class="qa-field">
+        <div class="qa-surah-bar">
+          <label class="qa-label">
+            <span class="qa-step">٣</span>
+            <span data-i18n="selectSurah">اختر السورة</span>
+          </label>
+          <input type="search" id="qaSurahSearch" class="qa-search-input" placeholder="ابحث عن سورة بالاسم أو الرقم…" data-i18n-ph="searchSurahPh">
+        </div>
+        <div class="qa-surah-grid" id="qaSurahList" role="listbox"></div>
+      </div>
+    </div>
+    <div class="m-actions qa-foot">
+      <button class="btn" id="queueAddCancel" data-i18n="cancel">إلغاء</button>
+      <button class="btn primary" id="queueAddConfirm" disabled>
+        <svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span data-i18n="addSurah">إضافة سورة</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════ DOWNLOADS DRAWER ══════════ -->
 <div class="drawer" id="dlDrawer" role="region" aria-label="Downloads" data-i18n-aria="downloads">
   <div class="d-head">

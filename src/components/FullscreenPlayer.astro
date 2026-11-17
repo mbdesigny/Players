@@ -61,7 +61,25 @@ import AudioReactiveBg from './AudioReactiveBg.astro';
       </div>
 
       <div class="ov-queue" id="ovQueueWrap" hidden>
-        <div class="oq-head" data-i18n="upNext">التالي في القائمة</div>
+        <div class="oq-head">
+          <div class="oq-title-wrap">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h12M4 18h8"/><path d="M18 12v8"/><path d="m15 17 3 3 3-3"/></svg>
+            <span class="oq-title" data-i18n="upNext">التالي في القائمة</span>
+            <span class="oq-count" id="ovQueueCount"></span>
+          </div>
+          <div class="oq-actions">
+            <button class="oq-btn-add" id="ovQueueAddBtn" title="إضافة سورة" aria-label="إضافة سورة" data-act="openqueueadd">
+              <svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              <span data-i18n="addSurah">إضافة سورة</span>
+            </button>
+            <button class="oq-btn-clear" id="ovQueueClearBtn" title="مسح القائمة القادمة" aria-label="مسح القائمة" data-i18n-title="clearQueue">
+              <svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+            <button class="oq-btn-close" id="ovQueueClose" title="إغلاق" aria-label="إغلاق" data-i18n-aria="close">
+              <svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+            </button>
+          </div>
+        </div>
         <div class="ov-queue-list" id="ovQueue"></div>
       </div>
     </div>
