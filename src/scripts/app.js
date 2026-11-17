@@ -174,11 +174,22 @@ function frameInner() {
   if (FRAME_TPL == null) { const el = document.getElementById('playerFrame'); FRAME_TPL = el ? el.textContent.trim() : '' }
   return FRAME_TPL.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
 }
-function mandalaSVG(seed, numTxt, subTxt, photo, phLetter) {
+function mandalaSVG(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
   const C = (2 * Math.PI * 45.6).toFixed(2), cid = 'phc' + (hash(seed) >>> 0).toString(36) + (phSeq++);
-  const center = photo
-    ? `<text x="48" y="52.4" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text><clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath><image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>`
-    : `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="51.8" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="60" text-anchor="middle" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
+  let center;
+  if (photo || placeholderImg) {
+    const fallbackText = `<text x="48" y="52.4" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text>`;
+    let images = '';
+    if (placeholderImg) {
+      images += `<image href="${placeholderImg}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice"/>`;
+    }
+    if (photo) {
+      images += `<image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>`;
+    }
+    center = `${fallbackText}<clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath>${images}`;
+  } else {
+    center = `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="51.8" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="60" text-anchor="middle" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
+  }
   const inner = frameInner()
     .replace(/<g id="mondala">/, '<g class="spin-a">')
     .replace(/<circle id="pr-pill"[^>]*\/>/, `<circle class="pr-fill" cx="48" cy="48" r="45.6" fill="none" stroke="#ba9743" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 48 48)"/>`)
@@ -560,7 +571,9 @@ function updateNowPlaying() {
   const tr = S.current; if (!tr) return;
   const seed = tr.rar, num = S.lang === 'ar' ? arDigits(tr.n) : String(tr.n), sub = trackName(tr);
   const photo = photoURL(tr.rar, tr.rid);
-  const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق'];
+  const isMadani = (tr.type === 1) || (tr.n && SURAH[tr.n - 1] && SURAH[tr.n - 1][3] === 1);
+  const mosquePlaceholder = isMadani ? '/img/mosque-nabawi.jpg' : '/img/mosque-haram.jpg';
+  const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
   $('#npMandala').innerHTML = mandalaSVG(...args); $('#ovMandala').innerHTML = mandalaSVG(...args);
   $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.remove()">` : '';
   const ava = photo || avatarURI(tr.rar, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق');
