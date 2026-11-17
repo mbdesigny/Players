@@ -113,6 +113,8 @@
 
 /* ═══════════════ OUNS DESIGN TOKENS ═══════════════ */
 :root {
+  --pr-circ: 286.513;
+  --pr: 0;
   --bg: #F3EFE4;
   --bg2: #EAE4D2;
   --surface: #FBF8F0;
@@ -267,7 +269,6 @@ body {
   line-height: 1.5;
   display: flex;
   flex-direction: column;
-  transition: background .45s, color .45s;
 }
 
 h1,
@@ -753,7 +754,7 @@ main {
   font-size: var(--fs-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all .15s ease-out;
+  transition: background-color .15s ease-out, border-color .15s ease-out, box-shadow .15s ease-out, transform .15s ease-out, color .15s ease-out;
   margin-bottom: 14px
 }
 
@@ -1336,6 +1337,7 @@ body:not(.playing) .mandala-svg .spin-c {
 }
 
 .mandala-svg .pr-fill {
+  stroke-dashoffset: calc(var(--pr-circ) * (1 - var(--pr, 0)));
   transition: stroke-dashoffset .25s linear
 }
 
@@ -1688,7 +1690,7 @@ body.np-float .np-title {
   background: transparent;
   color: var(--ink2);
   cursor: pointer;
-  transition: all .15s ease;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease, color .15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2398,7 +2400,7 @@ html[dir="rtl"] .prog .fill {
   color: var(--gold-ink);
   border: 1px solid var(--gold);
   cursor: pointer;
-  transition: all .15s ease;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease, color .15s ease;
   font-family: inherit;
 }
 
@@ -2424,7 +2426,7 @@ html[dir="rtl"] .prog .fill {
   border: 1px solid var(--line);
   color: var(--ink2);
   cursor: pointer;
-  transition: all .15s ease;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease, color .15s ease;
   padding: 0;
 }
 
@@ -2896,7 +2898,7 @@ kbd {
   color: var(--ink);
   cursor: pointer;
   text-align: start;
-  transition: all .15s ease;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease, color .15s ease;
   font-family: inherit;
 }
 
@@ -3349,7 +3351,7 @@ body.mushaf-full #view {
   font-size: var(--fs-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all .15s ease-out
+  transition: background-color .15s ease-out, border-color .15s ease-out, box-shadow .15s ease-out, transform .15s ease-out, color .15s ease-out
 }
 
 .mback-btn:hover {
@@ -3372,7 +3374,7 @@ body.mushaf-full #view {
   font-size: var(--fs-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all .15s ease-out;
+  transition: background-color .15s ease-out, border-color .15s ease-out, box-shadow .15s ease-out, transform .15s ease-out, color .15s ease-out;
   max-width: 100%
 }
 
@@ -4270,7 +4272,7 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   font-size: var(--fs-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all .14s ease-out;
+  transition: background-color .14s ease-out, border-color .14s ease-out, box-shadow .14s ease-out, transform .14s ease-out, color .14s ease-out;
 }
 
 .mindex-tab:hover {
@@ -4359,7 +4361,7 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   color: var(--ink);
   cursor: pointer;
   text-align: start;
-  transition: all .14s ease-out;
+  transition: background-color .14s ease-out, border-color .14s ease-out, box-shadow .14s ease-out, transform .14s ease-out, color .14s ease-out;
   box-shadow: var(--shadow-sm);
   font: inherit;
 }
@@ -4437,7 +4439,7 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   fill: var(--surface2);
   stroke: var(--gold);
   stroke-width: 1.4;
-  transition: all .15s;
+  transition: background-color .15s, border-color .15s, box-shadow .15s, transform .15s, color .15s;
 }
 
 .mindex-card-item.current .star-svg {
@@ -6584,4 +6586,31 @@ select,
   .mushaf-stage{padding:6px 8%}
   .drawer{max-height:72vh}
   #toasts{bottom:calc(var(--player) + 10px)}
+}
+
+/* ════ PERF: theme switch + low-end device relief ════ */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
+body.playing #bgFx .g1,
+body.playing #bgFx .g2 {
+  animation-play-state: paused;
+}
+
+.lite-fx #bgFx .g1 {
+  filter: blur(40px);
+  animation: none
+}
+
+.lite-fx #bgFx .g2 {
+  filter: blur(32px);
+  animation: none
+}
+
+.lite-fx .mandala-svg .spin-b,
+.lite-fx .mandala-svg .spin-c {
+  animation: none
 }

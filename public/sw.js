@@ -150,17 +150,8 @@ async function handleAudio(req, url) {
     }
     return res;
   }
-  const m0 = /^bytes=0-(\d*)$/.exec(range);
-  if (m0 && !m0[1]) {
-    try {
-      const res = await fetch(new Request(url.href));
-      if (res && (res.ok || res.type === 'opaque')) {
-        c.put(key, res.clone()).then(() => trimAudioCache()).catch(() => { });
-        return res;
-      }
-      return res;
-    } catch (_) { /* fall through to plain range passthrough */ }
-  }
+  /* First play: stream natively (browser-managed buffer, fast start) and
+     warm a full cached copy in the background for the next play / offline. */
   warmAudioCache(key);
   return fetch(req);
 }
