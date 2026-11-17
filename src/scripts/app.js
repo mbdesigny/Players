@@ -186,7 +186,7 @@ function mandalaSVG(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
     if (photo) {
       images += `<image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" onerror="this.remove()"/>`;
     }
-    center = `${fallbackText}<clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath>${images}`;
+    center = `<circle cx="48" cy="48" r="21.5" fill="#21402f"/><clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath>${fallbackText}${images}<circle cx="48" cy="48" r="21.5" fill="none" stroke="#ba9743" stroke-width="0.75"/>`;
   } else {
     center = `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="44.5" text-anchor="middle" dominant-baseline="central" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="54" text-anchor="middle" dominant-baseline="central" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
   }
@@ -206,7 +206,19 @@ const reciterName = r => S.lang === 'ar' ? r.name : (r.name_en || r.name);
 const moshafRewaya = m => m.rewaya || (m.name || '').split('-')[0].replace(/\s+/g, ' ').trim();
 const RECITER_PHOTOS = { 'منشاوي': 'minshawi', 'عبدالباسط': 'abdulbasit', 'التركي': 'badr-turki', 'شريم': 'shuraim', 'ديبروف': 'dibirov', 'دوسري': 'dosari', 'معيقلي': 'muaiqly', 'الموسى': 'al-mousa', 'سحيم': 'suhaim', 'الدخين': 'dukayn', 'السديس': 'sudais', 'العفاسي': 'afasy', 'الحصري': 'husary', 'العجمي': 'ajmi', 'عباد': 'faris-abbad' };
 const RECITER_PHOTOS_EXACT = { 'سعودالشريم': 'shuraim', 'ياسرالدوسري': 'dosari', 'محمدصديقالمنشاوي': 'minshawi', 'عبدالباسطعبدالصمد': 'abdulbasit', 'بدرالتركي': 'badr-turki', 'ماهرالمعيقلي': 'muaiqly', 'عبداللهالموسى': 'al-mousa', 'عبدالعزيزسحيم': 'suhaim', 'عبدالعزيزالسحيم': 'suhaim', 'هيثمالدخين': 'dukayn', 'محمدديبروف': 'dibirov', 'عبدالرحمنالسديس': 'sudais', 'مشاريراشدالعفاسي': 'afasy', 'محمودخليلالحصري': 'husary', 'أحمدالعجمي': 'ajmi', 'سعدالغامدي': 'saad-ghamdi', 'فارسعباد': 'faris-abbad', 'مصطفىاسماعيل': 'mustafa', 'مصطفياسماعيل': 'mustafa' };
-function photoURL(name, id) { const n = norm2(name); const ex = RECITER_PHOTOS_EXACT[n]; if (ex) return 'img/' + ex + '.jpg'; if (n.includes(norm2('الشريمي')) || n.includes(norm2('الدوسري')) || n.includes(norm2('التركي')) || (n.includes(norm2('منشاوي')) && n.includes(norm2('طه')))) return id ? 'img/' + id + '.jpg' : ''; for (const k in RECITER_PHOTOS) { if (n.includes(norm2(k))) return 'img/' + RECITER_PHOTOS[k] + '.jpg' } return id ? 'img/' + id + '.jpg' : '' }
+const KNOWN_RECITER_IDS = new Set([14, 46, 76, 86, 95, 221, 231, 253, 259, 264, 21200]);
+function photoURL(name, id) {
+  const n = norm2(name);
+  const ex = RECITER_PHOTOS_EXACT[n];
+  if (ex) return 'img/' + ex + '.jpg';
+  if (n.includes(norm2('الشريمي')) || n.includes(norm2('الدوسري')) || n.includes(norm2('التركي')) || (n.includes(norm2('منشاوي')) && n.includes(norm2('طه')))) {
+    return (id && KNOWN_RECITER_IDS.has(+id)) ? 'img/' + id + '.jpg' : '';
+  }
+  for (const k in RECITER_PHOTOS) {
+    if (n.includes(norm2(k))) return 'img/' + RECITER_PHOTOS[k] + '.jpg';
+  }
+  return (id && KNOWN_RECITER_IDS.has(+id)) ? 'img/' + id + '.jpg' : '';
+}
 const reciterImg = (r, cls = '') => { const p = photoURL(r.name, r.id); const ava = avatarURI(r.name, reciterLetter(r)); return p ? `<img class="${cls}" src="${p}" alt="${esc(reciterName(r))}" loading="lazy" onerror="this.onerror=null;this.src='${ava}'">` : `<img class="${cls}" src="${ava}" alt="${esc(reciterName(r))}" loading="lazy">` };
 
 /* ═══════════════ DATA ═══════════════ */
@@ -587,7 +599,7 @@ function updateNowPlaying() {
   const mosquePlaceholder = isMadani ? '/img/mosque-nabawi.jpg' : '/img/mosque-haram.jpg';
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
   $('#npMandala').innerHTML = mandalaSVG(...args); $('#ovMandala').innerHTML = mandalaSVG(...args);
-  $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.remove()">` : '';
+  $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.remove()">` : (mosquePlaceholder ? `<img src="${mosquePlaceholder}" alt="">` : '');
   const ava = photo || avatarURI(tr.rar, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق');
   $('#pbArtImg').src = ava; $('#pbArtImg').onerror = function () { this.onerror = null; this.src = avatarURI(tr.rar, 'ق') };
   const titleHTML = S.lang === 'ar' && tr.n != null ? `<span class="sn-font sg-pair"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>` : esc(trackName(tr));
