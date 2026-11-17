@@ -1022,6 +1022,18 @@ justify-content: space-between;
   height: 15px
 }
 
+.mini-btn.qadd-btn:hover {
+  color: var(--gold-ink);
+  background: var(--glow2);
+  border-color: var(--gold);
+}
+
+.mini-btn.qadd-btn.added {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.14);
+  border-color: #10b981;
+}
+
 .eq {
   display: inline-flex;
   align-items: flex-end;
