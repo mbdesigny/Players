@@ -167,7 +167,7 @@ function avatarURI(seed, letter) {
   const [bg, pt, ink, gd] = pal(seed); let sq = '', dots = '';
   for (let i = 0; i < 4; i++)sq += `<rect x="40" y="40" width="120" height="120" fill="none" stroke="${pt}" stroke-width="1.4" opacity=".45" transform="rotate(${i * 22.5} 100 100)"/>`;
   for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; dots += `<circle cx="${(100 + 87 * Math.cos(a)).toFixed(1)}" cy="${(100 + 87 * Math.sin(a)).toFixed(1)}" r="3" fill="${pt}" opacity=".85"/>` }
-  return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-size="52" font-family="'Alan Sans',system-ui,sans-serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
+  return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="117" text-anchor="middle" font-size="50" font-family="Amiri,serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
 }
 let FRAME_TPL = null, phSeq = 0;
 function frameInner() {
