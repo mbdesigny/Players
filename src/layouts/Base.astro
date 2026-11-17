@@ -52,6 +52,8 @@ const ldJson = JSON.stringify({
         document.documentElement.setAttribute('data-theme', theme);
         var metaTc = document.querySelector('meta[name=theme-color]');
         if (metaTc && theme === 'dark') metaTc.content = '#000000';
+
+        if ((navigator.deviceMemory || 8) <= 4 || (navigator.hardwareConcurrency || 8) <= 4) document.documentElement.classList.add('lite-fx');
       } catch (e) {}
     </script>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -113,8 +115,7 @@ const ldJson = JSON.stringify({
       }
     </script>
   </head>
-  <body data-theme="light">
-    <script is:inline>try{var th=document.documentElement.getAttribute('data-theme');if(th)document.body.dataset.theme=th}catch(e){}</script>
+  <body>
     <slot />
   </body>
 </html>

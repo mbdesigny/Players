@@ -168,7 +168,7 @@ function bindAudio(el) {
   let lastSessionSave = 0;
   el.addEventListener('timeupdate', () => { scheduleProgress(); const now = Date.now(); if (now - lastSessionSave > 25000) { lastSessionSave = now; saveSession() } });
   el.addEventListener('progress', updateBuffer);
-  el.addEventListener('loadedmetadata', () => { clearStallWatch(); lastProgressPaint = 0; updateProgress(); probeBitrate() });
+  el.addEventListener('loadedmetadata', () => { clearStallWatch(); lastProgressPaint = 0; updateProgress() });
   el.addEventListener('waiting', () => armStallWatch(el));
   el.addEventListener('stalled', () => armStallWatch(el));
   el.addEventListener('ended', () => { if (S.repeat === 2) { el.currentTime = 0; el.play().catch(() => { }) } else nextTrack() });
@@ -587,7 +587,10 @@ function loadTrack(i, autoplay = true, seek = 0) {
   setAudioSrc(order[0].url); audio.playbackRate = S.speed;
   if (seek) audio.addEventListener('loadedmetadata', () => { audio.currentTime = seek }, { once: true });
   if (autoplay) audio.play().catch(() => { });
-  updateNowPlaying(); renderQueue(); markPlayingRows(); pushRecent(tr); saveSession();
+  updateNowPlaying();
+  const idle = window.requestIdleCallback ? cb => requestIdleCallback(cb, { timeout: 300 }) : cb => setTimeout(cb, 120);
+  idle(() => { renderQueue(); markPlayingRows(); });
+  pushRecent(tr); saveSession();
 }
 function currentSources() { return S.srcOrder || [] }
 function tryNextSource() {
@@ -618,7 +621,8 @@ function updateNowPlaying() {
   const isMadani = (tr.type === 1) || (tr.n && SURAH[tr.n - 1] && SURAH[tr.n - 1][3] === 1);
   const mosquePlaceholder = isMadani ? '/img/mosque-nabawi.jpg' : '/img/mosque-haram.jpg';
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
-  $('#npMandala').innerHTML = mandalaSVG(...args); $('#ovMandala').innerHTML = mandalaSVG(...args); prFills = null;
+  $('#npMandala').innerHTML = mandalaSVG(...args);
+  if ($('#npOverlay').classList.contains('open')) $('#ovMandala').innerHTML = mandalaSVG(...args);
   $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.remove()">` : (mosquePlaceholder ? `<img src="${mosquePlaceholder}" alt="">` : '');
   const ava = photo || avatarURI(tr.rar, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق');
   $('#pbArtImg').src = ava; $('#pbArtImg').onerror = function () { this.onerror = null; this.src = avatarURI(tr.rar, 'ق') };
@@ -637,17 +641,6 @@ function updateBadges() {
   const src = currentSources()[S.srcIdx] || tr.sources[0];
   const html = `<span class="tag gold">${esc(tr.rewaya || tr.mname || '')}</span><span class="tag" id="qBadge">${src.bitrate} ${t('kbps')}</span><span class="tag">${esc(src.provider)}</span>`;
   $('#npBadges').innerHTML = html; $('#ovBadges').innerHTML = html;
-}
-async function probeBitrate() {
-  const tr = S.current; if (!tr) return;
-  try {
-    const h = await fetch(audio.src, { method: 'HEAD' }); const len = +h.headers.get('content-length');
-    if (len && audio.duration) {
-      const k = Math.round(len * 8 / audio.duration / 1000);
-      $$('#qBadge').forEach(el => el.textContent = `${k} ${t('kbps')}`);
-      const src = currentSources()[S.srcIdx]; if (src) src.bitrate = k;
-    }
-  } catch (e) { }
 }
 function markPlayingRows() {
   $$('.surah-row').forEach(row => {
@@ -712,13 +705,11 @@ function updateProgress() {
   if (ovThumb) ovThumb.style.insetInlineStart = (p * 100) + '%';
   const now = Math.round(audio.currentTime || 0), max = Math.round(d), vt = cur + ' / ' + dur;
   [progBar, ovProg].forEach(el => { if (!el) return; el.setAttribute('aria-valuemax', max); el.setAttribute('aria-valuenow', now); el.setAttribute('aria-valuetext', vt) });
-  if (!prFills || !prFills.length || !prFills[0].isConnected) prFills = $$('.pr-fill');
-  const off = String(PR_CIRC * (1 - p));
-  prFills.forEach(c => c.style.strokeDashoffset = off);
+  document.documentElement.style.setProperty('--pr', p.toFixed(4));
   if (S.current && d && S.current.duration !== d) { S.current.duration = d; const row = $(`.surah-row[data-key="${S.current.key}"] .dur`); if (row) row.textContent = dur }
 }
-let P = null, prFills = null, progressRaf = 0, lastProgressPaint = 0;
-const PROGRESS_MIN_INTERVAL = 250, PR_CIRC = 2 * Math.PI * 45.6;
+let P = null, progressRaf = 0, lastProgressPaint = 0;
+const PROGRESS_MIN_INTERVAL = ((navigator.hardwareConcurrency || 8) <= 4 || matchMedia('(max-width: 820px)').matches) ? 500 : 250, PR_CIRC = 2 * Math.PI * 45.6;
 function scheduleProgress() {
   if (progressRaf) return;
   progressRaf = requestAnimationFrame(() => {
@@ -1830,7 +1821,7 @@ $('#confirmNo').onclick = () => { closeModal('#confirmScrim'); confirmRes && con
 
 /* ═══════════════ THEME / LANG ═══════════════ */
 function applyTheme() {
-  document.body.dataset.theme = S.theme;
+  document.documentElement.dataset.theme = S.theme;
   document.querySelector('meta[name=theme-color]').content = S.theme === 'dark' ? '#000000' : '#F3EFE4';
   $('#themeIcon').innerHTML = S.theme === 'dark' ? '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/>' : '<path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/>';
   $$('#segTheme button').forEach(b => { const on = b.dataset.th === S.theme; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') });
@@ -1867,7 +1858,13 @@ function applyNpPanel() {
   const dock = $('#npDock'); if (dock) dock.classList.toggle('on', float);
   applyNpPos();
 }
-function setTheme(th) { S.theme = th; store.set('theme', th); applyTheme(); if (S.view === 'mushaf') render() }
+let themeSettleT = 0;
+function setTheme(th) {
+  document.documentElement.classList.add('theme-switching');
+  S.theme = th; store.set('theme', th); applyTheme();
+  clearTimeout(themeSettleT);
+  themeSettleT = setTimeout(() => document.documentElement.classList.remove('theme-switching'), 150);
+}
 function setLang(lg) { S.lang = lg; store.set('lang', lg); applyLang(); render(); if (S.current) updateNowPlaying(); renderQueue(); rotateVerse(true) }
 
 /* ═══════════════ VERSE ROTATOR ═══════════════ */
@@ -1969,6 +1966,7 @@ window.__waves = () => ({ ctx: acx ? acx.state : 'none', has: !!analyser, lvl: +
 let ovPrevFocus = null;
 function openOverlay() {
   const ov = $('#npOverlay'); ov.classList.add('open'); startWaves(); renderQueue();
+  if ($('#ovMandala')) $('#ovMandala').innerHTML = $('#npMandala').innerHTML;
   ovPrevFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   try { ov.focus({ preventScroll: true }) } catch (_) { }
 }
