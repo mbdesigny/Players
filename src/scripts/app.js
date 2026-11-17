@@ -167,7 +167,7 @@ function avatarURI(seed, letter) {
   const [bg, pt, ink, gd] = pal(seed); let sq = '', dots = '';
   for (let i = 0; i < 4; i++)sq += `<rect x="40" y="40" width="120" height="120" fill="none" stroke="${pt}" stroke-width="1.4" opacity=".45" transform="rotate(${i * 22.5} 100 100)"/>`;
   for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; dots += `<circle cx="${(100 + 87 * Math.cos(a)).toFixed(1)}" cy="${(100 + 87 * Math.sin(a)).toFixed(1)}" r="3" fill="${pt}" opacity=".85"/>` }
-  return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="117" text-anchor="middle" font-size="50" font-family="Amiri,serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
+  return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${bg}"/>${sq}${dots}<rect x="57" y="57" width="86" height="86" fill="none" stroke="${gd}" stroke-width="1.6" transform="rotate(45 100 100)"/><circle cx="100" cy="100" r="46" fill="${pt}"/><text x="100" y="100" text-anchor="middle" dominant-baseline="central" font-size="52" font-family="'Alan Sans',system-ui,sans-serif" font-weight="700" fill="${bg}">${esc(letter)}</text></svg>`);
 }
 let FRAME_TPL = null, phSeq = 0;
 function frameInner() {
@@ -178,7 +178,7 @@ function mandalaSVG(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
   const C = (2 * Math.PI * 45.6).toFixed(2), cid = 'phc' + (hash(seed) >>> 0).toString(36) + (phSeq++);
   let center;
   if (photo || placeholderImg) {
-    const fallbackText = `<text x="48" y="52.4" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text>`;
+    const fallbackText = `<text x="48" y="48" text-anchor="middle" dominant-baseline="central" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text>`;
     let images = '';
     if (placeholderImg) {
       images += `<image href="${placeholderImg}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice"/>`;
@@ -188,7 +188,7 @@ function mandalaSVG(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
     }
     center = `${fallbackText}<clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath>${images}`;
   } else {
-    center = `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="51.8" text-anchor="middle" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="60" text-anchor="middle" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
+    center = `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="44.5" text-anchor="middle" dominant-baseline="central" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="54" text-anchor="middle" dominant-baseline="central" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
   }
   const inner = frameInner()
     .replace(/<g id="mondala">/, '<g class="spin-a">')
