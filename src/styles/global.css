@@ -1980,45 +1980,61 @@ html[dir="rtl"] .prog .fill {
   background: var(--bg);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 26px;
+  padding: 20px 28px;
   transform: translateY(102%);
-  transition: transform .5s cubic-bezier(.32, .72, .28, 1);
-  overflow-y: auto
+  transition: transform .42s cubic-bezier(.22, 1, .36, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
 }
 
 .np-overlay.open {
-  transform: none
+  transform: translateZ(0);
+}
+
+.np-overlay:not(.open) .ov-photo,
+.np-overlay:not(.open) .ov-waves,
+.np-overlay:not(.open) .ov-bg,
+.np-overlay:not(.open) .audio-bg {
+  display: none !important;
 }
 
 .np-overlay .ov-bg {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  overflow: hidden
+  overflow: hidden;
+  z-index: 0;
 }
 
 .np-overlay .ov-bg .glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px)
+  filter: blur(60px);
+  opacity: .6;
+  transform: translateZ(0);
 }
 
 .ov-top {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
-  z-index: 1
+  z-index: 2;
+  flex-shrink: 0;
+  padding: 2px 4px 10px;
 }
 
 .ov-top .lbl {
   font-size: var(--fs-2xs);
-  letter-spacing: 2.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--gold-ink);
-  font-weight: 700
+  font-weight: 700;
 }
 
 .ov-photo {
@@ -2026,111 +2042,198 @@ html[dir="rtl"] .prog .fill {
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  pointer-events: none
+  pointer-events: none;
 }
 
 .ov-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(70px) saturate(1.15);
-  opacity: .45;
-  transform: scale(1.25)
+  filter: blur(28px) saturate(1.15);
+  opacity: .32;
+  transform: scale(1.15) translateZ(0);
 }
 
 .ov-photo::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 30%, var(--bg) 92%)
+  background: linear-gradient(180deg, transparent 20%, var(--bg) 90%);
+}
+
+/* ── Fullscreen Main Body ── */
+.ov-body {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.25fr);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 5vw, 64px);
+  position: relative;
+  z-index: 1;
+  padding: 10px 16px;
+  min-height: 0;
+}
+
+/* Start side: Mandala + Reciter Photo (Right in RTL, Left in LTR) */
+.ov-side-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.ov-mandala-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.ov-mandala-box::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow1) 0%, transparent 68%);
+  opacity: .5;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .ov-mandala {
-  width: min(60vh, 470px);
+  width: clamp(250px, 34vw, 420px);
+  max-width: 100%;
   aspect-ratio: 1;
-  margin: 1.5vh 0 .5vh;
   position: relative;
-  z-index: 1
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 14px 34px rgba(0, 0, 0, .26));
 }
 
-.ov-title .sn-font {
-  font-size: clamp(36px, 6vh, 52px)
+.ov-mandala .mandala-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ov-mandala .mandala-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* End side: Player Controls Console (Left in RTL, Right in LTR) */
+.ov-side-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.ov-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 18px;
 }
 
 .ov-title {
   font-family: "Amiri", serif;
-  font-size: clamp(30px, 5vh, 44px);
+  font-size: clamp(28px, 4.4vh, 46px);
   text-align: center;
-  position: relative;
-  z-index: 1
+  color: var(--ink);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.ov-title .sn-font {
+  font-size: clamp(34px, 5.4vh, 56px);
+  line-height: 1;
 }
 
 .ov-artist {
   color: var(--ink2);
   font-size: var(--fs-md);
-  margin-top: 4px;
-  position: relative;
-  z-index: 1
+  margin-top: 6px;
+  font-weight: 600;
 }
 
 .ov-badges {
   display: flex;
   gap: 8px;
-  margin: 12px 0 16px;
-  position: relative;
-  z-index: 1;
+  margin: 10px 0 0;
   flex-wrap: wrap;
-  justify-content: center
+  justify-content: center;
 }
 
 .ov-progress {
-  width: min(560px, 90%);
-  position: relative;
-  z-index: 1;
-  margin-bottom: 18px
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 18px;
 }
 
 .ov-controls {
   display: flex;
   align-items: center;
-  gap: 22px;
-  position: relative;
-  z-index: 1;
-  margin-bottom: 16px
+  justify-content: center;
+  gap: clamp(14px, 2.5vw, 24px);
+  margin-bottom: 18px;
+  width: 100%;
 }
 
 .ov-controls .play-btn {
   width: 66px;
-  height: 66px
+  height: 66px;
 }
 
 .ov-controls .play-btn .ic {
   width: 26px;
-  height: 26px
+  height: 26px;
 }
 
 .ov-controls .ctrl {
   width: 44px;
-  height: 44px
+  height: 44px;
 }
 
 .ov-controls .ctrl .ic {
   width: 22px;
-  height: 22px
+  height: 22px;
 }
 
 .ov-actions {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
-  position: relative;
-  z-index: 1
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .ov-queue {
-  width: min(560px, 100%);
+  width: 100%;
+  max-width: 500px;
   position: relative;
   z-index: 1;
-  margin-bottom: 14px
+  margin-top: 8px;
 }
 
 .ov-queue .oq-head {
@@ -2139,55 +2242,198 @@ html[dir="rtl"] .prog .fill {
   font-weight: 700;
   letter-spacing: 1.5px;
   margin-bottom: 6px;
-  text-align: start
+  text-align: start;
 }
 
 .ov-queue .ov-queue-list {
-  max-height: 30vh;
+  max-height: 26vh;
   overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  padding: 6px
+  padding: 6px;
+  box-shadow: var(--shadow-sm);
 }
 
-@media(max-height:560px) and (orientation:landscape) {
-  .ov-queue .ov-queue-list {
-    max-height: 24vh
+/* ── Mobile / Portrait Layout (Vertical Stack) ── */
+@media (max-width: 819px), (orientation: portrait) {
+  .np-overlay {
+    padding: 16px 14px;
+    justify-content: flex-start;
+  }
+
+  .ov-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 4px;
+    width: 100%;
+    margin: auto 0;
+  }
+
+  .ov-side-visual {
+    width: 100%;
+  }
+
+  .ov-mandala {
+    width: min(32vh, 72vw, 260px);
+    margin: 6px auto;
+  }
+
+  .ov-side-controls {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .ov-info {
+    margin-bottom: 12px;
+  }
+
+  .ov-title {
+    font-size: clamp(24px, 3.8vh, 36px);
+  }
+
+  .ov-title .sn-font {
+    font-size: clamp(28px, 4.6vh, 44px);
+  }
+
+  .ov-progress {
+    width: min(480px, 94%);
+    margin-bottom: 14px;
+  }
+
+  .ov-controls {
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .ov-controls .play-btn {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ov-controls .play-btn .ic {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ov-controls .ctrl {
+    width: 42px;
+    height: 42px;
   }
 }
 
-@media(max-width:640px){
-  .np-overlay{padding:16px}
-  .ov-mandala{width:min(34vh,72vw,270px)}
-  .ov-badges{margin:10px 0 12px}
-  .ov-progress{margin-bottom:12px}
-  .ov-controls{gap:14px;margin-bottom:10px}
-  .ov-controls .play-btn{width:58px;height:58px}
-  .ov-controls .play-btn .ic{width:22px;height:22px}
-  .ov-controls .ctrl{width:40px;height:40px}
+/* ── Compact Small Screens (<= 420px) ── */
+@media (max-width: 420px) {
+  .ov-mandala {
+    width: min(28vh, 66vw, 210px);
+  }
+
+  .ov-controls {
+    gap: 10px;
+  }
+
+  .ov-controls .play-btn {
+    width: 54px;
+    height: 54px;
+  }
+
+  .ov-controls .ctrl {
+    width: 38px;
+    height: 38px;
+  }
+
+  .ov-actions {
+    gap: 6px;
+  }
+
+  .ov-actions .btn {
+    padding: 5px 8px;
+    font-size: var(--fs-xs);
+  }
 }
 
-@media(max-width:400px){
-  .ov-mandala{width:min(32vh,74vw,240px)}
-  .ov-title{font-size:clamp(24px,4.5vh,34px)}
-  .ov-controls{gap:10px}
-}
+/* ── Low-Height Landscape Devices (e.g. mobile rotated landscape) ── */
+@media (max-height: 540px) and (orientation: landscape) {
+  .np-overlay {
+    padding: 8px 20px;
+  }
 
-@media(max-height:560px) and (orientation:landscape){
-  .np-overlay{padding:10px 26px}
-  .ov-mandala{width:min(24vh,130px);margin:.5vh 0}
-  .ov-title{font-size:clamp(18px,4vh,24px);line-height:1.25}
-  .ov-title .sn-font{font-size:clamp(18px,4.5vh,26px)}
-  .ov-artist{margin-top:1px;font-size:var(--fs-sm)}
-  .ov-badges{margin:4px 0 6px}
-  .ov-progress{margin-bottom:6px}
-  .ov-controls{gap:10px;margin-bottom:6px}
-  .ov-controls .play-btn{width:46px;height:46px}
-  .ov-controls .play-btn .ic{width:18px;height:18px}
-  .ov-controls .ctrl{width:36px;height:36px}
-  .ov-actions{gap:8px}
-  .ov-actions .btn{padding:5px 10px}
+  .ov-top {
+    padding: 0 4px 4px;
+  }
+
+  .ov-body {
+    grid-template-columns: minmax(180px, 0.9fr) minmax(280px, 1.4fr);
+    gap: 16px;
+    padding: 0;
+  }
+
+  .ov-mandala {
+    width: min(65vh, 200px);
+  }
+
+  .ov-info {
+    margin-bottom: 6px;
+  }
+
+  .ov-title {
+    font-size: clamp(18px, 4.8vh, 25px);
+    line-height: 1.25;
+  }
+
+  .ov-title .sn-font {
+    font-size: clamp(20px, 5.2vh, 28px);
+  }
+
+  .ov-artist {
+    font-size: var(--fs-xs);
+    margin-top: 2px;
+  }
+
+  .ov-badges {
+    margin: 4px 0 0;
+    gap: 4px;
+  }
+
+  .ov-progress {
+    margin-bottom: 8px;
+  }
+
+  .ov-controls {
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .ov-controls .play-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .ov-controls .play-btn .ic {
+    width: 18px;
+    height: 18px;
+  }
+
+  .ov-controls .ctrl {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ov-actions {
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .ov-actions .btn {
+    padding: 4px 8px;
+    font-size: var(--fs-xs);
+  }
+
+  .ov-queue .ov-queue-list {
+    max-height: 20vh;
+  }
 }
 
 /* ═══════════════ MODALS / DRAWER / TOAST ═══════════════ */

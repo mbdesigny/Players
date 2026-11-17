@@ -28,67 +28,73 @@
     position: absolute;
     inset: 0;
     overflow: hidden;
-    pointer-events: none
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .np-overlay:not(.open) .audio-bg {
+    display: none !important;
   }
 
   .np-overlay .audio-bg-in {
     position: absolute;
-    inset: -12%;
-    opacity: .9;
-    transform: scale(calc(1 + var(--bass) * .08));
-    will-change: transform
+    inset: -10%;
+    opacity: .85;
+    transform: scale(calc(1 + var(--bass, 0) * .06)) translateZ(0);
+    will-change: transform;
   }
 
   .np-overlay .audio-bg .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(48px);
+    filter: blur(24px);
     mix-blend-mode: multiply;
-    animation: audio-float 14s ease-in-out infinite alternate;
-    will-change: transform, opacity
+    animation: audio-float 16s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+    transform: translateZ(0);
   }
 
   .np-overlay .orb-bass {
-    width: 48vmax;
-    height: 48vmax;
-    top: -14vmax;
-    inset-inline-start: -12vmax;
-    background: radial-gradient(circle, rgba(143, 188, 143, .95) 0%, transparent 68%);
-    transform: scale(calc(.85 + var(--bass) * .55));
-    opacity: calc(.35 + var(--bass) * .55)
+    width: 44vmax;
+    height: 44vmax;
+    top: -12vmax;
+    inset-inline-start: -10vmax;
+    background: radial-gradient(circle, rgba(143, 188, 143, .85) 0%, rgba(143, 188, 143, .2) 48%, transparent 70%);
+    transform: scale(calc(.85 + var(--bass, 0) * .45));
+    opacity: calc(.3 + var(--bass, 0) * .5);
   }
 
   .np-overlay .orb-mid {
-    width: 40vmax;
-    height: 40vmax;
-    bottom: -12vmax;
-    inset-inline-end: -10vmax;
-    background: radial-gradient(circle, rgba(186, 151, 67, .9) 0%, transparent 68%);
-    transform: scale(calc(.85 + var(--mid) * .5));
-    opacity: calc(.32 + var(--mid) * .55);
-    animation-duration: 18s;
-    animation-delay: -5s
+    width: 38vmax;
+    height: 38vmax;
+    bottom: -10vmax;
+    inset-inline-end: -8vmax;
+    background: radial-gradient(circle, rgba(186, 151, 67, .8) 0%, rgba(186, 151, 67, .2) 48%, transparent 70%);
+    transform: scale(calc(.85 + var(--mid, 0) * .45));
+    opacity: calc(.28 + var(--mid, 0) * .5);
+    animation-duration: 20s;
+    animation-delay: -5s;
   }
 
   .np-overlay .orb-treble {
-    width: 30vmax;
-    height: 30vmax;
-    top: 34%;
-    inset-inline-end: 18%;
-    background: radial-gradient(circle, rgba(61, 103, 69, .85) 0%, transparent 68%);
-    transform: scale(calc(.8 + var(--treble) * .7));
-    opacity: calc(.25 + var(--treble) * .6);
-    animation-duration: 22s;
-    animation-delay: -9s
+    width: 28vmax;
+    height: 28vmax;
+    top: 35%;
+    inset-inline-end: 15%;
+    background: radial-gradient(circle, rgba(61, 103, 69, .75) 0%, rgba(61, 103, 69, .18) 48%, transparent 70%);
+    transform: scale(calc(.8 + var(--treble, 0) * .5));
+    opacity: calc(.22 + var(--treble, 0) * .5);
+    animation-duration: 24s;
+    animation-delay: -9s;
   }
 
   @keyframes audio-float {
     0% {
-      translate: -4% -4%
+      transform: translate3d(-3%, -3%, 0);
     }
 
     100% {
-      translate: 6% 6%
+      transform: translate3d(4%, 4%, 0);
     }
   }
 
