@@ -2617,7 +2617,7 @@ kbd {
 
 /* ═════════════ mushaf (fullscreen reading) ═════════════ */
 body.mushaf-full .shell {
-  grid-template-columns: var(--sidebar) minmax(0, 1fr)
+  grid-template-columns: minmax(0, 1fr) !important
 }
 
 body.mushaf-full .np-panel,
@@ -2626,14 +2626,26 @@ body.mushaf-full .topbar {
   display: none
 }
 
-@media (max-width: 899px) {
-  body.mushaf-full .shell {
-    grid-template-columns: minmax(0, 1fr)
-  }
+body.mushaf-full .sidebar {
+  position: fixed !important;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: 1001;
+  width: var(--sidebar);
+  max-width: 85vw;
+  background: var(--surface);
+  border-inline-end: 1px solid var(--line2);
+  box-shadow: var(--shadow3);
+  transition: transform .25s ease-out;
+  transform: translateX(-100%)
+}
 
-  body.mushaf-full .sidebar {
-    display: none
-  }
+html[dir="rtl"] body.mushaf-full .sidebar {
+  transform: translateX(100%)
+}
+
+body.mushaf-full .sidebar.open {
+  transform: translateX(0) !important
 }
 
 body.mushaf-full main {
@@ -2661,13 +2673,106 @@ body.mushaf-full #view {
 .mushaf-top {
   position: relative;
   z-index: 6;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
   padding: 10px 18px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
   box-shadow: 0 2px 12px rgba(0, 0, 0, .07)
+}
+
+.mt-start {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start
+}
+
+.mback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface2);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease-out
+}
+
+.mback-btn:hover {
+  background: var(--surface);
+  border-color: var(--gold);
+  color: var(--gold-ink)
+}
+
+.mtop-pill {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease-out;
+  max-width: 100%
+}
+
+.mtop-pill:hover {
+  background: var(--surface);
+  border-color: var(--gold);
+  color: var(--gold-ink);
+  box-shadow: 0 2px 8px rgba(186, 151, 67, .18)
+}
+
+.mtop-pill .ic {
+  width: 18px;
+  height: 18px;
+  color: var(--gold-ink);
+  flex-shrink: 0
+}
+
+.mtop-pill .mp-surah {
+  font-weight: 700
+}
+
+.mtop-pill .mp-dot {
+  color: var(--ink2);
+  opacity: .5
+}
+
+.mtop-pill .mp-juz {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink2)
+}
+
+@media (max-width: 640px) {
+  .mushaf-top {
+    padding: 8px 10px;
+    gap: 6px
+  }
+  .mtop-pill {
+    padding: 5px 12px;
+    font-size: var(--fs-xs)
+  }
+  .mback-btn {
+    padding: 6px 8px
+  }
+  .mback-btn .bt-txt {
+    display: none
+  }
 }
 
 .mt-nav {
@@ -2731,13 +2836,14 @@ html[dir="rtl"] .mt-sel {
 }
 
 .mushaf-stage {
+  --mzoom: 1;
   flex: 1;
   min-height: 0;
   overflow: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px 6.25%
+  padding: 10px 14px;
 }
 
 .mushaf-stage.cover {
@@ -2859,7 +2965,7 @@ html[dir="rtl"] .mt-sel {
   flex: 1;
   min-height: 0;
   display: flex;
-  --mside-w: 252px
+  --mside-w: 0px
 }
 
 .mushaf-corner {
@@ -2911,6 +3017,10 @@ body.mushaf-noside .mushaf-side {
   overflow: hidden
 }
 
+.mushaf-stage.flip-on.mushaf-zoomed {
+  overflow: auto
+}
+
 .mushaf-stage.flip-on .mushaf-page {
   display: none
 }
@@ -2918,8 +3028,10 @@ body.mushaf-noside .mushaf-side {
 .mushaf-stage.flip-on .flip-host {
   display: block;
   position: absolute;
-  inset: 32px;
-  transform: scaleX(-1)
+  inset: 12px;
+  transform: scaleX(-1) scale(var(--mzoom, 1));
+  transform-origin: center center;
+  transition: transform .18s ease-out
 }
 
 .mushaf-stage.flip-on .flip-host .stf__wrapper {
@@ -2937,76 +3049,87 @@ body.mushaf-noside .mushaf-side {
   box-sizing: border-box
 }
 
-.flip-spine {
-  display: none
+.mushaf-stage:not(.flip-on) .mushaf-page {
+  transform: scale(var(--mzoom, 1));
+  transform-origin: center center;
+  transition: transform .18s ease-out
 }
 
-.mushaf-stage.flip-on:has(.stf__wrapper.--landscape) .flip-spine {
-  display: block;
-  position: absolute;
-  top: 32px;
-  bottom: 32px;
-  left: 50%;
-  width: 96px;
-  transform: translateX(-50%);
-  pointer-events: none;
-  z-index: 500;
-  background: linear-gradient(90deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, .02) 20%,
-    rgba(0, 0, 0, .06) 38%,
-    rgba(0, 0, 0, .14) 46%,
-    rgba(0, 0, 0, .30) 49.2%,
-    rgba(0, 0, 0, .38) 50%,
-    rgba(0, 0, 0, .30) 50.8%,
-    rgba(0, 0, 0, .14) 54%,
-    rgba(0, 0, 0, .06) 62%,
-    rgba(0, 0, 0, .02) 80%,
-    rgba(0, 0, 0, 0) 100%)
+.mushaf-stage.single:not(.flip-on) .mushaf-page {
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 345/550;
+  display: flex;
+  justify-content: center;
+  align-items: center
 }
 
-.flip-spine::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 28%;
-  width: 44%;
-  background: linear-gradient(90deg,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, .10) 42%,
-    rgba(255, 255, 255, 0) 50%,
-    rgba(255, 255, 255, .10) 58%,
-    rgba(255, 255, 255, 0))
+.mushaf-stage.single:not(.flip-on) .mushaf-page img {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 12px
 }
 
-.flip-spine::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(50% - .75px);
-  width: 1.5px;
-  background: rgba(0, 0, 0, .40);
-  filter: blur(.5px)
+.mzoom-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 4px;
+  gap: 2px
 }
 
-[data-theme="dark"] .mushaf-stage.flip-on:has(.stf__wrapper.--landscape) .flip-spine {
-  background: linear-gradient(90deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, .10) 38%,
-    rgba(0, 0, 0, .45) 49.2%,
-    rgba(0, 0, 0, .6) 50%,
-    rgba(0, 0, 0, .45) 50.8%,
-    rgba(0, 0, 0, .10) 62%,
-    rgba(0, 0, 0, 0) 100%)
+.mzoom-group .icon-btn {
+  width: 28px;
+  height: 28px;
+  padding: 5px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 999px
 }
 
-[data-theme="dark"] .flip-spine::after {
-  background: rgba(0, 0, 0, .75)
+.mzoom-group .icon-btn:hover {
+  background: var(--surface);
+  color: var(--gold-ink)
 }
 
+.mzoom-pill {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 8px;
+  border: none;
+  background: transparent;
+  color: var(--ink2);
+  cursor: pointer;
+  border-radius: 999px;
+  line-height: 1
+}
+
+.mzoom-pill:hover {
+  color: var(--gold-ink);
+  background: var(--surface)
+}
+
+@media(max-width:899px) {
+  [data-act="mlayout"] {
+    display: none !important
+  }
+}
+
+@media(max-width:640px) {
+  .mzoom-group {
+    display: none !important
+  }
+}
+
+/* Natural book page inner-spine binding */
 .flip-page {
+  position: relative;
   background: #fff;
   border-radius: 6px;
   overflow: hidden
@@ -3014,6 +3137,38 @@ body.mushaf-noside .mushaf-side {
 
 [data-theme="dark"] .flip-page {
   background: #0D0F12
+}
+
+.flip-page::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8%;
+  pointer-events: none;
+  z-index: 10
+}
+
+.stf__item.--right .flip-page::after,
+.flip-page[data-p]:nth-child(even)::after {
+  left: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, .18), rgba(0, 0, 0, .04) 50%, transparent)
+}
+
+.stf__item.--left .flip-page::after,
+.flip-page[data-p]:nth-child(odd)::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(0, 0, 0, .18), rgba(0, 0, 0, .04) 50%, transparent)
+}
+
+[data-theme="dark"] .stf__item.--right .flip-page::after,
+[data-theme="dark"] .flip-page[data-p]:nth-child(even)::after {
+  background: linear-gradient(to right, rgba(0, 0, 0, .55), rgba(0, 0, 0, .15) 50%, transparent)
+}
+
+[data-theme="dark"] .stf__item.--left .flip-page::after,
+[data-theme="dark"] .flip-page[data-p]:nth-child(odd)::after {
+  background: linear-gradient(to left, rgba(0, 0, 0, .55), rgba(0, 0, 0, .15) 50%, transparent)
 }
 
 .flip-in {
@@ -3145,23 +3300,16 @@ body.mushaf-clean .mrestore {
 }
 
 @media (min-width: 900px) {
+  .mushaf-top {
+    display: flex
+  }
 
-  .mushaf-top,
   .mushaf-foot {
-    display: none
+    display: flex
   }
 
   .mushaf-side {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    flex: none;
-    width: var(--mside-w);
-    height: 100vh;
-    padding: 18px 14px;
-    border-inline-start: 1px solid var(--line);
-    background: var(--bg);
-    overflow-y: auto
+    display: none
   }
 
   .mnav {
@@ -3169,19 +3317,11 @@ body.mushaf-clean .mrestore {
   }
 
   .mushaf-corner {
-    display: flex
+    display: none
   }
 
   .mushaf-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    padding: 6px 18px 10px
-  }
-
-  .mushaf-bottom .mf-slider {
-    max-width: 480px
+    display: none
   }
 }
 
@@ -3394,6 +3534,306 @@ html[dir="rtl"] .mnav .ic,
 html[dir="rtl"] .mushaf-corner [data-act="mushafback"] .ic,
 html[dir="rtl"] .back-btn .ic {
   transform: scaleX(-1)
+}
+
+/* ═════════════ mushaf index modal ═════════════ */
+.mindex-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, .45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: mindexFadeIn .15s ease-out;
+}
+
+@keyframes mindexFadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+.mindex-card {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  max-height: min(84vh, 720px);
+  background: var(--surface);
+  border: 1px solid var(--line2);
+  border-radius: 18px;
+  box-shadow: var(--shadow3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: mindexPop .2s cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes mindexPop {
+  from { opacity: 0; transform: scale(.96) translateY(8px) }
+  to { opacity: 1; transform: scale(1) translateY(0) }
+}
+
+.mindex-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.mindex-title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.mindex-tabs {
+  display: inline-flex;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.mindex-tab {
+  padding: 5px 14px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--ink2);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .14s ease-out;
+}
+
+.mindex-tab:hover {
+  color: var(--ink);
+}
+
+.mindex-tab.active {
+  background: var(--surface);
+  color: var(--gold-ink);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+  font-weight: 700;
+}
+
+.mindex-x {
+  border-radius: 8px;
+}
+
+.mindex-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.mindex-search .ic {
+  color: var(--ink2);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.mindex-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface2);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  outline: none;
+  transition: border-color .15s ease-out;
+}
+
+.mindex-search input:focus {
+  border-color: var(--gold);
+}
+
+.mindex-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mindex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 4px;
+}
+
+@media (max-width: 640px) {
+  .mindex-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+.mindex-card-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: start;
+  transition: all .14s ease-out;
+  box-shadow: var(--shadow-sm);
+  font: inherit;
+}
+
+.mindex-card-item:hover {
+  background: var(--surface2);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.mindex-card-item.current {
+  background: var(--surface2);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--glow2);
+}
+
+.mci-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mci-page {
+  font-size: var(--fs-xs);
+  color: var(--ink2);
+  font-variant-numeric: tabular-nums;
+  background: var(--surface2);
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.mindex-card-item.current .mci-page {
+  border-color: var(--gold);
+  color: var(--gold-ink);
+}
+
+.mci-name {
+  font-family: 'Alan Sans', var(--font-sans);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.mci-meta {
+  font-size: var(--fs-xs);
+  color: var(--ink2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.star-badge {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--surface2);
+  stroke: var(--gold);
+  stroke-width: 1.4;
+  transition: all .15s;
+}
+
+.mindex-card-item.current .star-svg {
+  fill: var(--gold);
+  stroke: var(--gold);
+}
+
+.star-num {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.mindex-card-item.current .star-num {
+  color: #fff;
+}
+
+.mindex-page {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface2);
+  color: var(--ink2);
+  font-size: var(--fs-xs);
+  flex-shrink: 0;
+}
+
+.mindex-page .mpage-n {
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.mindex-badge {
+  margin-inline-start: 4px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #fff;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mindex-empty {
+  padding: 36px 16px;
+  text-align: center;
+  color: var(--ink2);
+  font-size: var(--fs-sm);
 }
 
 .mushaf-stage.book {
@@ -3812,18 +4252,32 @@ html[dir="rtl"] .back-btn .ic {
 }
 
 .hp-weather {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 12px;
-  min-height: 56px;
+  min-height: 48px;
   margin-bottom: 12px;
   text-align: start
 }
 
 .hp-weather .hw-ic {
-  font-size: var(--fs-7xl);
-  line-height: 1;
+  position: absolute;
+  inset-inline-end: 0;
+  top: -4px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F7F3E8;
   flex: none
+}
+
+.hp-weather .hw-ic .w-svg {
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .25))
 }
 
 .hp-weather .hw-t {
