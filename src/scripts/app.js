@@ -605,7 +605,7 @@ function updateNowPlaying() {
   $('#npTitle').innerHTML = titleHTML; $('#ovTitle').innerHTML = titleHTML;
   $('#npArtist').textContent = trackReciter(tr); $('#ovArtist').textContent = trackReciter(tr);
   $('#pbTitle').textContent = `${trackName(tr)} · ${trackReciter(tr)}`;
-  $('#pbSub').textContent = [tr.rewaya, tr.mname].filter(Boolean).join(' · ') || trackReciter(tr);
+  $('#pbSub').textContent = (tr.mname && tr.rewaya && tr.mname !== tr.rewaya && tr.mname.includes(tr.rewaya)) ? tr.mname : [tr.rewaya, tr.mname].filter((v, i, a) => v && a.indexOf(v) === i).join(' · ') || trackReciter(tr);
   updateBadges(); updateFavButtons(); applyNpPanel();
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({ title: trackName(tr), artist: trackReciter(tr), album: tr.rewaya || '', artwork: [{ src: ava, sizes: '512x512', type: photo ? 'image/jpeg' : 'image/svg+xml' }] });
