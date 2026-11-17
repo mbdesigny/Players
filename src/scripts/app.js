@@ -1773,7 +1773,12 @@ function setOrbVars(b) {
 }
 function drawWaves(ts) {
   const cv = $('#ovWaves'); if (!cv) { waveRaf = 0; return }
-  const dpr = Math.min(2, devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight;
+  const ov = $('#npOverlay');
+  if (!ov || !ov.classList.contains('open') || document.hidden) {
+    waveRaf = requestAnimationFrame(drawWaves);
+    return;
+  }
+  const dpr = Math.min(1.25, devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight;
   if (!w || !h) { waveRaf = requestAnimationFrame(drawWaves); return }
   if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr) }
   const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
@@ -1804,7 +1809,7 @@ function drawWaves(ts) {
     layerLvl[bi] += ((playing ? bands[bi] : 0) - layerLvl[bi]) * .1;
     const amp = h * (.14 + layerLvl[bi] * .42);
     ctx.beginPath(); ctx.moveTo(0, h);
-    for (let x = 0; x <= w; x += 6) {
+    for (let x = 0; x <= w; x += 12) {
       const p = x / w;
       const y = h * .68
         - Math.sin(p * Math.PI * 2 * wl + t * sp + li * 1.7) * amp * (.55 + .45 * Math.sin(p * Math.PI * 3 + t * .7 + li))
@@ -1820,7 +1825,14 @@ function startWaves() {
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   waveRaf = requestAnimationFrame(drawWaves);
 }
-function stopWaves() { if (waveRaf) cancelAnimationFrame(waveRaf); waveRaf = 0; orbLvl = [0, 0, 0]; orbBase = [0, 0, 0]; setOrbVars([0, 0, 0]) }
+function stopWaves() {
+  if (waveRaf) cancelAnimationFrame(waveRaf);
+  waveRaf = 0;
+  orbLvl = [0, 0, 0]; orbBase = [0, 0, 0];
+  setOrbVars([0, 0, 0]);
+  const cv = $('#ovWaves');
+  if (cv) { const ctx = cv.getContext('2d'); if (ctx) ctx.clearRect(0, 0, cv.width, cv.height); }
+}
 window.__waves = () => ({ ctx: acx ? acx.state : 'none', has: !!analyser, lvl: +smLevel.toFixed(3), layers: layerLvl.map(v => +v.toFixed(3)), orbs: orbLvl.map(v => +v.toFixed(3)), paused: audio.paused });
 let ovPrevFocus = null;
 function openOverlay() {
