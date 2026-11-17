@@ -139,8 +139,9 @@ function setAudioSrc(url) {
   audio.src = url;
 }
 function swapAudioEl() {
+  try { audio.pause(); audio.removeAttribute('src'); audio.load() } catch (e) { }
   const el = document.createElement('audio');
-  el.id = 'audio'; el.preload = 'metadata';
+  el.id = 'audio'; el.preload = 'metadata'; el.setAttribute('playsinline', ''); el.setAttribute('webkit-playsinline', '');
   el.volume = audio.volume; el.muted = audio.muted; el.playbackRate = audio.playbackRate;
   audio.replaceWith(el);
   try { if (acx) acx.close() } catch (e) { }
@@ -148,15 +149,34 @@ function swapAudioEl() {
   bindAudio(el);
   return el;
 }
+let stallTimer = 0, errToastedKey = '';
+function clearStallWatch() { if (stallTimer) { clearTimeout(stallTimer); stallTimer = 0 } }
+function armStallWatch(el) {
+  if (stallTimer) return;
+  stallTimer = setTimeout(() => {
+    stallTimer = 0;
+    if (el.paused || el.ended || el.readyState >= 3) return;
+    const at = el.currentTime;
+    try { el.load() } catch (e) { }
+    el.addEventListener('loadedmetadata', () => { el.currentTime = at; el.play().catch(() => { }) }, { once: true });
+  }, 8000);
+}
 function bindAudio(el) {
   el.addEventListener('play', () => { setPlayingUI(true); if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
-  el.addEventListener('pause', () => { setPlayingUI(false); saveSession() });
+  el.addEventListener('pause', () => { setPlayingUI(false); clearStallWatch(); saveSession() });
+  el.addEventListener('playing', () => clearStallWatch());
   let lastSessionSave = 0;
-  el.addEventListener('timeupdate', () => { updateProgress(); const now = Date.now(); if (now - lastSessionSave > 25000) { lastSessionSave = now; saveSession() } });
+  el.addEventListener('timeupdate', () => { scheduleProgress(); const now = Date.now(); if (now - lastSessionSave > 25000) { lastSessionSave = now; saveSession() } });
   el.addEventListener('progress', updateBuffer);
-  el.addEventListener('loadedmetadata', () => { updateProgress(); probeBitrate() });
+  el.addEventListener('loadedmetadata', () => { clearStallWatch(); lastProgressPaint = 0; updateProgress(); probeBitrate() });
+  el.addEventListener('waiting', () => armStallWatch(el));
+  el.addEventListener('stalled', () => armStallWatch(el));
   el.addEventListener('ended', () => { if (S.repeat === 2) { el.currentTime = 0; el.play().catch(() => { }) } else nextTrack() });
-  el.addEventListener('error', () => { if (S.current && el.src) tryNextSource() });
+  el.addEventListener('error', () => {
+    if (!S.current || !el.src) return;
+    if (S.srcIdx < currentSources().length) { tryNextSource(); return }
+    if (errToastedKey !== S.current.key) { errToastedKey = S.current.key; toast(t('errorAudio')) }
+  });
 }
 
 /* ═══════════════ GENERATIVE ISLAMIC ART ═══════════════ */
@@ -597,12 +617,12 @@ function updateNowPlaying() {
   const isMadani = (tr.type === 1) || (tr.n && SURAH[tr.n - 1] && SURAH[tr.n - 1][3] === 1);
   const mosquePlaceholder = isMadani ? '/img/mosque-nabawi.jpg' : '/img/mosque-haram.jpg';
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
-  $('#npMandala').innerHTML = mandalaSVG(...args); $('#ovMandala').innerHTML = mandalaSVG(...args);
+  $('#npMandala').innerHTML = mandalaSVG(...args); $('#ovMandala').innerHTML = mandalaSVG(...args); prFills = null;
   $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" onerror="this.remove()">` : (mosquePlaceholder ? `<img src="${mosquePlaceholder}" alt="">` : '');
   const ava = photo || avatarURI(tr.rar, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق');
   $('#pbArtImg').src = ava; $('#pbArtImg').onerror = function () { this.onerror = null; this.src = avatarURI(tr.rar, 'ق') };
   const titleHTML = S.lang === 'ar' && tr.n != null ? `<span class="sn-font sg-pair"><span class="sg-w"></span><span class="sg-n">${surahNameGlyph(tr.n)}</span></span>` : esc(trackName(tr));
-  $('#npTitle').innerHTML = titleHTML; $('#ovTitle').innerHTML = titleHTML;
+  $('#npTitle').innerHTML = titleHTML; $('#ovTitle').innerHTML = titleHTML; P = null;
   $('#npArtist').textContent = trackReciter(tr); $('#ovArtist').textContent = trackReciter(tr);
   $('#pbTitle').textContent = `${trackName(tr)} · ${trackReciter(tr)}`;
   $('#pbSub').textContent = (tr.mname && tr.rewaya && tr.mname !== tr.rewaya && tr.mname.includes(tr.rewaya)) ? tr.mname : [tr.rewaya, tr.mname].filter((v, i, a) => v && a.indexOf(v) === i).join(' · ') || trackReciter(tr);
@@ -678,16 +698,35 @@ function renderQueue() {
   if (oq) oq.innerHTML = html;
 }
 function updateProgress() {
-  const d = audio.duration || 0, p = d ? audio.currentTime / d : 0;
-  $('#tCur').textContent = fmt(audio.currentTime); $('#tDur').textContent = fmt(d);
-  $('#ovCur').textContent = fmt(audio.currentTime); $('#ovDur').textContent = fmt(d);
-  $('#progFill').style.width = (p * 100) + '%'; $('#progThumb').style.insetInlineStart = (p * 100) + '%';
-  $('#ovFill').style.width = (p * 100) + '%'; $('#ovThumb').style.insetInlineStart = (p * 100) + '%';
-  const now = Math.round(audio.currentTime || 0), max = Math.round(d);
-  ['progBar', 'ovProg'].forEach(id => { const el = $('#' + id); if (!el) return; el.setAttribute('aria-valuemax', max); el.setAttribute('aria-valuenow', now); el.setAttribute('aria-valuetext', fmt(now) + ' / ' + fmt(max)) });
-  const C = 2 * Math.PI * 45.6;
-  $$('.pr-fill').forEach(c => c.style.strokeDashoffset = C * (1 - p));
-  if (S.current && d) { S.current.duration = d; const row = $(`.surah-row[data-key="${S.current.key}"] .dur`); if (row) row.textContent = fmt(d) }
+  const d = audio.duration || 0, p = d ? audio.currentTime / d : 0, cur = fmt(audio.currentTime), dur = fmt(d);
+  if (!P || !P.tCur.isConnected) P = { tCur: $('#tCur'), tDur: $('#tDur'), ovCur: $('#ovCur'), ovDur: $('#ovDur'), progFill: $('#progFill'), progThumb: $('#progThumb'), ovFill: $('#ovFill'), ovThumb: $('#ovThumb'), progBar: $('#progBar'), ovProg: $('#ovProg') };
+  const { tCur, tDur, ovCur, ovDur, progFill, progThumb, ovFill, ovThumb, progBar, ovProg } = P;
+  if (tCur) tCur.textContent = cur;
+  if (tDur) tDur.textContent = dur;
+  if (ovCur) ovCur.textContent = cur;
+  if (ovDur) ovDur.textContent = dur;
+  if (progFill) progFill.style.width = (p * 100) + '%';
+  if (progThumb) progThumb.style.insetInlineStart = (p * 100) + '%';
+  if (ovFill) ovFill.style.width = (p * 100) + '%';
+  if (ovThumb) ovThumb.style.insetInlineStart = (p * 100) + '%';
+  const now = Math.round(audio.currentTime || 0), max = Math.round(d), vt = cur + ' / ' + dur;
+  [progBar, ovProg].forEach(el => { if (!el) return; el.setAttribute('aria-valuemax', max); el.setAttribute('aria-valuenow', now); el.setAttribute('aria-valuetext', vt) });
+  if (!prFills || !prFills.length || !prFills[0].isConnected) prFills = $$('.pr-fill');
+  const off = String(PR_CIRC * (1 - p));
+  prFills.forEach(c => c.style.strokeDashoffset = off);
+  if (S.current && d && S.current.duration !== d) { S.current.duration = d; const row = $(`.surah-row[data-key="${S.current.key}"] .dur`); if (row) row.textContent = dur }
+}
+let P = null, prFills = null, progressRaf = 0, lastProgressPaint = 0;
+const PROGRESS_MIN_INTERVAL = 250, PR_CIRC = 2 * Math.PI * 45.6;
+function scheduleProgress() {
+  if (progressRaf) return;
+  progressRaf = requestAnimationFrame(() => {
+    progressRaf = 0;
+    const now = performance.now();
+    if (now - lastProgressPaint < PROGRESS_MIN_INTERVAL) return;
+    lastProgressPaint = now;
+    updateProgress();
+  });
 }
 function updateBuffer() {
   try { if (audio.buffered.length && audio.duration) { const b = audio.buffered.end(audio.buffered.length - 1) / audio.duration * 100; $('#progBuf').style.width = b + '%'; $('#ovBuf').style.width = b + '%' } } catch (e) { }
@@ -1724,10 +1763,12 @@ function setSleep(min) {
 /* ═══════════════ SEEK / VOLUME BARS ═══════════════ */
 function bindBar(el, onPct) {
   const pct = e => { const r = el.getBoundingClientRect(); const rtl = getComputedStyle(el).direction === 'rtl'; const x = rtl ? r.right - e.clientX : e.clientX - r.left; return Math.max(0, Math.min(1, x / r.width)) };
+  let mvRaf = 0;
   el.addEventListener('pointerdown', e => {
     el.setPointerCapture(e.pointerId); el.classList.add('scrub'); onPct(pct(e), true);
-    const mv = ev => onPct(pct(ev), true); const up = ev => { onPct(pct(ev), false); el.classList.remove('scrub'); el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up) };
-    el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up)
+    const mv = ev => { if (mvRaf) return; mvRaf = requestAnimationFrame(() => { mvRaf = 0; onPct(pct(ev), true) }) };
+    const up = ev => { if (mvRaf) { cancelAnimationFrame(mvRaf); mvRaf = 0 } onPct(pct(ev), false); el.classList.remove('scrub'); el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up) };
+    el.addEventListener('pointermove', mv, { passive: true }); el.addEventListener('pointerup', up)
   });
 }
 bindBar($('#progBar'), (p, drag) => { if (audio.duration) { if (!drag) audio.currentTime = p * audio.duration; $('#progFill').style.width = p * 100 + '%'; $('#progThumb').style.insetInlineStart = p * 100 + '%'; $('#tCur').textContent = fmt(p * audio.duration); const el = $('#progBar'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
