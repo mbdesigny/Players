@@ -4571,6 +4571,12 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
 }
 
 /* ═══════════════════ PRAYER TIMES ═══════════════════ */
+.view-head.prayer-head {
+  max-width: 860px;
+  margin: 8px auto 18px;
+  width: 100%
+}
+
 .prayer-wrap {
   display: flex;
   flex-direction: column;
