@@ -10,11 +10,26 @@
       "enabled": true,
       "invocation_logs": true,
       "persist": true
-    }
-  },
+    },
     "traces": {
       "enabled": false,
       "head_sampling_rate": 1,
       "persist": true
     }
+  },
+  "previews": {
+    "observability": {
+      "enabled": true,
+      "logs": {
+        "enabled": true,
+        "invocation_logs": true,
+        "persist": true
+      },
+      "traces": {
+        "enabled": false,
+        "head_sampling_rate": 1,
+        "persist": true
+      }
+    }
+  }
 }
