@@ -3639,6 +3639,11 @@ body.mushaf-noside .mushaf-side {
   overflow: hidden
 }
 
+.mushaf-stage.mushaf-zoomed {
+  align-items: flex-start;
+  padding-bottom: 24px
+}
+
 .mushaf-stage.flip-on.mushaf-zoomed {
   overflow: auto
 }
@@ -3654,6 +3659,10 @@ body.mushaf-noside .mushaf-side {
   transform: scaleX(-1) scale(var(--mzoom, 1));
   transform-origin: center center;
   transition: transform .18s ease-out
+}
+
+.mushaf-stage.flip-on.mushaf-zoomed .flip-host {
+  transform-origin: center top
 }
 
 .mushaf-stage.flip-on .flip-host .stf__wrapper {
@@ -3675,6 +3684,10 @@ body.mushaf-noside .mushaf-side {
   transform: scale(var(--mzoom, 1));
   transform-origin: center center;
   transition: transform .18s ease-out
+}
+
+.mushaf-stage.mushaf-zoomed:not(.flip-on) .mushaf-page {
+  transform-origin: center top
 }
 
 .mushaf-stage.single:not(.flip-on) .mushaf-page {

@@ -817,6 +817,8 @@ function mushafGo(n) {
   if (n >= 1) store.set(`mushafLast_${S.mushafRiwaya}`, n);
   if (S.view !== 'mushaf') setView('mushaf');
   S.readN = n;
+  const stg = $('#view .mushaf-stage');
+  if (stg && stg.scrollTop > 0) stg.scrollTop = 0;
   if (flip && document.contains($('#flipHost'))) {
     const idx = Math.max(0, n - 1), cur = flip.getCurrentPageIndex();
     if (idx !== cur) {
@@ -871,6 +873,10 @@ function applyMushafZoom() {
   if (stg) {
     stg.style.setProperty('--mzoom', String(S.mushafZoom || 1));
     stg.classList.toggle('mushaf-zoomed', (S.mushafZoom || 1) > 1.0);
+    if ((S.mushafZoom || 1) <= 1.0) {
+      stg.scrollTop = 0;
+      stg.scrollLeft = 0;
+    }
   }
   $$('#view [data-mzoom-val]').forEach(el => {
     el.textContent = `${Math.round((S.mushafZoom || 1) * 100)}%`;
@@ -996,6 +1002,7 @@ async function mountFlip() {
       const i = +e.data; if (isNaN(i)) return;
       S.readN = book ? mushafRight(i + 1) : i + 1;
       S.mushafPage = S.readN; store.set('mushafPage', S.readN); store.set(`mushafLast_${S.mushafRiwaya}`, S.readN);
+      if (stg && stg.scrollTop > 0) stg.scrollTop = 0;
       mushafSyncUI();
       for (let p = S.readN - 4; p <= S.readN + 5; p++) if (p >= 1 && p <= MUSHAF_PAGES) flipSetSrc(p);
       mushafPrecache(S.readN, S.mushafRiwaya);
