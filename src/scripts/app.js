@@ -206,17 +206,18 @@ const reciterName = r => S.lang === 'ar' ? r.name : (r.name_en || r.name);
 const moshafRewaya = m => m.rewaya || (m.name || '').split('-')[0].replace(/\s+/g, ' ').trim();
 const RECITER_PHOTOS = { 'منشاوي': 'minshawi', 'عبدالباسط': 'abdulbasit', 'التركي': 'badr-turki', 'شريم': 'shuraim', 'ديبروف': 'dibirov', 'دوسري': 'dosari', 'معيقلي': 'muaiqly', 'الموسى': 'al-mousa', 'سحيم': 'suhaim', 'الدخين': 'dukayn', 'السديس': 'sudais', 'العفاسي': 'afasy', 'الحصري': 'husary', 'العجمي': 'ajmi', 'عباد': 'faris-abbad' };
 const RECITER_PHOTOS_EXACT = { 'سعودالشريم': 'shuraim', 'ياسرالدوسري': 'dosari', 'محمدصديقالمنشاوي': 'minshawi', 'عبدالباسطعبدالصمد': 'abdulbasit', 'بدرالتركي': 'badr-turki', 'ماهرالمعيقلي': 'muaiqly', 'عبداللهالموسى': 'al-mousa', 'عبدالعزيزسحيم': 'suhaim', 'عبدالعزيزالسحيم': 'suhaim', 'هيثمالدخين': 'dukayn', 'محمدديبروف': 'dibirov', 'عبدالرحمنالسديس': 'sudais', 'مشاريراشدالعفاسي': 'afasy', 'محمودخليلالحصري': 'husary', 'أحمدالعجمي': 'ajmi', 'سعدالغامدي': 'saad-ghamdi', 'فارسعباد': 'faris-abbad', 'مصطفىاسماعيل': 'mustafa', 'مصطفياسماعيل': 'mustafa' };
+const KNOWN_RECITER_IDS = new Set([14, 46, 76, 86, 94, 95, 221, 231, 253, 259, 264, 265, 278, 21200]);
 function photoURL(name, id) {
   const n = norm2(name);
   const ex = RECITER_PHOTOS_EXACT[n];
   if (ex) return 'img/' + ex + '.jpg';
   if (n.includes(norm2('الشريمي')) || n.includes(norm2('الدوسري')) || n.includes(norm2('التركي')) || (n.includes(norm2('منشاوي')) && n.includes(norm2('طه')))) {
-    return id ? 'img/' + id + '.jpg' : '';
+    return (id && KNOWN_RECITER_IDS.has(+id)) ? 'img/' + id + '.jpg' : '';
   }
   for (const k in RECITER_PHOTOS) {
     if (n.includes(norm2(k))) return 'img/' + RECITER_PHOTOS[k] + '.jpg';
   }
-  return id ? 'img/' + id + '.jpg' : '';
+  return (id && KNOWN_RECITER_IDS.has(+id)) ? 'img/' + id + '.jpg' : '';
 }
 const reciterImg = (r, cls = '') => { const p = photoURL(r.name, r.id); const ava = avatarURI(r.name, reciterLetter(r)); return p ? `<img class="${cls}" src="${p}" alt="${esc(reciterName(r))}" loading="lazy" onerror="this.onerror=null;this.src='${ava}'">` : `<img class="${cls}" src="${ava}" alt="${esc(reciterName(r))}" loading="lazy">` };
 
