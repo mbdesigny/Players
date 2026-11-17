@@ -88,7 +88,27 @@ const ldJson = JSON.stringify({
     <script is:inline>
       if ('serviceWorker' in navigator) {
         addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => { console.error('[Ouns] service worker registration failed:', err) });
+          navigator.serviceWorker.register('/sw.js').then((reg) => {
+            let hadController = !!navigator.serviceWorker.controller, reloaded = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              if (!hadController) { hadController = true; return }
+              if (reloaded) return;
+              reloaded = true;
+              window.location.reload();
+            });
+            const applyUpdate = () => {
+              const w = reg.waiting || reg.installing;
+              if (w && navigator.serviceWorker.controller) w.postMessage({ type: 'SKIP_WAITING' });
+            };
+            reg.addEventListener('updatefound', () => {
+              const nw = reg.installing;
+              if (!nw) return;
+              nw.addEventListener('statechange', () => {
+                if (nw.state === 'installed' && navigator.serviceWorker.controller) applyUpdate();
+              });
+            });
+            if (reg.waiting && navigator.serviceWorker.controller) applyUpdate();
+          }).catch(err => { console.error('[Ouns] service worker registration failed:', err) });
         });
       }
     </script>

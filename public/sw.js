@@ -32,9 +32,10 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('activate', (e) => {
-  /* No clients.claim (F-22): the activated worker takes over pages on their
-     next navigation, never mid-session. Old caches are purged only after the
-     new worker is active, so open tabs keep serving a consistent set. */
+  /* Old caches are purged only after the new worker is active, so open tabs
+     keep serving a consistent set. clients.claim() is safe here because the
+     worker only skips waiting when a page explicitly sent SKIP_WAITING, and
+     that page reloads itself on controllerchange to pick up fresh assets. */
   e.waitUntil(
     caches.keys()
       .then((ks) => {
@@ -43,11 +44,13 @@ self.addEventListener('activate', (e) => {
         const others = ks.filter((k) => !k.startsWith('ouns-app-') && k !== MUSHAF_CACHE && k !== AUDIO_CACHE);
         return Promise.all([...toDelete, ...others].map((k) => caches.delete(k)));
       })
+      .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('message', (e) => {
   const d = e.data || {};
+  if (d.type === 'SKIP_WAITING') self.skipWaiting();
   if (d.type === 'precache-mushaf' && Array.isArray(d.urls)) {
     e.waitUntil((async () => {
       const c = await caches.open(MUSHAF_CACHE);
