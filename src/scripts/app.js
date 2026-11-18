@@ -127,6 +127,7 @@ const S = {
   adhkarCat: null, ytId: null, weather: null
 };
 let audio = $('#audio');
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
 audio.volume = store.get('volume', 1);
 
 /* CORS-safe audio: only route through Web Audio (which requires CORS) for
@@ -159,6 +160,7 @@ function armStallWatch(el) {
   stallTimer = setTimeout(() => {
     stallTimer = 0;
     if (el.paused || el.ended || el.readyState >= 3) return;
+    if (document.hidden) { armStallWatch(el); return }
     if (curBufEnd(el) > stallSnap) { armStallWatch(el); return }
     const at = el.currentTime;
     try { el.load() } catch (e) { }
@@ -172,7 +174,9 @@ function prewarmTrack() {
   if (document.visibilityState !== 'visible') return;
   const c = navigator.connection || {};
   if (c.saveData || c.effectiveType === 'slow-2g' || c.effectiveType === '2g') return;
-  if (audio.preload !== 'auto') audio.preload = 'auto';
+  if (corsAudio(audio.currentSrc) && navigator.serviceWorker.controller) {
+    try { navigator.serviceWorker.controller.postMessage({ type: 'cache-audio', url: audio.currentSrc }) } catch (_) { }
+  }
 }
 function schedulePrewarm() { if (!prewarmTimer) prewarmTimer = setTimeout(prewarmTrack, 1500) }
 function bindAudio(el) {
@@ -1904,7 +1908,7 @@ setInterval(() => rotateVerse(), 22000);
 /* ═══════════ fullscreen waves visualizer ═══════════ */
 let acx = null, analyser = null, freqData = null, waveRaf = 0, smLevel = 0, layerLvl = [0, 0, 0], orbLvl = [0, 0, 0], orbPeak = [0, 0, 0], orbBase = [0, 0, 0];
 function ensureAnalyser() {
-  if (acx !== null || (!window.AudioContext && !window.webkitAudioContext)) return;
+  if (IS_ANDROID || acx !== null || (!window.AudioContext && !window.webkitAudioContext)) return;
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     const cand = new Ctx();

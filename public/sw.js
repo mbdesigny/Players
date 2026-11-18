@@ -51,6 +51,9 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('message', (e) => {
   const d = e.data || {};
   if (d.type === 'SKIP_WAITING') self.skipWaiting();
+  if (d.type === 'cache-audio' && typeof d.url === 'string') {
+    try { e.waitUntil(storeAudio(new URL(d.url))) } catch (_) { }
+  }
   if (d.type === 'precache-mushaf' && Array.isArray(d.urls)) {
     e.waitUntil((async () => {
       const c = await caches.open(MUSHAF_CACHE);
@@ -74,100 +77,83 @@ self.addEventListener('message', (e) => {
   }
 });
 
-/* Audio streams: cache-first with range support. First play streams natively;
-   that same stream is tee'd into the cache as it plays (one download, no
-   competing second fetch). Cached ranges are served as zero-copy Blob slices,
-   memoized per file (least-recently-used, only cors/basic bodies are readable).
-   Cache is FIFO-trimmed by file count and soft-capped via storage estimate. */
-const blobMemo = new Map();
-const BLOB_MEMO_MAX = 4;
-function memoBlob(key, res) {
-  if (blobMemo.has(key)) {
-    const p = blobMemo.get(key);
-    blobMemo.delete(key);
-    blobMemo.set(key, p);
-    return p;
-  }
-  const p = res.blob().catch(() => null);
-  blobMemo.set(key, p);
-  if (blobMemo.size > BLOB_MEMO_MAX) blobMemo.delete(blobMemo.keys().next().value);
-  return p;
+/* Audio streams: native playback is NEVER intercepted on a miss -- the request
+   falls through to Chrome's media stack, which resumes mp3quran's immutable,
+   CORnative responses better than any synthetic 206. The worker only becomes
+   visible for files explicitly pulled ahead via the cache-audio message.
+   Cache.put rejects 206 bodies (spec: partial responses are unstorable), so
+   population always uses a separate credentialless full GET that answers 200. */
+const AUDIO_CORS_RE = /^https:\/\/([a-z0-9-]+\.)*mp3quran\.net\//i;
+
+async function getCachedAudio(url) {
+  const c = await caches.open(AUDIO_CACHE);
+  const hit = await c.match(url.href);
+  return (hit && hit.type !== 'opaque' && hit.status === 200) ? hit : null;
+}
+
+async function storeAudio(url) {
+  if (!AUDIO_CORS_RE.test(url.href)) return;
+  const c = await caches.open(AUDIO_CACHE);
+  if (await c.match(url.href)) return;
+  let res;
+  try { res = await fetch(url.href, { credentials: 'omit', redirect: 'follow' }) } catch (_) { return }
+  if (!res || res.status !== 200 || res.type === 'opaque') return;
+  await c.put(url.href, res.clone()).catch(() => { });
+  await trimAudioCache();
 }
 
 async function trimAudioCache() {
   const c = await caches.open(AUDIO_CACHE);
   const keys = await c.keys();
-  if (blobMemo.size) {
-    const alive = new Set(keys.map((k) => k.url));
-    for (const k of [...blobMemo.keys()]) if (!alive.has(k)) blobMemo.delete(k);
-  }
   if (keys.length > AUDIO_CACHE_MAX_FILES) {
-    for (const k of keys.slice(0, keys.length - AUDIO_CACHE_MAX_FILES)) {
-      await c.delete(k);
-      blobMemo.delete(k.url);
-    }
+    for (const k of keys.slice(0, keys.length - AUDIO_CACHE_MAX_FILES)) await c.delete(k);
   }
   if (navigator.storage && navigator.storage.estimate) {
     try {
-      for (let guard = 0; guard < AUDIO_CACHE_MAX_FILES; guard++) {
+      for (let guard = 0; guard < 8; guard++) {
         const est = await navigator.storage.estimate();
         if ((est.usage || 0) <= AUDIO_QUOTA_BYTES) break;
         const ks2 = await c.keys();
         if (!ks2.length) break;
         await c.delete(ks2[0]);
-        blobMemo.delete(ks2[0].url);
       }
     } catch (_) { }
   }
 }
 
-function rangeParts(rangeHeader, size) {
+function sliceAudio(blob, rangeHeader, contentType) {
   const m = /bytes=(\d+)-(\d*)/.exec(rangeHeader || '');
   if (!m) return null;
-  return { start: +m[1], end: m[2] ? Math.min(+m[2] + 1, size) : size };
-}
-
-async function sliceResponse(bp, rangeHeader, contentType) {
-  const blob = await bp;
-  if (!blob) return null;
-  const p = rangeParts(rangeHeader, blob.size);
-  if (!p) return null;
-  if (p.start >= blob.size || p.end <= p.start) throw new Error('range-start-out-of-bounds');
-  const body = blob.slice(p.start, p.end);
-  return new Response(body, {
-    status: 206,
-    statusText: 'Partial Content',
+  const start = +m[1], end = m[2] ? Math.min(+m[2] + 1, blob.size) : blob.size;
+  if (start >= blob.size || end <= start) {
+    return { status: 416, size: blob.size };
+  }
+  return new Response(blob.slice(start, end), {
+    status: 206, statusText: 'Partial Content',
     headers: {
       'Content-Type': contentType || 'audio/mpeg',
-      'Content-Range': `bytes ${p.start}-${p.start + body.size - 1}/${blob.size}`,
-      'Content-Length': String(body.size)
+      'Content-Range': `bytes ${start}-${start + (end - start) - 1}/${blob.size}`,
+      'Content-Length': String(end - start),
+      'Accept-Ranges': 'bytes'
     }
   });
 }
 
-async function handleAudio(req, url) {
-  const range = req.headers.get('range');
-  const key = url.href;
-  const c = await caches.open(AUDIO_CACHE);
-  const hit = await c.match(key);
-  if (hit) {
-    trimAudioCache();
-    if (hit.type !== 'opaque' && range) {
-      try {
-        const sliced = await sliceResponse(memoBlob(key, hit.clone()), range, hit.headers.get('Content-Type'));
-        if (sliced) return sliced;
-      } catch (_) { return hit.clone() }
+async function serveAudio(event, url) {
+  const hit = await getCachedAudio(url);
+  if (!hit) return;
+  const range = event.request.headers.get('range');
+  if (range) {
+    let sliced = null;
+    try { sliced = sliceAudio(await hit.clone().blob(), range, hit.headers.get('Content-Type')) } catch (_) { }
+    if (sliced && sliced.status === 416) {
+      const size = sliced.size;
+      event.respondWith(new Response('', { status: 416, headers: { 'Content-Range': `bytes */${size}`, 'Accept-Ranges': 'bytes' } }));
+      return;
     }
-    return hit.clone();
+    if (sliced) { event.respondWith(sliced); return }
   }
-  const res = await fetch(req);
-  if (res && res.ok) {
-    const p = rangeParts(range, Infinity);
-    if (!p || p.start === 0) {
-      c.put(key, res.clone()).then(() => trimAudioCache()).catch(() => { });
-    }
-  }
-  return res;
+  event.respondWith(hit.clone());
 }
 
 self.addEventListener('fetch', (e) => {
@@ -176,7 +162,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
 
   if (req.destination === 'audio' || req.destination === 'video' || AUDIO_EXT.test(url.pathname)) {
-    e.respondWith(handleAudio(req, url));
+    if (AUDIO_CORS_RE.test(url.href)) serveAudio(e, url);
     return;
   }
   if (req.headers.has('range')) return;
