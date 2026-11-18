@@ -1318,17 +1318,56 @@ body:not(.playing) .mandala-svg .spin-c {
   }
 }
 
-.mandala-svg .m-num {
-  font-family: "Alan Sans", system-ui, sans-serif;
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  dominant-baseline: central
+.m-center {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 44.8%;
+  height: 44.8%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  background: #21402f;
+  border: 1px solid #ba9743;
+  box-shadow: inset 0 0 0 1px rgba(227, 210, 165, .55);
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center
 }
 
-.mandala-svg .m-sub {
-  font-family: "Alan Sans", system-ui, sans-serif;
-  font-size: 4.6px;
-  dominant-baseline: central
+.m-center img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover
+}
+
+.m-center .m-pic {
+  opacity: 0;
+  transition: opacity .3s ease-in-out
+}
+
+.m-center .m-pic.loaded {
+  opacity: 1
+}
+
+.m-center .m-txt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #e3d2a5;
+  line-height: 1.15;
+  font-family: "Alan Sans", system-ui, sans-serif
+}
+
+.m-center .m-num {
+  font-weight: 700;
+  font-size: 28cqw
+}
+
+.m-center .m-sub {
+  font-size: 10.7cqw
 }
 
 .mandala-svg .pr-fill {
