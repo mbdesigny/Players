@@ -208,31 +208,26 @@ function mandalaArt() {
   if (ART_TPL == null) { const el = document.getElementById('mandalaArt'); ART_TPL = el ? el.textContent.trim().replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '') : '' }
   return ART_TPL;
 }
-function mandalaSVG(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
+function mandalaSVG(seed) {
   const C = (2 * Math.PI * 45.6).toFixed(2), cid = 'phc' + (hash(seed) >>> 0).toString(36) + (phSeq++);
-  let center;
-  if (photo || placeholderImg) {
-    const fallbackText = `<text x="48" y="48" text-anchor="middle" dominant-baseline="central" class="m-num" fill="#e3d2a5">${esc(phLetter || 'ق')}</text>`;
-    let images = '';
-    if (placeholderImg) {
-      images += `<image href="${placeholderImg}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice"/>`;
-    }
-    if (photo) {
-      images += `<image href="${photo}" x="26.5" y="26.5" width="43" height="43" clip-path="url(#${cid})" preserveAspectRatio="xMidYMid slice" data-err-remove="1"/>`;
-    }
-    center = `<circle cx="48" cy="48" r="21.5" fill="#21402f"/><clipPath id="${cid}"><circle cx="48" cy="48" r="21.5"/></clipPath>${fallbackText}${images}<circle cx="48" cy="48" r="21.5" fill="none" stroke="#ba9743" stroke-width="0.75"/>`;
-  } else {
-    center = `<circle cx="48" cy="48" r="21.5" fill="#21402f" stroke="#ba9743" stroke-width="0.39"/><text x="48" y="44.5" text-anchor="middle" dominant-baseline="central" class="m-num" fill="#e3d2a5">${esc(numTxt)}</text><text x="48" y="54" text-anchor="middle" dominant-baseline="central" class="m-sub" fill="#e3d2a5">${esc(subTxt)}</text>`;
-  }
   const inner = `<defs><linearGradient id="${cid}lg" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(31.291993,32.806122,-32.806122,31.291993,6.457318,22.027675)"><stop offset="0" style="stop-color:#3d6745;stop-opacity:1"/><stop offset="1" style="stop-color:#143c1c;stop-opacity:1"/></linearGradient><filter id="${cid}sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.6"/></filter></defs>`
     + `<circle cx="48" cy="48" r="48" fill="url(#${cid}lg)"/>`
     + `<g class="spin-a">${mandalaArt()}</g>`
     + `<circle cx="48" cy="48" r="45.6" fill="none" stroke="#ba9743" stroke-opacity="0.22" stroke-width="1.5"/>`
     + `<circle class="pr-fill" cx="48" cy="48" r="45.6" fill="none" stroke="#ba9743" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 48 48)"/>`
-    + `<circle cx="48" cy="48" r="23" fill="#15251a" opacity="0.5" filter="url(#${cid}sh)"/>`
-    + center
-    + `<circle cx="48" cy="48" r="21.5" fill="none" stroke="#e3d2a5" stroke-width="0.55"/>`;
+    + `<circle cx="48" cy="48" r="23" fill="#15251a" opacity="0.5" filter="url(#${cid}sh)"/>`;
   return `<svg viewBox="0 0 96 96" class="mandala-svg" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+function mandalaHTML(seed, numTxt, subTxt, photo, phLetter, placeholderImg) {
+  let center;
+  if (photo || placeholderImg) {
+    center = `<img class="m-ava" src="${avatarURI(seed, phLetter || 'ق')}" alt="" aria-hidden="true">`
+      + (placeholderImg ? `<img class="m-pic" src="${placeholderImg}" alt="" loading="lazy" data-err-remove="1">` : '')
+      + (photo ? `<img class="m-pic" src="${photo}" alt="" loading="lazy" data-err-remove="1">` : '');
+  } else {
+    center = `<span class="m-txt"><span class="m-num">${esc(numTxt)}</span><span class="m-sub">${esc(subTxt)}</span></span>`;
+  }
+  return mandalaSVG(seed) + `<div class="m-center">${center}</div>`;
 }
 const reciterLetter = r => { const n = (S.lang === 'ar' ? r.name : r.name_en || r.name).trim(); return n[0] || 'ق' };
 const reciterName = r => S.lang === 'ar' ? r.name : (r.name_en || r.name);
@@ -640,8 +635,8 @@ function updateNowPlaying() {
   const isMadani = (tr.type === 1) || (tr.n && SURAH[tr.n - 1] && SURAH[tr.n - 1][3] === 1);
   const mosquePlaceholder = isMadani ? '/img/mosque-nabawi.jpg' : '/img/mosque-haram.jpg';
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
-  $('#npMandala').innerHTML = mandalaSVG(...args);
-  if ($('#npOverlay').classList.contains('open')) $('#ovMandala').innerHTML = mandalaSVG(...args);
+  $('#npMandala').innerHTML = mandalaHTML(...args);
+  if ($('#npOverlay').classList.contains('open')) $('#ovMandala').innerHTML = mandalaHTML(...args);
   $('#ovPhoto').innerHTML = photo ? `<img src="${photo}" alt="" data-err-remove="1">` : (mosquePlaceholder ? `<img src="${mosquePlaceholder}" alt="">` : '');
   const ava = photo || avatarURI(tr.rar, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق');
   $('#pbArtImg').src = ava; $('#pbArtImg').onerror = function () { this.onerror = null; this.src = avatarURI(tr.rar, 'ق') };
@@ -1932,6 +1927,10 @@ document.addEventListener('error', e => {
   if (el.dataset.alts != null) { const alts = el.dataset.alts.split('|').filter(Boolean); if (alts.length) { el.setAttribute('src', alts.shift()); el.dataset.alts = alts.join('|') } else el.classList.add('broken'); return }
   if (el.dataset.errBroken != null) el.classList.add('broken');
 }, true);
+document.addEventListener('load', e => {
+  const el = e.target;
+  if (el && el.tagName === 'IMG' && el.classList.contains('m-pic')) el.classList.add('loaded');
+}, true);
 function setOrbVars(b) {
   const ov = $('#npOverlay'); if (!ov) return;
   ov.style.setProperty('--bass', b[0].toFixed(3));
@@ -2681,8 +2680,8 @@ window.addEventListener('storage', e => {
   $('#btnShuffle').classList.toggle('on', S.shuffle);
   setSpeed(S.speed);
   $('#view').innerHTML = `<div class="skel-page"><div class="skel skel-hero"></div><div class="skel-grid">${'<div class="skel skel-card"></div>'.repeat(8)}</div></div>`;
-  $('#npMandala').innerHTML = mandalaSVG('أُنس', 'أ', 'القرآن الكريم');
-  $('#ovMandala').innerHTML = mandalaSVG('أُنس', 'أ', 'القرآن الكريم');
+  $('#npMandala').innerHTML = mandalaHTML('أُنس', 'أ', 'القرآن الكريم');
+  $('#ovMandala').innerHTML = mandalaHTML('أُنس', 'أ', 'القرآن الكريم');
   $('#pbArtImg').src = avatarURI('أُنس', 'أ');
   rotateVerse(true);
   await loadData();
