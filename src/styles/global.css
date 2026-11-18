@@ -2142,10 +2142,14 @@ html[dir="rtl"] .prog .fill {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 2;
+  position: sticky;
+  top: 0;
+  z-index: 6;
   flex-shrink: 0;
   padding: 2px 4px 10px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 82%, transparent) 60%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .ov-top .lbl {
@@ -6619,4 +6623,26 @@ body.playing #bgFx .g2 {
 .lite-fx .mandala-svg .spin-b,
 .lite-fx .mandala-svg .spin-c {
   animation: none
+}
+
+/* ═══════════════ phone playback controls modal ═══════════════ */
+#mSpeedRange {
+  width: 100%;
+  accent-color: var(--gold);
+  height: 22px;
+  cursor: pointer;
+  margin: 12px 0 2px
+}
+
+.mctl-sleep .sl {
+  display: block;
+  margin: 14px 0 8px
+}
+
+.mctl-sleep .seg {
+  flex-wrap: wrap
+}
+
+.phone-ctl .vol .prog {
+  width: 150px
 }

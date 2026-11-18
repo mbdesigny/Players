@@ -6,7 +6,7 @@ import NowPlayingPanel from '../components/NowPlayingPanel.astro';
 import PlayerBar from '../components/PlayerBar.astro';
 import FullscreenPlayer from '../components/FullscreenPlayer.astro';
 import Modals from '../components/Modals.astro';
-import frame from '../assets/player-frame.svg?raw';
+import mandalaArt from '../assets/mandala-art.svg?raw';
 ---
 <Base>
   <div id="bgFx"><div class="glow g1"></div><div class="glow g2"></div><div class="lattice"></div><div class="grain"></div></div>
@@ -31,7 +31,7 @@ import frame from '../assets/player-frame.svg?raw';
   <div id="toasts" role="status" aria-live="polite" aria-atomic="true"></div>
   <audio id="audio" preload="metadata" playsinline="" webkit-playsinline=""></audio>
 
-  <script is:inline type="text/svg-template" id="playerFrame" set:html={frame} />
+  <script is:inline type="text/svg-template" id="mandalaArt" set:html={mandalaArt} />
   <script>
     import '../scripts/app.js';
   </script>
