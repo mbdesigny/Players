@@ -1868,8 +1868,7 @@ function applyLang() {
   applyI18nStatic(); buildQualitySeg(); renderSleepPop();
 }
 function applyI18nStatic() { $$('[data-i18n]').forEach(el => { const k = el.dataset.i18n; if (I18N[S.lang][k]) el.textContent = I18N[S.lang][k] }); $$('[data-i18n-title]').forEach(el => { const k = el.dataset.i18nTitle; if (I18N[S.lang][k]) el.title = I18N[S.lang][k] }); $$('[data-i18n-aria]').forEach(el => { const k = el.dataset.i18nAria; if (I18N[S.lang][k]) el.setAttribute('aria-label', I18N[S.lang][k]) }); $$('.nav-item').forEach(b => { const k = b.dataset.view || 'downloads'; if (I18N[S.lang][k]) b.title = I18N[S.lang][k] }) }
-function buildQualitySeg() { ['segQuality', 'segQualitySet'].forEach(id => $$('#' + id + ' button').forEach(b => { const on = b.dataset.q === S.quality; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') })) }
-function openQuality() { openModal('#qualityScrim') }
+function buildQualitySeg() { $$('#segQualitySet button').forEach(b => { const on = b.dataset.q === S.quality; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') }) }
 function applySidebar() {
   document.body.classList.toggle('side-collapsed', S.sideMode === 'collapsed');
   const b = $('#sideBtn'); if (b) b.classList.toggle('on', S.sideMode === 'collapsed');
@@ -2136,12 +2135,7 @@ function setQuality(q) {
   S.quality = q; store.set('quality', q); buildQualitySeg();
   if (S.current) { const pos = audio.currentTime, was = !audio.paused; S.srcIdx = 0; S.srcOrder = pickSource(S.current, S.quality); setAudioSrc(S.srcOrder[0].url); audio.addEventListener('loadedmetadata', () => { audio.currentTime = pos }, { once: true }); if (was) audio.play().catch(() => { }); updateBadges() }
 }
-$('#qualityScrim').addEventListener('click', e => {
-  const qb = e.target.closest('#segQuality button');
-  if (qb) { setQuality(qb.dataset.q); return }
-  if (e.target.id === 'qualityClose' || e.target.id === 'qualityScrim') closeModal('#qualityScrim');
-});
-$('#btnQuality').onclick = openQuality;
+$('#btnQuality').onclick = () => openModal('#phoneCtlScrim');
 function setSpeed(v) {
   S.speed = Math.min(2, Math.max(.75, v)); store.set('speed', S.speed); audio.playbackRate = S.speed;
   const sv = $('#speedVal'); if (sv) sv.textContent = S.speed + '\u00d7';
@@ -2588,7 +2582,7 @@ if ('mediaSession' in navigator) {
    fullscreen player, and the sidebar drawer (signalled by #scrimSide.open —
    the sidebar's own .open class is also used for the desktop state). */
 const TRAP_ROOTS = [
-  ['#confirmScrim', null], ['#qualityScrim', null], ['#prayerScrim', null],
+  ['#confirmScrim', null], ['#prayerScrim', null],
   ['#settingsScrim', null], ['#queueAddScrim', null], ['#dlDrawer', null], ['#npOverlay', null], ['#phoneCtlScrim', null],
   ['#sidebar', '#scrimSide']
 ];
@@ -2641,7 +2635,7 @@ document.addEventListener('keydown', e => {
     if ($('#confirmScrim') && $('#confirmScrim').classList.contains('open')) { closeModal('#confirmScrim'); confirmRes && confirmRes(false); return }
     if ($('#queueAddScrim') && $('#queueAddScrim').classList.contains('open')) { closeModal('#queueAddScrim'); return }
     if (S.view === 'mushaf') { if (document.body.classList.contains('mushaf-clean')) { document.body.classList.remove('mushaf-clean'); return } setView('home'); return }
-    closeOverlay(); closeModal('#settingsScrim'); closeModal('#prayerScrim'); closeModal('#qualityScrim'); closeModal('#dlDrawer'); closeModal('#phoneCtlScrim'); closeSidebar();
+    closeOverlay(); closeModal('#settingsScrim'); closeModal('#prayerScrim'); closeModal('#dlDrawer'); closeModal('#phoneCtlScrim'); closeSidebar();
   }
 });
 window.addEventListener('beforeunload', saveSession);

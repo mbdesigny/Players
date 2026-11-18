@@ -6828,7 +6828,17 @@ body.playing #bgFx .g2 {
   display: none
 }
 
-@media(max-width:640px) {
+@media(min-width:769px) {
+  .settings-sheet .sec-vol {
+    display: none
+  }
+
+  .settings-sheet {
+    width: min(420px, 92vw)
+  }
+}
+
+@media(max-width:768px) {
   #phoneCtlScrim {
     place-items: end stretch
   }
