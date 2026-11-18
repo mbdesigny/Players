@@ -421,8 +421,8 @@ svg {
 }
 
 .brand-mark {
-  width: 46px;
-  height: 46px;
+  width: 56px;
+  height: 56px;
   flex: none;
   border-radius: 50%;
   box-shadow: 0 6px 18px var(--glow1)
@@ -441,7 +441,7 @@ svg {
 
 .brand-name .wm {
   display: none;
-  height: 27px;
+  height: 56px;
   width: auto;
   max-width: 100%
 }
@@ -6530,6 +6530,7 @@ select,
   .pb-progress{display:none}
   .pb-right{gap:2px}
   .pb-right #btnExpand{display:grid}
+  .verse-card {visibility: hidden;}
 }
 
 @media(max-width:479px){
