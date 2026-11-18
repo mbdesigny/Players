@@ -74,15 +74,38 @@ self.addEventListener('message', (e) => {
   }
 });
 
-/* Audio streams: cache-first with range support. Full files are stored once
-   under their URL; later range requests are served by slicing the cached body
-   (only possible for cors/basic responses — opaque bodies are unreadable).
+/* Audio streams: cache-first with range support. First play streams natively;
+   that same stream is tee'd into the cache as it plays (one download, no
+   competing second fetch). Cached ranges are served as zero-copy Blob slices,
+   memoized per file (least-recently-used, only cors/basic bodies are readable).
    Cache is FIFO-trimmed by file count and soft-capped via storage estimate. */
+const blobMemo = new Map();
+const BLOB_MEMO_MAX = 4;
+function memoBlob(key, res) {
+  if (blobMemo.has(key)) {
+    const p = blobMemo.get(key);
+    blobMemo.delete(key);
+    blobMemo.set(key, p);
+    return p;
+  }
+  const p = res.blob().catch(() => null);
+  blobMemo.set(key, p);
+  if (blobMemo.size > BLOB_MEMO_MAX) blobMemo.delete(blobMemo.keys().next().value);
+  return p;
+}
+
 async function trimAudioCache() {
   const c = await caches.open(AUDIO_CACHE);
   const keys = await c.keys();
+  if (blobMemo.size) {
+    const alive = new Set(keys.map((k) => k.url));
+    for (const k of [...blobMemo.keys()]) if (!alive.has(k)) blobMemo.delete(k);
+  }
   if (keys.length > AUDIO_CACHE_MAX_FILES) {
-    for (const k of keys.slice(0, keys.length - AUDIO_CACHE_MAX_FILES)) await c.delete(k);
+    for (const k of keys.slice(0, keys.length - AUDIO_CACHE_MAX_FILES)) {
+      await c.delete(k);
+      blobMemo.delete(k.url);
+    }
   }
   if (navigator.storage && navigator.storage.estimate) {
     try {
@@ -92,42 +115,34 @@ async function trimAudioCache() {
         const ks2 = await c.keys();
         if (!ks2.length) break;
         await c.delete(ks2[0]);
+        blobMemo.delete(ks2[0].url);
       }
     } catch (_) { }
   }
 }
 
-function sliceResponse(res, rangeHeader) {
+function rangeParts(rangeHeader, size) {
   const m = /bytes=(\d+)-(\d*)/.exec(rangeHeader || '');
-  if (!m) return Promise.resolve(res);
-  const start = +m[1];
-  return res.arrayBuffer().then((buf) => {
-    if (start >= buf.byteLength) throw new Error('range-start-out-of-bounds');
-    const end = m[2] ? Math.min(+m[2] + 1, buf.byteLength) : buf.byteLength;
-    const body = buf.slice(start, end);
-    return new Response(body, {
-      status: 206,
-      statusText: 'Partial Content',
-      headers: {
-        'Content-Type': res.headers.get('Content-Type') || 'audio/mpeg',
-        'Content-Range': `bytes ${start}-${start + body.byteLength - 1}/${buf.byteLength}`,
-        'Content-Length': String(body.byteLength)
-      }
-    });
-  });
+  if (!m) return null;
+  return { start: +m[1], end: m[2] ? Math.min(+m[2] + 1, size) : size };
 }
 
-async function warmAudioCache(key) {
-  try {
-    const c = await caches.open(AUDIO_CACHE);
-    if (await c.match(key)) return;
-    let res;
-    try { res = await fetch(key, { mode: 'cors' }) } catch (_) { res = await fetch(key, { mode: 'no-cors' }) }
-    if (res && (res.ok || res.type === 'opaque')) {
-      await c.put(key, res);
-      trimAudioCache();
+async function sliceResponse(bp, rangeHeader, contentType) {
+  const blob = await bp;
+  if (!blob) return null;
+  const p = rangeParts(rangeHeader, blob.size);
+  if (!p) return null;
+  if (p.start >= blob.size || p.end <= p.start) throw new Error('range-start-out-of-bounds');
+  const body = blob.slice(p.start, p.end);
+  return new Response(body, {
+    status: 206,
+    statusText: 'Partial Content',
+    headers: {
+      'Content-Type': contentType || 'audio/mpeg',
+      'Content-Range': `bytes ${p.start}-${p.start + body.size - 1}/${blob.size}`,
+      'Content-Length': String(body.size)
     }
-  } catch (_) { }
+  });
 }
 
 async function handleAudio(req, url) {
@@ -137,23 +152,22 @@ async function handleAudio(req, url) {
   const hit = await c.match(key);
   if (hit) {
     trimAudioCache();
-    if (hit.type === 'opaque') return hit;
-    if (range) {
-      try { return await sliceResponse(hit.clone(), range) } catch (_) { return hit.clone() }
+    if (hit.type !== 'opaque' && range) {
+      try {
+        const sliced = await sliceResponse(memoBlob(key, hit.clone()), range, hit.headers.get('Content-Type'));
+        if (sliced) return sliced;
+      } catch (_) { return hit.clone() }
     }
     return hit.clone();
   }
-  if (!range) {
-    const res = await fetch(req);
-    if (res && (res.ok || res.type === 'opaque')) {
+  const res = await fetch(req);
+  if (res && res.ok) {
+    const p = rangeParts(range, Infinity);
+    if (!p || p.start === 0) {
       c.put(key, res.clone()).then(() => trimAudioCache()).catch(() => { });
     }
-    return res;
   }
-  /* First play: stream natively (browser-managed buffer, fast start) and
-     warm a full cached copy in the background for the next play / offline. */
-  warmAudioCache(key);
-  return fetch(req);
+  return res;
 }
 
 self.addEventListener('fetch', (e) => {

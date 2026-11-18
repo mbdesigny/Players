@@ -133,6 +133,7 @@ audio.volume = store.get('volume', 1);
    hosts verified to send Access-Control-Allow-Origin; never let the analyser
    break playback — non-CORS sources play unrouted with synthetic waves. */
 function setAudioSrc(url) {
+  audio.preload = 'metadata';
   if (corsAudio(url)) { audio.crossOrigin = 'anonymous' }
   else if (acx) { audio = swapAudioEl() }
   else { audio.removeAttribute('crossorigin') }
@@ -149,22 +150,35 @@ function swapAudioEl() {
   bindAudio(el);
   return el;
 }
-let stallTimer = 0, errToastedKey = '';
-function clearStallWatch() { if (stallTimer) { clearTimeout(stallTimer); stallTimer = 0 } }
+let stallTimer = 0, stallSnap = 0, errToastedKey = '';
+function clearStallWatch() { if (stallTimer) { clearTimeout(stallTimer); stallTimer = 0 } stallSnap = 0 }
+const curBufEnd = el => { try { const b = el.buffered; return b.length ? b.end(b.length - 1) : -1 } catch (e) { return -1 } };
 function armStallWatch(el) {
   if (stallTimer) return;
+  stallSnap = curBufEnd(el);
   stallTimer = setTimeout(() => {
     stallTimer = 0;
     if (el.paused || el.ended || el.readyState >= 3) return;
+    if (curBufEnd(el) > stallSnap) { armStallWatch(el); return }
     const at = el.currentTime;
     try { el.load() } catch (e) { }
     el.addEventListener('loadedmetadata', () => { el.currentTime = at; el.play().catch(() => { }) }, { once: true });
-  }, 8000);
+  }, 12000);
 }
+let prewarmTimer = 0;
+function prewarmTrack() {
+  prewarmTimer = 0;
+  if (!audio || !S.current || !audio.paused || !audio.currentSrc) return;
+  if (document.visibilityState !== 'visible') return;
+  const c = navigator.connection || {};
+  if (c.saveData || c.effectiveType === 'slow-2g' || c.effectiveType === '2g') return;
+  if (audio.preload !== 'auto') audio.preload = 'auto';
+}
+function schedulePrewarm() { if (!prewarmTimer) prewarmTimer = setTimeout(prewarmTrack, 1500) }
 function bindAudio(el) {
-  el.addEventListener('play', () => { setPlayingUI(true); if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
-  el.addEventListener('pause', () => { setPlayingUI(false); clearStallWatch(); saveSession() });
-  el.addEventListener('playing', () => clearStallWatch());
+  el.addEventListener('play', () => { setPlayingUI(true); if (prewarmTimer) { clearTimeout(prewarmTimer); prewarmTimer = 0 } if (corsAudio(el.currentSrc || el.src)) ensureAnalyser(); if (acx && acx.state === 'suspended') acx.resume() });
+  el.addEventListener('pause', () => { setPlayingUI(false); clearStallWatch(); saveSession(); schedulePrewarm() });
+  el.addEventListener('playing', () => { clearStallWatch(); const cur = currentSources()[S.srcIdx]; if (cur) store.set('lastProvider', cur.provider) });
   let lastSessionSave = 0;
   el.addEventListener('timeupdate', () => { scheduleProgress(); const now = Date.now(); if (now - lastSessionSave > 25000) { lastSessionSave = now; saveSession() } });
   el.addEventListener('progress', updateBuffer);
@@ -582,7 +596,13 @@ function loadTrack(i, autoplay = true, seek = 0) {
   if (i < 0 || i >= S.tracks.length) return;
   lastQueuedOffset = 0;
   S.idx = i; const tr = S.tracks[i]; S.current = tr; S.srcIdx = 0;
-  const order = pickSource(tr, S.quality); S.srcOrder = order;
+  const order = pickSource(tr, S.quality);
+  const good = store.get('lastProvider', '');
+  if (good && order.length > 1) {
+    const gi = order.findIndex(s => s.provider === good);
+    if (gi > 0 && order[gi].bitrate >= order[0].bitrate - 32) order.unshift(order.splice(gi, 1)[0]);
+  }
+  S.srcOrder = order;
   setAudioSrc(order[0].url); audio.playbackRate = S.speed;
   if (seek) audio.addEventListener('loadedmetadata', () => { audio.currentTime = seek }, { once: true });
   if (autoplay) audio.play().catch(() => { });
@@ -1891,14 +1911,19 @@ let acx = null, analyser = null, freqData = null, waveRaf = 0, smLevel = 0, laye
 function ensureAnalyser() {
   if (acx !== null || (!window.AudioContext && !window.webkitAudioContext)) return;
   try {
-    acx = new (window.AudioContext || window.webkitAudioContext)();
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const cand = new Ctx();
+    if (cand.state !== 'running') { try { cand.resume() } catch (e) { } }
+    if (cand.state !== 'running') { try { cand.close() } catch (e) { } return }
+    acx = cand;
     const src = acx.createMediaElementSource(audio);
     analyser = acx.createAnalyser(); analyser.fftSize = 512; analyser.smoothingTimeConstant = .82;
     src.connect(analyser); analyser.connect(acx.destination);
     freqData = new Uint8Array(analyser.frequencyBinCount);
   } catch (e) { acx = null; analyser = null }
 }
-document.addEventListener('pointerdown', () => { if (acx && acx.state === 'suspended') acx.resume() }, { capture: true });
+document.addEventListener('pointerdown', () => { if (acx && acx.state === 'suspended') acx.resume(); else if (!audio.paused && acx === null) ensureAnalyser() }, { capture: true });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') prewarmTrack() });
 document.addEventListener('error', e => {
   const el = e.target;
   if (!el || !el.dataset) return;
