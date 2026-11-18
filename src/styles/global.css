@@ -6657,24 +6657,200 @@ body.playing #bgFx .g2 {
   animation: none
 }
 
-/* ═══════════════ phone playback controls modal ═══════════════ */
-#mSpeedRange {
+/* ═══════════════ audio settings sheet (bottom sheet) ═══════════════ */
+.settings-sheet .sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line)
+}
+
+.settings-sheet .sheet-head h3 {
+  margin: 0;
+  font-size: var(--fs-lg)
+}
+
+.set-sec {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line)
+}
+
+.set-sec:last-child {
+  border-bottom: 0;
+  padding-bottom: 4px
+}
+
+.sec-t {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin-bottom: 10px
+}
+
+.sec-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px
+}
+
+.sec-row .sec-t {
+  margin-bottom: 0
+}
+
+.sec-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+
+.sec-tools b {
+  font-size: var(--fs-sm);
+  min-width: 42px;
+  text-align: center;
+  color: var(--gold-ink)
+}
+
+.set-vol {
+  display: flex;
+  align-items: center;
+  gap: 10px
+}
+
+.set-vol .ctrl {
+  flex: none
+}
+
+.sheet-range {
+  appearance: none;
+  -webkit-appearance: none;
   width: 100%;
-  accent-color: var(--gold);
-  height: 22px;
+  height: 28px;
+  margin: 2px 0;
+  background: transparent;
   cursor: pointer;
-  margin: 12px 0 2px
+  --fd: right
 }
 
-.mctl-sleep .sl {
-  display: block;
-  margin: 14px 0 8px
+[dir='rtl'] .sheet-range {
+  --fd: left
 }
 
-.mctl-sleep .seg {
+.sheet-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 99px;
+  background: linear-gradient(to var(--fd, right), var(--gold) var(--val, 100%), var(--line) var(--val, 100%))
+}
+
+.sheet-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  box-shadow: var(--shadow2)
+}
+
+.sheet-range::-moz-range-track {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--line)
+}
+
+.sheet-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--gold)
+}
+
+.sheet-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--gold)
+}
+
+.pseg {
   flex-wrap: wrap
 }
 
-.phone-ctl .vol .prog {
-  width: 150px
+.pseg button {
+  padding: 8px 14px
+}
+
+.pseg button.on {
+  background: var(--gold);
+  color: var(--on-gold)
+}
+
+.sleep-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px
+}
+
+.sleep-grid button {
+  padding: 11px 6px;
+  border-radius: var(--r-sm);
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--ink2);
+  transition: .15s
+}
+
+.sleep-grid button.on {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--on-gold)
+}
+
+.st-count {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--on-gold);
+  background: var(--gold);
+  border-radius: 99px;
+  padding: 2px 10px;
+  min-width: 58px;
+  text-align: center;
+  font-variant-numeric: tabular-nums
+}
+
+#btnExpand .ic-set {
+  display: none
+}
+
+@media(max-width:640px) {
+  #phoneCtlScrim {
+    place-items: end stretch
+  }
+
+  .settings-sheet {
+    width: 100%;
+    max-width: none;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    border-bottom: 0;
+    transform: translateY(100%);
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px))
+  }
+
+  #phoneCtlScrim.open .settings-sheet {
+    transform: none
+  }
+
+  #btnExpand .ic-exp {
+    display: none
+  }
+
+  #btnExpand .ic-set {
+    display: block
+  }
 }
