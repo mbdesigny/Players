@@ -1605,6 +1605,8 @@ body.np-float .np-title {
 }
 
 .queue-head {
+  display: flex;
+  align-items: center;
   font-size: var(--fs-2xs);
   letter-spacing: 1.4px;
   text-transform: uppercase;
