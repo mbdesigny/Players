@@ -8,7 +8,7 @@ const vEgypt = '/adhan/voices/egypt.mp3';
 const vTurkey = '/adhan/voices/turkey.mp3';
 const vBaldi = '/adhan/voices/baldi.mp3';
 const vQatami = '/adhan/voices/qatami.mp3';
-import mosqueUrl from '../assets/hero/mosque.jpg?url';
+import mosqueUrl from '../assets/hero/greatmosque.jpg?url';
 import ADHKAR from '../data/adhkar.json';
 import { pad, norm, norm2, esc, hash, arDigits, fmt, safeName } from './lib/text.js';
 import { SURAH, surahName, surahNameGlyph, SURAH_PAGE } from './lib/surah.js';
@@ -739,7 +739,7 @@ function pushRecent(tr) {
 
 /* ═══════════════ MUSHAF ═══════════════ */
 const MUSHAF_LOCAL = {
-  hafs: import.meta.glob('../assets/mushaf/*.svg', { eager: true, query: '?url', import: 'default' }),
+  hafs: import.meta.glob('../assets/mushaf-hafs/*.svg', { eager: true, query: '?url', import: 'default' }),
   warsh: import.meta.glob('../assets/mushaf-warsh/*.svg', { eager: true, query: '?url', import: 'default' })
 };
 const MUSHAF_REMOTE = {

@@ -593,7 +593,7 @@ function pushRecent(tr) {
 
 /* ═══════════════ MUSHAF ═══════════════ */
 const MUSHAF_LOCAL = {
-  hafs: import.meta.glob('../assets/mushaf/*.svg', { eager: true, query: '?url', import: 'default' }),
+  hafs: import.meta.glob('../assets/mushaf-hafs/*.svg', { eager: true, query: '?url', import: 'default' }),
   warsh: import.meta.glob('../assets/mushaf-warsh/*.svg', { eager: true, query: '?url', import: 'default' })
 };
 const MUSHAF_REMOTE = {
@@ -608,7 +608,7 @@ const MUSHAF_REMOTE = {
     `https://cdn.jsdelivr.net/gh/quran-ws/quran-svg@b4155f07e4aea087d2c458069acff9f7c7e749f6/mushafs/warsh/kfqc/svg/${pad(n)}.svg`
   ]
 };
-const mushafLocalKey = (n, rw) => `../assets/${rw === 'warsh' ? 'mushaf-warsh' : 'mushaf'}/${pad(n)}.svg`;
+const mushafLocalKey = (n, rw) => `../assets/${rw === 'warsh' ? 'mushaf-warsh' : 'mushaf-hafs'}/${pad(n)}.svg`;
 const mushafSources = (n, rw) => {
   const local = MUSHAF_LOCAL[rw][mushafLocalKey(n, rw)];
   return local ? [local, ...MUSHAF_REMOTE[rw](n)] : MUSHAF_REMOTE[rw](n);

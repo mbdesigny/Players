@@ -308,7 +308,7 @@ The substantive risk concentrates in four areas:
 - **Mapping:** OWASP A05:2021 · CWE-693.
 
 **[F-45] Mushaf fallback imagery resolves against mutable `@main` branch references of three uncontracted GitHub repos**
-- **Severity:** Low · **Category:** Supply chain (content) · **Location:** `app.js:535-544`; `src/assets/mushaf/README.md`; `src/assets/mushaf-warsh/README.md`
+- **Severity:** Low · **Category:** Supply chain (content) · **Location:** `app.js:535-544`; `src/assets/mushaf-hafs/README.md`; `src/assets/mushaf-warsh/README.md`
 - **Description:** Fallback chains use `cdn.jsdelivr.net/gh/<repo>@main/...` and `raw.githubusercontent.com/<repo>/main/...` (`Younes12345698/pro-muslim-mushaf`, `SakinaDevGroup/mushaf-madani-cdn`, `quran-ws/quran-svg`). Branch refs are mutable; SRI does not apply to `<img>`; SVG-in-`<img>` is script-inert, so the exposure is content integrity of displayed Quranic pages and availability — not execution.
 - **Evidence:** `` `https://cdn.jsdelivr.net/gh/Younes12345698/pro-muslim-mushaf@main/svg/${pad(n)}.svg` `` …; READMEs document the fallback order ("raw is primary because jsdelivr 403s some warsh pages").
 - **Mapping:** OWASP A08:2021 · CWE-829. **Mitigations:** 689 MB vendored local assets are primary; remote chains are fallback-only.

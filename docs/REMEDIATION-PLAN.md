@@ -119,7 +119,7 @@ Verification: `npm run lint`; manual screen-reader spot-check (VoiceOver/NVDA) o
 
 ### 2.5 Supply-chain content fixes — fixes F-45, F-42
 
-- [ ] **F-45** `src/scripts/app.js:535-544`: pin the three fallback repos to immutable commit SHAs instead of `@main` (both `cdn.jsdelivr.net/gh/<repo>@<sha>/…` and `raw.githubusercontent.com/<repo>/<sha>/…`). Resolve current SHAs once, record them in `src/assets/mushaf/README.md` and `src/assets/mushaf-warsh/README.md` alongside the documented fallback order.
+- [ ] **F-45** `src/scripts/app.js:535-544`: pin the three fallback repos to immutable commit SHAs instead of `@main` (both `cdn.jsdelivr.net/gh/<repo>@<sha>/…` and `raw.githubusercontent.com/<repo>/<sha>/…`). Resolve current SHAs once, record them in `src/assets/mushaf-hafs/README.md` and `src/assets/mushaf-warsh/README.md` alongside the documented fallback order.
 - [ ] **F-42**: regenerate `package-lock.json` against `registry.npmjs.org` (`rm package-lock.json && npm install` with default registry), verify `npm audit` still reports 0 and all 417 integrity fields persist; commit the regenerated lockfile. Optionally add `.npmrc` with `registry=https://registry.npmjs.org/` to prevent recurrence.
 
 Acceptance: zero `registry.npmmirror.com` URLs in the lockfile; zero `@main` references in fallback chains.

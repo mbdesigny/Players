@@ -31,7 +31,7 @@ Implemented:
   swipe gestures.
 - Open-book two-page spread on desktop (≥900px) with live re-render when
   crossing the breakpoint.
-- **Pages are self-hosted SVGs** in `src/assets/mushaf/` (Hafs 604) and
+- **Pages are self-hosted SVGs** in `src/assets/mushaf-hafs/` (Hafs 604) and
   `src/assets/mushaf-warsh/` (Warsh), resolved at build time via
   `import.meta.glob`. Missing pages fall back to a remote chain
   (jsdelivr SVG → raw GitHub SVG → PNG CDN). Pages 1–2 are pre-wrapped into
@@ -134,7 +134,7 @@ Tracked in `docs/IMPROVEMENTS-PROMPT.md`. Status:
 | A7 | This documentation sync | **done** |
 | A8 | Adhkar daily progress | **done** |
 | A9 | Adhan duck mode + notifications + location hardening | **done** |
-| A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | **done** — pure logic in `src/scripts/lib/` (text/surah/mushaf/sources/prayer), 29 unit tests via `node:test`, ESLint + Prettier wired (`npm run lint`/`format`/`test`), `engines.node >=18` |
+| A10 | Split `app.js` into modules, ESLint/Prettier, unit tests | **done** — pure logic in `src/scripts/lib/` (text/surah/mushaf-hafs/sources/prayer), 29 unit tests via `node:test`, ESLint + Prettier wired (`npm run lint`/`format`/`test`), `engines.node >=18` |
 | A11 | Deduplicate CSS; single `#view` click delegator | **done** — removed duplicate MUSHAF-1 section (merged unique props into MUSHAF-2), slimmed duplicate MOBILE-2 media blocks to unique rules (kept after base mushaf rules so cascade still wins), merged the two `#view` click handlers into one delegator; RESTORED-BASE section analyzed and intentionally kept (its 2 overlapping selectors are live partial overrides, not dead duplication) |
 | A12 | `markPlayingRows()` null-number bug | **done** — rows now carry `data-n` (both reciter rows and collection rows), so un-marking always restores the real surah number; removed the dead `(row.dataset.coll!=null?null:null)` expression |
 | A13 | Unified `apiFetch` layer (timeout/retry/cache) + Nominatim policy | **done** — `src/scripts/lib/api.js`: `apiFetch` with AbortController timeout, retry with backoff (5xx/429/network, fail-fast on 4xx), in-memory TTL cache; wired into mp3quran, alquran.cloud editions, open-meteo, bigdatacloud, geo IP chain, aladhan; `nominatimSearch` sends `Accept-Language` + identifying `User-Agent` and throttles to ~1 req/sec |

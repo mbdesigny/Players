@@ -8,7 +8,7 @@ covered by it and remain the property of their respective owners.
 ## Bundled assets
 
 ### Written mushaf pages (Hafs & Warsh)
-- Location: `src/assets/mushaf/*.svg`, `src/assets/mushaf-warsh/*.svg`
+- Location: `src/assets/mushaf-hafs/*.svg`, `src/assets/mushaf-warsh/*.svg`
 - Source: https://github.com/Younes12345698/pro-muslim-mushaf (Madani mushaf,
   King Fahd Glorious Qur'an Printing Complex artwork)
 - License: **CC-BY-NC 4.0** — non-commercial use only. Any commercial use of
