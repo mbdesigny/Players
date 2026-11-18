@@ -214,8 +214,7 @@ function mandalaArt() {
 }
 function mandalaSVG(seed) {
   const C = (2 * Math.PI * 45.6).toFixed(2), cid = 'phc' + (hash(seed) >>> 0).toString(36) + (phSeq++);
-  const inner = `<defs><linearGradient id="${cid}lg" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(31.291993,32.806122,-32.806122,31.291993,6.457318,22.027675)"><stop offset="0" style="stop-color:#3d6745;stop-opacity:1"/><stop offset="1" style="stop-color:#143c1c;stop-opacity:1"/></linearGradient><filter id="${cid}sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.6"/></filter></defs>`
-    + `<circle cx="48" cy="48" r="48" fill="url(#${cid}lg)"/>`
+  const inner = `<defs><filter id="${cid}sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.6"/></filter></defs>`
     + `<g class="spin-a">${mandalaArt()}</g>`
     + `<circle cx="48" cy="48" r="45.6" fill="none" stroke="#ba9743" stroke-opacity="0.22" stroke-width="1.5"/>`
     + `<circle class="pr-fill" cx="48" cy="48" r="45.6" fill="none" stroke="#ba9743" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 48 48)"/>`

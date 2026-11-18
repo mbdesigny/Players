@@ -1265,13 +1265,17 @@ body:not(.playing) .eq i {
 .mandala-wrap {
   position: relative;
   width: 100%;
-  height: 100%
+  height: 100%;
+  /* replaces the removed SVG <linearGradient gradientTransform="matrix(31.291993,32.806122,...)"> */
+  background: linear-gradient(135deg, #3d6745 6%, #143c1c 58%);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .2)
 }
 
 .mandala-svg {
   width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 10px 26px rgba(0, 0, 0, .2))
+  height: 100%
 }
 
 /* B5: spin each ring around its OWN bounding-box centre (fill-box) so the
