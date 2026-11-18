@@ -117,3 +117,18 @@
   </div>
   <div class="d-list" id="dlList"><div class="empty" style="padding:26px"><p data-i18n="noDownloads">لا توجد تنزيلات بعد</p></div></div>
 </div>
+
+<!-- ═══════════════ PHONE PLAYBACK CONTROLS ═══════════════ -->
+<div class="scrim" id="phoneCtlScrim">
+  <div class="modal phone-ctl" role="dialog" aria-modal="true" aria-labelledby="phoneCtlTitle">
+    <h3 id="phoneCtlTitle"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5a9 9 0 0 0-9 9c0 1.8.5 3.4 1.4 4.8h15.2A8.9 8.9 0 0 0 21 14a9 9 0 0 0-9-9z"/><path d="M12 14l3.5-4.5"/><circle cx="12" cy="14" r="1.2"/></svg><span data-i18n="playback">التحكم بالتشغيل</span></h3>
+    <div class="set-row"><div class="sl" data-i18n="volume">الصوت</div>
+      <div class="vol"><button class="ctrl" id="mMute" aria-label="mute"><svg class="ic" id="mVolIcon" viewBox="0 0 24 24"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+        <div class="prog" id="mVolBar" dir="ltr" role="slider" tabindex="0" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-i18n-aria="volume" aria-label="مستوى الصوت"><div class="rail"><div class="fill" id="mVolFill"></div><div class="thumb" id="mVolThumb"></div></div></div>
+      </div></div>
+    <div class="set-row"><div class="sl" data-i18n="speed">السرعة</div><b id="mSpeedVal" dir="ltr">1×</b></div>
+    <input type="range" id="mSpeedRange" min="0.75" max="2" step="0.05" value="1" dir="ltr" data-i18n-aria="speed" aria-label="السرعة">
+    <div class="mctl-sleep"><div class="sl" data-i18n="sleep">مؤقت النوم</div><div class="seg" id="mSleepSeg" role="group" data-i18n-aria="sleep" aria-label="مؤقت النوم"></div></div>
+    <div class="m-actions"><button class="btn primary" id="phoneCtlClose" data-i18n="done">تم</button></div>
+  </div>
+</div>
