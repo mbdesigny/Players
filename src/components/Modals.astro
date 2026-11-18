@@ -34,20 +34,6 @@
   </div>
 </div>
 
-<!-- ═══════════════ QUALITY ═══════════════ -->
-<div class="scrim" id="qualityScrim">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qualityTitle" style="width:min(400px,92vw)">
-    <h3 id="qualityTitle"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg><span data-i18n="quality">الجودة</span></h3>
-    <div class="seg" id="segQuality" role="group" data-i18n-aria="quality" aria-label="الجودة">
-      <button data-q="auto" data-i18n="qAuto" aria-pressed="false">أعلى جودة</button>
-      <button data-q="high" data-i18n="qHigh" aria-pressed="false">١٩٢+</button>
-      <button data-q="std" data-i18n="qStd" aria-pressed="false">١٢٨</button>
-      <button data-q="save" data-i18n="qSave" aria-pressed="false">توفير البيانات</button>
-    </div>
-    <div class="m-actions"><button class="btn primary" id="qualityClose" data-i18n="done">تم</button></div>
-  </div>
-</div>
-
 <!-- ══════════ CONFIRM ══════════ -->
 <div class="scrim" id="confirmScrim">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg" style="width:min(400px,92vw)">
@@ -125,7 +111,7 @@
       <h3 id="phoneCtlTitle"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3"/><circle cx="15" cy="6" r="2"/><path d="M4 12h3M11 12h9"/><circle cx="9" cy="12" r="2"/><path d="M4 18h9M17 18h3"/><circle cx="15" cy="18" r="2"/></svg><span data-i18n="audioSet">إعدادات الصوت</span></h3>
       <button class="mini-btn" id="phoneCtlClose" data-i18n-aria="close" aria-label="إغلاق"><svg class="ic" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
     </div>
-    <div class="set-sec">
+    <div class="set-sec sec-vol">
       <div class="sec-t" data-i18n="volume">الصوت</div>
       <div class="set-vol">
         <button class="ctrl" id="mMute" data-i18n-aria="mute" aria-label="كتم"><svg class="ic" id="mVolIcon" viewBox="0 0 24 24"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg></button>
