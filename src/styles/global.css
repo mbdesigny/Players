@@ -579,6 +579,22 @@ html[lang="en"] .brand-name .wm-en {
   opacity: .8
 }
 
+a.side-foot {
+  display: block;
+  text-decoration: none;
+  transition: color .15s ease, opacity .15s ease
+}
+
+a.side-foot:hover {
+  color: var(--gold);
+  opacity: 1
+}
+
+a.nav-dev {
+  text-decoration: none;
+  cursor: pointer
+}
+
 /* ═══════════════ TOPBAR ═══════════════ */
 .topbar {
   display: flex;
