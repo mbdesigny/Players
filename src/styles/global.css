@@ -590,6 +590,11 @@ a.side-foot:hover {
   opacity: 1
 }
 
+a.nav-dev {
+  text-decoration: none;
+  cursor: pointer
+}
+
 /* ═══════════════ TOPBAR ═══════════════ */
 .topbar {
   display: flex;
