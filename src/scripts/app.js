@@ -710,13 +710,13 @@ function renderQueue() {
 }
 function updateProgress() {
   const df = audio.duration, fin = typeof df === 'number' && isFinite(df), d = fin ? df : 0, p = d ? Math.min(1, Math.max(0, audio.currentTime / d)) : 0, cur = fmt(audio.currentTime), dur = fmt(d);
-  if (!P || !P.tCur.isConnected) P = { tCur: $('#tCur'), tDur: $('#tDur'), ovCur: $('#ovCur'), ovDur: $('#ovDur'), progFill: $('#progFill'), progThumb: $('#progThumb'), ovFill: $('#ovFill'), ovThumb: $('#ovThumb'), progBar: $('#progBar'), ovProg: $('#ovProg') };
-  const { tCur, tDur, ovCur, ovDur, progFill, progThumb, ovFill, ovThumb, progBar, ovProg } = P;
+  if (!P || !P.tCur.isConnected) P = { tCur: $('#tCur'), tDur: $('#tDur'), ovCur: $('#ovCur'), ovDur: $('#ovDur'), progBar: $('#progBar'), ovProg: $('#ovProg') };
+  const { tCur, tDur, ovCur, ovDur, progBar, ovProg } = P;
   if (tDur) tDur.textContent = dur;
   if (ovDur) ovDur.textContent = dur;
-  const scrub = (progBar && progBar.classList.contains('scrub')) ? 1 : (ovProg && ovProg.classList.contains('scrub') ? 2 : 0), pct = (p * 100) + '%';
-  if (scrub !== 1) { if (tCur) tCur.textContent = cur; if (progFill) progFill.style.width = pct; if (progThumb) progThumb.style.insetInlineStart = pct }
-  if (scrub !== 2) { if (ovCur) ovCur.textContent = cur; if (ovFill) ovFill.style.width = pct; if (ovThumb) ovThumb.style.insetInlineStart = pct }
+  const scrub = (progBar && progBar.classList.contains('scrub')) ? 1 : (ovProg && ovProg.classList.contains('scrub') ? 2 : 0);
+  if (scrub !== 1) { if (tCur) tCur.textContent = cur; if (progBar) progBar.style.setProperty('--p', String(p)) }
+  if (scrub !== 2) { if (ovCur) ovCur.textContent = cur; if (ovProg) ovProg.style.setProperty('--p', String(p)) }
   const now = Math.round(audio.currentTime || 0), max = Math.round(d), vt = cur + ' / ' + dur;
   [progBar, ovProg].forEach(el => { if (!el) return; el.setAttribute('aria-valuemax', max); el.setAttribute('aria-valuenow', now); el.setAttribute('aria-valuetext', vt) });
   document.documentElement.style.setProperty('--pr', p.toFixed(4));
@@ -735,7 +735,7 @@ function scheduleProgress() {
   });
 }
 function updateBuffer() {
-  try { if (audio.buffered.length && audio.duration && isFinite(audio.duration)) { const b = audio.buffered.end(audio.buffered.length - 1) / audio.duration * 100; $('#progBuf').style.width = b + '%'; $('#ovBuf').style.width = b + '%' } } catch (e) { }
+  try { if (audio.buffered.length && audio.duration && isFinite(audio.duration)) { const b = audio.buffered.end(audio.buffered.length - 1) / audio.duration; const pb = $('#progBar'); if (pb) pb.style.setProperty('--buf', String(b)); const op = $('#ovProg'); if (op) op.style.setProperty('--buf', String(b)) } } catch (e) { }
 }
 function setPlayingUI(on) {
   document.body.classList.toggle('playing', on);
@@ -1784,8 +1784,8 @@ function bindBar(el, onPct) {
     el.addEventListener('pointermove', mv, { passive: true }); el.addEventListener('pointerup', up)
   });
 }
-bindBar($('#progBar'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; $('#progFill').style.width = p * 100 + '%'; $('#progThumb').style.insetInlineStart = p * 100 + '%'; $('#tCur').textContent = fmt(p * audio.duration); const el = $('#progBar'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
-bindBar($('#ovProg'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; $('#ovFill').style.width = p * 100 + '%'; $('#ovThumb').style.insetInlineStart = p * 100 + '%'; $('#ovCur').textContent = fmt(p * audio.duration); const el = $('#ovProg'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
+bindBar($('#progBar'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; const el = $('#progBar'); el.style.setProperty('--p', String(p)); $('#tCur').textContent = fmt(p * audio.duration); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
+bindBar($('#ovProg'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; const el = $('#ovProg'); el.style.setProperty('--p', String(p)); $('#ovCur').textContent = fmt(p * audio.duration); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
 function barKeys(el, onKey) {
   el.addEventListener('keydown', e => {
     let h = null;
