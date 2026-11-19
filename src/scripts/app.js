@@ -1776,12 +1776,25 @@ function setSleep(min) {
 function paintRange(r) { if (r) r.style.setProperty('--val', ((r.value - r.min) / (r.max - r.min) * 100) + '%') }
 function bindBar(el, onPct) {
   const pct = e => { const r = el.getBoundingClientRect(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) };
-  let mvRaf = 0;
+  let mvRaf = 0, active = 0, last = 0;
   el.addEventListener('pointerdown', e => {
-    el.setPointerCapture(e.pointerId); el.classList.add('scrub'); onPct(pct(e), true);
-    const mv = ev => { if (mvRaf) return; mvRaf = requestAnimationFrame(() => { mvRaf = 0; onPct(pct(ev), true) }) };
-    const up = ev => { if (mvRaf) { cancelAnimationFrame(mvRaf); mvRaf = 0 } onPct(pct(ev), false); el.classList.remove('scrub'); el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up) };
-    el.addEventListener('pointermove', mv, { passive: true }); el.addEventListener('pointerup', up)
+    if (active || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    active = e.pointerId; last = pct(e);
+    let win = null;
+    try { el.setPointerCapture(e.pointerId) } catch (err) { win = window }
+    el.classList.add('scrub'); onPct(last, true);
+    const mv = ev => { if (!active || ev.pointerId !== active) return; last = pct(ev); if (mvRaf) return; mvRaf = requestAnimationFrame(() => { mvRaf = 0; onPct(last, true) }) };
+    const up = ev => {
+      if (!active || ev.pointerId !== active) return;
+      active = 0;
+      if (mvRaf) { cancelAnimationFrame(mvRaf); mvRaf = 0 }
+      onPct(ev.type === 'pointercancel' ? last : pct(ev), false);
+      el.classList.remove('scrub');
+      const tgt = win || el;
+      tgt.removeEventListener('pointermove', mv); tgt.removeEventListener('pointerup', up); tgt.removeEventListener('pointercancel', up);
+    };
+    const tgt = win || el;
+    tgt.addEventListener('pointermove', mv, { passive: true }); tgt.addEventListener('pointerup', up); tgt.addEventListener('pointercancel', up);
   });
 }
 bindBar($('#progBar'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; const el = $('#progBar'); el.style.setProperty('--p', String(p)); $('#tCur').textContent = fmt(p * audio.duration); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });

@@ -2268,9 +2268,23 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 }
 
 .ov-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   max-width: 500px;
-  margin-bottom: 18px;
+  margin-bottom: 18px
+}
+
+.ov-progress .t {
+  font-size: var(--fs-3xs);
+  color: var(--ink2);
+  font-variant-numeric: tabular-nums;
+  min-width: 36px
+}
+
+.ov-progress .t:last-child {
+  text-align: end
 }
 
 .ov-progress .prog .thumb {
