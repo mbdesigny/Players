@@ -1775,7 +1775,7 @@ function setSleep(min) {
 /* ═══════════════ SEEK / VOLUME BARS ═══════════════ */
 function paintRange(r) { if (r) r.style.setProperty('--val', ((r.value - r.min) / (r.max - r.min) * 100) + '%') }
 function bindBar(el, onPct) {
-  const pct = e => { const r = el.getBoundingClientRect(); const rtl = getComputedStyle(el).direction === 'rtl'; const x = rtl ? r.right - e.clientX : e.clientX - r.left; return Math.max(0, Math.min(1, x / r.width)) };
+  const pct = e => { const r = el.getBoundingClientRect(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) };
   let mvRaf = 0;
   el.addEventListener('pointerdown', e => {
     el.setPointerCapture(e.pointerId); el.classList.add('scrub'); onPct(pct(e), true);
@@ -1797,8 +1797,8 @@ function barKeys(el, onKey) {
     e.preventDefault(); e.stopPropagation(); onKey(h);
   });
 }
-barKeys($('#progBar'), h => { if (!audio.duration || !isFinite(audio.duration)) return; const d = audio.duration, s2 = document.documentElement.dir === 'rtl' ? -1 : 1; if (h === 'home') audio.currentTime = 0; else if (h === 'end') audio.currentTime = d; else audio.currentTime = Math.max(0, Math.min(d, audio.currentTime + h * 5 * s2)) });
-barKeys($('#ovProg'), h => { if (!audio.duration || !isFinite(audio.duration)) return; const d = audio.duration, s2 = document.documentElement.dir === 'rtl' ? -1 : 1; if (h === 'home') audio.currentTime = 0; else if (h === 'end') audio.currentTime = d; else audio.currentTime = Math.max(0, Math.min(d, audio.currentTime + h * 5 * s2)) });
+barKeys($('#progBar'), h => { if (!audio.duration || !isFinite(audio.duration)) return; const d = audio.duration; if (h === 'home') audio.currentTime = 0; else if (h === 'end') audio.currentTime = d; else audio.currentTime = Math.max(0, Math.min(d, audio.currentTime + h * 5)) });
+barKeys($('#ovProg'), h => { if (!audio.duration || !isFinite(audio.duration)) return; const d = audio.duration; if (h === 'home') audio.currentTime = 0; else if (h === 'end') audio.currentTime = d; else audio.currentTime = Math.max(0, Math.min(d, audio.currentTime + h * 5)) });
 function updateVolUI() {
   const v = audio.muted ? 0 : audio.volume;
   const icon = v === 0 ? '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="m16 9 5 6M21 9l-5 6"/>' : v < .5 ? '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/>' : '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/>';
