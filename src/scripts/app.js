@@ -1748,7 +1748,6 @@ function trackFromKey(k) {
 }
 
 /* ═══════════════ SLEEP TIMER ═══════════════ */
-const SLEEP_OPTS = [0, 5, 10, 15, 30, 45, 60];
 const SLEEP_SHEET = [30, 45, 60, 120, 180];
 const fmtMMSS = ms => { const s2 = Math.ceil(ms / 1000); return String(Math.floor(s2 / 60)).padStart(2, '0') + ':' + String(s2 % 60).padStart(2, '0') };
 function renderPhoneSleep() {
@@ -1757,26 +1756,19 @@ function renderPhoneSleep() {
     + `<button data-min="0" aria-pressed="false">${t('cancel')}</button>`;
   const badge = $('#mSleepBadge'); if (badge) badge.hidden = !S.sleepMin;
 }
-function renderSleepPop() {
-  const h = SLEEP_OPTS.map(m => `<button data-min="${m}" class="${S.sleepMin === m ? 'on' : ''}"><span>${m === 0 ? t('sleepOff') : m + ' ' + t('min')}</span>${S.sleepMin === m ? '✓' : ''}</button>`).join('');
-  $('#sleepPop').innerHTML = h;
-  renderPhoneSleep();
-}
 function setSleep(min) {
   S.sleepMin = min; clearTimeout(S.sleepTimer); clearInterval(S.sleepTick);
-  $('#sleepBadge').hidden = !min; $('#btnSleep').classList.toggle('on', !!min); renderSleepPop(); $('#sleepPop').classList.remove('open');
+  renderPhoneSleep();
   if (!min) return;
   const end = Date.now() + min * 60000; toast(`${t('timerSet')} ${min} ${t('min')}`);
   S.sleepTick = setInterval(() => {
-    const ms = Math.max(0, end - Date.now()), left = Math.max(0, Math.round(ms / 60000));
-    $('#sleepBadge').textContent = left || '<1';
+    const ms = Math.max(0, end - Date.now());
     const mb = $('#mSleepBadge'); if (mb) mb.textContent = fmtMMSS(ms)
   }, 1000);
-  $('#sleepBadge').textContent = min;
   const mb0 = $('#mSleepBadge'); if (mb0) mb0.textContent = fmtMMSS(min * 60000);
   S.sleepTimer = setTimeout(() => {
     const v0 = audio.volume; let step = 0;
-    const fade = setInterval(() => { step++; audio.volume = Math.max(0, v0 * (1 - step / 10)); if (step >= 10) { clearInterval(fade); audio.pause(); audio.volume = v0; clearInterval(S.sleepTick); S.sleepMin = 0; $('#sleepBadge').hidden = true; $('#btnSleep').classList.remove('on'); renderSleepPop(); toast(t('timerEnd')) } }, 800);
+    const fade = setInterval(() => { step++; audio.volume = Math.max(0, v0 * (1 - step / 10)); if (step >= 10) { clearInterval(fade); audio.pause(); audio.volume = v0; clearInterval(S.sleepTick); S.sleepMin = 0; renderPhoneSleep(); toast(t('timerEnd')) } }, 800);
   }, min * 60000);
 }
 
@@ -1794,7 +1786,6 @@ function bindBar(el, onPct) {
 }
 bindBar($('#progBar'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; $('#progFill').style.width = p * 100 + '%'; $('#progThumb').style.insetInlineStart = p * 100 + '%'; $('#tCur').textContent = fmt(p * audio.duration); const el = $('#progBar'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
 bindBar($('#ovProg'), (p, drag) => { if (audio.duration && isFinite(audio.duration)) { if (!drag) audio.currentTime = p * audio.duration; $('#ovFill').style.width = p * 100 + '%'; $('#ovThumb').style.insetInlineStart = p * 100 + '%'; $('#ovCur').textContent = fmt(p * audio.duration); const el = $('#ovProg'); el.setAttribute('aria-valuenow', Math.round(p * audio.duration)); el.setAttribute('aria-valuetext', fmt(p * audio.duration) + ' / ' + fmt(audio.duration)) } });
-bindBar($('#volBar'), p => { audio.volume = p; store.set('volume', p); updateVolUI() });
 function barKeys(el, onKey) {
   el.addEventListener('keydown', e => {
     let h = null;
@@ -1808,13 +1799,9 @@ function barKeys(el, onKey) {
 }
 barKeys($('#progBar'), h => { if (!audio.duration || !isFinite(audio.duration)) return; const d = audio.duration, s2 = document.documentElement.dir === 'rtl' ? -1 : 1; if (h === 'home') audio.currentTime = 0; else if (h === 'end') audio.currentTime = d; else audio.currentTime = Math.max(0, Math.min(d, audio.currentTime + h * 5 * s2)) });
 barKeys($('#ovProg'), h => { if (!audio.duration || !isFinite(audio.duration)) return; const d = audio.duration, s2 = document.documentElement.dir === 'rtl' ? -1 : 1; if (h === 'home') audio.currentTime = 0; else if (h === 'end') audio.currentTime = d; else audio.currentTime = Math.max(0, Math.min(d, audio.currentTime + h * 5 * s2)) });
-barKeys($('#volBar'), h => { const v = h === 'home' ? 0 : h === 'end' ? 1 : audio.volume + h * .05; audio.volume = Math.max(0, Math.min(1, v)); store.set('volume', audio.volume); updateVolUI() });
 function updateVolUI() {
   const v = audio.muted ? 0 : audio.volume;
-  $('#volFill').style.width = v * 100 + '%'; $('#volThumb').style.insetInlineStart = v * 100 + '%';
-  const vb = $('#volBar'); if (vb) { vb.setAttribute('aria-valuenow', Math.round(v * 100)); vb.setAttribute('aria-valuetext', Math.round(v * 100) + '%') }
   const icon = v === 0 ? '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="m16 9 5 6M21 9l-5 6"/>' : v < .5 ? '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/>' : '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/>';
-  $('#volIcon').innerHTML = icon;
   const mI = $('#mVolIcon'); if (mI) mI.innerHTML = icon;
   const mR = $('#mVolRange'); if (mR) { mR.value = Math.round(v * 100); paintRange(mR) }
 }
@@ -1862,7 +1849,7 @@ function applyLang() {
   document.documentElement.lang = S.lang; document.documentElement.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
   $('#langBtn').textContent = S.lang === 'ar' ? 'EN' : 'ع';
   $$('#segLang button').forEach(b => { const on = b.dataset.lg === S.lang; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') });
-  applyI18nStatic(); buildQualitySeg(); renderSleepPop();
+  applyI18nStatic(); buildQualitySeg(); renderPhoneSleep();
 }
 function applyI18nStatic() { $$('[data-i18n]').forEach(el => { const k = el.dataset.i18n; if (I18N[S.lang][k]) el.textContent = I18N[S.lang][k] }); $$('[data-i18n-title]').forEach(el => { const k = el.dataset.i18nTitle; if (I18N[S.lang][k]) el.title = I18N[S.lang][k] }); $$('[data-i18n-aria]').forEach(el => { const k = el.dataset.i18nAria; if (I18N[S.lang][k]) el.setAttribute('aria-label', I18N[S.lang][k]) }); $$('.nav-item').forEach(b => { const k = b.dataset.view || 'downloads'; if (I18N[S.lang][k]) b.title = I18N[S.lang][k] }) }
 function buildQualitySeg() { $$('#segQualitySet button').forEach(b => { const on = b.dataset.q === S.quality; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false') }) }
@@ -2109,9 +2096,6 @@ $('#prayerScrim').addEventListener('change', e => {
 $('#confirmScrim').addEventListener('click', e => { if (e.target === e.currentTarget) { closeModal(e.currentTarget); confirmRes && confirmRes(false) } });
 $('#navDownloads').onclick = () => { openModal('#dlDrawer'); closeSidebar() };
 $('#dlClose').onclick = () => closeModal('#dlDrawer');
-$('#btnSleep').onclick = e => { e.stopPropagation(); renderSleepPop(); $('#sleepPop').classList.toggle('open') };
-document.addEventListener('click', e => { if (!e.target.closest('.sleep-wrap')) $('#sleepPop').classList.remove('open') });
-$('#sleepPop').addEventListener('click', e => { const b = e.target.closest('[data-min]'); if (b) setSleep(+b.dataset.min) });
 $('#mSleepGrid').addEventListener('click', e => { const b = e.target.closest('[data-min]'); if (b) setSleep(+b.dataset.min) });
 $('#mMute').onclick = () => { audio.muted = !audio.muted; updateVolUI() };
 $('#mVolRange').addEventListener('input', e => { audio.muted = false; audio.volume = Math.max(0, Math.min(1, +e.target.value / 100)); store.set('volume', audio.volume); updateVolUI() });
@@ -2132,26 +2116,19 @@ function setQuality(q) {
   S.quality = q; store.set('quality', q); buildQualitySeg();
   if (S.current) { const pos = audio.currentTime, was = !audio.paused; S.srcIdx = 0; S.srcOrder = pickSource(S.current, S.quality); setAudioSrc(S.srcOrder[0].url); audio.addEventListener('loadedmetadata', () => { audio.currentTime = pos }, { once: true }); if (was) audio.play().catch(() => { }); updateBadges() }
 }
-$('#btnQuality').onclick = () => openModal('#phoneCtlScrim');
+$('#btnSettings').onclick = () => openModal('#phoneCtlScrim');
 function setSpeed(v) {
   S.speed = Math.min(2, Math.max(.75, v)); store.set('speed', S.speed); audio.playbackRate = S.speed;
-  const sv = $('#speedVal'); if (sv) sv.textContent = S.speed + '\u00d7';
-  const sr = $('#speedRange'); if (sr) { sr.value = S.speed; paintRange(sr) }
-  $('#btnSpeed').classList.toggle('on', S.speed !== 1);
   const mv = $('#mSpeedVal'); if (mv) mv.textContent = S.speed + '\u00d7';
   const mr = $('#mSpeedRange'); if (mr) { mr.value = S.speed; paintRange(mr) }
   const rs = $('#mSpeedReset'); if (rs) rs.hidden = S.speed === 1;
 }
-$('#btnSpeed').onclick = e => { e.stopPropagation(); $('#speedPop').classList.toggle('open') };
-$('#speedRange').addEventListener('input', e => setSpeed(+e.target.value));
 $('#mSpeedRange').addEventListener('input', e => setSpeed(+e.target.value));
 setSpeed(S.speed); paintRange($('#mVolRange')); renderPhoneSleep();
-document.addEventListener('click', e => { if (!e.target.closest('.speed-wrap')) $('#speedPop').classList.remove('open') });
 $('#btnPlay').onclick = togglePlay; $('#btnNext').onclick = nextTrack; $('#btnPrev').onclick = prevTrack;
 $('#btnShuffle').onclick = () => { S.shuffle = !S.shuffle; store.set('shuffle', S.shuffle); $('#btnShuffle').classList.toggle('on', S.shuffle); $$('.np-overlay [data-act="shuffle"]').forEach(b => b.classList.toggle('on', S.shuffle)) };
 $('#btnRepeat').onclick = () => { S.repeat = (S.repeat + 1) % 3; store.set('repeat', S.repeat); updateRepeatUI() };
 function updateRepeatUI() { $('#btnRepeat').classList.toggle('on', S.repeat > 0); $('#repBadge').hidden = S.repeat !== 2; $$('.np-overlay [data-act="repeat"]').forEach(b => b.classList.toggle('on', S.repeat > 0)) }
-$('#btnMute').onclick = () => { audio.muted = !audio.muted; updateVolUI() };
 $('#btnDl').onclick = () => { if (S.current) enqueueDownloads([S.current]) };
 $('#npDl').onclick = () => { if (S.current) enqueueDownloads([S.current]) };
 $('#npFav').onclick = () => toggleFav(S.current); $('#pbFav').onclick = () => toggleFav(S.current);
@@ -2623,7 +2600,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
   else if (e.key === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + .05); store.set('volume', audio.volume); updateVolUI() }
   else if (e.key === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - .05); store.set('volume', audio.volume); updateVolUI() }
-  else if (e.key === 'm' || e.key === 'M') $('#btnMute').click();
+  else if (e.key === 'm' || e.key === 'M') { audio.muted = !audio.muted; updateVolUI() }
   else if (e.key === 'f' || e.key === 'F') toggleFav(S.current);
   else if (e.key === 'n' || e.key === 'N') nextTrack();
   else if (e.key === 'p' || e.key === 'P') prevTrack();
@@ -2661,7 +2638,7 @@ window.addEventListener('storage', e => {
 /* ═══════════════ INIT ═══════════════ */
 (async function init() {
   akPurgeOld();
-  applyTheme(); applyLang(); buildQualitySeg(); renderSleepPop(); updateRepeatUI(); updateVolUI(); applyNpPanel(); applySidebar();
+  applyTheme(); applyLang(); buildQualitySeg(); renderPhoneSleep(); updateRepeatUI(); updateVolUI(); applyNpPanel(); applySidebar();
   $('#npPin').onclick = () => { S.npMode = S.npMode === 'pinned' ? 'hidden' : 'pinned'; store.set('npMode', S.npMode); applyNpPanel() }
   $('#npDock').onclick = () => { S.npMode = S.npMode === 'float' ? 'auto' : 'float'; store.set('npMode', S.npMode); applyNpPanel() };
   const npHead = $('.np-head'); let npDrag = null;

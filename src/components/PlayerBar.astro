@@ -21,23 +21,7 @@
   </div>
   <div class="pb-right">
     <button class="ctrl" id="npPin" data-i18n-title="pin" data-i18n-aria="pin" aria-label="تثبيت اللوحة"><svg class="ic" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M8 4h8"/><path d="M9 4v5c0 1.6-2.2 2.6-2.2 4.2h10.4C16.2 11.6 14 10.6 14 9V4"/></svg></button>
-    <button class="ctrl" id="btnQuality" data-i18n-title="quality" data-i18n-aria="quality" aria-label="الجودة"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M7 7h10v10H7z" opacity="0"/><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M15 4h3a2 2 0 0 1 2 2v3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M9 20H6a2 2 0 0 1-2-2v-3"/><path d="M12 10.2v1M12 12.8v1M10.6 11.4h1M12.4 11.4h1"/></svg></button>
-    <div class="speed-wrap">
-      <button class="ctrl" id="btnSpeed" data-i18n-title="speed" data-i18n-aria="speed" aria-label="السرعة"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5a9 9 0 0 0-9 9c0 1.8.5 3.4 1.4 4.8h15.2A8.9 8.9 0 0 0 21 14a9 9 0 0 0-9-9z"/><path d="M12 14l3.5-4.5"/><circle cx="12" cy="14" r="1.2"/></svg></button>
-      <div class="popover speed-pop" id="speedPop">
-        <div class="sp-head"><span data-i18n="speed">السرعة</span><b id="speedVal" dir="ltr">1×</b></div>
-        <input type="range" id="speedRange" min="0.75" max="2" step="0.05" value="1" dir="ltr">
-        <div class="sp-marks" dir="ltr"><span>0.75×</span><span>1×</span><span>1.5×</span><span>2×</span></div>
-      </div>
-    </div>
-    <div class="sleep-wrap">
-      <button class="ctrl" id="btnSleep" data-i18n-title="sleep" data-i18n-aria="sleep" aria-label="مؤقت النوم"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg><span class="sleep-badge" id="sleepBadge" hidden></span></button>
-      <div class="popover" id="sleepPop"></div>
-    </div>
-    <div class="vol">
-      <button class="ctrl" id="btnMute" aria-label="mute"><svg class="ic" id="volIcon" viewBox="0 0 24 24"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg></button>
-      <div class="prog" id="volBar" dir="ltr" role="slider" tabindex="0" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-i18n-aria="volume" aria-label="مستوى الصوت"><div class="rail"><div class="fill" id="volFill"></div><div class="thumb" id="volThumb"></div></div></div>
-    </div>
+    <button class="ctrl" id="btnSettings" data-i18n-title="settings" data-i18n-aria="settings" aria-label="الإعدادات"><svg class="ic" viewBox="0 0 24 24"><path d="M5 4v6m0 4v6M12 4v1m0 4v11M19 4v10m0 4v2"/><circle cx="5" cy="12" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="19" cy="16" r="2"/></svg></button>
     <button class="ctrl" id="btnDl" aria-label="download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 19h16"/></svg></button>
     <button class="ctrl" id="btnExpand" aria-label="expand"><svg class="ic ic-exp" viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/></svg><svg class="ic ic-set" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3"/><circle cx="15" cy="6" r="2"/><path d="M4 12h3M11 12h9"/><circle cx="9" cy="12" r="2"/><path d="M4 18h9M17 18h3"/><circle cx="15" cy="18" r="2"/></svg></button>
   </div>
