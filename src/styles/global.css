@@ -2006,10 +2006,6 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
   transform-origin: 0 50%
 }
 
-html[dir="rtl"] .prog .buf {
-  transform-origin: 100% 50%
-}
-
 .prog .fill {
   position: absolute;
   left: 0;
@@ -2020,11 +2016,6 @@ html[dir="rtl"] .prog .buf {
   border-radius: 4px;
   transform: scaleX(var(--p, 0));
   transform-origin: 0 50%
-}
-
-html[dir="rtl"] .prog .fill {
-  background: linear-gradient(270deg, var(--accent), var(--gold));
-  transform-origin: 100% 50%
 }
 
 .prog .thumb {
@@ -2039,11 +2030,6 @@ html[dir="rtl"] .prog .fill {
   opacity: 0;
   transition: opacity .15s;
   box-shadow: 0 0 0 3px var(--glow2)
-}
-
-html[dir="rtl"] .prog .thumb {
-  left: auto;
-  right: calc((100% - 14px) * var(--p, 0))
 }
 
 .prog:hover .thumb,
@@ -2285,6 +2271,10 @@ html[dir="rtl"] .prog .thumb {
   width: 100%;
   max-width: 500px;
   margin-bottom: 18px;
+}
+
+.ov-progress .prog .thumb {
+  opacity: 1
 }
 
 .ov-controls {
@@ -3214,18 +3204,23 @@ kbd {
     position: absolute;
     left: 12px;
     right: 12px;
-    inset-inline: 12px;
-    top: -14px;
-    height: 26px;
-    align-items: center
+    top: 0;
+    height: 24px;
+    align-items: flex-start
   }
 
   .pb-progress .t {
     display: none
   }
 
+  .pb-progress .prog {
+    align-items: flex-start
+  }
+
   .pb-progress .prog .thumb {
-    opacity: 1
+    opacity: 1;
+    top: 2px;
+    transform: translateY(-50%)
   }
 
   .pb-right #btnExpand {
