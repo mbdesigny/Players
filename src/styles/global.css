@@ -6405,6 +6405,14 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   .reciter-card .play-ov .ic{width:14px;height:14px}
 }
 
+/* ═══ reciters page — very small screens: one card per row, declutter ═══ */
+@media(max-width:480px){
+  .reciter-grid{grid-template-columns:1fr;gap:12px}
+  .reciter-card{padding:12px 14px}
+  .reciter-card .rm .tag:not(.gold){display:none}
+  .reciter-card .rn{overflow-wrap:anywhere}
+}
+
 /* ══════════════════════════════════════════════════════════════════
    fullscreen player — animated aurora background + audio waves
    ══════════════════════════════════════════════════════════════════ */
