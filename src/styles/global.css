@@ -1996,41 +1996,54 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 
 .prog .buf {
   position: absolute;
-  inset-inline-start: 0;
+  left: 0;
+  right: 0;
   top: 0;
   bottom: 0;
-  width: 0;
   background: var(--line2);
-  border-radius: 4px
+  border-radius: 4px;
+  transform: scaleX(var(--buf, 0));
+  transform-origin: 0 50%
+}
+
+html[dir="rtl"] .prog .buf {
+  transform-origin: 100% 50%
 }
 
 .prog .fill {
   position: absolute;
-  inset-inline-start: 0;
+  left: 0;
+  right: 0;
   top: 0;
   bottom: 0;
-  width: 0;
   background: linear-gradient(90deg, var(--accent), var(--gold));
-  border-radius: 4px
+  border-radius: 4px;
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%
 }
 
 html[dir="rtl"] .prog .fill {
-  background: linear-gradient(270deg, var(--accent), var(--gold))
+  background: linear-gradient(270deg, var(--accent), var(--gold));
+  transform-origin: 100% 50%
 }
 
 .prog .thumb {
   position: absolute;
   top: 50%;
-  inset-inline-start: 0;
+  left: calc((100% - 14px) * var(--p, 0));
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: var(--gold);
   transform: translateY(-50%);
-  margin-inline-start: -7px;
   opacity: 0;
   transition: opacity .15s;
   box-shadow: 0 0 0 3px var(--glow2)
+}
+
+html[dir="rtl"] .prog .thumb {
+  left: auto;
+  right: calc((100% - 14px) * var(--p, 0))
 }
 
 .prog:hover .thumb,
@@ -3199,6 +3212,8 @@ kbd {
 
   .pb-progress {
     position: absolute;
+    left: 12px;
+    right: 12px;
     inset-inline: 12px;
     top: -14px;
     height: 26px;
