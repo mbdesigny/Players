@@ -2055,76 +2055,6 @@ html[dir="rtl"] .prog .fill {
   color: var(--ink2)
 }
 
-.vol {
-  display: flex;
-  align-items: center;
-  gap: 6px
-}
-
-.vol .prog {
-  width: 76px;
-  flex: none
-}
-
-.sleep-wrap {
-  position: relative
-}
-
-.sleep-badge {
-  position: absolute;
-  top: -4px;
-  inset-inline-end: -4px;
-  font-size: var(--fs-3xs);
-  background: var(--gold);
-  color: var(--on-gold);
-  border-radius: 8px;
-  padding: 0 4px;
-  font-weight: 700
-}
-
-.popover {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  inset-inline-end: 0;
-  background: var(--surface2);
-  border: 1px solid var(--line2);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow);
-  padding: 8px;
-  min-width: 150px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(8px);
-  transition: .2s;
-  z-index: 60
-}
-
-.popover.open {
-  opacity: 1;
-  pointer-events: auto;
-  transform: none
-}
-
-.popover button {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: var(--fs-xs);
-  color: var(--ink2)
-}
-
-.popover button:hover {
-  background: var(--bg2);
-  color: var(--ink)
-}
-
-.popover button.on {
-  color: var(--gold-ink);
-  font-weight: 700
-}
-
 /* ═══════════════ FULLSCREEN NOW PLAYING ═══════════════ */
 .np-overlay {
   position: fixed;
@@ -3222,9 +3152,7 @@ kbd {
     flex: 1
   }
 
-  .pb-right select,
-  .pb-right .vol,
-  .pb-right .sleep-wrap {
+  .pb-right select {
     display: none
   }
 
@@ -6254,52 +6182,8 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   }
 }
 
-/* ═══════════════ speed popover ═══════════════ */
-.speed-wrap {
-  position: relative
-}
-
-.speed-pop {
-  inset-inline-end: 0;
-  bottom: calc(100% + 10px);
-  width: 230px;
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px
-}
-
-.sp-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: var(--fs-sm);
-  font-weight: 700
-}
-
-.sp-head b {
-  color: var(--gold-ink);
-  font-variant-numeric: tabular-nums
-}
-
-#speedRange {
-  width: 100%;
-  accent-color: var(--gold);
-  height: 22px;
-  cursor: pointer
-}
-
-.sp-marks {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--fs-3xs);
-  color: var(--ink2)
-}
-
 @media(max-width:479px) {
-
-  #btnSettings,
-  .speed-wrap {
+  #btnSettings {
     display: none
   }
 }
@@ -6848,10 +6732,6 @@ body.playing #bgFx .g2 {
 }
 
 @media(min-width:769px) {
-  .settings-sheet .sec-vol {
-    display: none
-  }
-
   .settings-sheet {
     width: min(420px, 92vw)
   }
