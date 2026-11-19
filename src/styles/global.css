@@ -1977,7 +1977,7 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 
 .prog {
   flex: 1;
-  height: 16px;
+  height: 24px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -2022,12 +2022,12 @@ html[dir="rtl"] .prog .fill {
   position: absolute;
   top: 50%;
   inset-inline-start: 0;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--gold);
   transform: translateY(-50%);
-  margin-inline-start: -6px;
+  margin-inline-start: -7px;
   opacity: 0;
   transition: opacity .15s;
   box-shadow: 0 0 0 3px var(--glow2)
@@ -3270,7 +3270,19 @@ kbd {
   }
 
   .pb-progress {
+    position: absolute;
+    inset-inline: 12px;
+    top: -14px;
+    height: 26px;
+    align-items: center
+  }
+
+  .pb-progress .t {
     display: none
+  }
+
+  .pb-progress .prog .thumb {
+    opacity: 1
   }
 
   .pb-right #btnExpand {
@@ -6580,7 +6592,6 @@ select,
   .pb-buttons{gap:6px}
   .pb-buttons .ctrl:first-child,
   .pb-buttons .ctrl:last-child{display:none}
-  .pb-progress{display:none}
   .pb-right{gap:2px}
   .pb-right #btnExpand{display:grid}
   .verse-card {visibility: hidden;}
