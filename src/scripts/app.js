@@ -450,7 +450,7 @@ function reciterCard(r) {
   const ms = S.rewaya === '__all' ? r.moshaf : r.moshaf.filter(m => norm(moshafRewaya(m)) === S.rewaya);
   const rw = [...new Set(ms.map(m => moshafRewaya(m)).filter(Boolean))].slice(0, 2);
   return `<button class="reciter-card ${S.reciter && S.reciter.id === r.id ? 'active' : ''}" data-rid="${esc(r.id)}">
-    <div class="ava">${reciterImg(r)}
+    <div class="ava skel">${reciterImg(r, 'ph-img')}
     <span class="play-ov"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span></span></div>
     <div class="rn">${esc(reciterName(r))}</div>
     <div class="rm">${rw.map(x => `<span class="tag">${esc(x)}</span>`).join('')}<span class="tag gold">${r.moshaf.length} ${t('moshaf')}</span></div></button>`;
@@ -1820,6 +1820,20 @@ function updateVolUI() {
 }
 
 /* ═══════════════ TOAST / CONFIRM ═══════════════ */
+let keyHintEl = null, keyHintT1 = 0, keyHintT2 = 0;
+function keyHint(msg) {
+  if (!keyHintEl || !keyHintEl.isConnected) {
+    const host = $('#toasts'); if (!host) return;
+    keyHintEl = document.createElement('div');
+    keyHintEl.className = 'toast key-hint';
+    host.append(keyHintEl);
+  }
+  clearTimeout(keyHintT1); clearTimeout(keyHintT2);
+  keyHintEl.classList.remove('out');
+  keyHintEl.textContent = msg;
+  keyHintT1 = setTimeout(() => { if (keyHintEl) keyHintEl.classList.add('out') }, 1400);
+  keyHintT2 = setTimeout(() => { if (keyHintEl && keyHintEl.classList.contains('out')) keyHintEl = null }, 1700);
+}
 function toast(msg, action) {
   const el = document.createElement('div'); el.className = 'toast'; el.innerHTML = `<span>${esc(msg)}</span>`;
   if (action) { const b = document.createElement('button'); b.textContent = action.label; b.onclick = () => { action.fn(); kill() }; el.append(b) }
@@ -1941,6 +1955,7 @@ document.addEventListener('error', e => {
 document.addEventListener('load', e => {
   const el = e.target;
   if (el && el.tagName === 'IMG' && el.classList.contains('m-pic')) el.classList.add('loaded');
+  if (el && el.tagName === 'IMG' && el.classList.contains('ph-img')) { el.classList.add('loaded'); const c = el.closest('.ava'); if (c) c.classList.add('loaded') }
 }, true);
 function setOrbVars(b) {
   const ov = $('#npOverlay'); if (!ov) return;
@@ -2609,10 +2624,10 @@ document.addEventListener('keydown', e => {
   else if (S.view === 'mushaf' && (e.ctrlKey || e.metaKey) && e.key === '-') { e.preventDefault(); mushafZoomStep(-1) }
   else if (S.view === 'mushaf' && (e.ctrlKey || e.metaKey) && e.key === '0') { e.preventDefault(); setMushafZoom(1.0) }
   else if (S.view === 'mushaf' && S.readN && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); const rtl = document.documentElement.dir === 'rtl'; mushafGo(mushafStep(S.readN, (e.key === 'ArrowLeft') === rtl ? 1 : -1, mushafBook())) }
-  else if (e.key === 'ArrowRight') audio.currentTime = Math.min((audio.duration || 0), audio.currentTime + 5);
-  else if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
-  else if (e.key === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + .05); store.set('volume', audio.volume); updateVolUI() }
-  else if (e.key === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - .05); store.set('volume', audio.volume); updateVolUI() }
+  else if (e.key === 'ArrowRight') { audio.currentTime = Math.min((audio.duration || 0), audio.currentTime + 5); keyHint(fmt(audio.currentTime) + ' / ' + (audio.duration && isFinite(audio.duration) ? fmt(audio.duration) : '—')) }
+  else if (e.key === 'ArrowLeft') { audio.currentTime = Math.max(0, audio.currentTime - 5); keyHint(fmt(audio.currentTime) + ' / ' + (audio.duration && isFinite(audio.duration) ? fmt(audio.duration) : '—')) }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + .05); store.set('volume', audio.volume); updateVolUI(); keyHint(`${t('volume')}: ${Math.round(audio.volume * 100)}%`) }
+  else if (e.key === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - .05); store.set('volume', audio.volume); updateVolUI(); keyHint(`${t('volume')}: ${Math.round(audio.volume * 100)}%`) }
   else if (e.key === 'm' || e.key === 'M') { audio.muted = !audio.muted; updateVolUI() }
   else if (e.key === 'f' || e.key === 'F') toggleFav(S.current);
   else if (e.key === 'n' || e.key === 'N') nextTrack();
