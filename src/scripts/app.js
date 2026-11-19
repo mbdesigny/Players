@@ -2132,7 +2132,7 @@ function setQuality(q) {
   S.quality = q; store.set('quality', q); buildQualitySeg();
   if (S.current) { const pos = audio.currentTime, was = !audio.paused; S.srcIdx = 0; S.srcOrder = pickSource(S.current, S.quality); setAudioSrc(S.srcOrder[0].url); audio.addEventListener('loadedmetadata', () => { audio.currentTime = pos }, { once: true }); if (was) audio.play().catch(() => { }); updateBadges() }
 }
-$('#btnQuality').onclick = () => openModal('#phoneCtlScrim');
+$('#btnSettings').onclick = () => openModal('#phoneCtlScrim');
 function setSpeed(v) {
   S.speed = Math.min(2, Math.max(.75, v)); store.set('speed', S.speed); audio.playbackRate = S.speed;
   const sv = $('#speedVal'); if (sv) sv.textContent = S.speed + '\u00d7';

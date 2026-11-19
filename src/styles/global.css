@@ -6298,7 +6298,7 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
 
 @media(max-width:479px) {
 
-  #btnQuality,
+  #btnSettings,
   .speed-wrap {
     display: none
   }
