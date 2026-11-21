@@ -37,30 +37,33 @@ export function initPageChrome({ i18n, onLang } = {}) {
 
   // ═══ الثيم: تبديل data-theme + الحفظ في ouns_theme (نفس مفاتيح التطبيق) ═══
   const themeBtn = qs('themeBtn');
-  const setThemeLight = qs('setThemeLight');
-  const setThemeDark = qs('setThemeDark');
+  const segTheme = qs('segTheme');
 
   function currentTheme() {
     return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   }
 
+  function syncThemeSegs(t) {
+    segTheme.querySelectorAll('button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.th === t));
+    });
+  }
+
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
     try { localStorage.setItem('ouns_theme', JSON.stringify(t)) } catch { /* تجاهل */ }
-    setThemeLight.setAttribute('aria-pressed', String(t === 'light'));
-    setThemeDark.setAttribute('aria-pressed', String(t === 'dark'));
+    syncThemeSegs(t);
   }
 
   themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
-  setThemeLight.addEventListener('click', () => applyTheme('light'));
-  setThemeDark.addEventListener('click', () => applyTheme('dark'));
-  setThemeLight.setAttribute('aria-pressed', String(currentTheme() === 'light'));
-  setThemeDark.setAttribute('aria-pressed', String(currentTheme() === 'dark'));
+  segTheme.querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => applyTheme(b.dataset.th));
+  });
+  syncThemeSegs(currentTheme());
 
   // ═══ اللغة: تبديل dir/lang + المشي على data-i18n + الحفظ في ouns_lang ═══
   const langBtn = qs('langBtn');
-  const setLangAr = qs('setLangAr');
-  const setLangEn = qs('setLangEn');
+  const segLang = qs('segLang');
   let lang = 'ar';
 
   function applyLang(l) {
@@ -79,8 +82,9 @@ export function initPageChrome({ i18n, onLang } = {}) {
       });
     }
     langBtn.textContent = l === 'ar' ? 'EN' : 'ع';
-    setLangAr.setAttribute('aria-pressed', String(l === 'ar'));
-    setLangEn.setAttribute('aria-pressed', String(l === 'en'));
+    segLang.querySelectorAll('button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.lg === l));
+    });
     try { localStorage.setItem('ouns_lang', JSON.stringify(l)) } catch { /* تجاهل */ }
     if (onLang) onLang(l, dict);
   }
@@ -88,8 +92,9 @@ export function initPageChrome({ i18n, onLang } = {}) {
   langBtn.addEventListener('click', () => {
     applyLang(document.documentElement.lang === 'ar' ? 'en' : 'ar');
   });
-  setLangAr.addEventListener('click', () => applyLang('ar'));
-  setLangEn.addEventListener('click', () => applyLang('en'));
+  segLang.querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => applyLang(b.dataset.lg));
+  });
 
   // الإقلاع: طبّق اللغة المحفوظة فورًا (نفس القيمة التي طبّقها سكربت Base قبل أول رسم)
   let savedLang = 'ar';
@@ -99,23 +104,24 @@ export function initPageChrome({ i18n, onLang } = {}) {
   } catch { /* تجاهل — قيمة محفوظة غير صالحة */ }
   applyLang(savedLang);
 
-  // ═══ الإعدادات المنبثقة + Escape: فتح/غلق والغلق عند النقر خارجها ═══
+  // ═══ مودال الإعدادات (#settingsScrim): فتح/غلق بنفس نمط openModal في التطبيق ═══
   const settingsBtn = qs('settingsBtn');
-  const settingsPop = qs('settingsPop');
+  const settingsScrim = qs('settingsScrim');
+  const settingsClose = qs('settingsClose');
 
-  function setPop(open) {
-    settingsPop.hidden = !open;
+  function setSettings(open) {
+    settingsScrim.classList.toggle('open', open);
     settingsBtn.setAttribute('aria-expanded', String(open));
   }
 
-  settingsBtn.addEventListener('click', () => setPop(settingsPop.hidden));
-  document.addEventListener('click', (e) => {
-    if (settingsPop.hidden) return;
-    if (!settingsPop.contains(e.target) && !settingsBtn.contains(e.target)) setPop(false);
+  settingsBtn.addEventListener('click', () => setSettings(true));
+  settingsClose.addEventListener('click', () => setSettings(false));
+  settingsScrim.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) setSettings(false);
   });
   addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      setPop(false);
+      setSettings(false);
       setSide(false);
     }
   });

@@ -1,6 +1,6 @@
 ---
 // ═══ عناصر تحكم ثابتة تعيش في شريط الأدوات العلوي لكل الصفحات الثابتة ═══
-// الأزرار: الإعدادات (قائمة منبثقة) + اللغة (AR/EN) + الثيم (فاتح/داكن)
+// الأزرار: الإعدادات (يفتح #settingsScrim) + اللغة (AR/EN) + الثيم (فاتح/داكن)
 const { version } = Astro.props;
 ---
 
@@ -13,85 +13,21 @@ const { version } = Astro.props;
   </button>
 </div>
 
-<!-- ═══ قائمة الإعدادات المنبثقة الخفيفة (مظهر + لغة) ═══ -->
-<div class="set-pop" id="settingsPop" hidden role="menu" aria-label="الإعدادات">
-  <div class="set-row">
-    <span class="set-lbl" data-i18n="theme">المظهر</span>
-    <div class="set-seg" role="group">
-      <button id="setThemeLight" data-i18n="light" aria-pressed="false">نهاري</button>
-      <button id="setThemeDark" data-i18n="dark" aria-pressed="false">ليلي</button>
-    </div>
+<!-- ═══ مودال الإعدادات — نفس #settingsScrim الخاص بالتطبيق، بنفس مكوّناته العالمية (scrim/modal/set-row/seg) ═══ -->
+<div class="scrim" id="settingsScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <h3 id="settingsTitle"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg><span data-i18n="settings">الإعدادات</span></h3>
+    <div class="set-row"><div><div class="sl" data-i18n="theme">المظهر</div><div class="sd" data-i18n="themeDesc">نهاري بيج / ليلي OLED</div></div>
+      <div class="seg" id="segTheme" role="group" data-i18n-aria="theme" aria-label="المظهر"><button data-th="light" data-i18n="light" aria-pressed="false">نهاري</button><button data-th="dark" data-i18n="dark" aria-pressed="false">ليلي</button></div></div>
+    <div class="set-row"><div><div class="sl" data-i18n="language">اللغة</div><div class="sd">العربية / English</div></div>
+      <div class="seg" id="segLang" role="group" data-i18n-aria="language" aria-label="اللغة"><button data-lg="ar" aria-pressed="false">العربية</button><button data-lg="en" aria-pressed="false">English</button></div></div>
+    <div class="set-ver" dir="ltr">أُنْس · v{version}</div>
+    <div class="m-actions"><button class="btn primary" id="settingsClose" data-i18n="done">تم</button></div>
   </div>
-  <div class="set-row">
-    <span class="set-lbl" data-i18n="language">اللغة</span>
-    <div class="set-seg" role="group">
-      <button id="setLangAr" aria-pressed="false">عربي</button>
-      <button id="setLangEn" aria-pressed="false">English</button>
-    </div>
-  </div>
-  <div class="set-ver" dir="ltr">أُنْس · v{version}</div>
 </div>
 
 <style>
-  /* ═══ قائمة الإعدادات المنبثقة (مُنطّقة داخل المكوّن فلا تتعارض مع global.css) ═══ */
-  .set-pop {
-    position: fixed;
-    inset-inline-end: clamp(14px, 2.2vw, 26px);
-    top: calc(var(--gutter-y) + 54px);
-    z-index: 80;
-    width: min(320px, calc(100vw - 28px));
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, .18);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px
-  }
-
-  .set-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px
-  }
-
-  .set-lbl {
-    font-size: var(--fs-sm);
-    color: var(--ink)
-  }
-
-  .set-seg {
-    display: inline-flex;
-    gap: 4px;
-    padding: 3px;
-    border-radius: 999px;
-    background: var(--surface2);
-    border: 1px solid var(--line)
-  }
-
-  .set-seg button {
-    border: 0;
-    background: transparent;
-    color: var(--ink2);
-    font: inherit;
-    font-size: var(--fs-xs);
-    padding: 6px 13px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background .15s ease, color .15s ease
-  }
-
-  .set-seg button[aria-pressed="true"] {
-    background: var(--accent);
-    color: var(--on-accent)
-  }
-
-  .set-seg button:active {
-    opacity: .85
-  }
-
+  /* ═══ سطر الإصدار فقط (البقية كلها أنماط عالمية من التطبيق) ═══ */
   .set-ver {
     font-size: var(--fs-2xs);
     color: var(--ink2);
