@@ -3400,6 +3400,11 @@ body.mushaf-full #view {
   color: var(--gold-ink)
 }
 
+/* بالعربية (RTL) انقلب السهم ليتجه يمينًا كاتجاه العودة الصحيح */
+html[dir="rtl"] .mback-btn .ic {
+  transform: scaleX(-1)
+}
+
 .mtop-pill {
   justify-self: center;
   display: inline-flex;
