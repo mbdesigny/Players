@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "updated": "2026-11-21",
+  "images": {
+    "morning": "/adhkar/morning.jpg",
+    "afternoon": "/adhkar/evening.jpg"
+  },
+  "tracks": [
+    {
+      "id": "alaa-morning",
+      "period": "morning",
+      "titleAr": "أذكار الصباح",
+      "titleEn": "Morning Adhkar",
+      "reciterAr": "علاء عقل",
+      "reciterEn": "Alaa Akel",
+      "file": "Alaa_Akel-Morning-Azkar.mp3",
+      "sizeMB": 32.6,
+      "src": "https://files.catbox.moe/wr5vex.mp3"
+    },
+    {
+      "id": "hamza-morning",
+      "period": "morning",
+      "titleAr": "أذكار الصباح",
+      "titleEn": "Morning Adhkar",
+      "reciterAr": "حمزة بو الديب",
+      "reciterEn": "Hamza Boueldib",
+      "file": "Hamza-Boueldib-Morning_Azkar.mp3",
+      "sizeMB": 27.9,
+      "src": "https://files.catbox.moe/ikpza3.mp3"
+    },
+    {
+      "id": "alaa-afternoon",
+      "period": "afternoon",
+      "titleAr": "أذكار المساء",
+      "titleEn": "Afternoon Adhkar",
+      "reciterAr": "علاء عقل",
+      "reciterEn": "Alaa Akel",
+      "file": "Alaa_Akel-Afternoun-Azkar.mp3",
+      "sizeMB": 32,
+      "src": "https://files.catbox.moe/baki7o.mp3"
+    },
+    {
+      "id": "hamza-afternoon",
+      "period": "afternoon",
+      "titleAr": "أذكار المساء",
+      "titleEn": "Afternoon Adhkar",
+      "reciterAr": "حمزة بو الديب",
+      "reciterEn": "Hamza Boueldib",
+      "file": "Hamza-Boueldib-Afternoun_Azkar.mp3",
+      "sizeMB": 37.9,
+      "src": "https://files.catbox.moe/l5t2b5.mp3"
+    }
+  ]
+}
