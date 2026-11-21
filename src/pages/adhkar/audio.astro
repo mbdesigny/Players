@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageControls from '../../components/PageControls.astro';
 import data from '../../data/adhkar-audio.json';
+import pkg from '../../../package.json';
 
 const periods = ['morning', 'afternoon'];
 
@@ -49,8 +51,9 @@ const groups = periods.map((period) => {
 
     <div class="center">
       <header class="topbar">
-        <button class="icon-btn" id="menuBtn" aria-label="القائمة"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-        <button class="icon-btn" id="sideBtn" aria-label="إخفاء اللوحة"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
+        <button class="icon-btn" id="menuBtn" data-i18n-aria="menu" aria-label="القائمة" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <button class="icon-btn" id="sideBtn" data-i18n-aria="hidePanel" aria-label="إخفاء اللوحة" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
+        <PageControls version={pkg.version} />
       </header>
       <main>
         <div class="aud-grid">
@@ -83,12 +86,12 @@ const groups = periods.map((period) => {
   <div class="aud-player" id="audPlayer" aria-live="polite">
     <div class="aud-bar"><i id="audFill"></i></div>
     <div class="aud-row">
-      <button class="aud-toggle" id="audToggle" aria-label="تشغيل / إيقاف" disabled>
+      <button class="aud-toggle" id="audToggle" data-i18n-aria="playToggle" aria-label="تشغيل / إيقاف" disabled>
         <svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg>
         <svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg>
       </button>
       <div class="aud-meta">
-        <b id="audTitle">اختر أذكارًا للاستماع</b>
+        <b id="audTitle" data-i18n="pickPrompt">اختر أذكارًا للاستماع</b>
         <span id="audReader"></span>
       </div>
       <span class="aud-time" id="audTime">00:00</span>
@@ -364,34 +367,13 @@ const groups = periods.map((period) => {
 </style>
 
 <script>
-  const side = document.getElementById('sidebar');
-  const scrim = document.getElementById('scrimSide');
-  const menuBtn = document.getElementById('menuBtn');
+  import { initPageChrome } from '../../scripts/lib/page-chrome.js';
 
-  function setSide(open) {
-    side.classList.toggle('open', open);
-    scrim.classList.toggle('open', open);
-    menuBtn.setAttribute('aria-expanded', String(open));
-  }
-
-  const sideBtn = document.getElementById('sideBtn');
-  try {
-    if (localStorage.getItem('ouns_sideMode') === '"collapsed"') {
-      document.body.classList.add('side-collapsed');
-      sideBtn.classList.add('on');
-    }
-  } catch (_) {}
-  sideBtn.addEventListener('click', () => {
-    const collapsed = document.body.classList.toggle('side-collapsed');
-    sideBtn.classList.toggle('on', collapsed);
-    try { localStorage.setItem('ouns_sideMode', JSON.stringify(collapsed ? 'collapsed' : 'open')) } catch (_) {}
-  });
-
-  menuBtn.addEventListener('click', () => setSide(true));
-  scrim.addEventListener('click', () => setSide(false));
-  addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') setSide(false);
-  });
+  // ═══ قاموس الترجمة المحلي للصفحة (المكتبة + عناصر التحكم + نصوص المشغّل) ═══
+  const T = {
+    ar: { library: 'المكتبة', home: 'الرئيسية', reciters: 'القرّاء', favorites: 'المفضلة', recent: 'سجل الاستماع', mushaf: 'المصحف', adhkar: 'الأذكار', prayerTimes: 'مواقيت الصلاة', ytView: 'أفضل التلاوات', developer: 'المُطوِّر', sideFoot: 'أُنْس · رفيق التلاوة', menu: 'القائمة', hidePanel: 'إخفاء اللوحة', settings: 'الإعدادات', theme: 'المظهر', light: 'نهاري', dark: 'ليلي', language: 'اللغة', pickPrompt: 'اختر أذكارًا للاستماع', playToggle: 'تشغيل / إيقاف', playError: 'تعذَّر تشغيل الملف — تحقَّق من المسار' },
+    en: { library: 'Library', home: 'Home', reciters: 'Reciters', favorites: 'Favorites', recent: 'Recently Played', mushaf: 'Mushaf', adhkar: 'Adhkar', prayerTimes: 'Prayer times', ytView: 'Best recitations', developer: 'Developer', sideFoot: 'Ouns · Recitation Companion', menu: 'Menu', hidePanel: 'Hide panel', settings: 'Settings', theme: 'Theme', light: 'Light', dark: 'Dark', language: 'Language', pickPrompt: 'Choose adhkar to listen', playToggle: 'Play / Pause', playError: "Couldn't play the file — check the path" },
+  };
 
   const audio = document.getElementById('adhkarAudio');
   const player = document.getElementById('audPlayer');
@@ -409,6 +391,15 @@ const groups = periods.map((period) => {
   };
 
   let active = null;
+
+  // ═══ عناصر التحكم الثابتة (سايدبار + ثيم + لغة + إعدادات) من الوحدة المشتركة ═══
+  const chrome = initPageChrome({
+    i18n: T,
+    onLang() {
+      // إن كان هناك مقطع مُختار فلا تُعِد العنوان إلى نص البداية
+      if (active) title.textContent = active.dataset.title;
+    },
+  });
 
   function pulse() {
     if (audio.paused) audio.play().catch(() => {});
@@ -464,7 +455,7 @@ const groups = periods.map((period) => {
 
   audio.addEventListener('error', () => {
     if (!audio.src || !audio.error) return;
-    title.textContent = 'تعذَّر تشغيل الملف — تحقَّق من المسار';
+    title.textContent = T[chrome.lang()].playError;
     player.classList.remove('playing');
   });
 </script>

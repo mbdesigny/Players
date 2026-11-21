@@ -1,0 +1,116 @@
+---
+// ═══ عناصر تحكم ثابتة تعيش في شريط الأدوات العلوي لكل الصفحات الثابتة ═══
+// الأزرار: الإعدادات (قائمة منبثقة) + اللغة (AR/EN) + الثيم (فاتح/داكن)
+const { version } = Astro.props;
+---
+
+<div class="top-actions">
+  <button class="icon-btn" id="settingsBtn" data-i18n-aria="settings" aria-label="الإعدادات" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.14-1.4l2-1.55-2-3.46-2.35.95a7 7 0 0 0-2.42-1.4L13.7 2.6h-3.4l-.39 2.54a7 7 0 0 0-2.42 1.4l-2.35-.95-2 3.46 2 1.55A7 7 0 0 0 5 12c0 .48.05.94.14 1.4l-2 1.55 2 3.46 2.35-.95a7 7 0 0 0 2.42 1.4l.39 2.54h3.4l.39-2.54a7 7 0 0 0 2.42-1.4l2.35.95 2-3.46-2-1.55c.09-.46.14-.92.14-1.4z"/></svg></button>
+  <button class="icon-btn txt" id="langBtn" data-i18n-aria="language" aria-label="اللغة">EN</button>
+  <button class="icon-btn" id="themeBtn" data-i18n-aria="theme" aria-label="المظهر">
+    <svg class="ic theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg>
+    <svg class="ic theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/></svg>
+  </button>
+</div>
+
+<!-- ═══ قائمة الإعدادات المنبثقة الخفيفة (مظهر + لغة) ═══ -->
+<div class="set-pop" id="settingsPop" hidden role="menu" aria-label="الإعدادات">
+  <div class="set-row">
+    <span class="set-lbl" data-i18n="theme">المظهر</span>
+    <div class="set-seg" role="group">
+      <button id="setThemeLight" data-i18n="light" aria-pressed="false">نهاري</button>
+      <button id="setThemeDark" data-i18n="dark" aria-pressed="false">ليلي</button>
+    </div>
+  </div>
+  <div class="set-row">
+    <span class="set-lbl" data-i18n="language">اللغة</span>
+    <div class="set-seg" role="group">
+      <button id="setLangAr" aria-pressed="false">عربي</button>
+      <button id="setLangEn" aria-pressed="false">English</button>
+    </div>
+  </div>
+  <div class="set-ver" dir="ltr">أُنْس · v{version}</div>
+</div>
+
+<style>
+  /* ═══ قائمة الإعدادات المنبثقة (مُنطّقة داخل المكوّن فلا تتعارض مع global.css) ═══ */
+  .set-pop {
+    position: fixed;
+    inset-inline-end: clamp(14px, 2.2vw, 26px);
+    top: calc(var(--gutter-y) + 54px);
+    z-index: 80;
+    width: min(320px, calc(100vw - 28px));
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .18);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px
+  }
+
+  .set-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px
+  }
+
+  .set-lbl {
+    font-size: var(--fs-sm);
+    color: var(--ink)
+  }
+
+  .set-seg {
+    display: inline-flex;
+    gap: 4px;
+    padding: 3px;
+    border-radius: 999px;
+    background: var(--surface2);
+    border: 1px solid var(--line)
+  }
+
+  .set-seg button {
+    border: 0;
+    background: transparent;
+    color: var(--ink2);
+    font: inherit;
+    font-size: var(--fs-xs);
+    padding: 6px 13px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease
+  }
+
+  .set-seg button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--on-accent)
+  }
+
+  .set-seg button:active {
+    opacity: .85
+  }
+
+  .set-ver {
+    font-size: var(--fs-2xs);
+    color: var(--ink2);
+    text-align: center;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    font-style: normal
+  }
+
+  /* ═══ أيقونة الثيم: هلال بالنهاري، شمس بالليلي (فقاعة scope فقط — العنصر ثابت وقت البناء) ═══ */
+  .theme-sun {
+    display: none
+  }
+
+  :global([data-theme="dark"]) .theme-moon {
+    display: none
+  }
+
+  :global([data-theme="dark"]) .theme-sun {
+    display: block
+  }
+</style>

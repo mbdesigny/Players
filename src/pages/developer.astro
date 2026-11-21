@@ -2,6 +2,7 @@
 // ═══ صفحة المُطوِّر — مدمجة داخل بنية تطبيق «أُنْس» ═══
 // نفس مكوّنات التطبيق: shell + sidebar + topbar — بدون أي مكتبات خارجية
 import Base from '../layouts/Base.astro';
+import PageControls from '../components/PageControls.astro';
 import pkg from '../../package.json';
 
 const web = 'https://graphixy-v2.pages.dev/';
@@ -82,13 +83,7 @@ const iconPaths = {
       <header class="topbar">
         <button class="icon-btn" id="menuBtn" data-i18n-aria="menu" aria-label="القائمة" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <button class="icon-btn" id="sideBtn" data-i18n-aria="hidePanel" aria-label="إخفاء اللوحة" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
-        <div class="top-actions">
-          <button class="icon-btn txt" id="langBtn" data-i18n-aria="language" aria-label="اللغة">EN</button>
-          <button class="icon-btn" id="themeBtn" data-i18n-aria="theme" aria-label="المظهر">
-            <svg class="ic theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg>
-            <svg class="ic theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/></svg>
-          </button>
-        </div>
+        <PageControls version={version} />
       </header>
 
       <main class="dev-main">
@@ -422,115 +417,29 @@ const iconPaths = {
   html[dir="ltr"] .dev-back-full .ic {
     transform: scaleX(-1)
   }
-
-
-  /* تبديل أيقونة الثيم: هلال بالوضع النهاري، شمس بالليلي */
-  .theme-sun {
-    display: none
-  }
-
-  :global([data-theme="dark"]) .theme-moon {
-    display: none
-  }
-
-  :global([data-theme="dark"]) .theme-sun {
-    display: block
-  }
 </style>
 
 <script>
-  // ═══ السايدبار: فتح/غلق (درج على الشاشات الصغيرة) + زر الطي على سطح المكتب ═══
-  const side = document.getElementById('sidebar');
-  const scrim = document.getElementById('scrimSide');
-  const menuBtn = document.getElementById('menuBtn');
-  const sideBtn = document.getElementById('sideBtn');
+  import { initPageChrome } from '../scripts/lib/page-chrome.js';
 
-  function setSide(open) {
-    side.classList.toggle('open', open);
-    scrim.classList.toggle('open', open);
-    menuBtn.setAttribute('aria-expanded', String(open));
-  }
-
-  // استرجاع حالة الطي المحفوظة (نفس مفتاح التطبيق ouns_sideMode)
-  try {
-    if (localStorage.getItem('ouns_sideMode') === '"collapsed"') {
-      document.body.classList.add('side-collapsed');
-      sideBtn.classList.add('on');
-      sideBtn.setAttribute('aria-pressed', 'true');
-    }
-  } catch (_) {}
-
-  sideBtn.addEventListener('click', () => {
-    const collapsed = document.body.classList.toggle('side-collapsed');
-    sideBtn.classList.toggle('on', collapsed);
-    sideBtn.setAttribute('aria-pressed', String(collapsed));
-    try { localStorage.setItem('ouns_sideMode', JSON.stringify(collapsed ? 'collapsed' : 'open')) } catch (_) {}
-  });
-
-  menuBtn.addEventListener('click', () => setSide(true));
-  scrim.addEventListener('click', () => setSide(false));
-
-  // ═══ الثيم: تبديل data-theme + الحفظ في ouns_theme (نفس مفاتيح التطبيق) ═══
-  const themeBtn = document.getElementById('themeBtn');
-
-  function currentTheme() {
-    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  }
-
-  function applyTheme(t) {
-    document.documentElement.setAttribute('data-theme', t);
-    try { localStorage.setItem('ouns_theme', JSON.stringify(t)) } catch (_) {}
-  }
-
-  themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
-
-  // ═══ اللغة: قاموس محلي + تبديل dir/lang + الحفظ في ouns_lang ═══
+  // ═══ قاموس الترجمة المحلي للصفحة (نفس قيم قاموس التطبيق) ═══
   const I18N = {
-    ar: { library: 'المكتبة', home: 'الرئيسية', reciters: 'القرّاء', favorites: 'المفضلة', recent: 'سجل الاستماع', mushaf: 'المصحف', adhkar: 'الأذكار', prayerTimes: 'مواقيت الصلاة', ytView: 'أفضل التلاوات', downloads: 'التنزيلات', developer: 'المُطوِّر', verseLabel: 'آية وتدبّر', sideFoot: 'أُنْس · رفيق التلاوة', theme: 'المظهر', language: 'اللغة', menu: 'القائمة', hidePanel: 'إخفاء اللوحة', backHome: 'العودة إلى أُنْس', devTitle: 'وكالة جرافيكسي', devBug: 'الإبلاغ عن مشكلة' },
-    en: { library: 'Library', home: 'Home', reciters: 'Reciters', favorites: 'Favorites', recent: 'Recently Played', mushaf: 'Mushaf', adhkar: 'Adhkar', prayerTimes: 'Prayer times', ytView: 'Best recitations', downloads: 'Downloads', developer: 'Developer', verseLabel: 'Verse & Reflect', sideFoot: 'Ouns · Recitation Companion', theme: 'Theme', language: 'Language', menu: 'Menu', hidePanel: 'Hide panel', backHome: 'Back to Ouns', devTitle: 'Graphixy Agency', devBug: 'Report a bug' },
+    ar: { library: 'المكتبة', home: 'الرئيسية', reciters: 'القرّاء', favorites: 'المفضلة', recent: 'سجل الاستماع', mushaf: 'المصحف', adhkar: 'الأذكار', prayerTimes: 'مواقيت الصلاة', ytView: 'أفضل التلاوات', downloads: 'التنزيلات', developer: 'المُطوِّر', verseLabel: 'آية وتدبّر', sideFoot: 'أُنْس · رفيق التلاوة', settings: 'الإعدادات', theme: 'المظهر', light: 'نهاري', dark: 'ليلي', language: 'اللغة', menu: 'القائمة', hidePanel: 'إخفاء اللوحة', backHome: 'العودة إلى أُنْس', devTitle: 'وكالة جرافيكسي', devBug: 'الإبلاغ عن مشكلة' },
+    en: { library: 'Library', home: 'Home', reciters: 'Reciters', favorites: 'Favorites', recent: 'Recently Played', mushaf: 'Mushaf', adhkar: 'Adhkar', prayerTimes: 'Prayer times', ytView: 'Best recitations', downloads: 'Downloads', developer: 'Developer', verseLabel: 'Verse & Reflect', sideFoot: 'Ouns · Recitation Companion', settings: 'Settings', theme: 'Theme', light: 'Light', dark: 'Dark', language: 'Language', menu: 'Menu', hidePanel: 'Hide panel', backHome: 'Back to Ouns', devTitle: 'Graphixy Agency', devBug: 'Report a bug' },
   };
 
-  const langBtn = document.getElementById('langBtn');
+  // ═══ عناصر التحكم الثابتة (سايدبار + ثيم + لغة + إعدادات) من الوحدة المشتركة ═══
   const devTitleEl = document.getElementById('devTitle');
-
-  function applyLang(l) {
-    document.documentElement.lang = l;
-    document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
-    const dict = I18N[l];
-    document.querySelectorAll('[data-i18n]').forEach((el) => {
-      const v = dict[el.getAttribute('data-i18n')];
-      if (!v) return;
-      // عنوان البطاقة ثنائي اللغة: نصّ رئيسي + امتداد إنجليزي في الوضع العربي
-      el.textContent = v;
-      if (el === devTitleEl && l === 'ar') {
+  initPageChrome({
+    i18n: I18N,
+    onLang(l) {
+      // عنوان البطاقة ثنائي اللغة: امتداد إنجليزي صغير في الوضع العربي
+      if (l === 'ar' && devTitleEl) {
         const sp = document.createElement('span');
         sp.className = 'dev-en';
         sp.textContent = 'Graphixy Agency';
         devTitleEl.appendChild(sp);
       }
-    });
-    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
-      const v = dict[el.getAttribute('data-i18n-aria')];
-      if (v) el.setAttribute('aria-label', v);
-    });
-    langBtn.textContent = l === 'ar' ? 'EN' : 'ع';
-    try { localStorage.setItem('ouns_lang', JSON.stringify(l)) } catch (_) {}
-  }
-
-  langBtn.addEventListener('click', () => {
-    applyLang(document.documentElement.lang === 'ar' ? 'en' : 'ar');
-  });
-
-  // الإقلاع: طبّق اللغة المحفوظة فوراً (نفس القيمة التي طبّقها سكربت Base قبل أول رسم)
-  let savedLang = 'ar';
-  try {
-    const raw = JSON.parse(localStorage.getItem('ouns_lang'));
-    if (raw === 'ar' || raw === 'en') savedLang = raw;
-  } catch (_) {}
-  applyLang(savedLang);
-
-  // ═══ Escape يغلق الدرج ═══
-  addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') setSide(false);
+    },
   });
 </script>
