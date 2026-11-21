@@ -7,46 +7,78 @@ const tracks = [
     title: 'أذكار الصباح',
     titleEn: 'Morning Adhkar',
     reciter: 'علاء عقل',
-    reciterEn: 'Alaa Akl',
+    initial: 'ع',
     src: '/audio/sabah-alaa.mp3',
+    theme: 'morning',
   },
   {
     id: 'massa',
     title: 'أذكار المساء',
     titleEn: 'Evening Adhkar',
     reciter: 'حمزة بو الديب',
-    reciterEn: 'Hamza Boueldib',
+    initial: 'ح',
     src: '/audio/massa-hamza.mp3',
+    theme: 'evening',
   },
+];
+
+const links = [
+  { href: '/', label: 'الرئيسية', icon: 'M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z' },
+  { href: '/?view=adhkar', label: 'الأذكار', icon: 'M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z' },
+  { href: '/?view=prayer', label: 'مواقيت الصلاة', icon: 'M12 2c.8 1.6 1.5 2.6 1.5 4A1.5 1.5 0 0 1 12 7.5 1.5 1.5 0 0 1 10.5 6c0-1.4.7-2.4 1.5-4z' },
+  { href: '/adhkar/audio', label: 'الأذكار الصوتية', icon: 'M4 14v-2a8 8 0 0 1 16 0v2', current: true },
 ];
 ---
 
 <Base>
-  <main class="aud-page">
-    <a class="aud-back" href="/">← العودة إلى أُنْس</a>
+  <div id="audScrim" class="aud-scrim" hidden></div>
 
-    <header class="aud-head">
-      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 17v3"/></svg>
+  <aside id="audSide" class="aud-side" aria-hidden="true" aria-label="القائمة">
+    <div class="aud-side-head">
+      <b>أُنْس</b>
+      <button class="aud-side-x" id="audSideClose" aria-label="إغلاق القائمة">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <nav class="aud-side-nav">
+      {links.map((l) => (
+        <a class:list={['aud-link', { current: l.current }]} href={l.href} aria-current={l.current ? 'page' : undefined}>
+          <svg class="ic" viewBox="0 0 24 24"><path d={l.icon}/></svg>
+          <span>{l.label}</span>
+        </a>
+      ))}
+    </nav>
+    <div class="aud-side-foot">رفيقك لتلاوة الوحي</div>
+  </aside>
+
+  <div class="aud-page">
+    <header class="aud-top">
+      <button class="aud-burger" id="audBurger" aria-label="فتح القائمة" aria-expanded="false" aria-controls="audSide">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
       <h1>الأذكار الصوتية</h1>
+      <svg class="ic aud-top-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 17v3"/></svg>
     </header>
 
-    <div class="aud-grid">
+    <main class="aud-grid">
       {tracks.map((tr) => (
-        <button class="aud-card" data-src={tr.src} data-title={tr.title} data-reciter={tr.reciter}>
-          <span class="aud-art" aria-hidden="true">
-            <svg class="ic" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
-          </span>
-          <span class="aud-info">
-            <b>{tr.title}</b>
+        <article class="aud-card" tabindex="0" role="button" data-src={tr.src} data-title={tr.title} data-reciter={tr.reciter} aria-pressed="false">
+          <div class="aud-intro">
+            <h2>{tr.title}</h2>
             <span class="aud-en">{tr.titleEn}</span>
-            <span class="aud-reader">بصوت {tr.reciter}</span>
-          </span>
-          <span class="aud-go" aria-hidden="true">
-            <svg class="ic" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg>
-          </span>
-        </button>
+          </div>
+          <div class:list={['aud-hero', tr.theme]} aria-hidden="true"></div>
+          <footer class="aud-foot">
+            <span class="aud-ava" aria-hidden="true">{tr.initial}</span>
+            <span class="aud-reader">{tr.reciter}</span>
+            <span class="aud-pp" aria-hidden="true">
+              <svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg>
+              <svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg>
+            </span>
+          </footer>
+        </article>
       ))}
-    </div>
+    </main>
 
     <div class="aud-player" id="audPlayer" aria-live="polite">
       <div class="aud-bar"><i id="audFill"></i></div>
@@ -64,109 +96,216 @@ const tracks = [
     </div>
 
     <audio id="adhkarAudio" preload="none"></audio>
-  </main>
+  </div>
 </Base>
 
 <style>
-  .aud-page {
-    min-height: 100dvh;
-    max-width: 560px;
-    margin-inline: auto;
-    padding: 28px 20px;
-    padding-top: max(28px, env(safe-area-inset-top));
-    padding-bottom: calc(120px + env(safe-area-inset-bottom));
+  .aud-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, .42);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease
+  }
+
+  .aud-scrim.open {
+    opacity: 1;
+    pointer-events: auto
+  }
+
+  .aud-side {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 41;
+    width: min(78vw, 300px);
+    background: var(--surface);
+    border-inline-end: 1px solid var(--line);
+    box-shadow: -18px 0 44px rgba(0, 0, 0, .18);
     display: flex;
     flex-direction: column;
-    gap: 18px
+    transform: translateX(105%);
+    transition: transform .24s ease;
+    visibility: hidden
   }
 
-  .aud-back {
-    align-self: flex-start;
-    font-size: var(--fs-sm);
-    color: var(--ink2);
-    text-decoration: none
+  .aud-side.open {
+    transform: translateX(0);
+    visibility: visible
   }
 
-  .aud-back:hover {
+  .aud-side-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--line)
+  }
+
+  .aud-side-head b {
+    font-size: var(--fs-md);
     color: var(--gold)
   }
 
-  .aud-head {
+  .aud-side-x {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: none;
+    color: var(--ink2);
+    cursor: pointer
+  }
+
+  .aud-side-x .ic {
+    width: 17px;
+    height: 17px
+  }
+
+  .aud-side-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 12px
+  }
+
+  .aud-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: var(--r-sm, 12px);
+    color: var(--ink2);
+    text-decoration: none;
+    font-size: var(--fs-base);
+    transition: background .15s ease, color .15s ease
+  }
+
+  .aud-link .ic {
+    width: 19px;
+    height: 19px
+  }
+
+  .aud-link:hover {
+    background: var(--surface2);
+    color: var(--ink)
+  }
+
+  .aud-link.current {
+    background: var(--surface2);
+    color: var(--gold);
+    font-weight: 600
+  }
+
+  .aud-side-foot {
+    margin-top: auto;
+    padding: 16px 18px;
+    font-size: var(--fs-2xs);
+    color: var(--ink2);
+    text-align: center;
+    opacity: .75
+  }
+
+  .aud-page {
+    min-height: 100dvh;
+    max-width: 720px;
+    margin-inline: auto;
+    padding-bottom: calc(120px + env(safe-area-inset-bottom))
+  }
+
+  .aud-top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 14px 18px;
+    padding-top: max(14px, env(safe-area-inset-top));
+    background: var(--bg);
+    border-bottom: 1px solid var(--line)
+  }
+
+  .aud-burger {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm, 12px);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer
+  }
+
+  .aud-burger:active {
+    transform: scale(.95)
+  }
+
+  .aud-top h1 {
+    font-size: var(--fs-lg);
+    color: var(--ink)
+  }
+
+  .aud-top-ic {
+    width: 21px;
+    height: 21px;
+    margin-inline-start: auto;
     color: var(--gold)
   }
 
-  .aud-head .ic {
-    width: 26px;
-    height: 26px
-  }
-
-  .aud-head h1 {
-    font-size: var(--fs-4xl)
-  }
-
   .aud-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 18px
   }
 
   .aud-card {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    padding: 16px;
-    border-radius: var(--r-md, 16px);
+    flex-direction: column;
+    border-radius: 20px;
     background: var(--surface);
     border: 1px solid var(--line);
-    text-align: start;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, .07);
+    overflow: hidden;
     cursor: pointer;
-    transition: border-color .15s ease, box-shadow .15s ease, transform .1s ease
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease
   }
 
-  .aud-card:hover {
+  .aud-card:hover,
+  .aud-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .13);
     border-color: var(--gold);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .08)
+    outline: none
   }
 
   .aud-card:active {
-    transform: scale(.98)
+    transform: scale(.985)
   }
 
   .aud-card.playing {
     border-color: var(--gold);
-    box-shadow: 0 8px 24px var(--glow1)
+    box-shadow: 0 14px 36px var(--glow1)
   }
 
-  .aud-art {
-    flex: none;
-    width: 52px;
-    height: 52px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--surface2);
-    border: 1px solid var(--line);
-    color: var(--gold)
-  }
-
-  .aud-art .ic {
-    width: 24px;
-    height: 24px
-  }
-
-  .aud-info {
+  .aud-intro {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 18px 12px
   }
 
-  .aud-info b {
-    font-size: var(--fs-md);
+  .aud-intro h2 {
+    font-size: var(--fs-xl);
     color: var(--ink)
   }
 
@@ -175,34 +314,118 @@ const tracks = [
     color: var(--ink2)
   }
 
-  .aud-reader {
-    font-size: var(--fs-sm);
-    color: var(--gold-ink, var(--gold));
-    margin-top: 2px
+  .aud-hero {
+    height: 150px;
+    margin: 0 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, .06)
   }
 
-  .aud-go {
+  .aud-hero.morning {
+    background:
+      radial-gradient(circle at 50% 74%, #FFF6DF 0 13%, rgba(255, 246, 223, .4) 14% 21%, transparent 22%),
+      radial-gradient(2px 2px at 18% 30%, rgba(255, 255, 255, .85) 99%, transparent),
+      radial-gradient(2px 2px at 32% 20%, rgba(255, 255, 255, .6) 99%, transparent),
+      radial-gradient(2px 2px at 76% 26%, rgba(255, 255, 255, .7) 99%, transparent),
+      linear-gradient(180deg, #FFE9BC 0%, #F9CD8D 52%, #E89B55 100%)
+  }
+
+  .aud-hero.evening {
+    background:
+      radial-gradient(circle at 74% 24%, #F5ECCB 0 8%, transparent 9%),
+      radial-gradient(circle at 70% 21%, #1C2A46 0 7%, transparent 8%),
+      radial-gradient(2px 2px at 24% 18%, #EFE5BE 99%, transparent),
+      radial-gradient(2px 2px at 44% 30%, rgba(239, 229, 190, .8) 99%, transparent),
+      radial-gradient(2px 2px at 14% 38%, rgba(239, 229, 190, .6) 99%, transparent),
+      radial-gradient(2px 2px at 58% 14%, rgba(239, 229, 190, .75) 99%, transparent),
+      linear-gradient(180deg, #17233D 0%, #26385A 52%, #33507B 76%, #3E6B48 100%)
+  }
+
+  .aud-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    border-top: 1px solid var(--line)
+  }
+
+  .aud-ava {
     flex: none;
-    margin-inline-start: auto;
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     display: grid;
     place-items: center;
     border-radius: 50%;
     background: var(--gold);
+    color: #fff;
+    font-size: var(--fs-sm);
+    font-weight: 700
+  }
+
+  .aud-reader {
+    font-size: var(--fs-sm);
+    color: var(--ink2);
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+  }
+
+  .aud-pp {
+    flex: none;
+    margin-inline-start: auto;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--line);
+    color: var(--gold)
+  }
+
+  .aud-pp .ic {
+    width: 19px;
+    height: 19px;
+    stroke-width: 2
+  }
+
+  .pp-pause {
+    display: none
+  }
+
+  .aud-card.playing .aud-pp,
+  .aud-player.playing .aud-toggle {
+    background: var(--gold);
+    border-color: var(--gold);
     color: #fff
   }
 
-  .aud-go .ic {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2
+  .aud-card.playing .pp-play,
+  .aud-player.playing .pp-play {
+    display: none
+  }
+
+  .aud-card.playing .pp-pause,
+  .aud-player.playing .pp-pause {
+    display: block
+  }
+
+  @media (min-width: 720px) {
+    .aud-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      padding: 24px
+    }
   }
 
   .aud-player {
     position: fixed;
     inset-inline: 16px;
     bottom: max(14px, env(safe-area-inset-bottom));
+    z-index: 30;
+    max-width: 520px;
+    margin-inline: auto;
     border-radius: 18px;
     background: var(--surface);
     border: 1px solid var(--line);
@@ -260,18 +483,6 @@ const tracks = [
     stroke-width: 2
   }
 
-  .pp-pause {
-    display: none
-  }
-
-  .aud-player.playing .pp-pause {
-    display: block
-  }
-
-  .aud-player.playing .pp-play {
-    display: none
-  }
-
   .aud-meta {
     display: flex;
     flex-direction: column;
@@ -302,6 +513,26 @@ const tracks = [
 </style>
 
 <script>
+  const side = document.getElementById('audSide');
+  const scrim = document.getElementById('audScrim');
+  const burger = document.getElementById('audBurger');
+  const sideClose = document.getElementById('audSideClose');
+
+  function setSide(open) {
+    side.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    scrim.hidden = false;
+    side.setAttribute('aria-hidden', String(!open));
+    burger.setAttribute('aria-expanded', String(open));
+  }
+
+  burger.addEventListener('click', () => setSide(!side.classList.contains('open')));
+  sideClose.addEventListener('click', () => setSide(false));
+  scrim.addEventListener('click', () => setSide(false));
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setSide(false);
+  });
+
   const audio = document.getElementById('adhkarAudio');
   const player = document.getElementById('audPlayer');
   const toggle = document.getElementById('audToggle');
@@ -319,9 +550,18 @@ const tracks = [
 
   let active = null;
 
+  function pulse() {
+    if (audio.paused) audio.play().catch(() => {});
+    else audio.pause();
+  }
+
   function select(card) {
     active = card;
-    cards.forEach((c) => c.classList.toggle('playing', c === card));
+    cards.forEach((c) => {
+      const on = c === card;
+      c.classList.toggle('playing', on);
+      c.setAttribute('aria-pressed', String(on));
+    });
     title.textContent = card.dataset.title;
     reader.textContent = card.dataset.reciter;
     toggle.disabled = false;
@@ -331,20 +571,22 @@ const tracks = [
 
   cards.forEach((card) => {
     card.addEventListener('click', () => {
-      if (active === card) {
-        if (audio.paused) audio.play().catch(() => {});
-        else audio.pause();
-        return;
+      if (active === card) pulse();
+      else {
+        select(card);
+        audio.play().catch(() => {});
       }
-      select(card);
-      audio.play().catch(() => {});
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
     });
   });
 
   toggle.addEventListener('click', () => {
-    if (!audio.src) return;
-    if (audio.paused) audio.play().catch(() => {});
-    else audio.pause();
+    if (audio.src) pulse();
   });
 
   audio.addEventListener('play', () => player.classList.add('playing'));
@@ -369,7 +611,6 @@ const tracks = [
   audio.addEventListener('error', () => {
     if (!audio.src || !audio.error) return;
     title.textContent = 'تعذّر تشغيل الملف — تحقّق من المسار';
-    reader.textContent = active ? active.dataset.reciter : '';
     player.classList.remove('playing');
   });
 </script>
