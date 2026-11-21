@@ -83,7 +83,6 @@ const iconPaths = {
         <button class="icon-btn" id="menuBtn" data-i18n-aria="menu" aria-label="القائمة" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <button class="icon-btn" id="sideBtn" data-i18n-aria="hidePanel" aria-label="إخفاء اللوحة" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
         <div class="top-actions">
-          <button class="icon-btn" id="settingsBtn" data-i18n-aria="settings" aria-label="الإعدادات" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.14-1.4l2-1.55-2-3.46-2.35.95a7 7 0 0 0-2.42-1.4L13.7 2.6h-3.4l-.39 2.54a7 7 0 0 0-2.42 1.4l-2.35-.95-2 3.46 2 1.55A7 7 0 0 0 5 12c0 .48.05.94.14 1.4l-2 1.55 2 3.46 2.35-.95a7 7 0 0 0 2.42 1.4l.39 2.54h3.4l.39-2.54a7 7 0 0 0 2.42-1.4l2.35.95 2-3.46-2-1.55c.09-.46.14-.92.14-1.4z"/></svg></button>
           <button class="icon-btn txt" id="langBtn" data-i18n-aria="language" aria-label="اللغة">EN</button>
           <button class="icon-btn" id="themeBtn" data-i18n-aria="theme" aria-label="المظهر">
             <svg class="ic theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/></svg>
@@ -152,25 +151,6 @@ const iconPaths = {
         </section>
       </main>
     </div>
-  </div>
-
-  <!-- ═══ قائمة الإعدادات المنبثقة الخفيفة (مظهر + لغة) ═══ -->
-  <div class="set-pop" id="settingsPop" hidden role="menu" aria-label="الإعدادات">
-    <div class="set-row">
-      <span class="set-lbl" data-i18n="theme">المظهر</span>
-      <div class="set-seg" role="group">
-        <button id="setThemeLight" data-i18n="light" aria-pressed="false">نهاري</button>
-        <button id="setThemeDark" data-i18n="dark" aria-pressed="false">ليلي</button>
-      </div>
-    </div>
-    <div class="set-row">
-      <span class="set-lbl" data-i18n="language">اللغة</span>
-      <div class="set-seg" role="group">
-        <button id="setLangAr" aria-pressed="false">عربي</button>
-        <button id="setLangEn" aria-pressed="false">English</button>
-      </div>
-    </div>
-    <div class="set-ver" dir="ltr">أُنْس · v{version}</div>
   </div>
 </Base>
 
@@ -443,73 +423,6 @@ const iconPaths = {
     transform: scaleX(-1)
   }
 
-  /* ═══ قائمة الإعدادات المنبثقة ═══ */
-  .set-pop {
-    position: fixed;
-    inset-inline-end: clamp(14px, 2.2vw, 26px);
-    top: calc(var(--gutter-y) + 54px);
-    z-index: 80;
-    width: min(320px, calc(100vw - 28px));
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, .18);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px
-  }
-
-  .set-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px
-  }
-
-  .set-lbl {
-    font-size: var(--fs-sm);
-    color: var(--ink)
-  }
-
-  .set-seg {
-    display: inline-flex;
-    gap: 4px;
-    padding: 3px;
-    border-radius: 999px;
-    background: var(--surface2);
-    border: 1px solid var(--line)
-  }
-
-  .set-seg button {
-    border: 0;
-    background: transparent;
-    color: var(--ink2);
-    font: inherit;
-    font-size: var(--fs-xs);
-    padding: 6px 13px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background .15s ease, color .15s ease
-  }
-
-  .set-seg button[aria-pressed="true"] {
-    background: var(--accent);
-    color: var(--on-accent)
-  }
-
-  .set-seg button:active {
-    opacity: .85
-  }
-
-  .set-ver {
-    font-size: var(--fs-2xs);
-    color: var(--ink2);
-    text-align: center;
-    border-top: 1px solid var(--line);
-    padding-top: 12px;
-    font-style: normal
-  }
 
   /* تبديل أيقونة الثيم: هلال بالوضع النهاري، شمس بالليلي */
   .theme-sun {
@@ -559,8 +472,6 @@ const iconPaths = {
 
   // ═══ الثيم: تبديل data-theme + الحفظ في ouns_theme (نفس مفاتيح التطبيق) ═══
   const themeBtn = document.getElementById('themeBtn');
-  const setThemeLight = document.getElementById('setThemeLight');
-  const setThemeDark = document.getElementById('setThemeDark');
 
   function currentTheme() {
     return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
@@ -569,23 +480,17 @@ const iconPaths = {
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
     try { localStorage.setItem('ouns_theme', JSON.stringify(t)) } catch (_) {}
-    setThemeLight.setAttribute('aria-pressed', String(t === 'light'));
-    setThemeDark.setAttribute('aria-pressed', String(t === 'dark'));
   }
 
   themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
-  setThemeLight.addEventListener('click', () => applyTheme('light'));
-  setThemeDark.addEventListener('click', () => applyTheme('dark'));
 
   // ═══ اللغة: قاموس محلي + تبديل dir/lang + الحفظ في ouns_lang ═══
   const I18N = {
-    ar: { library: 'المكتبة', home: 'الرئيسية', reciters: 'القرّاء', favorites: 'المفضلة', recent: 'سجل الاستماع', mushaf: 'المصحف', adhkar: 'الأذكار', prayerTimes: 'مواقيت الصلاة', ytView: 'أفضل التلاوات', downloads: 'التنزيلات', developer: 'المُطوِّر', verseLabel: 'آية وتدبّر', sideFoot: 'أُنْس · رفيق التلاوة', settings: 'الإعدادات', theme: 'المظهر', light: 'نهاري', dark: 'ليلي', language: 'اللغة', menu: 'القائمة', hidePanel: 'إخفاء اللوحة', backHome: 'العودة إلى أُنْس', devTitle: 'وكالة جرافيكسي', devBug: 'الإبلاغ عن مشكلة' },
-    en: { library: 'Library', home: 'Home', reciters: 'Reciters', favorites: 'Favorites', recent: 'Recently Played', mushaf: 'Mushaf', adhkar: 'Adhkar', prayerTimes: 'Prayer times', ytView: 'Best recitations', downloads: 'Downloads', developer: 'Developer', verseLabel: 'Verse & Reflect', sideFoot: 'Ouns · Recitation Companion', settings: 'Settings', theme: 'Theme', light: 'Light', dark: 'Dark', language: 'Language', menu: 'Menu', hidePanel: 'Hide panel', backHome: 'Back to Ouns', devTitle: 'Graphixy Agency', devBug: 'Report a bug' },
+    ar: { library: 'المكتبة', home: 'الرئيسية', reciters: 'القرّاء', favorites: 'المفضلة', recent: 'سجل الاستماع', mushaf: 'المصحف', adhkar: 'الأذكار', prayerTimes: 'مواقيت الصلاة', ytView: 'أفضل التلاوات', downloads: 'التنزيلات', developer: 'المُطوِّر', verseLabel: 'آية وتدبّر', sideFoot: 'أُنْس · رفيق التلاوة', theme: 'المظهر', language: 'اللغة', menu: 'القائمة', hidePanel: 'إخفاء اللوحة', backHome: 'العودة إلى أُنْس', devTitle: 'وكالة جرافيكسي', devBug: 'الإبلاغ عن مشكلة' },
+    en: { library: 'Library', home: 'Home', reciters: 'Reciters', favorites: 'Favorites', recent: 'Recently Played', mushaf: 'Mushaf', adhkar: 'Adhkar', prayerTimes: 'Prayer times', ytView: 'Best recitations', downloads: 'Downloads', developer: 'Developer', verseLabel: 'Verse & Reflect', sideFoot: 'Ouns · Recitation Companion', theme: 'Theme', language: 'Language', menu: 'Menu', hidePanel: 'Hide panel', backHome: 'Back to Ouns', devTitle: 'Graphixy Agency', devBug: 'Report a bug' },
   };
 
   const langBtn = document.getElementById('langBtn');
-  const setLangAr = document.getElementById('setLangAr');
-  const setLangEn = document.getElementById('setLangEn');
   const devTitleEl = document.getElementById('devTitle');
 
   function applyLang(l) {
@@ -609,16 +514,12 @@ const iconPaths = {
       if (v) el.setAttribute('aria-label', v);
     });
     langBtn.textContent = l === 'ar' ? 'EN' : 'ع';
-    setLangAr.setAttribute('aria-pressed', String(l === 'ar'));
-    setLangEn.setAttribute('aria-pressed', String(l === 'en'));
     try { localStorage.setItem('ouns_lang', JSON.stringify(l)) } catch (_) {}
   }
 
   langBtn.addEventListener('click', () => {
     applyLang(document.documentElement.lang === 'ar' ? 'en' : 'ar');
   });
-  setLangAr.addEventListener('click', () => applyLang('ar'));
-  setLangEn.addEventListener('click', () => applyLang('en'));
 
   // الإقلاع: طبّق اللغة المحفوظة فوراً (نفس القيمة التي طبّقها سكربت Base قبل أول رسم)
   let savedLang = 'ar';
@@ -628,27 +529,8 @@ const iconPaths = {
   } catch (_) {}
   applyLang(savedLang);
 
-  // ═══ البوب أوفر: فتح/غلق + غلق عند النقر خارجه أو Escape ═══
-  const settingsBtn = document.getElementById('settingsBtn');
-  const settingsPop = document.getElementById('settingsPop');
-
-  function setPop(open) {
-    settingsPop.hidden = !open;
-    settingsBtn.setAttribute('aria-expanded', String(open));
-  }
-
-  setThemeLight.setAttribute('aria-pressed', String(currentTheme() === 'light'));
-  setThemeDark.setAttribute('aria-pressed', String(currentTheme() === 'dark'));
-
-  settingsBtn.addEventListener('click', () => setPop(settingsPop.hidden));
-  document.addEventListener('click', (e) => {
-    if (settingsPop.hidden) return;
-    if (!settingsPop.contains(e.target) && !settingsBtn.contains(e.target)) setPop(false);
-  });
+  // ═══ Escape يغلق الدرج ═══
   addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      setPop(false);
-      setSide(false);
-    }
+    if (e.key === 'Escape') setSide(false);
   });
 </script>
