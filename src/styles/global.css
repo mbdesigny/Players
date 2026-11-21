@@ -5584,6 +5584,36 @@ html[dir="rtl"] .back-btn:not(.prayer-set-btn) .ic {
   box-shadow: var(--shadow2)
 }
 
+.ak-aud {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px var(--glow1);
+  cursor: pointer
+}
+
+.ak-aud .ic {
+  width: 17px;
+  height: 17px;
+  flex: none
+}
+
+.ak-aud:hover {
+  filter: brightness(1.08)
+}
+
+.ak-aud:active {
+  transform: scale(.97)
+}
+
 .ak-hero .ic {
   width: 26px;
   height: 26px;
