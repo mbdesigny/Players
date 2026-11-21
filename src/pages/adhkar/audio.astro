@@ -1,28 +1,17 @@
 ---
 import Base from '../../layouts/Base.astro';
+import data from '../../data/adhkar-audio.json';
 
-const tracks = [
-  {
-    id: 'sabah',
-    title: 'أذكار الصباح',
-    titleEn: 'Morning Adhkar',
-    reciter: 'علاء عقل',
-    initial: 'ع',
-    src: '/audio/sabah-alaa.mp3',
-    img: '/adhkar/morning.jpg',
-    alt: 'شروق الشمس على البحيرة — أذكار الصباح',
-  },
-  {
-    id: 'massa',
-    title: 'أذكار المساء',
-    titleEn: 'Afternoon Adhkar',
-    reciter: 'حمزة بو الديب',
-    initial: 'ح',
-    src: '/audio/massa-hamza.mp3',
-    img: '/adhkar/evening.jpg',
-    alt: 'غروب مهيب فوق الجبال — أذكار المساء',
-  },
-];
+const tracks = data.tracks.map((tr) => ({
+  id: tr.id,
+  title: tr.titleAr,
+  titleEn: tr.titleEn,
+  reciter: tr.reciterAr,
+  initial: tr.reciterAr.trim().charAt(0),
+  src: tr.src,
+  img: data.images[tr.period],
+  alt: `${tr.titleAr} — ${tr.reciterAr}`,
+}));
 
 ---
 
