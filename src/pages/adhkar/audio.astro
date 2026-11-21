@@ -2,17 +2,25 @@
 import Base from '../../layouts/Base.astro';
 import data from '../../data/adhkar-audio.json';
 
-const tracks = data.tracks.map((tr) => ({
-  id: tr.id,
-  title: tr.titleAr,
-  titleEn: tr.titleEn,
-  reciter: tr.reciterAr,
-  initial: tr.reciterAr.trim().charAt(0),
-  src: tr.src,
-  img: data.images[tr.period],
-  alt: `${tr.titleAr} — ${tr.reciterAr}`,
-}));
+const periods = ['morning', 'afternoon'];
 
+const groups = periods.map((period) => {
+  const first = data.tracks.find((tr) => tr.period === period);
+  return {
+    title: first.titleAr,
+    titleEn: first.titleEn,
+    img: data.images[period],
+    alt: first.titleAr,
+    readers: data.tracks
+      .filter((tr) => tr.period === period)
+      .map((tr) => ({
+        initial: tr.reciterAr.trim().charAt(0),
+        src: tr.src,
+        title: tr.titleAr,
+        reciter: tr.reciterAr,
+      })),
+  };
+});
 ---
 
 <Base>
@@ -46,21 +54,25 @@ const tracks = data.tracks.map((tr) => ({
       </header>
       <main>
         <div class="aud-grid">
-          {tracks.map((tr) => (
-            <article class="aud-card" tabindex="0" role="button" data-src={tr.src} data-title={tr.title} data-reciter={tr.reciter} aria-pressed="false">
+          {groups.map((g) => (
+            <article class="aud-card">
               <div class="aud-intro">
-                <h2>{tr.title}</h2>
-                <span class="aud-en">{tr.titleEn}</span>
+                <h2>{g.title}</h2>
+                <span class="aud-en">{g.titleEn}</span>
               </div>
-              <img class="aud-hero" src={tr.img} alt={tr.alt} width="800" height="1000" loading="lazy">
-              <footer class="aud-foot">
-                <span class="aud-ava" aria-hidden="true">{tr.initial}</span>
-                <span class="aud-reader">{tr.reciter}</span>
-                <span class="aud-pp" aria-hidden="true">
-                  <svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg>
-                  <svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg>
-                </span>
-              </footer>
+              <img class="aud-hero" src={g.img} alt={g.alt} width="800" height="1000" loading="lazy">
+              <div class="aud-foot">
+                {g.readers.map((r) => (
+                  <button class="aud-reader-btn" type="button" data-src={r.src} data-title={r.title} data-reciter={r.reciter} aria-pressed="false">
+                    <span class="aud-ava" aria-hidden="true">{r.initial}</span>
+                    <span class="aud-reader">{r.reciter}</span>
+                    <span class="aud-pp" aria-hidden="true">
+                      <svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg>
+                      <svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg>
+                    </span>
+                  </button>
+                ))}
+              </div>
             </article>
           ))}
         </div>
@@ -117,25 +129,14 @@ const tracks = data.tracks.map((tr) => ({
     border: 1px solid var(--line);
     box-shadow: 0 8px 26px rgba(0, 0, 0, .07);
     overflow: hidden;
-    cursor: pointer;
     transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease
   }
 
   .aud-card:hover,
-  .aud-card:focus-visible {
+  .aud-card:focus-within {
     transform: translateY(-3px);
     box-shadow: 0 18px 44px rgba(0, 0, 0, .13);
-    border-color: var(--gold);
-    outline: none
-  }
-
-  .aud-card:active {
-    transform: scale(.985)
-  }
-
-  .aud-card.playing {
-    border-color: var(--gold);
-    box-shadow: 0 14px 36px var(--glow1)
+    border-color: var(--gold)
   }
 
   .aud-intro {
@@ -167,10 +168,31 @@ const tracks = data.tracks.map((tr) => ({
 
   .aud-foot {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--line)
+  }
+
+  .aud-reader-btn {
+    display: flex;
     align-items: center;
     gap: 10px;
-    padding: 13px 16px;
-    border-top: 1px solid var(--line)
+    width: 100%;
+    padding: 7px 8px;
+    border-radius: 999px;
+    background: var(--surface2);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease
+  }
+
+  .aud-reader-btn:hover {
+    border-color: var(--gold)
+  }
+
+  .aud-reader-btn:active {
+    transform: scale(.985)
   }
 
   .aud-ava {
@@ -180,8 +202,8 @@ const tracks = data.tracks.map((tr) => ({
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--gold);
-    color: #fff;
+    background: var(--bg2);
+    color: var(--gold);
     font-size: var(--fs-sm);
     font-weight: 700
   }
@@ -198,19 +220,19 @@ const tracks = data.tracks.map((tr) => ({
   .aud-pp {
     flex: none;
     margin-inline-start: auto;
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--surface2);
-    border: 1px solid var(--line);
-    color: var(--gold)
+    background: var(--gold);
+    color: #fff;
+    border: 0
   }
 
   .aud-pp .ic {
-    width: 19px;
-    height: 19px;
+    width: 17px;
+    height: 17px;
     stroke-width: 2
   }
 
@@ -218,19 +240,24 @@ const tracks = data.tracks.map((tr) => ({
     display: none
   }
 
-  .aud-card.playing .aud-pp,
+  .aud-reader-btn.playing {
+    border-color: var(--gold);
+    background: var(--surface)
+  }
+
+  .aud-reader-btn.playing .aud-ava,
   .aud-player.playing .aud-toggle {
     background: var(--gold);
     border-color: var(--gold);
     color: #fff
   }
 
-  .aud-card.playing .pp-play,
+  .aud-reader-btn.playing .pp-play,
   .aud-player.playing .pp-play {
     display: none
   }
 
-  .aud-card.playing .pp-pause,
+  .aud-reader-btn.playing .pp-pause,
   .aud-player.playing .pp-pause {
     display: block
   }
@@ -239,7 +266,7 @@ const tracks = data.tracks.map((tr) => ({
     .aud-grid {
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 22px;
-      max-width: 1080px
+      max-width: 900px
     }
   }
 
@@ -373,7 +400,7 @@ const tracks = data.tracks.map((tr) => ({
   const title = document.getElementById('audTitle');
   const reader = document.getElementById('audReader');
   const time = document.getElementById('audTime');
-  const cards = [...document.querySelectorAll('.aud-card')];
+  const buttons = [...document.querySelectorAll('.aud-reader-btn')];
 
   const fmt = (s) => {
     if (!Number.isFinite(s) || s < 0) s = 0;
@@ -388,32 +415,26 @@ const tracks = data.tracks.map((tr) => ({
     else audio.pause();
   }
 
-  function select(card) {
-    active = card;
-    cards.forEach((c) => {
-      const on = c === card;
-      c.classList.toggle('playing', on);
-      c.setAttribute('aria-pressed', String(on));
+  function select(btn) {
+    active = btn;
+    buttons.forEach((b) => {
+      const on = b === btn;
+      b.classList.toggle('playing', on);
+      b.setAttribute('aria-pressed', String(on));
     });
-    title.textContent = card.dataset.title;
-    reader.textContent = card.dataset.reciter;
+    title.textContent = btn.dataset.title;
+    reader.textContent = btn.dataset.reciter;
     toggle.disabled = false;
     player.classList.add('active');
-    if (audio.src !== card.dataset.src) audio.src = card.dataset.src;
+    if (audio.src !== btn.dataset.src) audio.src = btn.dataset.src;
   }
 
-  cards.forEach((card) => {
-    card.addEventListener('click', () => {
-      if (active === card) pulse();
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (active === btn) pulse();
       else {
-        select(card);
+        select(btn);
         audio.play().catch(() => {});
-      }
-    });
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        card.click();
       }
     });
   });
