@@ -1,5 +1,5 @@
 // ═══ عناصر التحكم الثابتة المشتركة بين كل الصفحات الثابتة ═══
-// السايدبار (درج/طي) + الثيم + اللغة + قائمة الإعدادات المنبثقة
+// السايدبار (درج/طي) + الثيم + اللغة + مودال الإعدادات #settingsScrim الأصلي
 // الاستخدام: initPageChrome({ i18n, onLang })
 
 export function initPageChrome({ i18n, onLang } = {}) {
@@ -35,33 +35,35 @@ export function initPageChrome({ i18n, onLang } = {}) {
   menuBtn.addEventListener('click', () => setSide(true));
   scrim.addEventListener('click', () => setSide(false));
 
-  // ═══ الثيم: تبديل data-theme + الحفظ في ouns_theme (نفس مفاتيح التطبيق) ═══
+  // ═══ الثيم: تبديل data-theme + أيقونة قمر/شمس (نفس أسطر app.js) + segTheme ═══
   const themeBtn = qs('themeBtn');
+  const themeIcon = qs('themeIcon');
   const segTheme = qs('segTheme');
+  const SUN_IC = '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/>';
+  const MOON_IC = '<path d="M20 13.5A8 8 0 0 1 10.5 4 8 8 0 1 0 20 13.5z"/>';
 
   function currentTheme() {
     return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   }
 
-  function syncThemeSegs(t) {
-    segTheme.querySelectorAll('button').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.th === t));
-    });
-  }
-
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
     try { localStorage.setItem('ouns_theme', JSON.stringify(t)) } catch { /* تجاهل */ }
-    syncThemeSegs(t);
+    themeIcon.innerHTML = t === 'dark' ? SUN_IC : MOON_IC;
+    segTheme.querySelectorAll('button').forEach((b) => {
+      const on = b.dataset.th === t;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
   }
 
   themeBtn.addEventListener('click', () => applyTheme(currentTheme() === 'dark' ? 'light' : 'dark'));
   segTheme.querySelectorAll('button').forEach((b) => {
     b.addEventListener('click', () => applyTheme(b.dataset.th));
   });
-  syncThemeSegs(currentTheme());
+  applyTheme(currentTheme());
 
-  // ═══ اللغة: تبديل dir/lang + المشي على data-i18n + الحفظ في ouns_lang ═══
+  // ═══ اللغة: تبديل dir/lang + المشي على data-i18n + الحفظ في ouns_lang + segLang ═══
   const langBtn = qs('langBtn');
   const segLang = qs('segLang');
   let lang = 'ar';
@@ -83,7 +85,9 @@ export function initPageChrome({ i18n, onLang } = {}) {
     }
     langBtn.textContent = l === 'ar' ? 'EN' : 'ع';
     segLang.querySelectorAll('button').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.lg === l));
+      const on = b.dataset.lg === l;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     try { localStorage.setItem('ouns_lang', JSON.stringify(l)) } catch { /* تجاهل */ }
     if (onLang) onLang(l, dict);
@@ -104,7 +108,7 @@ export function initPageChrome({ i18n, onLang } = {}) {
   } catch { /* تجاهل — قيمة محفوظة غير صالحة */ }
   applyLang(savedLang);
 
-  // ═══ مودال الإعدادات (#settingsScrim): فتح/غلق بنفس نمط openModal في التطبيق ═══
+  // ═══ مودال الإعدادات (#settingsScrim الأصلي من Modals.astro): فتح/غلق بنفس نمط openModal ═══
   const settingsBtn = qs('settingsBtn');
   const settingsScrim = qs('settingsScrim');
   const settingsClose = qs('settingsClose');
@@ -125,6 +129,44 @@ export function initPageChrome({ i18n, onLang } = {}) {
       setSide(false);
     }
   });
+
+  // ═══ رواية المصحف + الأذان داخل المودال الأصلي — حفظ بنفس مفاتيح app.js ═══
+  const segMushafRw = qs('segMushafRw');
+  const segAdhan = qs('segAdhan');
+
+  let riwaya = 'hafs';
+  let adhanOn = false;
+  try { riwaya = JSON.parse(localStorage.getItem('ouns_mushafRiwaya')) === 'warsh' ? 'warsh' : 'hafs' } catch { /* تجاهل */ }
+  try { adhanOn = JSON.parse(localStorage.getItem('ouns_adhanOn')) === true } catch { /* تجاهل */ }
+
+  function syncSettingsSegs() {
+    segMushafRw.querySelectorAll('button').forEach((b) => {
+      const on = b.dataset.mrw === riwaya;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    segAdhan.querySelectorAll('button').forEach((b) => {
+      const on = b.dataset.adh === (adhanOn ? 'on' : 'off');
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  segMushafRw.querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => {
+      riwaya = b.dataset.mrw;
+      try { localStorage.setItem('ouns_mushafRiwaya', JSON.stringify(riwaya)) } catch { /* تجاهل */ }
+      syncSettingsSegs();
+    });
+  });
+  segAdhan.querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => {
+      adhanOn = b.dataset.adh === 'on';
+      try { localStorage.setItem('ouns_adhanOn', JSON.stringify(adhanOn)) } catch { /* تجاهل */ }
+      syncSettingsSegs();
+    });
+  });
+  syncSettingsSegs();
 
   return { lang: () => lang, applyLang };
 }
