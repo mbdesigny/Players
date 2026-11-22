@@ -748,10 +748,6 @@ main {
 @media(max-width:479px){
   .pb-art{display:none}
   #btnDl,#npDl,#npDock{display:none}
-  .player{grid-template-columns:1fr auto 1fr}
-  .pb-track{justify-content:flex-start}
-  .pb-center{justify-self:center}
-  .pb-right{justify-content:flex-end}
 }
 
 .back-btn {
@@ -1796,20 +1792,20 @@ body.np-float .np-title {
 /* ═══════════════ PLAYER BAR ═══════════════ */
 .player {
   flex: none;
-  height: 84px;
+  height: 92px;
   width: min(760px, 100% - 24px);
   margin: 0 auto 14px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 999px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 16px;
-  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 24px 14px;
   position: relative;
   z-index: 5;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .15)
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+  overflow: hidden
 }
 
 @supports (backdrop-filter: blur(10px)) {
@@ -1824,6 +1820,7 @@ body.np-float .np-title {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex: 1;
   min-width: 0
 }
 
@@ -1890,18 +1887,18 @@ body.np-float .np-title {
   flex: none
 }
 
-.pb-center {
+.pb-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  width: min(480px, 44vw)
+  justify-content: space-between;
+  gap: 14px
 }
 
 .pb-buttons {
   display: flex;
   align-items: center;
-  gap: 10px
+  gap: 10px;
+  flex: none
 }
 
 .ctrl {
@@ -1951,8 +1948,8 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 }
 
 .play-btn {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -1983,17 +1980,21 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 }
 
 .pb-progress {
+  position: absolute;
+  top: 8px;
+  inset-inline: 22px;
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%
+  width: auto
 }
 
 .pb-progress .t {
   font-size: var(--fs-3xs);
   color: var(--ink2);
   font-variant-numeric: tabular-nums;
-  min-width: 36px
+  min-width: 36px;
+  line-height: 11px
 }
 
 .pb-progress .t:last-child {
@@ -2002,7 +2003,7 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 
 .prog {
   flex: 1;
-  height: 24px;
+  height: 18px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -2066,7 +2067,8 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px
+  gap: 8px;
+  flex: 1
 }
 
 .pb-right #btnDl {
@@ -3193,11 +3195,6 @@ kbd {
     bottom: calc(var(--player) + 20px + env(safe-area-inset-bottom, 0px))
   }
 
-  .pb-center {
-    width: auto;
-    flex: 1
-  }
-
   .pb-right select {
     display: none
   }
@@ -3224,26 +3221,12 @@ kbd {
     height: var(--player);
     width: auto;
     margin-inline: 10px;
-    border-radius: 24px
+    border-radius: 24px;
+    padding: 0 14px 10px
   }
 
-  .pb-center {
-    display: contents
-  }
-
-  .pb-track {
-    grid-row: 2;
-    grid-column: 1
-  }
-
-  .pb-buttons {
-    grid-row: 2;
-    grid-column: 2
-  }
-
-  .pb-right {
-    grid-row: 2;
-    grid-column: 3
+  .pb-row {
+    gap: 8px
   }
 
   .pb-info {
@@ -3255,6 +3238,8 @@ kbd {
   }
 
   .pb-buttons {
+    flex: 1;
+    justify-content: center;
     gap: 8px
   }
 
@@ -3264,12 +3249,16 @@ kbd {
   }
 
   .pb-progress {
-    grid-column: 1 / -1;
-    grid-row: 1
+    top: 7px;
+    inset-inline: 16px
   }
 
   .pb-progress .t {
     display: none
+  }
+
+  .pb-right {
+    flex: none
   }
 
   .pb-progress .prog .thumb {
@@ -6629,7 +6618,7 @@ select,
   .ov-mandala{width:min(28vh, 150px)}
   .mushaf-stage{padding:6px 8%}
   .drawer{max-height:72vh}
-  #toasts{bottom:calc(var(--player) + 10px)}
+  #toasts{bottom:calc(var(--player) + 20px)}
 }
 
 /* ════ PERF: theme switch + low-end device relief ════ */
