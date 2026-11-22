@@ -17,7 +17,7 @@
     "format": "prettier --write src/scripts/lib tests"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.5",
+    "@astrojs/sitemap": "^3.7.6",
     "astro": "^7.4.13",
     "page-flip": "^2.0.7"
   },
