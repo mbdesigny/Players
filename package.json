@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.5",
-    "astro": "^7.4.11",
+    "astro": "^7.4.13",
     "page-flip": "^2.0.7"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "eslint": "^10.15.0",
     "globals": "^17.14.0",
     "prettier": "^3.7.4",
-    "wrangler": "^4.162.0"
+    "wrangler": "^4.165.0"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,
