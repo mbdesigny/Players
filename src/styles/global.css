@@ -1796,27 +1796,28 @@ body.np-float .np-title {
 /* ═══════════════ PLAYER BAR ═══════════════ */
 .player {
   flex: none;
-  height: var(--player);
+  height: 84px;
+  width: min(760px, 100% - 24px);
+  margin: 0 auto 14px;
   background: var(--surface);
-  border-top: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-radius: 999px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: 20px;
-  padding: 0 22px;
+  gap: 16px;
+  padding: 0 18px;
   position: relative;
   z-index: 5;
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, .06)
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .15)
 }
 
-.player::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  inset-inline: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: .6
+@supports (backdrop-filter: blur(10px)) {
+  .player {
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px)
+  }
 }
 
 .pb-track {
@@ -1827,8 +1828,8 @@ body.np-float .np-title {
 }
 
 .pb-art {
-  width: 58px;
-  height: 58px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   overflow: hidden;
   flex: none;
@@ -1893,14 +1894,14 @@ body.np-float .np-title {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
-  width: min(560px, 42vw)
+  gap: 6px;
+  width: min(480px, 44vw)
 }
 
 .pb-buttons {
   display: flex;
   align-items: center;
-  gap: 14px
+  gap: 10px
 }
 
 .ctrl {
@@ -1950,8 +1951,8 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
 }
 
 .play-btn {
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -2066,6 +2067,10 @@ html[dir="rtl"] [data-act="openrecent"] .ic {
   align-items: center;
   justify-content: flex-end;
   gap: 8px
+}
+
+.pb-right #btnDl {
+  display: none
 }
 
 .pb-right select {
@@ -3185,7 +3190,7 @@ kbd {
 
   body.np-float .np-panel {
     width: min(308px, calc(100vw - 24px));
-    bottom: calc(var(--player) + 10px)
+    bottom: calc(var(--player) + 20px + env(safe-area-inset-bottom, 0px))
   }
 
   .pb-center {
@@ -3216,11 +3221,10 @@ kbd {
   }
 
   .player {
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: 20px auto;
-    gap: 2px 12px;
-    align-content: center;
-    padding: 4px 16px
+    height: var(--player);
+    width: auto;
+    margin-inline: 10px;
+    border-radius: 24px
   }
 
   .pb-center {
@@ -6588,11 +6592,10 @@ select,
    scattered media blocks above.
    ══════════════════════════════════════════════════════════════════ */
 
-/* honour the phone home-indicator / safe area under the player footer */
+/* honour the phone home-indicator / safe area under the floating player pill */
 @media(max-width:900px){
   .player{
-    height:calc(var(--player) + env(safe-area-inset-bottom, 0px));
-    padding-bottom:env(safe-area-inset-bottom, 0px)
+    margin-bottom:calc(10px + env(safe-area-inset-bottom, 0px))
   }
 }
 
