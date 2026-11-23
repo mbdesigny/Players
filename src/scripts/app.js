@@ -298,7 +298,10 @@ function filteredReciters() {
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v) { S.view = v; S.query = ''; $('#searchInput').value = ''; if (v === 'mushaf') { S.readN = null; S.mushafAsk = true; S.mushafIndexOpen = false } S.adhkarCat = null; if (v !== 'yt') { S.ytId = null; destroyYt() } document.body.classList.toggle('mushaf-full', v === 'mushaf'); $$('.nav-item[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === (v === 'adhkarAudio' ? 'adhkar' : v))); closeSidebar(); render() }
+const VIEW_KEYS = ['reciters', 'favorites', 'recent', 'mushaf', 'adhkar', 'prayer', 'yt', 'developer', 'adhkarAudio'];
+function viewUrl(v) { const u = new URL(location.href); if (VIEW_KEYS.includes(v)) u.searchParams.set('view', v); else u.searchParams.delete('view'); return u.pathname + u.search + u.hash }
+function applyView(v) { S.view = v; S.query = ''; $('#searchInput').value = ''; if (v === 'mushaf') { S.readN = null; S.mushafAsk = true; S.mushafIndexOpen = false } S.adhkarCat = null; if (v !== 'yt') { S.ytId = null; destroyYt() } document.body.classList.toggle('mushaf-full', v === 'mushaf'); $$('.nav-item[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === (v === 'adhkarAudio' ? 'adhkar' : v))); closeSidebar(); render() }
+function setView(v, push = true) { applyView(v); const url = viewUrl(v); if (push) history.pushState({ view: v }, '', url); else history.replaceState({ view: v }, '', url) }
 function render() {
   destroyFlip();
   applyI18nStatic();
@@ -320,6 +323,7 @@ function render() {
   updateCounts();
   if (S.view === 'yt' && S.ytId) { const cur = YT_LIST.find(x => x.id === S.ytId); if (cur) mountYtPlayer(cur) }
 }
+window.addEventListener('popstate', e => { const raw = (e.state && e.state.view) || new URLSearchParams(location.search).get('view'); applyView(raw && VIEW_KEYS.includes(raw) ? raw : 'home') });
 const orn = `<div class="ornament"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="10" height="10"/><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)"/></svg></div>`;
 /* ─── WEATHER (Open-Meteo & Makin-Things icons) ─── */
 function weatherIconSVG(type) {
@@ -2855,5 +2859,5 @@ window.addEventListener('storage', e => {
   }
   /* deep link: /?view=... (PWA shortcuts) */
   const dv = new URLSearchParams(location.search).get('view');
-  if (dv && ['reciters', 'favorites', 'recent', 'mushaf', 'adhkar', 'prayer', 'yt', 'developer', 'adhkarAudio'].includes(dv)) setView(dv);
+  if (dv && VIEW_KEYS.includes(dv)) setView(dv, false);
 })();
