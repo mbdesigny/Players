@@ -59,12 +59,13 @@ const groups = periods.map((period) => {
         <div class="aud-grid">
           {groups.map((g) => (
             <article class="aud-card">
-              <div class="aud-intro">
-                <h2>{g.title}</h2>
-                <span class="aud-en">{g.titleEn}</span>
-              </div>
-              <img class="aud-hero" src={g.img} alt={g.alt} width="800" height="1000" loading="lazy">
-              <div class="aud-foot">
+              <img class="aud-hero" src={g.img} alt={g.alt} loading="lazy">
+              <div class="aud-body">
+                <div class="aud-intro">
+                  <h2>{g.title}</h2>
+                  <span class="aud-en">{g.titleEn}</span>
+                </div>
+                <div class="aud-foot">
                 {g.readers.map((r) => (
                   <button class="aud-reader-btn" type="button" data-src={r.src} data-title={r.title} data-reciter={r.reciter} aria-pressed="false">
                     <span class="aud-ava" aria-hidden="true">{r.initial}</span>
@@ -75,6 +76,7 @@ const groups = periods.map((period) => {
                     </span>
                   </button>
                 ))}
+                </div>
               </div>
             </article>
           ))}

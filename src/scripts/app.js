@@ -1476,7 +1476,7 @@ function viewAdhkarCat() {
   const prog = akCatProgress(S.adhkarCat);
   const done = c.items.filter(a => (prog[a.id] ?? a.count) === 0).length;
   return `<button class="back-btn" data-akback><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-  <div class="view-head"><div><h2>${esc(akCatName(c.name))}</h2><div class="sub" id="akProg" data-done="${done}" data-total="${c.items.length}">${num(c.items.length)} ${t('dhikr')} · ${t('akProgress')} ${num(done)}/${num(c.items.length)}</div></div></div>
+  <div class="view-head"><div><h2>${esc(akCatName(c.name))}</h2><div class="sub" id="akProg" data-done="${done}" data-total="${c.items.length}">${num(c.items.length)} ${t('dhikr')} · ${t('akProgress')} ${num(done)}/${num(c.items.length)}</div></div><button class="ak-aud" data-act="akaud" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 17v3"/></svg><span>${t('adhkarAudio')}</span></button></div>
   <div class="ak-list">${c.items.map(a => {
     const rem = prog[a.id] ?? a.count; return `<div class="ak-card${rem === 0 ? ' done' : ''}">
     <p class="ak-text">${esc(a.text)}</p>
@@ -1655,9 +1655,11 @@ function adxGroups() {
 function viewAdhkarAudio() {
   return `<div class="view-head"><div><h2>${t('adhkarAudio')}</h2><div class="sub">${t('audSub')}</div></div><button class="back-btn" data-act="akauback" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button></div>
   <div class="aud-grid">${adxGroups().map(g => `<article class="aud-card">
-    <div class="aud-intro"><h2>${esc(g.title)}</h2><span class="aud-en">${esc(g.titleEn)}</span></div>
-    <img class="aud-hero" src="${g.img}" alt="${esc(g.title)}" width="800" height="1000" loading="lazy">
-    <div class="aud-foot">${g.readers.map(r => `<button class="aud-reader-btn" type="button" data-adx-src="${r.src}" data-adx-title="${esc(r.titleAr)}" data-adx-reciter="${esc(r.reciterAr)}" aria-pressed="false"><span class="aud-ava" aria-hidden="true">${esc(r.reciterAr.trim().charAt(0))}</span><span class="aud-reader">${esc(r.reciterAr)}</span><span class="aud-pp" aria-hidden="true"><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></span></button>`).join('')}</div>
+    <img class="aud-hero" src="${g.img}" alt="${esc(g.title)}" loading="lazy">
+    <div class="aud-body">
+      <div class="aud-intro"><h2>${esc(g.title)}</h2><span class="aud-en">${esc(g.titleEn)}</span></div>
+      <div class="aud-foot">${g.readers.map(r => `<button class="aud-reader-btn" type="button" data-adx-src="${r.src}" data-adx-title="${esc(r.titleAr)}" data-adx-reciter="${esc(r.reciterAr)}" aria-pressed="false"><span class="aud-ava" aria-hidden="true">${esc(r.reciterAr.trim().charAt(0))}</span><span class="aud-reader">${esc(r.reciterAr)}</span><span class="aud-pp" aria-hidden="true"><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></span></button>`).join('')}</div>
+    </div>
   </article>`).join('')}</div>
   <div class="aud-player" id="adxPlayer" aria-live="polite"><div class="aud-bar"><i id="adxFill"></i></div><div class="aud-row"><button class="aud-toggle" id="adxToggle" aria-label="${t('kPlay')}" disabled><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></button><div class="aud-meta"><b id="adxTitle">${t('audPick')}</b><span id="adxReader"></span></div><span class="aud-time" id="adxTime">00:00</span></div></div>`;
 }
