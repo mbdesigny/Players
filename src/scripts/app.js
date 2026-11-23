@@ -1438,9 +1438,32 @@ setInterval(async () => { await fetchPrayer(); adhanTick(); if (S.prayerData && 
 fetchPrayer().then(() => { if (S.prayerData) { startPrayerTick(); if (S.view === 'home' || S.view === 'prayer') { render(); paintWeather() } } });
 
 /* ═══════════════════ ADHKAR ═══════════════════ */
+/* تفريق قسم «أذكار الصباح والمساء»: الصيغ المطلقة تُعرض في الصفحتين، وأذكار «أصبح» للصباح فقط،
+   وتُولَّد صيغ «أمسى» المقابلة للمساء وفق الحواشي الواردة في حصن المسلم نفسه، والعكس صحيح لأذكار المساء الصرفة */
+const AK_HK = '[\u064B-\u0652\u0670]*';
+const AK_AMSAW = t => t
+  .replace(new RegExp('أ' + AK_HK + 'ص' + AK_HK + 'ب' + AK_HK + 'ح' + AK_HK + 'ت', 'g'), 'أَمْسَيْت')
+  .replace(new RegExp('أ' + AK_HK + 'ص' + AK_HK + 'ب' + AK_HK + 'ح' + AK_HK + 'ن', 'g'), 'أَمْسَيْن')
+  .replace(new RegExp('أ' + AK_HK + 'ص' + AK_HK + 'ب' + AK_HK + 'ح' + AK_HK, 'g'), 'أَمْسَى')
+  .replace(new RegExp('ه' + AK_HK + 'ذ' + AK_HK + 'ا ال' + AK_HK + 'ي' + AK_HK + 'و' + AK_HK + 'م' + AK_HK, 'g'), 'هذِهِ اللَّيْلَةِ');
+const AK_ASBHW = t => t
+  .replace(new RegExp('أ' + AK_HK + 'م' + AK_HK + 'س' + AK_HK + 'ي' + AK_HK + 'ت', 'g'), 'أَصْبَحْتُ')
+  .replace(new RegExp('أ' + AK_HK + 'م' + AK_HK + 'س' + AK_HK + 'ي' + AK_HK + 'ن', 'g'), 'أَصْبَحْنَا')
+  .replace(new RegExp('أ' + AK_HK + 'م' + AK_HK + 'س' + AK_HK + 'ى', 'g'), 'أَصْبَحَ')
+  .replace(new RegExp('هذ' + AK_HK + 'هِ اللّ' + AK_HK + 'ي' + AK_HK + 'ل' + AK_HK + 'ة' + AK_HK, 'g'), 'هذَا الْيَوْمِ');
 const AK_CATS = (() => {
   const out = []; for (const c of ADHKAR) {
-    if (c.category === 'أذكار الصباح والمساء') { out.push({ name: 'أذكار الصباح', items: c.array }); out.push({ name: 'أذكار المساء', items: c.array }) }
+    if (c.category === 'أذكار الصباح والمساء') {
+      const morning = [], evening = [];
+      for (const a of c.array) {
+        const n = norm2(a.text.split('[')[0]);
+        const m = n.includes('اصبح'), e = n.includes('امس');
+        morning.push(e && !m ? { ...a, text: AK_ASBHW(a.text) } : a);
+        evening.push(m && !e ? { ...a, text: AK_AMSAW(a.text) } : a);
+      }
+      out.push({ name: 'أذكار الصباح', items: morning });
+      out.push({ name: 'أذكار المساء', items: evening });
+    }
     else out.push({ name: c.category, items: c.array })
   } return out
 })();
