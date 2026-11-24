@@ -2082,6 +2082,8 @@ let acx = null, analyser = null, freqData = null, waveRaf = 0, smLevel = 0, laye
 function ensureAnalyser() {
   if (IS_ANDROID || acx !== null || (!window.AudioContext && !window.webkitAudioContext)) return;
   try {
+    /* حذر: تمرير مصدر غير CORS (مثل catbox) عبر Web Audio يجعل خرجه صامتًا نهائيًا — لذلك نُمرر المصادر الموثوقة فقط */
+    if (!corsAudio(audio.currentSrc || audio.src)) return;
     const Ctx = window.AudioContext || window.webkitAudioContext;
     const cand = new Ctx();
     if (cand.state !== 'running') { try { cand.resume() } catch (e) { } }
