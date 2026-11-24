@@ -298,7 +298,10 @@ function filteredReciters() {
 }
 
 /* ═══════════════ VIEWS ═══════════════ */
-function setView(v) { S.view = v; S.query = ''; $('#searchInput').value = ''; if (v === 'mushaf') { S.readN = null; S.mushafAsk = true; S.mushafIndexOpen = false } S.adhkarCat = null; if (v !== 'yt') { S.ytId = null; destroyYt() } document.body.classList.toggle('mushaf-full', v === 'mushaf'); $$('.nav-item[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === (v === 'adhkarAudio' ? 'adhkar' : v))); closeSidebar(); render() }
+const VIEW_KEYS = ['reciters', 'favorites', 'recent', 'mushaf', 'adhkar', 'prayer', 'yt', 'developer', 'adhkarAudio'];
+function viewUrl(v) { const u = new URL(location.href); if (VIEW_KEYS.includes(v)) u.searchParams.set('view', v); else u.searchParams.delete('view'); return u.pathname + u.search + u.hash }
+function applyView(v) { S.view = v; S.query = ''; $('#searchInput').value = ''; if (v === 'mushaf') { S.readN = null; S.mushafAsk = true; S.mushafIndexOpen = false } S.adhkarCat = null; if (v !== 'yt') { S.ytId = null; destroyYt() } document.body.classList.toggle('mushaf-full', v === 'mushaf'); $$('.nav-item[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === (v === 'adhkarAudio' ? 'adhkar' : v))); closeSidebar(); render() }
+function setView(v, push = true) { applyView(v); const url = viewUrl(v); if (push) history.pushState({ view: v }, '', url); else history.replaceState({ view: v }, '', url) }
 function render() {
   destroyFlip();
   applyI18nStatic();
@@ -320,6 +323,7 @@ function render() {
   updateCounts();
   if (S.view === 'yt' && S.ytId) { const cur = YT_LIST.find(x => x.id === S.ytId); if (cur) mountYtPlayer(cur) }
 }
+window.addEventListener('popstate', e => { const raw = (e.state && e.state.view) || new URLSearchParams(location.search).get('view'); applyView(raw && VIEW_KEYS.includes(raw) ? raw : 'home') });
 const orn = `<div class="ornament"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="7" width="10" height="10"/><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)"/></svg></div>`;
 /* ─── WEATHER (Open-Meteo & Makin-Things icons) ─── */
 function weatherIconSVG(type) {
@@ -1434,9 +1438,32 @@ setInterval(async () => { await fetchPrayer(); adhanTick(); if (S.prayerData && 
 fetchPrayer().then(() => { if (S.prayerData) { startPrayerTick(); if (S.view === 'home' || S.view === 'prayer') { render(); paintWeather() } } });
 
 /* ═══════════════════ ADHKAR ═══════════════════ */
+/* تفريق قسم «أذكار الصباح والمساء»: الصيغ المطلقة تُعرض في الصفحتين، وأذكار «أصبح» للصباح فقط،
+   وتُولَّد صيغ «أمسى» المقابلة للمساء وفق الحواشي الواردة في حصن المسلم نفسه، والعكس صحيح لأذكار المساء الصرفة */
+const AK_HK = '[\u064B-\u0652\u0670]*';
+const AK_AMSAW = t => t
+  .replace(new RegExp('أ' + AK_HK + 'ص' + AK_HK + 'ب' + AK_HK + 'ح' + AK_HK + 'ت', 'g'), 'أَمْسَيْت')
+  .replace(new RegExp('أ' + AK_HK + 'ص' + AK_HK + 'ب' + AK_HK + 'ح' + AK_HK + 'ن', 'g'), 'أَمْسَيْن')
+  .replace(new RegExp('أ' + AK_HK + 'ص' + AK_HK + 'ب' + AK_HK + 'ح' + AK_HK, 'g'), 'أَمْسَى')
+  .replace(new RegExp('ه' + AK_HK + 'ذ' + AK_HK + 'ا ال' + AK_HK + 'ي' + AK_HK + 'و' + AK_HK + 'م' + AK_HK, 'g'), 'هذِهِ اللَّيْلَةِ');
+const AK_ASBHW = t => t
+  .replace(new RegExp('أ' + AK_HK + 'م' + AK_HK + 'س' + AK_HK + 'ي' + AK_HK + 'ت', 'g'), 'أَصْبَحْتُ')
+  .replace(new RegExp('أ' + AK_HK + 'م' + AK_HK + 'س' + AK_HK + 'ي' + AK_HK + 'ن', 'g'), 'أَصْبَحْنَا')
+  .replace(new RegExp('أ' + AK_HK + 'م' + AK_HK + 'س' + AK_HK + 'ى', 'g'), 'أَصْبَحَ')
+  .replace(new RegExp('هذ' + AK_HK + 'هِ اللّ' + AK_HK + 'ي' + AK_HK + 'ل' + AK_HK + 'ة' + AK_HK, 'g'), 'هذَا الْيَوْمِ');
 const AK_CATS = (() => {
   const out = []; for (const c of ADHKAR) {
-    if (c.category === 'أذكار الصباح والمساء') { out.push({ name: 'أذكار الصباح', items: c.array }); out.push({ name: 'أذكار المساء', items: c.array }) }
+    if (c.category === 'أذكار الصباح والمساء') {
+      const morning = [], evening = [];
+      for (const a of c.array) {
+        const n = norm2(a.text.split('[')[0]);
+        const m = n.includes('اصبح'), e = n.includes('امس');
+        morning.push(e && !m ? { ...a, text: AK_ASBHW(a.text) } : a);
+        evening.push(m && !e ? { ...a, text: AK_AMSAW(a.text) } : a);
+      }
+      out.push({ name: 'أذكار الصباح', items: morning });
+      out.push({ name: 'أذكار المساء', items: evening });
+    }
     else out.push({ name: c.category, items: c.array })
   } return out
 })();
@@ -1476,7 +1503,7 @@ function viewAdhkarCat() {
   const prog = akCatProgress(S.adhkarCat);
   const done = c.items.filter(a => (prog[a.id] ?? a.count) === 0).length;
   return `<button class="back-btn" data-akback><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button>
-  <div class="view-head"><div><h2>${esc(akCatName(c.name))}</h2><div class="sub" id="akProg" data-done="${done}" data-total="${c.items.length}">${num(c.items.length)} ${t('dhikr')} · ${t('akProgress')} ${num(done)}/${num(c.items.length)}</div></div></div>
+  <div class="view-head"><div><h2>${esc(akCatName(c.name))}</h2><div class="sub" id="akProg" data-done="${done}" data-total="${c.items.length}">${num(c.items.length)} ${t('dhikr')} · ${t('akProgress')} ${num(done)}/${num(c.items.length)}</div></div><button class="ak-aud" data-act="akaud" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 17v3"/></svg><span>${t('adhkarAudio')}</span></button></div>
   <div class="ak-list">${c.items.map(a => {
     const rem = prog[a.id] ?? a.count; return `<div class="ak-card${rem === 0 ? ' done' : ''}">
     <p class="ak-text">${esc(a.text)}</p>
@@ -1655,9 +1682,11 @@ function adxGroups() {
 function viewAdhkarAudio() {
   return `<div class="view-head"><div><h2>${t('adhkarAudio')}</h2><div class="sub">${t('audSub')}</div></div><button class="back-btn" data-act="akauback" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('back')}</button></div>
   <div class="aud-grid">${adxGroups().map(g => `<article class="aud-card">
-    <div class="aud-intro"><h2>${esc(g.title)}</h2><span class="aud-en">${esc(g.titleEn)}</span></div>
-    <img class="aud-hero" src="${g.img}" alt="${esc(g.title)}" width="800" height="1000" loading="lazy">
-    <div class="aud-foot">${g.readers.map(r => `<button class="aud-reader-btn" type="button" data-adx-src="${r.src}" data-adx-title="${esc(r.titleAr)}" data-adx-reciter="${esc(r.reciterAr)}" aria-pressed="false"><span class="aud-ava" aria-hidden="true">${esc(r.reciterAr.trim().charAt(0))}</span><span class="aud-reader">${esc(r.reciterAr)}</span><span class="aud-pp" aria-hidden="true"><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></span></button>`).join('')}</div>
+    <img class="aud-hero" src="${g.img}" alt="${esc(g.title)}" loading="lazy">
+    <div class="aud-body">
+      <div class="aud-intro"><h2>${esc(g.title)}</h2><span class="aud-en">${esc(g.titleEn)}</span></div>
+      <div class="aud-foot">${g.readers.map(r => `<button class="aud-reader-btn" type="button" data-adx-src="${r.src}" data-adx-title="${esc(r.titleAr)}" data-adx-reciter="${esc(r.reciterAr)}" aria-pressed="false"><span class="aud-ava" aria-hidden="true">${esc(r.reciterAr.trim().charAt(0))}</span><span class="aud-reader">${esc(r.reciterAr)}</span><span class="aud-pp" aria-hidden="true"><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></span></button>`).join('')}</div>
+    </div>
   </article>`).join('')}</div>
   <div class="aud-player" id="adxPlayer" aria-live="polite"><div class="aud-bar"><i id="adxFill"></i></div><div class="aud-row"><button class="aud-toggle" id="adxToggle" aria-label="${t('kPlay')}" disabled><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></button><div class="aud-meta"><b id="adxTitle">${t('audPick')}</b><span id="adxReader"></span></div><span class="aud-time" id="adxTime">00:00</span></div></div>`;
 }
@@ -2853,5 +2882,5 @@ window.addEventListener('storage', e => {
   }
   /* deep link: /?view=... (PWA shortcuts) */
   const dv = new URLSearchParams(location.search).get('view');
-  if (dv && ['reciters', 'favorites', 'recent', 'mushaf', 'adhkar', 'prayer', 'yt', 'developer', 'adhkarAudio'].includes(dv)) setView(dv);
+  if (dv && VIEW_KEYS.includes(dv)) setView(dv, false);
 })();

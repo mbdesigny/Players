@@ -7181,6 +7181,13 @@ html[dir="ltr"] .dev-back-full .ic {
   transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease
 }
 
+.aud-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0
+}
+
 .aud-card:hover,
 .aud-card:focus-within {
   transform: translateY(-3px);
@@ -7192,8 +7199,9 @@ html[dir="ltr"] .dev-back-full .ic {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 10px;
-  padding: 16px 18px 12px
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 16px 18px 10px
 }
 
 .aud-intro h2 {
@@ -7209,18 +7217,28 @@ html[dir="ltr"] .dev-back-full .ic {
 .aud-hero {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  max-height: 600px;
+  aspect-ratio: 16 / 9;
+  max-height: 480px;
   object-fit: cover;
   background: var(--surface2)
 }
 
 .aud-foot {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
   padding: 12px 14px 14px;
   border-top: 1px solid var(--line)
+}
+
+.aud-foot .aud-reader-btn {
+  flex: 1 1 45%
+}
+
+.aud-foot .aud-reader {
+  flex: 1;
+  text-align: start
 }
 
 .aud-reader-btn {
@@ -7309,14 +7327,6 @@ html[dir="ltr"] .dev-back-full .ic {
 .aud-reader-btn.playing .pp-pause,
 .aud-player.playing .pp-pause {
   display: block
-}
-
-@media (min-width: 900px) {
-  .aud-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 22px;
-    max-width: 900px
-  }
 }
 
 .aud-player {
