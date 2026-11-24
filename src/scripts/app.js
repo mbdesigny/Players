@@ -615,7 +615,7 @@ function loadTrack(i, autoplay = true, seek = 0) {
   updateNowPlaying();
   const idle = window.requestIdleCallback ? cb => requestIdleCallback(cb, { timeout: 300 }) : cb => setTimeout(cb, 120);
   idle(() => { renderQueue(); markPlayingRows(); });
-  pushRecent(tr); saveSession();
+  if (!tr.adx) { pushRecent(tr); saveSession() }
 }
 function currentSources() { return S.srcOrder || [] }
 function tryNextSource() {
@@ -642,7 +642,7 @@ function prevTrack() {
 function updateNowPlaying() {
   const tr = S.current; if (!tr) return;
   const seed = tr.rar, num = S.lang === 'ar' ? arDigits(tr.n) : String(tr.n), sub = trackName(tr);
-  const photo = photoURL(tr.rar, tr.rid);
+  const photo = tr.adx ? (tr.img || '') : photoURL(tr.rar, tr.rid);
   const isMadani = (tr.type === 1) || (tr.n && SURAH[tr.n - 1] && SURAH[tr.n - 1][3] === 1);
   const mosquePlaceholder = isMadani ? '/img/mosque-nabawi.jpg' : '/img/mosque-haram.jpg';
   const args = [seed, num, sub, photo, (S.lang === 'ar' ? tr.rar : tr.ren).trim()[0] || 'ق', mosquePlaceholder];
@@ -695,7 +695,7 @@ function renderQueue() {
   const html = items.map((tr, k) => {
     const i = start + k;
     const isCur = i === S.idx;
-    const numStr = isCur ? '▶' : (S.lang === 'ar' ? arDigits(tr.n) : String(tr.n));
+    const numStr = isCur ? '▶' : (tr.adx ? (tr.adxPm ? '☾' : '☀') : (S.lang === 'ar' ? arDigits(tr.n) : String(tr.n)));
     const reciterStr = trackReciter(tr);
     const surahStr = trackName(tr);
     return `<div class="queue-item ${isCur ? 'active' : ''}" draggable="${!isCur}" data-qi="${i}">
@@ -1680,6 +1680,19 @@ function adxGroups() {
   }
   return out;
 }
+function adxTracks(pm) {
+  const g = adxGroups().find(x => x.period === (pm ? 'afternoon' : 'morning'));
+  if (!g) return [];
+  return g.readers.map(r => ({
+    key: 'adx:' + r.id, adx: true, adxPm: pm, n: null,
+    name_ar: g.title, name_en: g.titleEn,
+    rar: r.reciterAr, ren: r.reciterEn || r.reciterAr,
+    rid: null, mid: null, rewaya: '', mname: t('adhkarAudio'),
+    img: g.img,
+    sources: [{ url: r.src, bitrate: 128, provider: 'Adhkar' }],
+    duration: 0
+  }));
+}
 function viewAdhkarAudio() {
   const pm = S.view === 'adhkarPM';
   const g = adxGroups().find(x => x.period === (pm ? 'afternoon' : 'morning'));
@@ -1689,60 +1702,36 @@ function viewAdhkarAudio() {
     <img class="aud-hero" src="${g.img}" alt="${esc(g.title)}" loading="lazy">
     <div class="aud-body">
       <div class="aud-intro"><h2>${esc(g.title)}</h2><span class="aud-en">${esc(g.titleEn)}</span></div>
-      <div class="aud-foot">${g.readers.map(r => `<button class="aud-reader-btn" type="button" data-adx-src="${r.src}" data-adx-title="${esc(r.titleAr)}" data-adx-reciter="${esc(r.reciterAr)}" aria-pressed="false"><span class="aud-ava" aria-hidden="true">${esc(r.reciterAr.trim().charAt(0))}</span><span class="aud-reader">${esc(r.reciterAr)}</span><span class="aud-pp" aria-hidden="true"><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></span></button>`).join('')}</div>
+      <div class="aud-foot">${g.readers.map(r => `<button class="aud-reader-btn" type="button" data-adxkey="adx:${r.id}" data-adx-title="${esc(r.reciterAr)}" aria-pressed="false"><span class="aud-ava" aria-hidden="true">${esc(r.reciterAr.trim().charAt(0))}</span><span class="aud-reader">${esc(r.reciterAr)}</span><span class="aud-pp" aria-hidden="true"><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></span></button>`).join('')}</div>
     </div>
   </article></div>
-  <div class="aud-player" id="adxPlayer" aria-live="polite"><div class="aud-bar"><i id="adxFill"></i></div><div class="aud-row"><button class="aud-toggle" id="adxToggle" aria-label="${t('kPlay')}" disabled><svg class="ic pp-play" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M19 12 7 19V5z"/></svg><svg class="ic pp-pause" viewBox="0 0 24 24"><path d="M7 5v14"/><path d="M17 5v14"/></svg></button><div class="aud-meta"><b id="adxTitle">${t('audPick')}</b><span id="adxReader"></span></div><span class="aud-time" id="adxTime">00:00</span></div></div>`;
+`;
 }
-/* حالة المشغّل حيّة عبر إعادة رسم الشاشة (singleton) */
-const ADX = { audio: null, wired: false, srcKey: '' };
+/* حالة مشغل الأذكار: يعمل عبر محرك المشغّل الرئيسي S.tracks/audio ليظهر في شريط التشغيل الرئيسي ولوحة التشغيل ومدياجسن النظام */
+const ADX = { wired: false };
+function adxSync() {
+  if (!$('#view .aud-reader-btn')) return;
+  $$('#view .aud-reader-btn').forEach(b => {
+    const on = !!(S.current && S.current.key === b.dataset.adxkey);
+    b.classList.toggle('playing', on && !audio.paused);
+    b.setAttribute('aria-pressed', String(on))
+  })
+}
 function mountAdx() {
-  const audio = ADX.audio || (ADX.audio = new Audio());
-  if (!ADX.wired) {
-    ADX.wired = true;
-    audio.preload = 'none';
-    audio.addEventListener('play', () => { const p = document.getElementById('adxPlayer'); if (p) { p.classList.add('playing'); p.classList.add('active') } $$('#view .aud-reader-btn').forEach(b => b.classList.toggle('playing', b.dataset.adxSrc === ADX.srcKey)) });
-    audio.addEventListener('pause', () => { const p = document.getElementById('adxPlayer'); if (p) p.classList.remove('playing') });
-    audio.addEventListener('ended', () => { const p = document.getElementById('adxPlayer'); if (p) p.classList.remove('playing'); const f = document.getElementById('adxFill'); if (f) f.style.width = '0%'; const tm = document.getElementById('adxTime'); if (tm) tm.textContent = '00:00' });
-    audio.addEventListener('loadedmetadata', () => { const tm = document.getElementById('adxTime'); if (tm) tm.textContent = fmtMMSS(audio.duration * 1000) });
-    audio.addEventListener('timeupdate', () => { const tm = document.getElementById('adxTime'); if (tm) tm.textContent = fmtMMSS(audio.currentTime * 1000); const f = document.getElementById('adxFill'); const d = audio.duration; if (f) f.style.width = Number.isFinite(d) && d > 0 ? `${(audio.currentTime / d) * 100}%` : '0%' });
-    audio.addEventListener('error', () => { if (!audio.src || !audio.error) return; const ti = document.getElementById('adxTitle'); if (ti) ti.textContent = t('adxError'); const p = document.getElementById('adxPlayer'); if (p) p.classList.remove('playing') });
-  }
-  const btns = $$('#view .aud-reader-btn');
-  const sel = btns.find(b => b.dataset.adxSrc === ADX.srcKey);
-  const player = document.getElementById('adxPlayer');
-  if (player) {
-    if (sel || !audio.paused) player.classList.add('active');
-    if (!audio.paused) player.classList.add('playing');
-  }
-  btns.forEach(b => { const on = b === sel; b.classList.toggle('playing', on && !audio.paused); b.setAttribute('aria-pressed', String(on)) });
-  if (sel) {
-    const ti = document.getElementById('adxTitle'), rd = document.getElementById('adxReader'), tg = document.getElementById('adxToggle'), tm = document.getElementById('adxTime'), f = document.getElementById('adxFill');
-    if (ti) ti.textContent = sel.dataset.adxTitle;
-    if (rd) rd.textContent = sel.dataset.adxReciter;
-    if (tg) tg.disabled = false;
-    if (tm) tm.textContent = fmtMMSS(audio.currentTime * 1000);
-    if (f && Number.isFinite(audio.duration) && audio.duration > 0) f.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
-  }
-  btns.forEach(btn => { btn.onclick = () => {
-    const key = btn.dataset.adxSrc;
-    if (key !== ADX.srcKey) {
-      ADX.srcKey = key;
-      btns.forEach(b => { b.classList.toggle('playing', b === btn); b.setAttribute('aria-pressed', String(b === btn)) });
-      const ti = document.getElementById('adxTitle'), rd = document.getElementById('adxReader'), tg = document.getElementById('adxToggle'), pl = document.getElementById('adxPlayer');
-      if (ti) ti.textContent = btn.dataset.adxTitle;
-      if (rd) rd.textContent = btn.dataset.adxReciter;
-      if (tg) tg.disabled = false;
-      if (pl) pl.classList.add('active');
-      audio.src = key;
-      audio.play().catch(() => { });
-    } else if (audio.src) {
-      if (audio.paused) audio.play().catch(() => { }); else audio.pause();
+  const list = adxTracks(S.view === 'adhkarPM');
+  if (!list.length) return;
+  if (!ADX.wired) { ADX.wired = true; ['play', 'pause', 'ended'].forEach(ev => audio.addEventListener(ev, adxSync)) }
+  $$('#view .aud-reader-btn').forEach(b => {
+    const trk = list.find(x => x.key === b.dataset.adxkey);
+    if (!trk) return;
+    b.onclick = () => {
+      if (S.current && S.current.key === trk.key) { audio.paused ? audio.play().catch(() => { }) : audio.pause() }
+      else { S.tracks = list; loadTrack(list.indexOf(trk), true) }
     }
-  } });
-  const tg = document.getElementById('adxToggle');
-  if (tg) tg.onclick = () => { if (audio.src) { if (audio.paused) audio.play().catch(() => { }); else audio.pause() } };
+  });
+  adxSync();
 }
+
 function viewYt() {
   const cur = S.ytId ? YT_LIST.find(x => x.id === S.ytId) : null;
   return `${cur ? `<button class="back-btn" data-act="ytback"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${t('ytAll')}</button>
@@ -1816,7 +1805,7 @@ async function prayerSearch(q) {
 const favKey = tr => tr.key;
 function isFaved(tr) { return S.favorites.some(f => f.key === favKey(tr)) }
 function toggleFav(tr) {
-  if (!tr) return;
+  if (!tr || tr.adx) return;
   const k = favKey(tr); const i = S.favorites.findIndex(f => f.key === k);
   if (i >= 0) {
     const [rm] = S.favorites.splice(i, 1); store.set('favorites', S.favorites);
@@ -1847,7 +1836,7 @@ function enqueueDownloads(tracks) {
   tracks.forEach(tr => {
     const job = { tr, state: 'pending', pct: 0, ctrl: null };
     const el = document.createElement('div'); el.className = 'dl-job';
-    el.innerHTML = `<div class="dj-t"><span>${pad(tr.n)} · ${esc(trackName(tr))}</span><span class="dj-s">${t('pending')}</span></div><div class="dj-bar"><i></i></div>`;
+    el.innerHTML = `<div class="dj-t"><span>${tr.adx ? esc(trackName(tr)) : pad(tr.n) + ' · ' + esc(trackName(tr))}</span><span class="dj-s">${t('pending')}</span></div><div class="dj-bar"><i></i></div>`;
     const empty = $('#dlList .empty'); if (empty) empty.remove();
     $('#dlList').prepend(el);
     job.el = el; job.bar = el.querySelector('i'); job.st = el.querySelector('.dj-s');
@@ -1858,7 +1847,7 @@ function enqueueDownloads(tracks) {
 function pumpDL() { while (DL.active < DL.conc) { const j = DL.jobs.find(x => x.state === 'pending'); if (!j) break; j.state = 'downloading'; DL.active++; runDL(j).finally(() => { DL.active--; pumpDL(); updateCounts() }) } }
 async function runDL(job) {
   const tr = job.tr; const src = pickSource(tr, S.quality)[0];
-  const fname = `${pad(tr.n)} - ${safeName(trackName(tr))}.mp3`;
+  const fname = tr.adx ? `${safeName(trackName(tr))} - ${safeName(trackReciter(tr))}.mp3` : `${pad(tr.n)} - ${safeName(trackName(tr))}.mp3`;
   job.st.textContent = t('downloading');
   try {
     job.ctrl = new AbortController();
